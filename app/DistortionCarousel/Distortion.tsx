@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
+import { useWindowResizeObserver } from "@funtech-inc/spice";
 import vertexShader from "./shader/main.vert";
 import fragmentSahder from "./shader/main.frag";
 import { memo, useEffect, useMemo, useRef } from "react";
@@ -7,8 +8,8 @@ import { GUIController } from "./gui";
 
 //背景テクスチャーのアスペクト比
 const TEXTURE_RATIO = {
-   x: 492,
-   y: 390,
+   x: 512,
+   y: 512,
 };
 
 //GUIで操作するために関数外に出してる
@@ -41,6 +42,20 @@ export const Distortion = () => {
             distortionState.noiseStrength;
          ref.current.uniforms.u_progress.value = distortionState.progress;
       }
+   });
+
+   //window resize
+   useWindowResizeObserver({
+      callback: ({ winW, winH }) => {
+         if (ref.current?.uniforms) {
+            ref.current.uniforms.u_resolution.value = new THREE.Vector2(
+               winW,
+               winH
+            );
+         }
+      },
+      debounce: 50,
+      dependencies: [],
    });
 
    return (
