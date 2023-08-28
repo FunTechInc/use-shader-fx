@@ -16,8 +16,9 @@ uniform float u_noiseStrength;
 // 時間
 uniform float u_time; 
 // 遷移フェーズを操作する
-uniform float u_trans;
-//
+uniform float u_progress;
+
+//hogehoge
 float quarticInOut(float t) {
 	return t < 0.5
 		? +8.0 * pow(t, 4.0)
@@ -44,7 +45,7 @@ void main(){
 	uv += noiseValue * u_noiseStrength;
 		
 	// 2枚のtextureをu_transの値で混ざるように切り替える
-	float trans = quarticInOut(u_trans);
+	float trans = quarticInOut(u_progress);
 		
 	vec4 color0 = texture2D(u_bgTexture0, vec2(0.5 - 0.3 * trans, 0.5) + (uv - vec2(0.5)) * (1.0 - 0.2 * trans));
 

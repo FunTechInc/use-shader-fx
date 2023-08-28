@@ -25,5 +25,8 @@
       "the-new-css-reset": "^1.9.0",
       "three": "^0.155.0",
       "typescript": "5.2.2"
+   },
+   "devDependencies": {
+      "lil-gui": "^0.18.2"
    }
 }

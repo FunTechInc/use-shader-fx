@@ -1,32 +1,45 @@
 import * as THREE from "three";
 import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
-
 import vertexShader from "./shader/main.vert";
 import fragmentSahder from "./shader/main.frag";
-import { useRef } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
+import { GUIController } from "./gui";
 
-/*===============================================
-定数
-===============================================*/
 //背景テクスチャーのアスペクト比
 const TEXTURE_RATIO = {
    x: 492,
    y: 390,
 };
 
+//GUIで操作するために関数外に出してる
+const distortionState = {
+   noiseStrength: 0,
+   progress: 0,
+};
+
 export const Distortion = () => {
    const ref = useRef<any>();
 
+   //set GUI
+   const gui = GUIController.instance;
+   gui.addNumericSlider(distortionState, "noiseStrength", 0, 1, 0.01);
+   gui.addNumericSlider(distortionState, "progress", 0, 1, 0.01);
+
+   //load texture
    const [noiseTexture, bgTexure0, bgTexure1] = useLoader(THREE.TextureLoader, [
-      "noiseTexture.png",
+      "noiseTexture.jpg",
       "sample.jpg",
       "sample2.jpg",
    ]);
 
+   //call frame
    useFrame(({ clock }) => {
-      const a = clock.getElapsedTime();
-      if (ref.current?.uniforms?.u_time) {
-         ref.current.uniforms.u_time.value = a;
+      const tick = clock.getElapsedTime();
+      if (ref.current?.uniforms) {
+         ref.current.uniforms.u_time.value = tick;
+         ref.current.uniforms.u_noiseStrength.value =
+            distortionState.noiseStrength;
+         ref.current.uniforms.u_progress.value = distortionState.progress;
       }
    });
 
@@ -48,9 +61,9 @@ export const Distortion = () => {
                u_noiseTexture: { value: noiseTexture },
                u_bgTexture0: { value: bgTexure0 },
                u_bgTexture1: { value: bgTexure1 },
-               u_noiseStrength: { value: 0.1 },
+               u_noiseStrength: { value: distortionState.noiseStrength },
+               u_progress: { value: distortionState.progress },
                u_time: { value: 0 },
-               u_trans: { value: 0 },
             }}
             vertexShader={vertexShader}
             fragmentShader={fragmentSahder}
