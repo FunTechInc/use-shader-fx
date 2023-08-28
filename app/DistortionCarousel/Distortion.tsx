@@ -14,8 +14,9 @@ const TEXTURE_RATIO = {
 
 //GUIで操作するために関数外に出してる
 const distortionState = {
-   noiseStrength: 0,
+   noiseStrength: 0.5,
    progress: 0,
+   progress2: 0,
 };
 
 export const Distortion = () => {
@@ -25,6 +26,8 @@ export const Distortion = () => {
    const gui = GUIController.instance;
    gui.addNumericSlider(distortionState, "noiseStrength", 0, 1, 0.01);
    gui.addNumericSlider(distortionState, "progress", 0, 1, 0.01);
+   gui.addNumericSlider(distortionState, "progress2", 0, 1, 0.01);
+
 
    //load texture
    const [noiseTexture, bgTexure0, bgTexure1] = useLoader(THREE.TextureLoader, [
@@ -41,6 +44,7 @@ export const Distortion = () => {
          ref.current.uniforms.u_noiseStrength.value =
             distortionState.noiseStrength;
          ref.current.uniforms.u_progress.value = distortionState.progress;
+         ref.current.uniforms.u_progress2.value = distortionState.progress2;
       }
    });
 
@@ -78,6 +82,7 @@ export const Distortion = () => {
                u_bgTexture1: { value: bgTexure1 },
                u_noiseStrength: { value: distortionState.noiseStrength },
                u_progress: { value: distortionState.progress },
+               u_progress2: { value: distortionState.progress2 },
                u_time: { value: 0 },
             }}
             vertexShader={vertexShader}
