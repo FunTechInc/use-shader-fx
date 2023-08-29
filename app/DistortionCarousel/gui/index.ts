@@ -138,4 +138,12 @@ export class GUIController {
          gui.add(obj, propertyName).name(controllerName);
       }
    };
+
+   /**
+    * getContollers
+    */
+   getContollers = (folderName?: string | undefined) => {
+      const gui = this._getGui(folderName);
+      return gui.controllers;
+   };
 }
