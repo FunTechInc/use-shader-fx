@@ -10,6 +10,7 @@ import { useAppStore } from "../_context/useAppStore";
 
 export const Distortion = () => {
    const ref = useRef<any>();
+   const { viewport } = useThree();
 
    //set GUI
    const guiUpdater = useSetGUI();
@@ -24,9 +25,8 @@ export const Distortion = () => {
    ]);
 
    //call frame
-   useFrame(({ clock }) => {
+   useFrame(({ clock, mouse }) => {
       const tick = clock.getElapsedTime();
-      const uniforms = ref.current?.uniforms;
       if (uniforms) {
          // update tick
          uniforms.u_time.value = tick;
@@ -99,6 +99,7 @@ export const Distortion = () => {
                u_progress: { value: distortionState.progress },
                u_progress2: { value: distortionState.progress2 },
                u_time: { value: 0 },
+               u_mouse: { value: new THREE.Vector2(0,0) }
             }}
             vertexShader={vertexShader}
             fragmentShader={fragmentSahder}
