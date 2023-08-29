@@ -15,8 +15,8 @@ uniform sampler2D u_noiseTexture;
 uniform float u_noiseStrength;
 // 時間
 uniform float u_time; 
-// mouse
-uniform vec2 u_mouse;
+// pointer
+uniform vec2 u_pointer;
 // 遷移フェーズを操作する
 uniform float u_progress;
 uniform float u_progress2;
@@ -41,7 +41,7 @@ void main(){
 	);
 
 	// マウス座標を正規化して -1.0 から 1.0 の範囲に変換
-	vec2 mouse=u_mouse*2.+1.;
+	// vec2 mouse=u_mouse*2.+1.;
 		
 	// ノイズテクスチャの座標に時間関数による変化を加える
 	vec2 timeNoiseOffset=vec2(sin(u_time),cos(u_time));
@@ -78,6 +78,6 @@ void main(){
 	// 正規化されたマウス座標を表示
 	// gl_FragColor=vec4(mouse.x,mouse.y,0.,1.);
 
-	gl_FragColor=mix(finalColorX,finalColorY,0.5);
-	// gl_FragColor=vec4(mouse,1.,1.0);
+	// gl_FragColor=mix(finalColorX,finalColorY,0.5);
+	gl_FragColor=vec4(u_pointer,1.,1.0);
 }
