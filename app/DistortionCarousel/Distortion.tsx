@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Canvas, useFrame, ThreeElements, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, ThreeElements, useLoader, useThree } from "@react-three/fiber";
 import { useWindowResizeObserver } from "@funtech-inc/spice";
 import vertexShader from "./shader/main.vert";
 import fragmentSahder from "./shader/main.frag";
@@ -21,6 +21,7 @@ const distortionState = {
 
 export const Distortion = () => {
    const ref = useRef<any>();
+   const { viewport } = useThree();
 
    //set GUI
    const gui = GUIController.instance;
@@ -37,7 +38,7 @@ export const Distortion = () => {
    ]);
 
    //call frame
-   useFrame(({ clock }) => {
+   useFrame(({ clock, mouse }) => {
       const tick = clock.getElapsedTime();
       if (ref.current?.uniforms) {
          ref.current.uniforms.u_time.value = tick;
@@ -45,6 +46,7 @@ export const Distortion = () => {
             distortionState.noiseStrength;
          ref.current.uniforms.u_progress.value = distortionState.progress;
          ref.current.uniforms.u_progress2.value = distortionState.progress2;
+         ref.current.uniforms.u_mouse.value = new THREE.Vector2(mouse.x, mouse.y);
       }
    });
 
@@ -84,6 +86,7 @@ export const Distortion = () => {
                u_progress: { value: distortionState.progress },
                u_progress2: { value: distortionState.progress2 },
                u_time: { value: 0 },
+               u_mouse: { value: new THREE.Vector2(0,0) }
             }}
             vertexShader={vertexShader}
             fragmentShader={fragmentSahder}

@@ -15,6 +15,8 @@ uniform sampler2D u_noiseTexture;
 uniform float u_noiseStrength;
 // 時間
 uniform float u_time; 
+// mouse
+uniform vec2 u_mouse;
 // 遷移フェーズを操作する
 uniform float u_progress;
 uniform float u_progress2;
@@ -37,10 +39,15 @@ void main(){
 		vUv.x * bgRatio.x + (1.0 - bgRatio.x) * 0.5,
 		vUv.y * bgRatio.y + (1.0 - bgRatio.y) * 0.5
 	);
+
+	// マウス座標を正規化して -1.0 から 1.0 の範囲に変換
+	vec2 mouse=u_mouse*2.+1.;
 		
 	// ノイズテクスチャの座標に時間関数による変化を加える
 	vec2 timeNoiseOffset=vec2(sin(u_time),cos(u_time));
 	vec2 uvWithTimeNoise=uv+timeNoiseOffset * 0.1;
+
+	uv+=cos(u_time*vec2(2.,1.)+uv*10.)*.01;
 
 	// ノイズテクスチャ座標にランダムなオフセットを加える
 	vec2 randomOffset=(texture2D(u_noiseTexture,uv*.1).rg*2.-1.)*0.003;
@@ -50,29 +57,8 @@ void main(){
 	vec2 noiseValue=texture2D(u_noiseTexture,uvWithTimeNoise).rg;
 	noiseValue=noiseValue*2.-1.;
 
-	//-------------元のコード------------------------
-	// 2Dノイズ値を取得して、-1.0 から 1.0 の範囲にリマップ
-	// vec2 noiseValue=texture2D(u_noiseTexture,uv).rg;
-	// noiseValue=noiseValue*2.-1.;
-	//---------------------------------------------
-
 	// uvをnoiseさせる
 	uv += noiseValue * u_noiseStrength * 0.01;
-		
-	// 2枚のtextureをu_transの値で混ざるように切り替える
-	// float transX = quarticInOut(u_progress);
-	// float transY = quarticInOut(u_progress2);
-		
-	// vec4 color0 = texture2D(u_bgTexture0, vec2(0.5 - 0.3 * transX, 0.5) + (uv - vec2(0.5)) * (1.0 - 0.2 * transX));
-
-	// vec4 color1 = texture2D(u_bgTexture1, vec2(0.5 + sin( (1. - transX) * 0.1), 0.5 ) + (uv - vec2(0.5)) * (0.9 + 0.1 * transX));
-
-	// vec4 color2 = texture2D(u_bgTexture0, vec2(0.5, 0.5 - 0.3 * transY) + (uv - vec2(0.5)) * (1.0 - 0.2 * transY));
-
-	// vec4 color3 = texture2D(u_bgTexture1, vec2(0.5, 0.5 + sin((1.0 - transY) * 0.1)) + (uv - vec2(0.5)) * (0.9 + 0.1 * transY));
-
-	// gl_FragColor = mix(color0, color1 , transX);
-	// gl_FragColor = mix(color2, color3, transY);
 
 	float transX=quarticInOut(u_progress);
 	float transY=quarticInOut(u_progress2);
@@ -89,5 +75,9 @@ void main(){
 	vec4 finalColorX=mix(color0,color1,transX);
 	vec4 finalColorY=mix(color2,color3,transY);
 
+	// 正規化されたマウス座標を表示
+	// gl_FragColor=vec4(mouse.x,mouse.y,0.,1.);
+
 	gl_FragColor=mix(finalColorX,finalColorY,0.5);
+	// gl_FragColor=vec4(mouse,1.,1.0);
 }
