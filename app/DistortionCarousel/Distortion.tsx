@@ -10,7 +10,6 @@ import { useAppStore } from "../_context/useAppStore";
 
 export const Distortion = () => {
    const ref = useRef<any>();
-   const { viewport } = useThree();
 
    //set GUI
    const guiUpdater = useSetGUI();
@@ -27,6 +26,7 @@ export const Distortion = () => {
    //call frame
    useFrame(({ clock, mouse }) => {
       const tick = clock.getElapsedTime();
+      const uniforms = ref.current?.uniforms;
       if (uniforms) {
          // update tick
          uniforms.u_time.value = tick;
