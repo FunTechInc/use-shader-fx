@@ -1,36 +1,23 @@
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, ThreeElements, useLoader, useThree } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { useWindowResizeObserver } from "@funtech-inc/spice";
 import vertexShader from "./shader/main.vert";
 import fragmentSahder from "./shader/main.frag";
-import { memo, useEffect, useMemo, useRef } from "react";
-import { GUIController } from "./gui";
-
-//背景テクスチャーのアスペクト比
-const TEXTURE_RATIO = {
-   x: 512,
-   y: 512,
-};
-
-//GUIで操作するために関数外に出してる
-const distortionState = {
-   noiseStrength: 0.5,
-   progress: 0,
-   progress2: 0,
-};
+import { distortionState, TEXTURE_RATIO } from "./store";
+import { useSetGUI } from "./hooks/setGUI";
+import { useAppStore } from "../_context/useAppStore";
 
 export const Distortion = () => {
    const ref = useRef<any>();
    const { viewport } = useThree();
 
    //set GUI
-   const gui = GUIController.instance;
-   gui.addNumericSlider(distortionState, "noiseStrength", 0, 1, 0.01);
-   gui.addNumericSlider(distortionState, "progress", 0, 1, 0.01);
-   gui.addNumericSlider(distortionState, "progress2", 0, 1, 0.01);
-
+   const guiUpdater = useSetGUI();
 
    //load texture
+   //React.Suspenseに基づいてるので、エラーハンドリングやフォールバックは親レベル
+   //useLoaderがpromiseをthrowしてる感じ
    const [noiseTexture, bgTexure0, bgTexure1] = useLoader(THREE.TextureLoader, [
       "noiseTexture.jpg",
       "sample.jpg",
@@ -40,13 +27,16 @@ export const Distortion = () => {
    //call frame
    useFrame(({ clock, mouse }) => {
       const tick = clock.getElapsedTime();
-      if (ref.current?.uniforms) {
-         ref.current.uniforms.u_time.value = tick;
-         ref.current.uniforms.u_noiseStrength.value =
-            distortionState.noiseStrength;
-         ref.current.uniforms.u_progress.value = distortionState.progress;
-         ref.current.uniforms.u_progress2.value = distortionState.progress2;
-         ref.current.uniforms.u_mouse.value = new THREE.Vector2(mouse.x, mouse.y);
+      if (uniforms) {
+         // update tick
+         uniforms.u_time.value = tick;
+         // update noise
+         uniforms.u_noiseStrength.value = distortionState.noiseStrength;
+         // update progress
+         uniforms.u_progress.value = distortionState.progress;
+         uniforms.u_progress2.value = distortionState.progress2;
+         // GUIの更新（guiの外で更新されたときにGUIを同期させる）
+         guiUpdater();
       }
    });
 
@@ -63,6 +53,29 @@ export const Distortion = () => {
       debounce: 50,
       dependencies: [],
    });
+
+   // グローバルの状態管理
+   // zustandのselectorのsubscribeを使って、stateの変更をsubscribeする
+   // frameを毎回呼び出さない、かつ別コンポーネントからグローバルに操作したいような状態管理用
+   useEffect(() => {
+      const unsubscribe = useAppStore.subscribe(
+         (state) => state.distortionTexture,
+         (state) => {
+            const uniforms = ref.current?.uniforms;
+            if (uniforms) {
+               uniforms.u_noiseTexture.value = state.noise ?? noiseTexture;
+               uniforms.u_bgTexture0.value = state.bg0 ?? bgTexure0;
+               uniforms.u_bgTexture1.value = state.bg1 ?? bgTexure1;
+            }
+         },
+         {
+            fireImmediately: true,
+         }
+      );
+      return () => {
+         unsubscribe();
+      };
+   }, [noiseTexture, bgTexure0, bgTexure1]);
 
    return (
       <mesh>
