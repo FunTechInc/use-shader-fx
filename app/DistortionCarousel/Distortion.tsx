@@ -24,12 +24,14 @@ export const Distortion = () => {
    ]);
 
    //call frame
-   useFrame(({ clock, mouse }) => {
+   useFrame(({ clock, pointer }) => {
       const tick = clock.getElapsedTime();
       const uniforms = ref.current?.uniforms;
       if (uniforms) {
          // update tick
          uniforms.u_time.value = tick;
+         // update pointer
+         uniforms.u_pointer.value = pointer;
          // update noise
          uniforms.u_noiseStrength.value = distortionState.noiseStrength;
          // update progress
@@ -99,7 +101,7 @@ export const Distortion = () => {
                u_progress: { value: distortionState.progress },
                u_progress2: { value: distortionState.progress2 },
                u_time: { value: 0 },
-               u_mouse: { value: new THREE.Vector2(0,0) }
+               u_pointer: { value: new THREE.Vector2(0, 0) },
             }}
             vertexShader={vertexShader}
             fragmentShader={fragmentSahder}
