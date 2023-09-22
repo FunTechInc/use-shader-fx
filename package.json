@@ -10,6 +10,7 @@
    },
    "dependencies": {
       "@funtech-inc/spice": "^1.1.17",
+      "@react-three/drei": "^9.83.9",
       "@react-three/fiber": "^8.13.7",
       "@types/node": "20.5.6",
       "@types/react": "18.2.21",

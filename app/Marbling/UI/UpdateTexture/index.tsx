@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import Image from "next/image";
-import s from "./index.module.scss";
-import { distortionState } from "../../store";
 import { useState } from "react";
 import { useAppStore } from "@/app/_context/useAppStore";
+import s from "./index.module.scss";
 
 export const TextureUpdater = ({
    defaultImg,
@@ -31,7 +30,6 @@ export const TextureUpdater = ({
                setDistortionTexture({
                   [type]: texture,
                });
-               // distortionState.textures[type] = texture;
             },
             undefined,
             (error) => console.error("Error loading texture:", error)

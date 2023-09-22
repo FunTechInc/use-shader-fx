@@ -1,6 +1,9 @@
 import { GUIController } from "../gui";
 import { distortionState } from "../store";
 
+/**
+ * @returns updateDisplays コントローラーをupdateDisplayする関数を返します
+ */
 export const useSetGUI = () => {
    const gui = GUIController.instance;
    gui.addNumericSlider(distortionState, "noiseStrength", 0, 1, 0.01);
