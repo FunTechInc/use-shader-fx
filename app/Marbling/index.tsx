@@ -2,17 +2,19 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { FBOScene } from "./FBOScene";
+import { Scene } from "./Scene";
 import { UserInterface } from "./UI";
+import { Perf } from "r3f-perf";
 
 export const Marbling = () => {
    return (
       <>
-         <Suspense fallback={null}>
-            <Canvas dpr={[1, 1.5]}>
-               <FBOScene />
-            </Canvas>
-         </Suspense>
+         <Canvas dpr={[1, 1.5]}>
+            <Suspense fallback={null}>
+               <Scene />
+            </Suspense>
+            <Perf position={"bottom-right"} minimal={false} />
+         </Canvas>
          {/* <UserInterface /> */}
       </>
    );
