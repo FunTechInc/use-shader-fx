@@ -2,18 +2,20 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Distortion } from "./Distortion";
+import { Scene } from "./Scene";
 import { UserInterface } from "./UI";
+import { Perf } from "r3f-perf";
 
-export const DistortionCarousel = () => {
+export const Marbling = () => {
    return (
       <>
          <Canvas dpr={[1, 1.5]}>
             <Suspense fallback={null}>
-               <Distortion />
+               <Scene />
             </Suspense>
+            <Perf position={"bottom-right"} minimal={false} />
          </Canvas>
-         <UserInterface />
+         {/* <UserInterface /> */}
       </>
    );
 };

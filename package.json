@@ -10,6 +10,7 @@
    },
    "dependencies": {
       "@funtech-inc/spice": "^1.1.17",
+      "@react-three/drei": "^9.83.9",
       "@react-three/fiber": "^8.13.7",
       "@types/node": "20.5.6",
       "@types/react": "18.2.21",
@@ -26,10 +27,12 @@
       "sass": "^1.66.1",
       "the-new-css-reset": "^1.9.0",
       "three": "^0.155.0",
+      "three-stdlib": "^2.26.6",
       "typescript": "5.2.2",
       "zustand": "^4.4.1"
    },
    "devDependencies": {
-      "lil-gui": "^0.18.2"
+      "lil-gui": "^0.18.2",
+      "r3f-perf": "^7.1.2"
    }
 }
