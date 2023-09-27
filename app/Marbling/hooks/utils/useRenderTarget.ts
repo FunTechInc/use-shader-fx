@@ -31,10 +31,12 @@ export const useRenderTarget = () => {
       },
    });
 
+   //set FBO
    renderTarget.current.read = useFBO(FBO_OPTION);
    renderTarget.current.write = useFBO(FBO_OPTION);
    renderTarget.current.swap();
 
+   //resize
    useWindowResizeObserver({
       callback: ({ winW, winH }) => {
          renderTarget.current.read?.setSize(winW, winH);

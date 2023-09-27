@@ -9,7 +9,7 @@ import { Perf } from "r3f-perf";
 export const Marbling = () => {
    return (
       <>
-         <Canvas dpr={[1, 1.5]}>
+         <Canvas dpr={[1, 2]}>
             <Suspense fallback={null}>
                <Scene />
             </Suspense>

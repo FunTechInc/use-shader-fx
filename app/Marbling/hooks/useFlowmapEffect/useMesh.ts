@@ -52,15 +52,18 @@ export const useMesh = ({
          }),
       [falloff, alpha, dissipation]
    );
-   const handleResize = useCallback(() => {
-      material.uniforms.uAspect.value = window.innerWidth / window.innerHeight;
-   }, [material]);
+   const handleResize = useCallback(
+      (width: number, height: number) => {
+         material.uniforms.uAspect.value = width / height;
+      },
+      [material]
+   );
    useEffect(() => {
-      handleResize();
+      handleResize(window.innerWidth, window.innerHeight);
    }, [handleResize]);
    useWindowResizeObserver({
-      callback: () => {
-         handleResize();
+      callback: ({ winW, winH }) => {
+         handleResize(winW, winH);
       },
       debounce: 100,
       dependencies: [handleResize],

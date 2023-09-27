@@ -7,7 +7,7 @@ import { usePointer } from "./usePointer";
 
 const FALLOFF = 0.3; // size of the stamp, percentage of the size
 const ALPHA = 1; // opacity of the stamp
-const DISSIPATION = 0.98; // affects the speed that the stamp fades. Closer to 1 is slower
+const DISSIPATION = 0.9; // affects the speed that the stamp fades. Closer to 1 is slower
 
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数

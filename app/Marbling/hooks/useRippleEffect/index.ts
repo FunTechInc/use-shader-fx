@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
@@ -26,35 +26,28 @@ export const useRippleEffect = (texture: THREE.Texture) => {
    });
    // create camera
    const camera = useCamera();
-   //set pointer
+   // set pointer event
    const trackPointerPos = usePointer(meshArr, FREQUENCY, MAX);
    /**
     * @returns rederTarget.texture
     */
-   const handleUpdate = (gl: THREE.WebGLRenderer) => {
-      if (!camera.current) {
-         return;
-      }
-      //update pointer
-      trackPointerPos();
-      //update render target
-      gl.setRenderTarget(renderTarget.write);
-      gl.render(scene, camera.current);
-      renderTarget.swap();
-      gl.setRenderTarget(null);
-      gl.clear();
-      //update meshArr
-      meshArr.forEach((mesh) => {
-         if (mesh.visible) {
-            const material = mesh.material as THREE.MeshBasicMaterial;
-            mesh.rotation.z += 0.02;
-            material.opacity *= 0.97;
-            mesh.scale.x = 0.98 * mesh.scale.x + 0.17;
-            mesh.scale.y = mesh.scale.x;
-            if (material.opacity < 0.002) mesh.visible = false;
+   const handleUpdate = useCallback(
+      (gl: THREE.WebGLRenderer) => {
+         if (!camera.current) {
+            return;
          }
-      });
-      return renderTarget.read?.texture as THREE.Texture;
-   };
+         //update pointer and meshArr
+         trackPointerPos();
+         //update render target
+         gl.setRenderTarget(renderTarget.write);
+         gl.render(scene, camera.current);
+         renderTarget.swap();
+         gl.setRenderTarget(null);
+         gl.clear();
+         //return buffer
+         return renderTarget.read?.texture as THREE.Texture;
+      },
+      [camera, renderTarget, scene, trackPointerPos]
+   );
    return handleUpdate;
 };

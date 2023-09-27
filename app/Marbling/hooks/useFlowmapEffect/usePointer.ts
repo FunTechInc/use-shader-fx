@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { FlowmapShaderMaterial } from "./useMesh";
 
@@ -10,7 +10,7 @@ export const usePointer = () => {
    const velocity = useRef(new THREE.Vector2(0, 0));
    const lastMouse = useRef(new THREE.Vector2(0, 0));
 
-   const handlePointerMove = (e: PointerEvent) => {
+   const handlePointerMove = useCallback((e: PointerEvent) => {
       const posX = e.clientX;
       const posY = e.clientY;
 
@@ -38,16 +38,16 @@ export const usePointer = () => {
       velocity.current.y = deltaY / delta;
       // Flag update to prevent hanging velocity values when not moving
       isVelocityUpdate.current = true;
-   };
+   }, []);
 
    useEffect(() => {
       window.addEventListener("pointermove", handlePointerMove);
       return () => {
          window.removeEventListener("pointermove", handlePointerMove);
       };
-   }, []);
+   }, [handlePointerMove]);
 
-   const updateVelocity = (material: FlowmapShaderMaterial) => {
+   const updateVelocity = useCallback((material: FlowmapShaderMaterial) => {
       if (!isVelocityUpdate.current) {
          material.uniforms.uMouse.value.set(-1, -1);
          velocity.current.set(0, 0);
@@ -58,7 +58,7 @@ export const usePointer = () => {
          velocity.current,
          velocity.current.length() ? 0.15 : 0.1
       );
-   };
+   }, []);
 
    return updateVelocity;
 };
