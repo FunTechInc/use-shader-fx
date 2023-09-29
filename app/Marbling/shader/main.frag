@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 varying vec2 vUv;
 //FBO
 uniform sampler2D u_bufferTexture;
@@ -44,9 +44,9 @@ void main() {
 		vUv.y*bgRatio.y+(1.-bgRatio.y)*.5
 	);
 
-	// -------------flow map----------------
-	vec3 flow = texture2D(u_bufferTexture, vUv).rgb * .1;
-	float theta = flow.r * 2.0 * PI;
+	// -------------FBOの値をテクスチャーに適用する----------------
+	vec3 flow = texture2D(u_bufferTexture, vUv).rgb * 1.0;
+	float theta = flow.r * 10.0 * PI;
 	vec2 dir = vec2(sin(theta), cos(theta));
 	uv += dir * flow.r * 1.0;
 	// ---------------------------------------------

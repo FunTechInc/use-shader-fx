@@ -12,7 +12,7 @@ const FREQUENCY = 5;
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
-export const useRippleEffect = (texture: THREE.Texture) => {
+export const useBrushEffect = (texture: THREE.Texture) => {
    // set scene
    const scene = useMemo(() => new THREE.Scene(), []);
    // create FBO

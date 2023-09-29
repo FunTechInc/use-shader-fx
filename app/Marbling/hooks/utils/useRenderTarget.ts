@@ -12,12 +12,6 @@ export type TRenderTarget = {
 const FBO_OPTION = {
    depthBuffer: false,
    stencilBuffer: false,
-   magFilter: THREE.NearestFilter,
-   minFilter: THREE.NearestFilter,
-   wrapS: THREE.ClampToEdgeWrapping,
-   wrapT: THREE.ClampToEdgeWrapping,
-   format: THREE.RGBAFormat,
-   type: THREE.FloatType,
 };
 
 export const useRenderTarget = () => {

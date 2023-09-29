@@ -1,23 +1,23 @@
 import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend } from "@react-three/fiber";
-import { useRippleEffect } from "./hooks/useRippleEffect";
+import { useBrushEffect } from "./hooks/useBrushEffect";
 import { useFlowmapEffect } from "./hooks/useFlowmapEffect";
 import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
 extend({ MainShaderMaterial });
 
 export const Scene = () => {
-   const [noiseTexture, bgTexure0, bgTexure1, rippleBrush] = useLoader(
+   const [noiseTexture, bgTexure0, bgTexure1, brush] = useLoader(
       THREE.TextureLoader,
       ["noiseTexture.jpg", "sample-2.jpg", "sample2.jpg", "brush.png"]
    );
    const mainShaderRef = useRef<TMainShaderUniforms>();
-   // const updateRipple = useRippleEffect(rippleBrush);
+   // const updateBrush = useBrushEffect(brush);
    const updateFlowmap = useFlowmapEffect();
 
    useFrame((props) => {
       const { gl, clock } = props;
-      // const texture = updateRipple(gl);
+      // const texture = updateBrush(gl);
       const texture = updateFlowmap(gl);
       const tick = clock.getElapsedTime();
       const main = mainShaderRef.current;
