@@ -49,9 +49,7 @@ TODO:
 - GUIつける
 - resize
 - clean up
-===============================================*/
 
-/*===============================================
 TODO*
 -drei の performance monitor調べる
 - Movement regressionてか、このページよく読む
