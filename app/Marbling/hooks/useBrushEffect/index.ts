@@ -4,6 +4,7 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
 import { usePointer } from "./usePointer";
 import { useRenderTarget } from "../utils/useRenderTarget";
+import { RootState } from "@react-three/fiber";
 
 const SIZE = 64;
 const MAX = 100;
@@ -13,41 +14,36 @@ const FREQUENCY = 5;
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
 export const useBrushEffect = (texture: THREE.Texture) => {
-   // set scene
    const scene = useMemo(() => new THREE.Scene(), []);
-   // create FBO
-   const renderTarget = useRenderTarget();
-   // create mesh
    const meshArr = useMesh({
       size: SIZE,
       max: MAX,
       texture,
       scene,
    });
-   // create camera
    const camera = useCamera();
-   // set pointer event
    const trackPointerPos = usePointer(meshArr, FREQUENCY, MAX);
+   const updateRenderTarget = useRenderTarget();
+
    /**
     * @returns rederTarget.texture
     */
    const handleUpdate = useCallback(
-      (gl: THREE.WebGLRenderer) => {
+      (props: RootState) => {
+         const { gl } = props;
          if (!camera.current) {
             return;
          }
          //update pointer and meshArr
          trackPointerPos();
          //update render target
-         gl.setRenderTarget(renderTarget.write);
-         gl.render(scene, camera.current);
-         renderTarget.swap();
-         gl.setRenderTarget(null);
-         gl.clear();
+         const bufferTexture = updateRenderTarget(gl, () => {
+            gl.render(scene, camera.current!);
+         });
          //return buffer
-         return renderTarget.read?.texture as THREE.Texture;
+         return bufferTexture;
       },
-      [camera, renderTarget, scene, trackPointerPos]
+      [scene, camera, trackPointerPos, updateRenderTarget]
    );
    return handleUpdate;
 };

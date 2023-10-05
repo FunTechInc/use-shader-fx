@@ -92,6 +92,6 @@ void main() {
 	// vec3 colmix = mix(col,resultColor,0.01);
 	// vec3 colmix = mix(tex,resultColor,0.01);
 
-	gl_FragColor = vec4(tex,1.0);
-	// gl_FragColor = vec4(flow,1.0);
+	// gl_FragColor = vec4(tex,1.0);
+	gl_FragColor = vec4(flow,1.0);
 }

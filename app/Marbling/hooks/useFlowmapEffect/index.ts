@@ -4,6 +4,7 @@ import { useCamera } from "../utils/useCamera";
 import { useRenderTarget } from "../utils/useRenderTarget";
 import { useMemo } from "react";
 import { usePointer } from "./usePointer";
+import { RootState } from "@react-three/fiber";
 
 const FALLOFF = 0.3; // size of the stamp, percentage of the size
 const ALPHA = 1; // opacity of the stamp
@@ -13,43 +14,37 @@ const DISSIPATION = 0.9; // affects the speed that the stamp fades. Closer to 1 
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
 export const useFlowmapEffect = () => {
-   // set scene
    const scene = useMemo(() => new THREE.Scene(), []);
-   // create FBO
-   const renderTarget = useRenderTarget();
-   // create mesh
    const material = useMesh({
       scene,
       falloff: FALLOFF,
       alpha: ALPHA,
       dissipation: DISSIPATION,
    });
-   // create camera
    const camera = useCamera();
-   // pointer
    const updateVelocity = usePointer();
+   const updateRenderTarget = useRenderTarget();
+
    /**
     * @returns rederTarget.texture
     */
-   const handleUpdate = (gl: THREE.WebGLRenderer) => {
+   const handleUpdate = (props: RootState) => {
+      const { gl } = props;
       if (!camera.current) {
          return;
       }
       //update velocity
       updateVelocity(material);
       //update render target
-      gl.setRenderTarget(renderTarget.write);
-      if (material.uniforms.tMap.value !== renderTarget.write?.texture) {
-         //前のフレームとFBOが一緒の時はrenderさせない
-         gl.render(scene, camera.current);
-      }
-      renderTarget.swap();
-      gl.setRenderTarget(null);
-      gl.clear();
+      const bufferTexture = updateRenderTarget(gl, (fbo) => {
+         if (material.uniforms.tMap.value !== fbo.write?.texture) {
+            // 前のフレームとFBOが一緒の時はrenderさせない
+            gl.render(scene, camera.current!);
+         }
+      });
       //return buffer
-      const bufferTexture = renderTarget.read!.texture;
       material.uniforms.tMap.value = bufferTexture;
-      return bufferTexture as THREE.Texture;
+      return bufferTexture;
    };
    return handleUpdate;
 };

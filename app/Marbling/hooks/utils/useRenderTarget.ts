@@ -1,7 +1,12 @@
 import * as THREE from "three";
 import { useFBO } from "@react-three/drei";
-import { useWindowResizeObserver } from "@funtech-inc/spice";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useThree } from "@react-three/fiber";
+
+const FBO_OPTION = {
+   depthBuffer: false,
+   stencilBuffer: false,
+};
 
 export type TRenderTarget = {
    read: THREE.WebGLRenderTarget | null;
@@ -9,12 +14,18 @@ export type TRenderTarget = {
    swap: () => void;
 };
 
-const FBO_OPTION = {
-   depthBuffer: false,
-   stencilBuffer: false,
-};
+type TUpdateRenderTarget = (
+   gl: THREE.WebGLRenderer,
+   renderCallback: (fbo: TRenderTarget) => void
+) => THREE.Texture;
 
-export const useRenderTarget = () => {
+/**
+ * render targetを更新して、スワップしたFBテクスチャーを返す
+ * updateRenderTargetはレンダーのタイミングで実行を制限したい場合があるので、
+ * @returns [renderTarget,updateRenderTarget]
+ * @param (gl,(fbo)=>void); 第2引数はFBOを受け取るレンダリング関数
+ */
+export const useRenderTarget = (): TUpdateRenderTarget => {
    const renderTarget = useRef<TRenderTarget>({
       read: null,
       write: null,
@@ -31,14 +42,24 @@ export const useRenderTarget = () => {
    renderTarget.current.swap();
 
    //resize
-   useWindowResizeObserver({
-      callback: ({ winW, winH }) => {
-         renderTarget.current.read?.setSize(winW, winH);
-         renderTarget.current.write?.setSize(winW, winH);
-      },
-      debounce: 100,
-      dependencies: [],
-   });
+   const size = useThree((state) => state.size);
+   useEffect(() => {
+      renderTarget.current.read?.setSize(size.width, size.height);
+      renderTarget.current.write?.setSize(size.width, size.height);
+   }, [size]);
 
-   return renderTarget.current;
+   const updateRenderTarget: TUpdateRenderTarget = useCallback(
+      (gl, renderCallback) => {
+         const fbo = renderTarget.current;
+         gl.setRenderTarget(fbo.write);
+         renderCallback(fbo);
+         fbo.swap();
+         gl.setRenderTarget(null);
+         gl.clear();
+         return fbo.read?.texture as THREE.Texture;
+      },
+      []
+   );
+
+   return updateRenderTarget;
 };
