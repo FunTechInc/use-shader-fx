@@ -4,7 +4,7 @@ import * as THREE from "three";
 type TcreateMesh = {
    size: number;
    max: number;
-   texture: THREE.Texture;
+   texture?: THREE.Texture;
    scene: THREE.Scene;
 };
 export const useMesh = ({ size, max, texture, scene }: TcreateMesh) => {
@@ -13,7 +13,7 @@ export const useMesh = ({ size, max, texture, scene }: TcreateMesh) => {
    const material = useMemo(
       () =>
          new THREE.MeshBasicMaterial({
-            map: texture,
+            map: texture ?? null,
             transparent: true,
             blending: THREE.AdditiveBlending,
             depthTest: false,

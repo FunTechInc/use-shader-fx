@@ -8,12 +8,12 @@ import { RootState } from "@react-three/fiber";
 
 const SIZE = 64;
 const MAX = 100;
-const FREQUENCY = 5;
+const FREQUENCY = 1;
 
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
-export const useBrushEffect = (texture: THREE.Texture) => {
+export const useRippleEffect = (texture?: THREE.Texture) => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const meshArr = useMesh({
       size: SIZE,

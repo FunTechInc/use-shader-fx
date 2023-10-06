@@ -6,20 +6,22 @@ import { useMemo } from "react";
 import { usePointer } from "./usePointer";
 import { RootState } from "@react-three/fiber";
 
-const FALLOFF = 0.3; // size of the stamp, percentage of the size
-const ALPHA = 1; // opacity of the stamp
-const DISSIPATION = 0.9; // affects the speed that the stamp fades. Closer to 1 is slower
+const RADIUS = 0.1; // size of the stamp, percentage of the size
+const MAGNIFICATION = 0.02; //拡大率
+const ALPHA = 0.3; // opacity
+const DISSIPATION = 1.0; // 拡散率。1にすると残り続ける
 
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
-export const useFlowmapEffect = () => {
+export const useMarbleEffect = () => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({
       scene,
-      falloff: FALLOFF,
+      radius: RADIUS,
       alpha: ALPHA,
       dissipation: DISSIPATION,
+      magnification: MAGNIFICATION,
    });
    const camera = useCamera();
    const updateVelocity = usePointer();

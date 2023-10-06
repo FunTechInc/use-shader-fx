@@ -6,7 +6,7 @@ import { Scene } from "./Scene";
 import { UserInterface } from "./UI";
 import { Perf } from "r3f-perf";
 
-export const Marbling = () => {
+export const Brushes = () => {
    return (
       <>
          <Canvas dpr={[1, 2]}>
