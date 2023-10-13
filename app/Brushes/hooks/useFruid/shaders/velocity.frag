@@ -11,6 +11,8 @@ uniform vec2 beforePointerPos;
 #pragma glslify: map            = require('./map.glsl')
 #pragma glslify: samplePressure = require('./samplePressure.glsl')
 
+varying vec2 vUv;
+
 void main(){
 	vec2 r = resolution;
 	vec2 uv = gl_FragCoord.xy / r;
@@ -26,6 +28,29 @@ void main(){
 	float pTop    = samplePressure(dataTex, (gl_FragCoord.xy - offsetY) / r, r);
 	float pBottom = samplePressure(dataTex, (gl_FragCoord.xy + offsetY) / r, r);
 
+	//カール
+	// vec2 vL = vUv - vec2(resolution.x, 0.0);
+	// vec2 vR = vUv + vec2(resolution.x, 0.0);
+	// vec2 vT = vUv + vec2(0.0, resolution.y);
+	// vec2 vB = vUv - vec2(0.0, resolution.y);
+
+	// float L = texture2D(dataTex, vL).y;
+	// float R = texture2D(dataTex, vR).y;
+	// float T = texture2D(dataTex, vT).x;
+	// float B = texture2D(dataTex, vB).x;
+
+	// float vorticity = R - L - T + B;
+
+	// //渦巻き
+	// float T = texture2D(uCurl, vT).x;
+	// float B = texture2D(uCurl, vB).x;
+	// float C = texture2D(dataTex, vUv).x;
+	// vec2 force = vec2(abs(T) - abs(B), 0.0);
+	// force *= 1.0 / length(force + 0.00001) * 28.0 * C;
+	// vec2 vel = texture2D(dataTex, vUv).xy;
+	// vel *= force;
+	// vel *= 0.1;
+
 	// マウス
 	vec2 mPos = 0.5 * (pointerPos + 1.0) * r;
 	vec2 mPPos = 0.5 * (beforePointerPos + 1.0) * r;
@@ -37,5 +62,9 @@ void main(){
 	v += vec2(pRight - pLeft, pBottom - pTop) * 0.5;
 	v += mforce;
 	v *= viscosity;
+	// v *= vel;
+
+	// vec2 finalColor = mix(v, vel, 0.5);
+
 	gl_FragColor = vec4(v, data.zw);
 }

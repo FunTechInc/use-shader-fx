@@ -6,7 +6,7 @@ import { useFlowmap } from "./hooks/useFlowmap";
 import { useFruid } from "./hooks/useFruid";
 import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
 import { useBrush } from "./hooks/useBrush";
-import { useShaderBrush } from "./hooks/useShaderBrush";
+
 extend({ MainShaderMaterial });
 
 export const Scene = () => {
@@ -17,16 +17,14 @@ export const Scene = () => {
    const mainShaderRef = useRef<TMainShaderUniforms>();
    // const updateRipple = useRipple(smoke);
    // const updateFlowmap = useFlowmap();
-   // const updateFruid = useFruid();
+   const updateFruid = useFruid();
    // const updateBrush = useBrush(smoke);
-   const updateShaderBrush = useShaderBrush();
 
    useFrame((props) => {
       // const texture = updateRipple(props);
       // const texture = updateFlowmap(props);
-      // const texture = updateFruid(props);
+      const texture = updateFruid(props);
       // const texture = updateBrush(props);
-      const texture = updateShaderBrush(props);
       const main = mainShaderRef.current;
       if (main) {
          main.u_bufferTexture = texture;
@@ -75,19 +73,14 @@ TODO：ライブラリ化にあたあって
 
 /*===============================================
 TODO:
-
 - useBrush
 	- meshlineを使って実現する
 	- めっちゃ細くしたら鉛筆、色鉛筆効果もできるみたいな
 		- テクスチャーも渡せるように
-
 - useFlowmap（あってもいいか）
-
 - useFruid
 	https://codepen.io/DedaloD/pen/PoJGKOb
-
-- useCustomRipple
-
+- useRipple
 ===============================================*/
 
 /*===============================================

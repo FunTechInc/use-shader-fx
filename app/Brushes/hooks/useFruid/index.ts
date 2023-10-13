@@ -3,7 +3,7 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
 import { useRenderTarget } from "../utils/useRenderTarget";
 import { useCallback, useMemo } from "react";
-import { usePointer } from "./usePointer";
+import { usePointer } from "../utils/usePointer";
 import { RootState } from "@react-three/fiber";
 
 /**
@@ -21,6 +21,8 @@ export const useFruid = () => {
          divergence: materials.divergenceMaterial.uniforms,
          pressure: materials.pressureMaterial.uniforms,
          velocity: materials.velocityMaterial.uniforms,
+         curl: materials.curlMaterial.uniforms,
+         vorticity: materials.vorticityMaterial.uniforms,
          advection: materials.advectionMaterial.uniforms,
       }),
       [materials]
@@ -51,9 +53,9 @@ export const useFruid = () => {
          }
 
          // update velocity(速度)
-         const { pointerPos, beforePointerPos } = updatePointer(pointer);
-         unifroms.velocity.pointerPos.value = pointerPos;
-         unifroms.velocity.beforePointerPos.value = beforePointerPos;
+         const { currentPointer, prevPointer } = updatePointer(pointer);
+         unifroms.velocity.pointerPos.value = currentPointer.clone();
+         unifroms.velocity.beforePointerPos.value = prevPointer.clone();
          updateRenderTarget(gl, (fbo) => {
             unifroms.velocity.dataTex.value = fbo.read!.texture;
             setMeshMaterial(materials.velocityMaterial);
@@ -66,6 +68,27 @@ export const useFruid = () => {
             setMeshMaterial(materials.advectionMaterial);
             gl.render(scene, camera.current);
          });
+
+         /*===============================================
+			カールとうずまき
+			===============================================*/
+         // //ここな気がするよな〜カール ここに速度テクスチャーを加える？
+         // updateRenderTarget(gl, (fbo) => {
+         //    unifroms.curl.uVelocity.value = fbo.read!.texture;
+         //    setMeshMaterial(materials.curlMaterial);
+         //    gl.render(scene, camera.current);
+         // });
+
+         // うずまきにcurlとvelocityを加える
+         // updateRenderTarget(gl, (fbo) => {
+         //    unifroms.vorticity.uVelocity.value = fbo.read!.texture;
+         //    unifroms.vorticity.uCurl.value = fbo.read!.texture;
+         //    setMeshMaterial(materials.vorticityMaterial);
+         //    gl.render(scene, camera.current);
+         // });
+         /*===============================================
+			//カールと渦巻き
+			===============================================*/
 
          // return final texture
          return outPutTexture;
@@ -82,3 +105,10 @@ export const useFruid = () => {
    );
    return handleUpdate;
 };
+
+/*===============================================
+advection
+curl カール
+vorticity 渦巻き
+pressure
+===============================================*/

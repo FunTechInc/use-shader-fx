@@ -28,5 +28,6 @@ vec2 bilerpVelocity(sampler2D tex, vec2 p, vec2 resolution) {
 void main(){
 	vec2 r = resolution;
 	vec2 p = gl_FragCoord.xy - sampleVelocity(dataTex, gl_FragCoord.xy / r, r);
+
 	gl_FragColor = vec4(bilerpVelocity(dataTex, p, r) * attenuation, samplePressure(dataTex, gl_FragCoord.xy / r, r), 0.0);
 }

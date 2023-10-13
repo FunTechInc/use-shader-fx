@@ -17,16 +17,24 @@ import {
    PressureMaterial,
    usePressureMaterial,
 } from "./materials/usePressureMaterial";
+import { CurlMaterial, useCurlMaterial } from "./materials/useCurlMaterial";
+import {
+   VorticityMaterial,
+   useVorticityMaterial,
+} from "./materials/useVorticityMaterial";
 import { useThree } from "@react-three/fiber";
 
 type TMaterials =
    | VelocityMaterial
    | AdvectionMaterial
    | DivergenceMaterial
+   | CurlMaterial
    | PressureMaterial;
 type TUseMeshReturnType = [
    {
       velocityMaterial: VelocityMaterial;
+      vorticityMaterial: VorticityMaterial;
+      curlMaterial: CurlMaterial;
       advectionMaterial: AdvectionMaterial;
       divergenceMaterial: DivergenceMaterial;
       pressureMaterial: PressureMaterial;
@@ -50,6 +58,10 @@ export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
    const updateMaterial = initialMaterial.clone();
    //速度シェーダー（velocity）
    const velocityMaterial = useVelocityMaterial();
+   //カールシェーダー (curl)
+   const curlMaterial = useCurlMaterial();
+   //うずまきシェーダー (vorticity)
+   const vorticityMaterial = useVorticityMaterial();
    //移流シェーダー(advection)
    const advectionMaterial = useAdvectionMaterial();
    //発散シェーダー(divergence)
@@ -60,12 +72,16 @@ export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
    const materials = useMemo(
       () => ({
          velocityMaterial,
+         vorticityMaterial,
+         curlMaterial,
          advectionMaterial,
          divergenceMaterial,
          pressureMaterial,
       }),
       [
          velocityMaterial,
+         vorticityMaterial,
+         curlMaterial,
          advectionMaterial,
          divergenceMaterial,
          pressureMaterial,
