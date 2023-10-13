@@ -9,7 +9,7 @@ import { RootState } from "@react-three/fiber";
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
-export const useFruidEffect = () => {
+export const useFruid = () => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const [materials, setMeshMaterial] = useMesh(scene);
    const camera = useCamera();
@@ -32,14 +32,12 @@ export const useFruidEffect = () => {
    const handleUpdate = useCallback(
       (props: RootState) => {
          const { gl, pointer } = props;
-         if (!camera.current) {
-            return;
-         }
+
          // update divergence(発散)
          updateRenderTarget(gl, (fbo) => {
             unifroms.divergence.dataTex.value = fbo.read!.texture;
             setMeshMaterial(materials.divergenceMaterial);
-            gl.render(scene, camera.current!);
+            gl.render(scene, camera.current);
          });
 
          // update pressure(圧力)
@@ -48,7 +46,7 @@ export const useFruidEffect = () => {
             updateRenderTarget(gl, (fbo) => {
                unifroms.pressure.dataTex.value = fbo.read!.texture;
                setMeshMaterial(materials.pressureMaterial);
-               gl.render(scene, camera.current!);
+               gl.render(scene, camera.current);
             });
          }
 
@@ -59,14 +57,14 @@ export const useFruidEffect = () => {
          updateRenderTarget(gl, (fbo) => {
             unifroms.velocity.dataTex.value = fbo.read!.texture;
             setMeshMaterial(materials.velocityMaterial);
-            gl.render(scene, camera.current!);
+            gl.render(scene, camera.current);
          });
 
          // update advection(移流)
          const outPutTexture = updateRenderTarget(gl, (fbo) => {
             unifroms.advection.dataTex.value = fbo.read!.texture;
             setMeshMaterial(materials.advectionMaterial);
-            gl.render(scene, camera.current!);
+            gl.render(scene, camera.current);
          });
 
          // return final texture

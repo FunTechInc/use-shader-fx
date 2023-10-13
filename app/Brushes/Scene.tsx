@@ -1,10 +1,12 @@
 import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend } from "@react-three/fiber";
-import { useRippleEffect } from "./hooks/useRippleEffect";
-import { useMarbleEffect } from "./hooks/useMarbleEffect";
-import { useFruidEffect } from "./hooks/useFruidEffect";
+import { useRipple } from "./hooks/useRipple";
+import { useFlowmap } from "./hooks/useFlowmap";
+import { useFruid } from "./hooks/useFruid";
 import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
+import { useBrush } from "./hooks/useBrush";
+import { useShaderBrush } from "./hooks/useShaderBrush";
 extend({ MainShaderMaterial });
 
 export const Scene = () => {
@@ -13,14 +15,18 @@ export const Scene = () => {
       "smoke.png",
    ]);
    const mainShaderRef = useRef<TMainShaderUniforms>();
-   // const updateRipple = useRippleEffect(smoke);
-   const updateMarble = useMarbleEffect();
-   // const updateFruid = useFruidEffect();
+   // const updateRipple = useRipple(smoke);
+   // const updateFlowmap = useFlowmap();
+   // const updateFruid = useFruid();
+   // const updateBrush = useBrush(smoke);
+   const updateShaderBrush = useShaderBrush();
 
    useFrame((props) => {
       // const texture = updateRipple(props);
-      const texture = updateMarble(props);
+      // const texture = updateFlowmap(props);
       // const texture = updateFruid(props);
+      // const texture = updateBrush(props);
+      const texture = updateShaderBrush(props);
       const main = mainShaderRef.current;
       if (main) {
          main.u_bufferTexture = texture;
@@ -63,15 +69,34 @@ TODO：ライブラリ化にあたあって
 	- ライブラリでr3Fに依存できない場合、hook時点でglをうけとれるようにする
 - mouse イベントにしてるとこ、useFrameのpointerから持ってくるように統一する
 	- たぶんデバイス毎の正規化において、r3fに任せたほうが、対応しやすい
-
 - pointerとかresolutuionとか、tickとか、渡す値は統一して、hook側（できればシェーダーで解決する）
+
 ===============================================*/
 
 /*===============================================
 TODO:
-- useBrush =>これを現margleにする
+
+- useBrush
+	- meshlineを使って実現する
 	- めっちゃ細くしたら鉛筆、色鉛筆効果もできるみたいな
-	- 連続的に描画されるようにする円がぽつぽつとなる感じ別にいらん
+		- テクスチャーも渡せるように
+
+- useFlowmap（あってもいいか）
+
 - useFruid
+	https://codepen.io/DedaloD/pen/PoJGKOb
+
 - useCustomRipple
+
+===============================================*/
+
+/*===============================================
+to make customhook...
+
+- usePointer
+	- beforeとenter,velocityを返すようにする
+	- isVelocityUpdateのrefも返すことで停止状態を監視できるようにする
+- useCamera
+- useRenderTarget
+
 ===============================================*/

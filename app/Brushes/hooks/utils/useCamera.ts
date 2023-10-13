@@ -10,7 +10,9 @@ const getCameraProps = (width: number, height: number) => {
 };
 
 export const useCamera = () => {
-   const camera = useRef<THREE.OrthographicCamera>();
+   const camera = useRef<THREE.OrthographicCamera>(
+      new THREE.OrthographicCamera()
+   );
    useEffect(() => {
       const { width, height, near, far } = getCameraProps(
          window.innerWidth,

@@ -13,7 +13,7 @@ const FREQUENCY = 1;
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
-export const useRippleEffect = (texture?: THREE.Texture) => {
+export const useRipple = (texture?: THREE.Texture) => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const meshArr = useMesh({
       size: SIZE,
@@ -31,14 +31,12 @@ export const useRippleEffect = (texture?: THREE.Texture) => {
    const handleUpdate = useCallback(
       (props: RootState) => {
          const { gl } = props;
-         if (!camera.current) {
-            return;
-         }
+
          //update pointer and meshArr
          trackPointerPos();
          //update render target
          const bufferTexture = updateRenderTarget(gl, () => {
-            gl.render(scene, camera.current!);
+            gl.render(scene, camera.current);
          });
          //return buffer
          return bufferTexture;

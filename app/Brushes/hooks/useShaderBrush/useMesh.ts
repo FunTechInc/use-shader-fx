@@ -14,11 +14,13 @@ type TcreateMesh = {
 
 type TUniforms = {
    tMap: { value: THREE.Texture | null };
+   uResolution: { value: THREE.Vector2 };
    uRadius: { value: number };
    uAlpha: { value: number };
    uDissipation: { value: number };
    uAspect: { value: number };
    uMouse: { value: THREE.Vector2 };
+   uPrevMouse: { value: THREE.Vector2 };
    uVelocity: { value: THREE.Vector2 };
    uMagnification: { value: number };
 };
@@ -43,11 +45,13 @@ export const useMesh = ({
                tMap: {
                   value: null,
                },
+               uResolution: { value: new THREE.Vector2(0, 0) },
+               uAspect: { value: 1 },
                uRadius: { value: radius },
                uAlpha: { value: alpha },
                uDissipation: { value: dissipation },
-               uAspect: { value: 1 },
                uMouse: { value: new THREE.Vector2(0, 0) },
+               uPrevMouse: { value: new THREE.Vector2(0, 0) },
                uVelocity: { value: new THREE.Vector2(0, 0) },
                uMagnification: { value: magnification },
             },
@@ -59,6 +63,7 @@ export const useMesh = ({
    const handleResize = useCallback(
       (width: number, height: number) => {
          material.uniforms.uAspect.value = width / height;
+         material.uniforms.uResolution.value = new THREE.Vector2(width, height);
       },
       [material]
    );
