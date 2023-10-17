@@ -1,11 +1,11 @@
-import { Brushes } from "./Brushes/";
+import { Fx } from "./fx/";
 
 import s from "./page.module.scss";
 
 export default function Home() {
    return (
       <div className={s.canvasWrapper}>
-         <Brushes />
+         <Fx />
       </div>
    );
 }
