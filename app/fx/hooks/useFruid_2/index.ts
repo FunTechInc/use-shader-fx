@@ -7,6 +7,28 @@ import { usePointer } from "../utils/usePointer";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 
+/*===============================================
+constants
+===============================================*/
+const CONFIG = {
+   DENSITY_DISSIPATION: 0.98,
+   VELOCITY_DISSIPATION: 0.99,
+   VELOCITY_ACCELERATION: 10.0,
+   PRESSURE_DISSIPATION: 0.9,
+   PRESSURE_ITERATIONS: 25,
+   CURL: 10,
+   SPLAT_RADIUS: 0.001,
+   COLOR: (velocity: THREE.Vector2) => {
+      // const rCol = Math.random() * 0.2;
+      // const gCol = Math.random() * 0.2;
+      // const bCol = Math.random() * 0.2;
+      const rCol = Math.max(0.0, velocity.x * 100);
+      const gCol = Math.max(0.0, velocity.y * 100);
+      const bCol = (rCol + gCol) / 2;
+      return new THREE.Vector3(rCol, gCol, bCol);
+   },
+};
+
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
@@ -15,8 +37,7 @@ export const useFruid_2 = () => {
    const [materials, setMeshMaterial] = useMesh(scene);
    const camera = useCamera();
    const updatePointer = usePointer();
-
-   //FBO
+   // FBO
    const updateVelocityFBO = useDoubleFBO();
    const updateDensityFBO = useDoubleFBO();
    const updateCurlFBO = useSingleFBO();
@@ -37,156 +58,143 @@ export const useFruid_2 = () => {
       [materials]
    );
 
-   const lastTime = useRef(Date.now());
+   const lastTime = useRef(0);
    /**
     * @returns rederTarget.texture
     */
-   const handleUpdate = useCallback((props: RootState) => {
-      const { gl, pointer, clock, size } = props;
+   const handleUpdate = useCallback(
+      (props: RootState) => {
+         const { gl, pointer, clock, size } = props;
 
-      /*===============================================
-		TODO* clockに修正する
-		===============================================*/
-      // const dt = Math.min((Date.now() - lastTime.current) / 1000, 0.03);
-      const dt = 0.013;
-      lastTime.current = Date.now();
+         // update clock
+         if (lastTime.current === 0) {
+            lastTime.current = clock.getElapsedTime();
+         }
+         const dt = Math.min(
+            (clock.getElapsedTime() - lastTime.current) / 3,
+            0.02
+         );
+         lastTime.current = clock.getElapsedTime();
 
-      /*===============================================
-		advectionを焼き付けて、velocityFBOを更新
-		===============================================*/
-      const velocityTex = updateVelocityFBO(gl, ({ read }) => {
-         setMeshMaterial(materials.advectionMaterial);
-         unifroms.advection.uVelocity.value = read;
-         unifroms.advection.uSource.value = read;
-         unifroms.advection.dt.value = dt;
-         unifroms.advection.dissipation.value = 0.99;
-         gl.render(scene, camera.current);
-      });
+         // update velocity
+         const velocityTex = updateVelocityFBO(gl, ({ read }) => {
+            setMeshMaterial(materials.advectionMaterial);
+            unifroms.advection.uVelocity.value = read;
+            unifroms.advection.uSource.value = read;
+            unifroms.advection.dt.value = dt;
+            unifroms.advection.dissipation.value = CONFIG.VELOCITY_DISSIPATION;
+            gl.render(scene, camera.current);
+         });
 
-      /*===============================================
-      advectionを焼きつけて、densityFBOを更新
-      ===============================================*/
-      const densityTex = updateDensityFBO(gl, ({ read }) => {
-         setMeshMaterial(materials.advectionMaterial);
-         unifroms.advection.uVelocity.value = velocityTex;
-         unifroms.advection.uSource.value = read;
-         unifroms.advection.dissipation.value = 0.98;
-         gl.render(scene, camera.current);
-      });
+         // update density
+         const densityTex = updateDensityFBO(gl, ({ read }) => {
+            setMeshMaterial(materials.advectionMaterial);
+            unifroms.advection.uVelocity.value = velocityTex;
+            unifroms.advection.uSource.value = read;
+            unifroms.advection.dissipation.value = CONFIG.DENSITY_DISSIPATION;
+            gl.render(scene, camera.current);
+         });
 
-      /*===============================================
-      マウスでsplat処理
-		//TODO*　unifroms.splat.color.valueの部分が多分おかしいので修正
-		多分、0~1で正規化できてないとかかな？
-      ===============================================*/
-      const { currentPointer, prevPointer, isVelocityUpdate, velocity } =
-         updatePointer(pointer);
+         // update splatting
+         const { currentPointer, diffPointer, isVelocityUpdate, velocity } =
+            updatePointer(pointer);
 
-      if (isVelocityUpdate) {
+         if (isVelocityUpdate) {
+            updateVelocityFBO(gl, ({ read }) => {
+               setMeshMaterial(materials.splatMaterial);
+               unifroms.splat.uTarget.value = read;
+               unifroms.splat.point.value = currentPointer;
+               const scaledDiff = diffPointer.multiply(
+                  new THREE.Vector2(size.width, size.height).multiplyScalar(
+                     CONFIG.VELOCITY_ACCELERATION
+                  )
+               );
+               unifroms.splat.color.value = new THREE.Vector3(
+                  scaledDiff.x,
+                  scaledDiff.y,
+                  1.0
+               );
+               unifroms.splat.radius.value = CONFIG.SPLAT_RADIUS;
+               gl.render(scene, camera.current);
+            });
+            updateDensityFBO(gl, ({ read }) => {
+               setMeshMaterial(materials.splatMaterial);
+               unifroms.splat.uTarget.value = read;
+               const color: THREE.Vector3 = CONFIG.COLOR
+                  ? CONFIG.COLOR(velocity)
+                  : new THREE.Vector3(1.0, 1.0, 1.0);
+               unifroms.splat.color.value = color;
+               gl.render(scene, camera.current);
+            });
+         }
+
+         // update curl
+         const curlTex = updateCurlFBO(gl, () => {
+            setMeshMaterial(materials.curlMaterial);
+            unifroms.curl.uVelocity.value = velocityTex;
+            gl.render(scene, camera.current);
+         });
+
+         // update vorticity
          updateVelocityFBO(gl, ({ read }) => {
-            setMeshMaterial(materials.splatMaterial);
-            unifroms.splat.uTarget.value = read;
-            unifroms.splat.point.value = currentPointer;
-            unifroms.splat.color.value = new THREE.Vector3(
-               velocity.x * size.width * 100.0,
-               velocity.y * size.height * 100.0,
-               1.0
-            );
-            // unifroms.splat.color.value = new THREE.Vector3(
-            //    currentPointer.x - prevPointer.x * size.width * 10.0,
-            //    currentPointer.y - prevPointer.y * size.height * -10.0,
-            //    1.0
-            // );
-            unifroms.splat.radius.value = 0.004;
+            setMeshMaterial(materials.vorticityMaterial);
+            unifroms.vorticity.uVelocity.value = read;
+            unifroms.vorticity.uCurl.value = curlTex;
+            unifroms.vorticity.curl.value = CONFIG.CURL;
+            unifroms.vorticity.dt.value = dt;
             gl.render(scene, camera.current);
          });
-         updateDensityFBO(gl, ({ read }) => {
-            setMeshMaterial(materials.splatMaterial);
-            unifroms.splat.uTarget.value = read;
-            unifroms.splat.color.value = new THREE.Vector3(1.0, 1.0, 1.0); //ここ一旦適当、多分ここが最終出力されるカラーになるので、速度に比例させたり？
+
+         // update divergence
+         const divergenceTex = updateDivergenceFBO(gl, () => {
+            setMeshMaterial(materials.divergenceMaterial);
+            unifroms.divergence.uVelocity.value = velocityTex;
             gl.render(scene, camera.current);
          });
-      }
 
-      /*===============================================
-      curlを焼きつけて、curlのFBOを更新（シングル）
-      ===============================================*/
-      const curlTex = updateCurlFBO(gl, () => {
-         setMeshMaterial(materials.curlMaterial);
-         unifroms.curl.uVelocity.value = velocityTex;
-         gl.render(scene, camera.current);
-      });
-
-      /*===============================================
-      vorticityを焼き付けて、velocityを更新
-      ===============================================*/
-      updateVelocityFBO(gl, ({ read }) => {
-         setMeshMaterial(materials.vorticityMaterial);
-         unifroms.vorticity.uVelocity.value = read;
-         unifroms.vorticity.uCurl.value = curlTex;
-         unifroms.vorticity.curl.value = 28;
-         unifroms.vorticity.dt.value = dt;
-         gl.render(scene, camera.current);
-      });
-
-      /*===============================================
-      divergenceを焼き付けて、divergenveを更新
-      ===============================================*/
-      const divergenceTex = updateDivergenceFBO(gl, () => {
-         setMeshMaterial(materials.divergenceMaterial);
-         unifroms.divergence.uVelocity.value = velocityTex;
-         gl.render(scene, camera.current);
-      });
-
-      /*===============================================
-      clearを焼き付けて、pressureを更新
-      ===============================================*/
-      updatePressureFBO(gl, ({ read }) => {
-         setMeshMaterial(materials.clearMaterial);
-         unifroms.clear.uTexture.value = read;
-         unifroms.clear.value.value = 0.8;
-         gl.render(scene, camera.current);
-      });
-
-      /*===============================================
-      pressureを焼き付けて、ヤコビ法でpuressureを計算
-      ===============================================*/
-      setMeshMaterial(materials.pressureMaterial);
-      unifroms.pressure.uDivergence.value = divergenceTex;
-
-      let pressureTexTemp: THREE.Texture;
-      for (let i = 0; i < 25; i++) {
-         pressureTexTemp = updatePressureFBO(gl, ({ read }) => {
-            unifroms.pressure.uPressure.value = read;
+         // update pressure
+         updatePressureFBO(gl, ({ read }) => {
+            setMeshMaterial(materials.clearMaterial);
+            unifroms.clear.uTexture.value = read;
+            unifroms.clear.value.value = CONFIG.PRESSURE_DISSIPATION;
             gl.render(scene, camera.current);
          });
-      }
 
-      /*===============================================
-      gradienSubtractを焼き付けて、veloityを更新
-      ===============================================*/
-      updateVelocityFBO(gl, ({ read }) => {
-         setMeshMaterial(materials.gradientSubtractMaterial);
-         unifroms.gradientSubtract.uPressure.value = pressureTexTemp;
-         unifroms.gradientSubtract.uVelocity.value = read;
-         gl.render(scene, camera.current);
-      });
+         // solve pressure iterative (Gauss-Seidel)
+         setMeshMaterial(materials.pressureMaterial);
+         unifroms.pressure.uDivergence.value = divergenceTex;
+         let pressureTexTemp: THREE.Texture;
+         for (let i = 0; i < CONFIG.PRESSURE_ITERATIONS; i++) {
+            pressureTexTemp = updatePressureFBO(gl, ({ read }) => {
+               unifroms.pressure.uPressure.value = read;
+               gl.render(scene, camera.current);
+            });
+         }
 
-      /*===============================================
-      dnsityを返す
-      ===============================================*/
-      return densityTex;
-   }, []);
+         // update gradienSubtract
+         updateVelocityFBO(gl, ({ read }) => {
+            setMeshMaterial(materials.gradientSubtractMaterial);
+            unifroms.gradientSubtract.uPressure.value = pressureTexTemp;
+            unifroms.gradientSubtract.uVelocity.value = read;
+            gl.render(scene, camera.current);
+         });
+
+         // return final texture
+         return densityTex;
+      },
+      [
+         materials,
+         unifroms,
+         camera,
+         scene,
+         setMeshMaterial,
+         updateCurlFBO,
+         updateDensityFBO,
+         updateDivergenceFBO,
+         updatePointer,
+         updatePressureFBO,
+         updateVelocityFBO,
+      ]
+   );
    return handleUpdate;
 };
-
-/*===============================================
-advection
-curl カール
-vorticity 渦巻き
-pressure
-===============================================*/
-
-/*===============================================
-TODO*気が向いたら、ランダムモードつくる
-===============================================*/

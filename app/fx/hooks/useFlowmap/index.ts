@@ -7,9 +7,9 @@ import { RootState } from "@react-three/fiber";
 import { usePointer } from "../utils/usePointer";
 
 const RADIUS = 0.1; // size of the stamp, percentage of the size
-const MAGNIFICATION = 0.02; //拡大率
-const ALPHA = 1.0; // opacity
-const DISSIPATION = 0.8; // 拡散率。1にすると残り続ける
+const MAGNIFICATION = 0.0; //拡大率
+const ALPHA = 0.1; // opacity
+const DISSIPATION = 0.9; // 拡散率。1にすると残り続ける
 
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数

@@ -35,9 +35,16 @@ export const usePointer = () => {
       }
       prevPointer.current = current;
 
+      //get diff pointer
+      const diffPointer = new THREE.Vector2(
+         current.x - prevTemp.x,
+         current.y - prevTemp.y
+      );
+
       return {
          currentPointer: current,
          prevPointer: prevTemp,
+         diffPointer: diffPointer,
          velocity: velocity.current,
          isVelocityUpdate: isUpdate,
       };

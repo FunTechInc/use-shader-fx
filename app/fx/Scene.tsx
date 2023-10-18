@@ -11,16 +11,17 @@ import { useBrush } from "./hooks/useBrush";
 extend({ MainShaderMaterial });
 
 export const Scene = () => {
-   const [bgTexure, smoke] = useLoader(THREE.TextureLoader, [
+   const [bgTexure, smoke, ripple] = useLoader(THREE.TextureLoader, [
       "background.jpg",
       "smoke.png",
+      "ripple.png",
    ]);
    const mainShaderRef = useRef<TMainShaderUniforms>();
    // const updateRipple = useRipple(smoke);
    // const updateFlowmap = useFlowmap();
    // const updateFruid = useFruid();
    const updateFruid_2 = useFruid_2();
-   // const updateBrush = useBrush(smoke);
+   // const updateBrush = useBrush(bgTexure);
 
    useFrame((props) => {
       // const texture = updateRipple(props);
@@ -51,7 +52,7 @@ export const Scene = () => {
 
 /*===============================================
 TODO:
-- GUIつける
+- GUIつける GUIで操作できるようにする
 - resize
 - clean up
 
@@ -65,53 +66,19 @@ https://docs.pmnd.rs/react-three-fiber/advanced/pitfalls
 ===============================================*/
 
 /*===============================================
-TODO：ライブラリ化にあたあって
-- resizeとかwindowSizeでやってる部分、useThreeでglのsizeもってきて、canvasのサイズに変更する
-	- ライブラリでr3Fに依存できない場合、hook時点でglをうけとれるようにする
-- mouse イベントにしてるとこ、useFrameのpointerから持ってくるように統一する
-	- たぶんデバイス毎の正規化において、r3fに任せたほうが、対応しやすい
-- pointerとかresolutuionとか、tickとか、渡す値は統一して、hook側（できればシェーダーで解決する）
-
-===============================================*/
-
-/*===============================================
-TODO:
-- useBrush
-	- meshlineを使って実現する
-	- めっちゃ細くしたら鉛筆、色鉛筆効果もできるみたいな
-		- テクスチャーも渡せるように
-- useFlowmap（あってもいいか）
-- useRipple
-===============================================*/
-
-/*===============================================
-to make customhook...
-
-- usePointer
-	- beforeとenter,velocityを返すようにする
-	- isVelocityUpdateのrefも返すことで停止状態を監視できるようにする
-- useCamera
-- useRenderTarget
-
-===============================================*/
-
-/*===============================================
-TODO
-なんとしてもカールと渦巻きを出したい！！
-https://portal.griflan.com/
-みたいな絵にしたい
-- useFruid
-	https://codepen.io/DedaloD/pen/PoJGKOb
-https://paveldogreat.github.io/WebGL-Fluid-Simulation/
-
-===============================================*/
-
-/*===============================================
 2つのbrushを共存させて複雑な絵作りの実験をあこのやつでやるか〜
 fluidの上にbrush載せたら、lusionみたいな演出になりそう
 ===============================================*/
 
 /*===============================================
-水面fxつくる
-beniのサイトは水面にまだ乾いてない絵の具で描いた絵が水面ギリギリで浮かんでるみたいな
+TODO*
+水面fxつくる useWatarSurface
+beniのサイトは水面にまだ乾いてない絵の具で描いた絵が水面ギリギリで浮かんでるみた
+いな
+https://medium.com/@martinRenou/real-time-rendering-of-water-caustics-59cda1d74aa
+===============================================*/
+
+/*===============================================
+TODO*
+旗シェーダー（useFrag）みたいなのつくりたい〜
 ===============================================*/

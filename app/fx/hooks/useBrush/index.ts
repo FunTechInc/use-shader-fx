@@ -6,12 +6,12 @@ import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
 import { usePointer } from "../utils/usePointer";
 
-const RADIUS = 0.02; // size of the stamp, percentage of the size
-const MAGNIFICATION = 0.0; //拡大率
+const RADIUS = 0.06; // size of the stamp, percentage of the size
+const MAGNIFICATION = 0.01; //拡大率
 const ALPHA = 0.1; // opacity TODO*これバグってるいので修正
 const DISSIPATION = 1.0; // 拡散率。1にすると残り続ける
 const MOTION_BLUR = 0.0; //モーションブラーの強さ
-const MOTION_SAMPLE = 1; //モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大
+const MOTION_SAMPLE = 10; //モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大
 const SMUDGE = 0.0; //滲み効果の強さ
 
 /**
@@ -20,7 +20,7 @@ const SMUDGE = 0.0; //滲み効果の強さ
 export const useBrush = (texture?: THREE.Texture) => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({
-      // texture,
+      texture,
       scene,
       radius: RADIUS,
       alpha: ALPHA,

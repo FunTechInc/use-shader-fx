@@ -17,6 +17,4 @@ void main () {
 	force *= 1.0 / length(force + 0.00001) * curl * C;
 	vec2 vel = texture2D(uVelocity, vUv).xy;
 	gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
-
-	// gl_FragColor = vec4(1.0,0.4,1.0, 1.0);
 }
