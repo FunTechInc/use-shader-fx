@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useCallback, useEffect, useMemo } from "react";
-import { useWindowResizeObserver } from "@funtech-inc/spice";
+import { useMemo } from "react";
+import { useAddMesh } from "../utils/useAddMesh";
+import { useResolution } from "../utils/useResolution";
+import { setUniform } from "../utils/setUniforms";
 
 type TcreateMesh = {
    scene: THREE.Scene;
@@ -58,27 +60,12 @@ export const useMesh = ({
          }),
       [radius, alpha, dissipation, magnification]
    );
-   const handleResize = useCallback(
-      (width: number, height: number) => {
-         material.uniforms.uAspect.value = width / height;
-         material.uniforms.uResolution.value = new THREE.Vector2(width, height);
-      },
-      [material]
-   );
-   useEffect(() => {
-      handleResize(window.innerWidth, window.innerHeight);
-   }, [handleResize]);
-   useWindowResizeObserver({
-      callback: ({ winW, winH }) => {
-         handleResize(winW, winH);
-      },
-      debounce: 100,
-      dependencies: [handleResize],
-   });
-   const mesh = useMemo(
-      () => new THREE.Mesh(geometry, material),
-      [geometry, material]
-   );
-   scene.add(mesh);
+
+   const resolution = useResolution();
+   setUniform(material, "uAspect", resolution.width / resolution.height);
+   setUniform(material, "uResolution", resolution.clone());
+
+   useAddMesh(scene, geometry, material);
+
    return material as FlowmapShaderMaterial;
 };

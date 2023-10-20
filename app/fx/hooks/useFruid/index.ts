@@ -5,6 +5,7 @@ import { useDoubleFBO } from "../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
 import { usePointer } from "../utils/usePointer";
 import { RootState } from "@react-three/fiber";
+import { setUniform } from "../utils/setUniforms";
 
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
@@ -16,7 +17,7 @@ export const useFruid = () => {
    const updatePointer = usePointer();
 
    //FBO
-   const updateRenderTarget = useDoubleFBO();
+   const updateRenderTarget = useDoubleFBO(scene, camera);
 
    const unifroms = useMemo(
       () => ({
@@ -39,57 +40,38 @@ export const useFruid = () => {
 
          // update divergence(発散)
          updateRenderTarget(gl, ({ read }) => {
-            unifroms.divergence.dataTex.value = read;
             setMeshMaterial(materials.divergenceMaterial);
-            gl.render(scene, camera.current);
+            setUniform(materials.divergenceMaterial, "dataTex", read);
          });
 
          // update pressure(圧力)
          const solverIteration = 30; //TODO：これも変数化
          for (let i = 0; i < solverIteration; i++) {
             updateRenderTarget(gl, ({ read }) => {
-               unifroms.pressure.dataTex.value = read;
                setMeshMaterial(materials.pressureMaterial);
-               gl.render(scene, camera.current);
+               unifroms.pressure.dataTex.value = read;
             });
          }
 
          // update velocity(速度)
          const { currentPointer, prevPointer } = updatePointer(pointer);
-         unifroms.velocity.pointerPos.value = currentPointer.clone();
-         unifroms.velocity.beforePointerPos.value = prevPointer.clone();
+         unifroms.velocity.pointerPos.value = currentPointer;
+         unifroms.velocity.beforePointerPos.value = prevPointer;
          updateRenderTarget(gl, ({ read }) => {
-            unifroms.velocity.dataTex.value = read;
             setMeshMaterial(materials.velocityMaterial);
-            gl.render(scene, camera.current);
+            unifroms.velocity.dataTex.value = read;
          });
 
          // update advection(移流)
          const outPutTexture = updateRenderTarget(gl, ({ read }) => {
-            unifroms.advection.dataTex.value = read;
             setMeshMaterial(materials.advectionMaterial);
-            gl.render(scene, camera.current);
+            unifroms.advection.dataTex.value = read;
          });
 
          // return final texture
          return outPutTexture;
       },
-      [
-         scene,
-         camera,
-         unifroms,
-         materials,
-         setMeshMaterial,
-         updatePointer,
-         updateRenderTarget,
-      ]
+      [unifroms, materials, setMeshMaterial, updatePointer, updateRenderTarget]
    );
    return handleUpdate;
 };
-
-/*===============================================
-advection
-curl カール
-vorticity 渦巻き
-pressure
-===============================================*/

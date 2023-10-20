@@ -17,7 +17,7 @@ export const useCurlMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               resolution: { value: new THREE.Vector2(0, 0) },
+               resolution: { value: new THREE.Vector2() },
                uVelocity: { value: null },
             },
             vertexShader: vertexShader,

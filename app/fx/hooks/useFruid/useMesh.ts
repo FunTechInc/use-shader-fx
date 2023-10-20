@@ -22,8 +22,9 @@ import {
    VorticityMaterial,
    useVorticityMaterial,
 } from "./materials/useVorticityMaterial";
-import { useThree } from "@react-three/fiber";
 import { useResolution } from "../utils/useResolution";
+import { useAddMesh } from "../utils/useAddMesh";
+import { setUniform } from "../utils/setUniforms";
 
 type TMaterials =
    | VelocityMaterial
@@ -84,30 +85,18 @@ export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
          pressureMaterial,
       ]
    );
-   /*===============================================
-	resize
-	===============================================*/
+
    const resolution = useResolution();
+   for (const material of Object.values(materials)) {
+      setUniform(material, "resolution", resolution.clone());
+   }
+
+   const mesh = useAddMesh(scene, geometry, initialMaterial);
    useEffect(() => {
-      for (const material of Object.values(materials)) {
-         material.uniforms.resolution.value = resolution;
-      }
-   }, [materials, resolution]);
+      initialMaterial.dispose();
+      mesh.material = updateMaterial;
+   }, [initialMaterial, mesh, updateMaterial]);
 
-   /*===============================================
-	add mesh to scene
-	===============================================*/
-   const mesh = useMemo(
-      () => new THREE.Mesh(geometry, initialMaterial),
-      [geometry, initialMaterial]
-   );
-   scene.add(mesh);
-   initialMaterial.dispose();
-   mesh.material = updateMaterial;
-
-   /*===============================================
-	マテリアルの更新関数
-	===============================================*/
    const setMeshMaterial = useCallback(
       (material: TMaterials) => {
          mesh.material = material;

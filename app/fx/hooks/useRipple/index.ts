@@ -3,8 +3,8 @@ import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
 import { usePointer } from "./usePointer";
-import { useDoubleFBO } from "../utils/useDoubleFBO";
 import { RootState } from "@react-three/fiber";
+import { useSingleFBO } from "../utils/useSingleFBO";
 
 const SIZE = 64;
 const MAX = 100;
@@ -23,7 +23,7 @@ export const useRipple = (texture?: THREE.Texture) => {
    });
    const camera = useCamera();
    const trackPointerPos = usePointer(meshArr, FREQUENCY, MAX);
-   const updateRenderTarget = useDoubleFBO();
+   const updateRenderTarget = useSingleFBO(scene, camera);
 
    /**
     * @returns rederTarget.texture
@@ -35,13 +35,11 @@ export const useRipple = (texture?: THREE.Texture) => {
          //update pointer and meshArr
          trackPointerPos();
          //update render target
-         const bufferTexture = updateRenderTarget(gl, () => {
-            gl.render(scene, camera.current);
-         });
+         const bufferTexture = updateRenderTarget(gl);
          //return buffer
          return bufferTexture;
       },
-      [scene, camera, trackPointerPos, updateRenderTarget]
+      [trackPointerPos, updateRenderTarget]
    );
    return handleUpdate;
 };

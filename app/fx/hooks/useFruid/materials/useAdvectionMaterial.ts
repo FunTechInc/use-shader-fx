@@ -18,7 +18,7 @@ export const useAdvectionMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               resolution: { value: new THREE.Vector2(0, 0) },
+               resolution: { value: new THREE.Vector2() },
                dataTex: { value: null },
                attenuation: { value: 1.0 }, //圧力のステップごとの減衰値
             },

@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 type TcreateMesh = {
@@ -21,12 +21,14 @@ export const useMesh = ({ size, max, texture, scene }: TcreateMesh) => {
          }),
       [texture]
    );
-   for (let i = 0; i < max; i++) {
-      const mesh = new THREE.Mesh(geometry.clone(), material.clone());
-      mesh.rotateZ(2 * Math.PI * Math.random());
-      mesh.visible = false;
-      scene.add(mesh);
-      meshArr.current.push(mesh);
-   }
+   useEffect(() => {
+      for (let i = 0; i < max; i++) {
+         const mesh = new THREE.Mesh(geometry.clone(), material.clone());
+         mesh.rotateZ(2 * Math.PI * Math.random());
+         mesh.visible = false;
+         scene.add(mesh);
+         meshArr.current.push(mesh);
+      }
+   }, [geometry, material, scene, max]);
    return meshArr.current;
 };

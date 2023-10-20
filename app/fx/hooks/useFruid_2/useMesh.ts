@@ -25,6 +25,8 @@ import {
    useGradientSubtractMaterial,
 } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial, useSplateMaterial } from "./materials/useSplatMaterial";
+import { useAddMesh } from "../utils/useAddMesh";
+import { setUniform } from "../utils/setUniforms";
 
 type TMaterials =
    | AdvectionMaterial
@@ -98,33 +100,21 @@ export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
       ]
    );
 
-   /*===============================================
-	resize
-	===============================================*/
    const resolution = useResolution();
+   for (const material of Object.values(materials)) {
+      setUniform(
+         material,
+         "texelSize",
+         new THREE.Vector2(1.0 / resolution.x, 1.0 / resolution.y)
+      );
+   }
+
+   const mesh = useAddMesh(scene, geometry, initialMaterial);
    useEffect(() => {
-      for (const material of Object.values(materials)) {
-         material.uniforms.texelSize.value = new THREE.Vector2(
-            1.0 / resolution.x,
-            1.0 / resolution.y
-         );
-      }
-   }, [materials, resolution]);
+      initialMaterial.dispose();
+      mesh.material = updateMaterial;
+   }, [initialMaterial, mesh, updateMaterial]);
 
-   /*===============================================
-	add mesh to scene
-	===============================================*/
-   const mesh = useMemo(
-      () => new THREE.Mesh(geometry, initialMaterial),
-      [geometry, initialMaterial]
-   );
-   scene.add(mesh);
-   initialMaterial.dispose();
-   mesh.material = updateMaterial;
-
-   /*===============================================
-	マテリアルの更新関数
-	===============================================*/
    const setMeshMaterial = useCallback(
       (material: TMaterials) => {
          mesh.material = material;

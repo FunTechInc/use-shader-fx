@@ -10,7 +10,7 @@ const FBO_OPTION = {
 
 type TUpdateFBO = (
    gl: THREE.WebGLRenderer,
-   renderCallback: ({ read }: { read: THREE.Texture }) => void
+   onBeforeRender?: ({ read }: { read: THREE.Texture }) => void
 ) => THREE.Texture;
 
 /**
@@ -19,7 +19,10 @@ type TUpdateFBO = (
  * @returns [renderTarget,updateRenderTarget]
  * @param (gl,(fbo)=>void); 第2引数はFBOを受け取るレンダリング関数
  */
-export const useSingleFBO = (): TUpdateFBO => {
+export const useSingleFBO = (
+   scene: THREE.Scene,
+   camera: THREE.Camera
+): TUpdateFBO => {
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
 
    //set FBO
@@ -31,14 +34,18 @@ export const useSingleFBO = (): TUpdateFBO => {
       renderTarget.current?.setSize(resolution.x, resolution.y);
    }, [resolution]);
 
-   const updateRenderTarget: TUpdateFBO = useCallback((gl, renderCallback) => {
-      const fbo = renderTarget.current!;
-      gl.setRenderTarget(fbo);
-      renderCallback({ read: fbo.texture });
-      gl.setRenderTarget(null);
-      gl.clear();
-      return fbo.texture;
-   }, []);
+   const updateRenderTarget: TUpdateFBO = useCallback(
+      (gl, onBeforeRender) => {
+         const fbo = renderTarget.current!;
+         gl.setRenderTarget(fbo);
+         onBeforeRender && onBeforeRender({ read: fbo.texture });
+         gl.render(scene, camera);
+         gl.setRenderTarget(null);
+         gl.clear();
+         return fbo.texture;
+      },
+      [scene, camera]
+   );
 
    return updateRenderTarget;
 };

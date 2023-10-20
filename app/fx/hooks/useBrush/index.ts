@@ -5,9 +5,10 @@ import { useDoubleFBO } from "../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
 import { usePointer } from "../utils/usePointer";
+import { setUniform } from "../utils/setUniforms";
 
-const RADIUS = 0.06; // size of the stamp, percentage of the size
-const MAGNIFICATION = 0.01; //拡大率
+const RADIUS = 0.04; // size of the stamp, percentage of the size
+const MAGNIFICATION = 0.0; //拡大率
 const ALPHA = 0.1; // opacity TODO*これバグってるいので修正
 const DISSIPATION = 1.0; // 拡散率。1にすると残り続ける
 const MOTION_BLUR = 0.0; //モーションブラーの強さ
@@ -20,7 +21,7 @@ const SMUDGE = 0.0; //滲み効果の強さ
 export const useBrush = (texture?: THREE.Texture) => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({
-      texture,
+      // texture,
       scene,
       radius: RADIUS,
       alpha: ALPHA,
@@ -32,7 +33,7 @@ export const useBrush = (texture?: THREE.Texture) => {
    });
    const camera = useCamera();
    const updatePointer = usePointer();
-   const updateRenderTarget = useDoubleFBO();
+   const updateRenderTarget = useDoubleFBO(scene, camera);
 
    /**
     * @returns rederTarget.texture
@@ -44,22 +45,23 @@ export const useBrush = (texture?: THREE.Texture) => {
          //update velocity
          const { currentPointer, prevPointer, velocity } =
             updatePointer(pointer);
-         material.uniforms.uMouse.value = currentPointer.clone();
-         material.uniforms.uPrevMouse.value = prevPointer.clone();
-         material.uniforms.uVelocity.value.lerp(
-            velocity,
-            velocity.length() ? 0.15 : 0.1
+
+         setUniform(material, "uMouse", currentPointer.clone());
+         setUniform(material, "uPrevMouse", prevPointer.clone());
+         setUniform(
+            material,
+            "uVelocity",
+            velocity.lerp(velocity, velocity.length() ? 0.15 : 0.1)
          );
 
          //update render target
          const bufferTexture = updateRenderTarget(gl, ({ read }) => {
-            material.uniforms.tMap.value = read;
-            gl.render(scene, camera.current);
+            setUniform(material, "tMap", read);
          });
          //return buffer
          return bufferTexture;
       },
-      [camera]
+      [material, updatePointer, updateRenderTarget]
    );
    return handleUpdate;
 };

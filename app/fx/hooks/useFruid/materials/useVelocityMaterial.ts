@@ -22,7 +22,7 @@ export const useVelocityMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               resolution: { value: new THREE.Vector2(0, 0) },
+               resolution: { value: new THREE.Vector2() },
                dataTex: { value: null },
                pointerPos: { value: null },
                beforePointerPos: { value: null },
