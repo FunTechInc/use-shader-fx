@@ -45,7 +45,6 @@ export const useMesh = (scene: THREE.Scene) => {
 
    const resolution = useResolution();
    material.uniforms.uResolution.value = resolution.clone();
-
    useAddMesh(scene, geometry, material);
 
    return material as MetamorphoseMaterial;

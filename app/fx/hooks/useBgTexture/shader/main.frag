@@ -30,10 +30,12 @@ void main() {
 	// uvをセンター基準に
 	vec2 centeredUV = uv - vec2(0.5);
 	
+	//texture 0
 	float xOffsetTexture0 = 0.5 - dirX * progress;
 	float yOffsetTexture0 = 0.5 - dirY * progress;
 	vec2 samplePosTexture0 = vec2(xOffsetTexture0, yOffsetTexture0) + centeredUV;
 
+	//texture 1
 	float xOffsetTexture1 = 0.5 + dirX * (1.0 - progress);
 	float yOffsetTexture1 = 0.5 + dirY * (1.0 - progress);
 	vec2 samplePosTexture1 = vec2(xOffsetTexture1, yOffsetTexture1) + centeredUV;

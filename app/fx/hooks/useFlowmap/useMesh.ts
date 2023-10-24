@@ -64,7 +64,6 @@ export const useMesh = ({
    const resolution = useResolution();
    setUniform(material, "uAspect", resolution.width / resolution.height);
    setUniform(material, "uResolution", resolution.clone());
-
    useAddMesh(scene, geometry, material);
 
    return material as FlowmapShaderMaterial;

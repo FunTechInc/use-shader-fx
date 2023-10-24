@@ -6,25 +6,21 @@ import { useFlowmap } from "./hooks/useFlowmap";
 import { useFruid } from "./hooks/useFruid";
 import { useFruid_2 } from "./hooks/useFruid_2";
 import { useBrush } from "./hooks/useBrush";
-import { useMetamorphose } from "./hooks/useMetamorphose";
+import { useBgTexture } from "./hooks/useBgTexture";
 import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
-import gsap from "gsap";
+import { useGUI } from "./gui/useGUI";
+import { CONFIG } from "./config";
+import { useDuoTone } from "./hooks/useDuoTone";
+import { useSimpleNoise } from "./hooks/useSimpleNoise";
 
 extend({ MainShaderMaterial });
 
 /*===============================================
-TODO*
-変数は更新関数に渡すようにして、フレーム毎に変更できるようにしておこう（するとGUIにも応用できるはず）
+TODO*snoiseを2重でかけたら、いい感じになるね〜
 ===============================================*/
 
-const config = {
-   noiseStrength: 0.0,
-   progress: 0.0,
-   dir: { x: 0.4, y: 0.4 },
-};
-
 export const Scene = () => {
-   const [bgTexure, bgTexure2, smoke, ripple, noise] = useLoader(
+   const [bg, bg2, smoke, ripple, noise, pNoise] = useLoader(
       THREE.TextureLoader,
       [
          "background.jpg",
@@ -32,52 +28,79 @@ export const Scene = () => {
          "smoke.png",
          "ripple.png",
          "noise.png",
+         "p-noise.webp",
       ]
    );
+   const updateGUI = useGUI();
    const mainShaderRef = useRef<TMainShaderUniforms>();
-   // const updateRipple = useRipple(smoke);
+   const updateBgTexture = useBgTexture();
+   const updateRipple = useRipple({ texture: smoke, max: 100, size: 64 });
+   const updateFruid_2 = useFruid_2();
+   const updateDuoTone = useDuoTone();
+   const updateSNoise = useSimpleNoise();
    // const updateFlowmap = useFlowmap();
    // const updateFruid = useFruid();
-   const updateFruid_2 = useFruid_2();
    // const updateBrush = useBrush(smoke);
-   // const updateMetamorphose = useMetamorphose();
 
    useFrame((props) => {
-      // const texture = updateRipple(props);
-      // const texture = updateFlowmap(props);
-      // const texture = updateFruid(props);
-      const texture = updateFruid_2(props);
-      // const texture = updateBrush(props);
-      // const texture = updateMetamorphose(props, {
-      //    texture: [bgTexure, bgTexure2],
-      //    imageResolution: new THREE.Vector2(1440, 1440),
-      //    noise: noise,
-      //    noiseStrength: config.noiseStrength,
-      //    progress: config.progress,
-      //    dir: { x: config.dir.x, y: config.dir.y },
-      // });
+      /*===============================================
+		background effects
+		===============================================*/
+      const bgTexture = updateBgTexture(props, {
+         texture: [bg, bg2],
+         imageResolution: CONFIG.bgTexture.imageResolution,
+         noise: noise,
+         noiseStrength: CONFIG.bgTexture.noiseStrength,
+         progress: CONFIG.bgTexture.progress,
+         dir: CONFIG.bgTexture.dir,
+      });
+      const duoEffect = updateDuoTone(props, {
+         texture: bgTexture,
+         color: [new THREE.Color(0xf0eee8), new THREE.Color(0xf9f6ee)],
+      });
+      const bgEffect = updateSNoise(props, {
+         texture: duoEffect,
+      });
+
+      /*===============================================
+		after effects
+		===============================================*/
+      let afterEffect: THREE.Texture;
+      switch (CONFIG.selectEffect) {
+         case 0:
+            afterEffect = updateRipple(props, {
+               frequency: CONFIG.ripple.frequency,
+               rotation: CONFIG.ripple.rotation,
+               fadeout_speed: CONFIG.ripple.fadeout_speed,
+               scale: CONFIG.ripple.scale,
+               alpha: CONFIG.ripple.alpha,
+            });
+            break;
+         case 1:
+            afterEffect = updateFruid_2(props, {
+               density_dissipation: CONFIG.fruid2.density_dissipation,
+               velocity_dissipation: CONFIG.fruid2.velocity_dissipation,
+               velocity_acceleration: CONFIG.fruid2.velocity_acceleration,
+               pressure_dissipation: CONFIG.fruid2.pressure_dissipation,
+               pressure_iterations: CONFIG.fruid2.pressure_iterations,
+               curl_strength: CONFIG.fruid2.curl_strength,
+               splat_radius: CONFIG.fruid2.splat_radius,
+               fruid_color: CONFIG.fruid2.fruid_color,
+            });
+            break;
+         default:
+            afterEffect = new THREE.Texture();
+            break;
+      }
 
       const main = mainShaderRef.current;
       if (main) {
-         main.u_bufferTexture = texture;
+         main.u_bgTexture = bgEffect;
+         main.u_effectTexture = afterEffect;
+         main.isBg = CONFIG.isBg;
       }
+      updateGUI();
    });
-
-   useEffect(() => {
-      const tl = gsap.timeline();
-      tl.to(config, {
-         noiseStrength: 0.2,
-         progress: 0.5,
-         duration: 1.0,
-         ease: "power3.in",
-      });
-      tl.to(config, {
-         noiseStrength: 0.0,
-         progress: 1.0,
-         duration: 1.0,
-         ease: "power3.out",
-      });
-   }, []);
 
    return (
       <mesh>
@@ -88,7 +111,6 @@ export const Scene = () => {
             u_resolution={
                new THREE.Vector2(window.innerWidth, window.innerHeight)
             }
-            u_bgTexture={bgTexure}
          />
       </mesh>
    );
@@ -96,7 +118,6 @@ export const Scene = () => {
 
 /*===============================================
 TODO:
-- GUIつける GUIで操作できるようにする
 - resize
 - clean up
 

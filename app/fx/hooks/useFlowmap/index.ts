@@ -48,6 +48,7 @@ export const useFlowmap = () => {
          const bufferTexture = updateRenderTarget(gl, ({ read }) => {
             setUniform(material, "tMap", read);
          });
+
          //return buffer
          return bufferTexture;
       },

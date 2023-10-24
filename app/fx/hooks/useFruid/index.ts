@@ -7,6 +7,10 @@ import { usePointer } from "../utils/usePointer";
 import { RootState } from "@react-three/fiber";
 import { setUniform } from "../utils/setUniforms";
 
+const CONFIG = {
+   PRESSURE_ITERATIONS: 20,
+};
+
 /**
  * @returns handleUpdate useFrameで毎フレーム呼び出す関数
  */
@@ -15,21 +19,7 @@ export const useFruid = () => {
    const [materials, setMeshMaterial] = useMesh(scene);
    const camera = useCamera();
    const updatePointer = usePointer();
-
-   //FBO
    const updateRenderTarget = useDoubleFBO(scene, camera);
-
-   const unifroms = useMemo(
-      () => ({
-         divergence: materials.divergenceMaterial.uniforms,
-         pressure: materials.pressureMaterial.uniforms,
-         velocity: materials.velocityMaterial.uniforms,
-         curl: materials.curlMaterial.uniforms,
-         vorticity: materials.vorticityMaterial.uniforms,
-         advection: materials.advectionMaterial.uniforms,
-      }),
-      [materials]
-   );
 
    /**
     * @returns rederTarget.texture
@@ -45,33 +35,37 @@ export const useFruid = () => {
          });
 
          // update pressure(圧力)
-         const solverIteration = 30; //TODO：これも変数化
+         const solverIteration = CONFIG.PRESSURE_ITERATIONS;
          for (let i = 0; i < solverIteration; i++) {
             updateRenderTarget(gl, ({ read }) => {
                setMeshMaterial(materials.pressureMaterial);
-               unifroms.pressure.dataTex.value = read;
+               setUniform(materials.pressureMaterial, "dataTex", read);
             });
          }
 
          // update velocity(速度)
          const { currentPointer, prevPointer } = updatePointer(pointer);
-         unifroms.velocity.pointerPos.value = currentPointer;
-         unifroms.velocity.beforePointerPos.value = prevPointer;
+         setUniform(materials.velocityMaterial, "pointerPos", currentPointer);
+         setUniform(
+            materials.velocityMaterial,
+            "beforePointerPos",
+            prevPointer
+         );
          updateRenderTarget(gl, ({ read }) => {
             setMeshMaterial(materials.velocityMaterial);
-            unifroms.velocity.dataTex.value = read;
+            setUniform(materials.velocityMaterial, "dataTex", read);
          });
 
          // update advection(移流)
          const outPutTexture = updateRenderTarget(gl, ({ read }) => {
             setMeshMaterial(materials.advectionMaterial);
-            unifroms.advection.dataTex.value = read;
+            setUniform(materials.advectionMaterial, "dataTex", read);
          });
 
          // return final texture
          return outPutTexture;
       },
-      [unifroms, materials, setMeshMaterial, updatePointer, updateRenderTarget]
+      [materials, setMeshMaterial, updatePointer, updateRenderTarget]
    );
    return handleUpdate;
 };

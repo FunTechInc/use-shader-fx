@@ -45,7 +45,6 @@ export const useBrush = (texture?: THREE.Texture) => {
          //update velocity
          const { currentPointer, prevPointer, velocity } =
             updatePointer(pointer);
-
          setUniform(material, "uMouse", currentPointer.clone());
          setUniform(material, "uPrevMouse", prevPointer.clone());
          setUniform(
@@ -58,6 +57,7 @@ export const useBrush = (texture?: THREE.Texture) => {
          const bufferTexture = updateRenderTarget(gl, ({ read }) => {
             setUniform(material, "tMap", read);
          });
+
          //return buffer
          return bufferTexture;
       },

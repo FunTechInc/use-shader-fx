@@ -3,6 +3,7 @@ export const setUniform = (
    key: string,
    value:
       | number
+      | THREE.Color
       | THREE.Vector2
       | THREE.Vector3
       | THREE.Vector4

@@ -6,29 +6,26 @@ import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 import { setUniform } from "../utils/setUniforms";
 
-type TParams = {
+export type BgTextureParams = {
    texture: THREE.Texture[];
    imageResolution: THREE.Vector2;
    noise: THREE.Texture;
    noiseStrength?: number;
    progress?: number;
-   dir?: {
-      x: number;
-      y: number;
-   };
+   dir?: THREE.Vector2;
 };
 
 /**
  * @returns handleUpdate(props: RootState)=> THREE.WebGLRenderTarget.texture
  */
-export const useMetamorphose = () => {
+export const useBgTexture = () => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera();
    const updateRenderTarget = useSingleFBO(scene, camera);
 
    const handleUpdate = useCallback(
-      (props: RootState, params: TParams) => {
+      (props: RootState, params: BgTextureParams) => {
          const { gl } = props;
          const {
             noise,
@@ -36,7 +33,7 @@ export const useMetamorphose = () => {
             imageResolution,
             noiseStrength = 0.0,
             progress = 0.0,
-            dir = { x: 0.0, y: 0.0 },
+            dir = new THREE.Vector2(0, 0),
          } = params;
          //set params
          setUniform(material, "uTexture0", texture[0]);
@@ -52,7 +49,7 @@ export const useMetamorphose = () => {
          //return buffer
          return bufferTexture;
       },
-      [updateRenderTarget]
+      [updateRenderTarget, material]
    );
    return handleUpdate;
 };

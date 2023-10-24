@@ -12,18 +12,20 @@ declare global {
 }
 
 export type TMainShaderUniforms = {
-   u_bufferTexture: any;
+   u_effectTexture: THREE.Texture;
    u_resolution: THREE.Vec2;
    u_imageResolution: THREE.Vec2;
    u_bgTexture: THREE.Texture;
+   isBg: boolean;
 };
 
 export const MainShaderMaterial = shaderMaterial(
    {
-      u_bufferTexture: null,
+      u_effectTexture: null,
       u_resolution: new THREE.Vector2(0, 0),
       u_imageResolution: new THREE.Vector2(1440, 1440),
-      u_bgTexture: new THREE.Texture(),
+      u_bgTexture: null,
+      isBg: true,
    },
    vertexShader,
    fragmentShader
