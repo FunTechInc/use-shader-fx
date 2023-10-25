@@ -1,9 +1,15 @@
 precision mediump float;
 
 varying vec2 vUv;
-uniform sampler2D uTexture;
-uniform sampler2D uNoise;
 uniform float uTime;
+uniform sampler2D uTexture;
+
+uniform vec2 xDir;
+uniform vec2 yDir;
+uniform float xTimeStrength;
+uniform float yTimeStrength;
+uniform float xStrength;
+uniform float yStrength;
 
 vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
 
@@ -36,10 +42,8 @@ float snoise(vec2 v){
 
 void main() {
 	vec2 uv = vUv;
-	float noisex = snoise(uv * vec2(800.0) + uTime * .8) * 0.005;
-	float noisey = snoise(uv * vec2(800.0) + uTime * .8) * -0.005;
-	uv.x = uv.x + noisex;
-	uv.y = uv.y + noisey;
-	vec4 texColor = texture2D(uTexture, uv);
-	gl_FragColor = vec4(texColor);
+	float noiseFactorX = snoise(uv * xDir + uTime * xTimeStrength);
+	float noiseFactorY = snoise(uv * yDir + uTime * yTimeStrength);
+	uv += vec2(noiseFactorX * xStrength, noiseFactorY * yStrength);
+	gl_FragColor = texture2D(uTexture, uv);
 }

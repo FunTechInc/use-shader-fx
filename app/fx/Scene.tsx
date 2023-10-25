@@ -1,22 +1,27 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend } from "@react-three/fiber";
-import { useRipple } from "./hooks/useRipple";
+import { RippleParams, useRipple } from "./hooks/useRipple";
 import { useFlowmap } from "./hooks/useFlowmap";
 import { useFruid } from "./hooks/useFruid";
-import { useFruid_2 } from "./hooks/useFruid_2";
+import { Fruid2Params, useFruid_2 } from "./hooks/useFruid_2";
 import { useBrush } from "./hooks/useBrush";
-import { useBgTexture } from "./hooks/useBgTexture";
+import { BgTextureParams, useBgTexture } from "./hooks/useBgTexture";
 import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
 import { useGUI } from "./gui/useGUI";
 import { CONFIG } from "./config";
-import { useDuoTone } from "./hooks/useDuoTone";
-import { useSimpleNoise } from "./hooks/useSimpleNoise";
+import { DuoToneParams, useDuoTone } from "./hooks/useDuoTone";
+import { SimpleNoiseParams, useSimpleNoise } from "./hooks/useSimpleNoise";
+import { extractParams } from "./hooks/utils/extractParams";
+import {
+   FogProjectionParams,
+   useFogProjection,
+} from "./hooks/useFogProjection";
 
 extend({ MainShaderMaterial });
 
 /*===============================================
-TODO*snoiseを2重でかけたら、いい感じになるね〜
+TODO* https://thebookofshaders.com/13/?lan=jp read this
 ===============================================*/
 
 export const Scene = () => {
@@ -37,67 +42,122 @@ export const Scene = () => {
    const updateRipple = useRipple({ texture: smoke, max: 100, size: 64 });
    const updateFruid_2 = useFruid_2();
    const updateDuoTone = useDuoTone();
-   const updateSNoise = useSimpleNoise();
+   const updateSimpleNoise = useSimpleNoise();
+   const updateFogProjection = useFogProjection();
    // const updateFlowmap = useFlowmap();
    // const updateFruid = useFruid();
    // const updateBrush = useBrush(smoke);
 
    useFrame((props) => {
       /*===============================================
-		background effects
+		fx
 		===============================================*/
-      const bgTexture = updateBgTexture(props, {
-         texture: [bg, bg2],
-         imageResolution: CONFIG.bgTexture.imageResolution,
-         noise: noise,
-         noiseStrength: CONFIG.bgTexture.noiseStrength,
-         progress: CONFIG.bgTexture.progress,
-         dir: CONFIG.bgTexture.dir,
-      });
-      const duoEffect = updateDuoTone(props, {
-         texture: bgTexture,
-         color: [new THREE.Color(0xf0eee8), new THREE.Color(0xf9f6ee)],
-      });
-      const bgEffect = updateSNoise(props, {
-         texture: duoEffect,
-      });
-
-      /*===============================================
-		after effects
-		===============================================*/
-      let afterEffect: THREE.Texture;
+      let fx: THREE.Texture;
       switch (CONFIG.selectEffect) {
          case 0:
-            afterEffect = updateRipple(props, {
-               frequency: CONFIG.ripple.frequency,
-               rotation: CONFIG.ripple.rotation,
-               fadeout_speed: CONFIG.ripple.fadeout_speed,
-               scale: CONFIG.ripple.scale,
-               alpha: CONFIG.ripple.alpha,
+            fx = updateRipple(props, {
+               ...(extractParams(CONFIG.ripple, [
+                  "frequency",
+                  "rotation",
+                  "fadeout_speed",
+                  "scale",
+                  "alpha",
+               ]) as RippleParams),
             });
             break;
          case 1:
-            afterEffect = updateFruid_2(props, {
-               density_dissipation: CONFIG.fruid2.density_dissipation,
-               velocity_dissipation: CONFIG.fruid2.velocity_dissipation,
-               velocity_acceleration: CONFIG.fruid2.velocity_acceleration,
-               pressure_dissipation: CONFIG.fruid2.pressure_dissipation,
-               pressure_iterations: CONFIG.fruid2.pressure_iterations,
-               curl_strength: CONFIG.fruid2.curl_strength,
-               splat_radius: CONFIG.fruid2.splat_radius,
-               fruid_color: CONFIG.fruid2.fruid_color,
+            fx = updateFruid_2(props, {
+               ...(extractParams(CONFIG.fruid2, [
+                  "density_dissipation",
+                  "velocity_dissipation",
+                  "velocity_acceleration",
+                  "pressure_dissipation",
+                  "pressure_iterations",
+                  "curl_strength",
+                  "splat_radius",
+                  "fruid_color",
+               ]) as Fruid2Params),
             });
             break;
          default:
-            afterEffect = new THREE.Texture();
+            fx = new THREE.Texture();
             break;
       }
 
+      /*===============================================
+		post fx
+		===============================================*/
+      const bgTexture = updateBgTexture(props, {
+         ...(extractParams(CONFIG.bgTexture, [
+            "imageResolution",
+            "noiseStrength",
+            "progress",
+            "dir",
+         ]) as BgTextureParams),
+         texture: [bg, bg2],
+         noise: noise,
+      });
+
+      let duoTone;
+      if (CONFIG.duoTone.active) {
+         duoTone = updateDuoTone(props, {
+            ...(extractParams(CONFIG.duoTone, [
+               "color0",
+               "color1",
+            ]) as DuoToneParams),
+            texture: bgTexture,
+         });
+      } else {
+         duoTone = bgTexture;
+      }
+
+      let simpleNoise;
+      if (CONFIG.simpleNoise.active) {
+         simpleNoise = updateSimpleNoise(props, {
+            ...(extractParams(CONFIG.simpleNoise, [
+               "xTimeStrength",
+               "yTimeStrength",
+               "xStrength",
+               "yStrength",
+            ]) as SimpleNoiseParams),
+            texture: duoTone,
+            xDir: new THREE.Vector2(
+               CONFIG.simpleNoise.xDir.x,
+               CONFIG.simpleNoise.xDir.y
+            ),
+            yDir: new THREE.Vector2(
+               CONFIG.simpleNoise.yDir.x,
+               CONFIG.simpleNoise.yDir.y
+            ),
+         });
+      } else {
+         simpleNoise = duoTone;
+      }
+
+      let fogProjection;
+      fogProjection = updateFogProjection(props, {
+         ...(extractParams(CONFIG.simpleNoise, [
+            "xTimeStrength",
+            "yTimeStrength",
+            "xStrength",
+            "yStrength",
+         ]) as FogProjectionParams),
+         texture: duoTone,
+         xDir: new THREE.Vector2(
+            CONFIG.simpleNoise.xDir.x,
+            CONFIG.simpleNoise.xDir.y
+         ),
+         yDir: new THREE.Vector2(
+            CONFIG.simpleNoise.yDir.x,
+            CONFIG.simpleNoise.yDir.y
+         ),
+      });
+
       const main = mainShaderRef.current;
       if (main) {
-         main.u_bgTexture = bgEffect;
-         main.u_effectTexture = afterEffect;
-         main.isBg = CONFIG.isBg;
+         main.u_fx = fx;
+         main.u_postFx = fogProjection;
+         main.isBgActive = CONFIG.bgTexture.active;
       }
       updateGUI();
    });
@@ -128,17 +188,4 @@ https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#movement-reg
 - dreiのパフォーマンス
 -このページもよく読む
 https://docs.pmnd.rs/react-three-fiber/advanced/pitfalls
-===============================================*/
-
-/*===============================================
-2つのbrushを共存させて複雑な絵作りの実験をあこのやつでやるか〜
-fluidの上にbrush載せたら、lusionみたいな演出になりそう
-===============================================*/
-
-/*===============================================
-TODO*
-水面fxつくる useWatarSurface
-beniのサイトは水面にまだ乾いてない絵の具で描いた絵が水面ギリギリで浮かんでるみた
-いな
-https://medium.com/@martinRenou/real-time-rendering-of-water-caustics-59cda1d74aa
 ===============================================*/
