@@ -4,10 +4,9 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/pressure.frag";
 
 type TUniforms = {
-   resolution: { value: THREE.Vector2 };
-   dataTex: { value: THREE.Texture };
-   alpha: { value: number };
-   beta: { value: number };
+   uPressure: { value: THREE.Texture };
+   uDivergence: { value: THREE.Texture };
+   texelSize: { value: THREE.Vector2 };
 };
 
 export class PressureMaterial extends THREE.ShaderMaterial {
@@ -19,10 +18,9 @@ export const usePressureMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               resolution: { value: new THREE.Vector2() },
-               dataTex: { value: null },
-               alpha: { value: 1.0 }, //圧力計算時の係数
-               beta: { value: 1.0 }, //圧力計算時の係数
+               uPressure: { value: null },
+               uDivergence: { value: null },
+               texelSize: { value: new THREE.Vector2() },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

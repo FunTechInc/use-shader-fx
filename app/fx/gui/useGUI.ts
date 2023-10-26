@@ -10,16 +10,16 @@ export const useGUI = () => {
    /*===============================================
 	post fx
 	===============================================*/
-   //bgTexture
-   const bgTexture = gui.addFolder("bgTexture(post)");
-   bgTexture.add(CONFIG.bgTexture, "noiseStrength", 0, 1, 0.01);
-   bgTexture.add(CONFIG.bgTexture, "progress", 0, 1, 0.01);
-   if (CONFIG.bgTexture.dir) {
-      bgTexture.add(CONFIG.bgTexture.dir, "x", 0, 1, 0.01);
-      bgTexture.add(CONFIG.bgTexture.dir, "y", 0, 1, 0.01);
+   //transitionBg
+   const transitionBg = gui.addFolder("transitionBg(post)");
+   transitionBg.add(CONFIG.transitionBg, "noiseStrength", 0, 1, 0.01);
+   transitionBg.add(CONFIG.transitionBg, "progress", 0, 1, 0.01);
+   if (CONFIG.transitionBg.dir) {
+      transitionBg.add(CONFIG.transitionBg.dir, "x", 0, 1, 0.01);
+      transitionBg.add(CONFIG.transitionBg.dir, "y", 0, 1, 0.01);
    }
-   bgTexture.add(CONFIG.bgTexture, "transform");
-   bgTexture.add(CONFIG.bgTexture, "active");
+   transitionBg.add(CONFIG.transitionBg, "transform");
+   transitionBg.add(CONFIG.transitionBg, "active");
 
    //duo
    const duoTone = gui.addFolder("duoTone(post)");
@@ -27,31 +27,29 @@ export const useGUI = () => {
    duoTone.addColor(CONFIG.duoTone, "color1");
    duoTone.add(CONFIG.duoTone, "active");
 
-   //simpleNoise
-   const simpleNoise = gui.addFolder("simpleNoise(post)");
-   simpleNoise.add(CONFIG.simpleNoise.xDir, "x", -100, 100, 1);
-   simpleNoise.add(CONFIG.simpleNoise.xDir, "y", -100, 100, 1);
-   simpleNoise.add(CONFIG.simpleNoise.yDir, "x", -100, 100, 1);
-   simpleNoise.add(CONFIG.simpleNoise.yDir, "y", -100, 100, 1);
-   simpleNoise.add(CONFIG.simpleNoise, "xTimeStrength", -1, 1, 0.01);
-   simpleNoise.add(CONFIG.simpleNoise, "yTimeStrength", -1, 1, 0.01);
-   simpleNoise.add(CONFIG.simpleNoise, "xStrength", -1, 1, 0.01);
-   simpleNoise.add(CONFIG.simpleNoise, "yStrength", -1, 1, 0.01);
-   simpleNoise.add(CONFIG.simpleNoise, "active");
+   //fog projection
+   const fogProjection = gui.addFolder("fogProjection(post)");
+   fogProjection.add(CONFIG.fogProjection, "timeStrength", -10, 10, 0.01);
+   fogProjection.add(CONFIG.fogProjection, "distortionStrength", 0, 10, 0.01);
+   fogProjection.add(CONFIG.fogProjection, "fogEdge0", 0, 1, 0.01);
+   fogProjection.add(CONFIG.fogProjection, "fogEdge1", 0, 1, 0.01);
+   fogProjection.addColor(CONFIG.fogProjection, "fogColor");
+   fogProjection.add(CONFIG.fogProjection, "active");
 
    /*===============================================
 	fx
 	===============================================*/
-   const fruid2 = gui.addFolder("fruid2(fx)");
-   fruid2.add(CONFIG.fruid2, "density_dissipation", 0, 1, 0.01);
-   fruid2.add(CONFIG.fruid2, "velocity_dissipation", 0, 1, 0.01);
-   fruid2.add(CONFIG.fruid2, "pressure_dissipation", 0, 1, 0.01);
-   fruid2.add(CONFIG.fruid2, "velocity_acceleration", 0, 100, 1);
-   fruid2.add(CONFIG.fruid2, "pressure_iterations", 0, 30, 1);
-   fruid2.add(CONFIG.fruid2, "curl_strength", 0, 100, 1);
-   fruid2.add(CONFIG.fruid2, "splat_radius", 0, 0.1, 0.001);
+   const fruid2 = gui.addFolder("fruid(fx)");
+   fruid2.add(CONFIG.fruid, "density_dissipation", 0, 1, 0.01);
+   fruid2.add(CONFIG.fruid, "velocity_dissipation", 0, 1, 0.01);
+   fruid2.add(CONFIG.fruid, "pressure_dissipation", 0, 1, 0.01);
+   fruid2.add(CONFIG.fruid, "velocity_acceleration", 0, 100, 1);
+   fruid2.add(CONFIG.fruid, "pressure_iterations", 0, 30, 1);
+   fruid2.add(CONFIG.fruid, "curl_strength", 0, 100, 1);
+   fruid2.add(CONFIG.fruid, "splat_radius", 0, 0.1, 0.001);
+
    //effect selector
-   gui.add(CONFIG, "selectEffect", { Ripple: 0, fruid2: 1 });
+   gui.add(CONFIG, "selectEffect", { Ripple: 0, fruid: 1 });
 
    const updateDisplays = () => {
       gui.folders.forEach((folder) =>

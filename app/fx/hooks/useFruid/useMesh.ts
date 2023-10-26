@@ -2,10 +2,6 @@ import * as THREE from "three";
 import { useCallback, useEffect, useMemo } from "react";
 import { useInitialMaterial } from "./materials/useInitialMaterial";
 import {
-   VelocityMaterial,
-   useVelocityMaterial,
-} from "./materials/useVelocityMaterial";
-import {
    AdvectionMaterial,
    useAdvectionMaterial,
 } from "./materials/useAdvectionMaterial";
@@ -23,23 +19,33 @@ import {
    useVorticityMaterial,
 } from "./materials/useVorticityMaterial";
 import { useResolution } from "../utils/useResolution";
+import { ClearMaterial, useClearMaterial } from "./materials/useClearMaterial";
+import {
+   GradientSubtractMaterial,
+   useGradientSubtractMaterial,
+} from "./materials/useGradientSubtractMaterial";
+import { SplatMaterial, useSplateMaterial } from "./materials/useSplatMaterial";
 import { useAddMesh } from "../utils/useAddMesh";
 import { setUniform } from "../utils/setUniforms";
 
 type TMaterials =
-   | VelocityMaterial
    | AdvectionMaterial
    | DivergenceMaterial
    | CurlMaterial
-   | PressureMaterial;
+   | PressureMaterial
+   | ClearMaterial
+   | GradientSubtractMaterial
+   | SplatMaterial;
 type TUseMeshReturnType = [
    {
-      velocityMaterial: VelocityMaterial;
       vorticityMaterial: VorticityMaterial;
       curlMaterial: CurlMaterial;
       advectionMaterial: AdvectionMaterial;
       divergenceMaterial: DivergenceMaterial;
       pressureMaterial: PressureMaterial;
+      clearMaterial: ClearMaterial;
+      gradientSubtractMaterial: GradientSubtractMaterial;
+      splatMaterial: SplatMaterial;
    },
    (material: TMaterials) => void
 ];
@@ -54,8 +60,6 @@ export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
    const initialMaterial = useInitialMaterial();
    //更新用シェーダー
    const updateMaterial = initialMaterial.clone();
-   //速度シェーダー（velocity）
-   const velocityMaterial = useVelocityMaterial();
    //カールシェーダー (curl)
    const curlMaterial = useCurlMaterial();
    //うずまきシェーダー (vorticity)
@@ -66,29 +70,43 @@ export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
    const divergenceMaterial = useDivergenceMaterial();
    //圧力シェーダー(pressure)
    const pressureMaterial = usePressureMaterial();
+   //クリアシェーダー
+   const clearMaterial = useClearMaterial();
+   //gradientSubtract
+   const gradientSubtractMaterial = useGradientSubtractMaterial();
+   //splatシェーダー
+   const splatMaterial = useSplateMaterial();
    //set object
    const materials = useMemo(
       () => ({
-         velocityMaterial,
          vorticityMaterial,
          curlMaterial,
          advectionMaterial,
          divergenceMaterial,
          pressureMaterial,
+         clearMaterial,
+         gradientSubtractMaterial,
+         splatMaterial,
       }),
       [
-         velocityMaterial,
          vorticityMaterial,
          curlMaterial,
          advectionMaterial,
          divergenceMaterial,
          pressureMaterial,
+         clearMaterial,
+         gradientSubtractMaterial,
+         splatMaterial,
       ]
    );
 
    const resolution = useResolution();
    for (const material of Object.values(materials)) {
-      setUniform(material, "resolution", resolution.clone());
+      setUniform(
+         material,
+         "texelSize",
+         new THREE.Vector2(1.0 / resolution.x, 1.0 / resolution.y)
+      );
    }
 
    const mesh = useAddMesh(scene, geometry, initialMaterial);

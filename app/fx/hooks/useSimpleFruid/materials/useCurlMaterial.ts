@@ -4,8 +4,8 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/curl.frag";
 
 type TUniforms = {
+   resolution: { value: THREE.Vector2 };
    uVelocity: { value: THREE.Texture };
-   texelSize: { value: THREE.Vector2 };
 };
 
 export class CurlMaterial extends THREE.ShaderMaterial {
@@ -17,8 +17,8 @@ export const useCurlMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
+               resolution: { value: new THREE.Vector2() },
                uVelocity: { value: null },
-               texelSize: { value: new THREE.Vector2() },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

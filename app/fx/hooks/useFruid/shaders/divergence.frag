@@ -1,26 +1,27 @@
 precision highp float;
+precision mediump sampler2D;
 
-uniform vec2 resolution;
-uniform sampler2D dataTex;
+varying vec2 vUv;
+varying vec2 vL;
+varying vec2 vR;
+varying vec2 vT;
+varying vec2 vB;
+uniform sampler2D uVelocity;
 
-#pragma glslify: sampleVelocity = require('./sampleVelocity.glsl')
-
-void main(){
-	vec2 r = resolution;
-	vec4 data = texture2D(dataTex, gl_FragCoord.xy / r);
-
-	vec2 offsetX = vec2(1.0, 0.0);
-	vec2 offsetY = vec2(0.0, 1.0);
-
-	// 上下左右の速度
-	vec2 vLeft   = sampleVelocity(dataTex, (gl_FragCoord.xy - offsetX) / r, r);
-	vec2 vRight  = sampleVelocity(dataTex, (gl_FragCoord.xy + offsetX) / r, r);
-	vec2 vTop    = sampleVelocity(dataTex, (gl_FragCoord.xy - offsetY) / r, r);
-	vec2 vBottom = sampleVelocity(dataTex, (gl_FragCoord.xy + offsetY) / r, r);
-
-	float divergence = ((vRight.x - vLeft.x) + (vBottom.y - vTop.y)) * 0.5;
-
-	gl_FragColor = vec4(data.xy, data.z, divergence);
-
+vec2 sampleVelocity (in vec2 uv) {
+	vec2 multiplier = vec2(1.0, 1.0);
+	if (uv.x < 0.0) { uv.x = 0.0; multiplier.x = -1.0; }
+	if (uv.x > 1.0) { uv.x = 1.0; multiplier.x = -1.0; }
+	if (uv.y < 0.0) { uv.y = 0.0; multiplier.y = -1.0; }
+	if (uv.y > 1.0) { uv.y = 1.0; multiplier.y = -1.0; }
+	return multiplier * texture2D(uVelocity, uv).xy;
 }
 
+void main () {
+	float L = sampleVelocity(vL).x;
+	float R = sampleVelocity(vR).x;
+	float T = sampleVelocity(vT).y;
+	float B = sampleVelocity(vB).y;
+	float div = 0.5 * (R - L + T - B);
+	gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
+}

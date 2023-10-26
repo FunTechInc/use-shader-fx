@@ -4,8 +4,8 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/divergence.frag";
 
 type TUniforms = {
-   uVelocity: { value: THREE.Texture };
-   texelSize: { value: THREE.Vector2 };
+   resolution: { value: THREE.Vector2 };
+   dataTex: { value: THREE.Texture };
 };
 
 export class DivergenceMaterial extends THREE.ShaderMaterial {
@@ -17,8 +17,8 @@ export const useDivergenceMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               uVelocity: { value: null },
-               texelSize: { value: new THREE.Vector2() },
+               resolution: { value: new THREE.Vector2() },
+               dataTex: { value: null },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

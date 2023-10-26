@@ -1,23 +1,26 @@
 precision highp float;
+precision mediump sampler2D;
 
-uniform float alpha;
-uniform float beta;
-uniform vec2 resolution;
-uniform sampler2D dataTex;
+varying vec2 vUv;
+varying vec2 vL;
+varying vec2 vR;
+varying vec2 vT;
+varying vec2 vB;
+uniform sampler2D uPressure;
+uniform sampler2D uDivergence;
 
-#pragma glslify: samplePressure = require('./samplePressure.glsl')
+vec2 boundary (in vec2 uv) {
+	uv = min(max(uv, 0.0), 1.0);
+	return uv;
+}
 
-void main(){
-	vec2 r = resolution;
-	vec4 data = texture2D(dataTex, gl_FragCoord.xy / r);
-
-	// 上下左右の圧力
-	float pLeft   = samplePressure(dataTex, (gl_FragCoord.xy - vec2(1.0, 0.0)) / r, r);
-	float pRight  = samplePressure(dataTex, (gl_FragCoord.xy + vec2(1.0, 0.0)) / r, r);
-	float pTop    = samplePressure(dataTex, (gl_FragCoord.xy - vec2(0.0, 1.0)) / r, r);
-	float pBottom = samplePressure(dataTex, (gl_FragCoord.xy + vec2(0.0, 1.0)) / r, r);
-
-	float divergence = data.w;
-	float pressure = (divergence * alpha + (pLeft + pRight + pTop + pBottom)) * 0.25 * beta;
-	gl_FragColor = vec4(data.xy, pressure, divergence);
+void main () {
+	float L = texture2D(uPressure, boundary(vL)).x;
+	float R = texture2D(uPressure, boundary(vR)).x;
+	float T = texture2D(uPressure, boundary(vT)).x;
+	float B = texture2D(uPressure, boundary(vB)).x;
+	float C = texture2D(uPressure, vUv).x;
+	float divergence = texture2D(uDivergence, vUv).x;
+	float pressure = (L + R + B + T - divergence) * 0.25;
+	gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
 }

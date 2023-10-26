@@ -7,22 +7,24 @@ import { useSingleFBO } from "../utils/useSingleFBO";
 import { usePointer } from "../utils/usePointer";
 
 export type RippleParams = {
-   frequency: number;
-   rotation: number;
-   fadeout_speed: number;
-   scale: number;
-   alpha: number;
-};
-type TUseRipple = {
-   texture: THREE.Texture;
-   size: number;
-   max: number;
+   frequency?: number;
+   rotation?: number;
+   /** hogehoge */
+   fadeout_speed?: number;
+   scale?: number;
+   alpha?: number;
 };
 
-/**
- * @returns handleUpdate useFrameで毎フレーム呼び出す関数
- */
-export const useRipple = ({ texture, size, max }: TUseRipple) => {
+type TUseRipple = {
+   /**  */
+   texture: THREE.Texture;
+   /** @param {number} 64 */
+   size?: number;
+   /** @param {number} 100 */
+   max?: number;
+};
+
+export const useRipple = ({ texture, size = 64, max = 100 }: TUseRipple) => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const meshArr = useMesh({
       size: size,
@@ -35,13 +37,17 @@ export const useRipple = ({ texture, size, max }: TUseRipple) => {
    const updateRenderTarget = useSingleFBO(scene, camera);
 
    const currentWave = useRef(0);
-   /**
-    * @returns rederTarget.texture
-    */
+
    const handleUpdate = useCallback(
       (props: RootState, params: RippleParams) => {
          const { gl, pointer, size } = props;
-         const { frequency, alpha, rotation, fadeout_speed, scale } = params;
+         const {
+            frequency = 0.01,
+            alpha = 0.6,
+            rotation = 0.01,
+            fadeout_speed = 0.9,
+            scale = 0.5,
+         } = params;
 
          //update pointer and meshArr
          const { currentPointer, diffPointer } = updatePointer(pointer);

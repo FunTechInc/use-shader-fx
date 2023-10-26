@@ -5,8 +5,8 @@ export const CONFIG = {
    /*===============================================
 	post fx
 	===============================================*/
-   //bgTexture
-   bgTexture: {
+   //transitionBg
+   transitionBg: {
       texture: [new THREE.Texture()],
       noise: new THREE.Texture(),
       noiseStrength: 0.0,
@@ -16,18 +16,19 @@ export const CONFIG = {
       active: true,
       transformDir: 1,
       transform: () => {
-         CONFIG.bgTexture.transformDir = CONFIG.bgTexture.transformDir * -1;
+         CONFIG.transitionBg.transformDir =
+            CONFIG.transitionBg.transformDir * -1;
          const tl = gsap.timeline({
             defaults: { duration: 2 },
          });
-         tl.to(CONFIG.bgTexture, {
+         tl.to(CONFIG.transitionBg, {
             noiseStrength: 0.2,
             progress: 0.5,
             ease: "power3.in",
          });
-         tl.to(CONFIG.bgTexture, {
+         tl.to(CONFIG.transitionBg, {
             noiseStrength: 0.0,
-            progress: CONFIG.bgTexture.transformDir > 0 ? 0.0 : 1.0,
+            progress: CONFIG.transitionBg.transformDir > 0 ? 0.0 : 1.0,
             ease: "power3.out",
          });
       },
@@ -38,26 +39,27 @@ export const CONFIG = {
       color1: new THREE.Color(0x000000),
       active: false,
    },
-   //simpleNoise
-   simpleNoise: {
-      xDir: {
-         x: 10,
-         y: 10,
-      },
-      yDir: {
-         x: 10,
-         y: 10,
-      },
-      xTimeStrength: 0.1,
-      yTimeStrength: 0.1,
-      xStrength: 0.01,
-      yStrength: 0.01,
+   //fogProjection
+   fogProjection: {
+      timeStrength: 0.0,
+      distortionStrength: 0.0,
+      fogEdge0: 0.0,
+      fogEdge1: 0.9,
+      fogColor: new THREE.Color(0xffffff),
       active: false,
    },
+
    /*===============================================
 	fx
 	===============================================*/
-   fruid2: {
+   ripple: {
+      frequency: 0.01,
+      rotation: 0.01,
+      fadeout_speed: 0.9,
+      scale: 0.15,
+      alpha: 0.6,
+   },
+   fruid: {
       density_dissipation: 0.98,
       velocity_dissipation: 0.99,
       velocity_acceleration: 8.0,
@@ -71,13 +73,6 @@ export const CONFIG = {
          const bCol = (rCol + gCol) / 2;
          return new THREE.Vector3(rCol, gCol, bCol);
       },
-   },
-   ripple: {
-      frequency: 0.01,
-      rotation: 0.01,
-      fadeout_speed: 0.9, //乗算される透明度係数 0~1 1で残り続ける
-      scale: 0.15,
-      alpha: 0.6,
    },
    selectEffect: -1,
 };

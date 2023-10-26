@@ -7,18 +7,16 @@ import { useSingleFBO } from "../utils/useSingleFBO";
 import { setUniform } from "../utils/setUniforms";
 
 export type FogProjectionParams = {
-   texture: THREE.Texture;
-   xDir: THREE.Vector2;
-   yDir: THREE.Vector2;
-   xTimeStrength: number;
-   yTimeStrength: number;
-   xStrength: number;
-   yStrength: number;
+   texture?: THREE.Texture;
+   timeStrength?: number;
+   distortionStrength?: number;
+   fogEdge0?: number;
+   fogEdge1?: number;
+   fogColor?: THREE.Color;
+   noiseOct?: number;
+   fbmOct?: number;
 };
 
-/**
- * @returns handleUpdate(props: RootState)=> THREE.WebGLRenderTarget.texture
- */
 export const useFogProjection = () => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
@@ -30,24 +28,30 @@ export const useFogProjection = () => {
          const { gl, clock } = props;
          const {
             texture,
-            xDir,
-            xTimeStrength,
-            xStrength,
-            yDir,
-            yTimeStrength,
-            yStrength,
+            timeStrength,
+            distortionStrength,
+            fogEdge0,
+            fogEdge1,
+            fogColor,
+            noiseOct,
+            fbmOct,
          } = params;
+
          //set params
-         setUniform(material, "uTexture", texture);
-         setUniform(material, "xDir", xDir);
-         setUniform(material, "xTimeStrength", xTimeStrength);
-         setUniform(material, "xStrength", xStrength);
-         setUniform(material, "yDir", yDir);
-         setUniform(material, "yTimeStrength", yTimeStrength);
-         setUniform(material, "yStrength", yStrength);
          setUniform(material, "uTime", clock.getElapsedTime());
+         texture && setUniform(material, "uTexture", texture);
+         timeStrength && setUniform(material, "timeStrength", timeStrength);
+         distortionStrength &&
+            setUniform(material, "distortionStrength", distortionStrength);
+         fogEdge0 && setUniform(material, "fogEdge0", fogEdge0);
+         fogEdge1 && setUniform(material, "fogEdge1", fogEdge1);
+         fogColor && setUniform(material, "fogColor", fogColor);
+         noiseOct && setUniform(material, "noiseOct", noiseOct);
+         fbmOct && setUniform(material, "fbmOct", fbmOct);
+
          //update render target
          const bufferTexture = updateRenderTarget(gl);
+
          //return buffer
          return bufferTexture;
       },

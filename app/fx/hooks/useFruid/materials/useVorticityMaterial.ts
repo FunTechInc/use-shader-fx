@@ -4,8 +4,11 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/vorticity.frag";
 
 type TUniforms = {
-   resolution: { value: THREE.Vector2 };
-   dataTex: { value: THREE.Texture };
+   uVelocity: { value: THREE.Texture };
+   uCurl: { value: THREE.Texture };
+   curl: { value: number };
+   dt: { value: number };
+   texelSize: { value: THREE.Vector2 };
 };
 
 export class VorticityMaterial extends THREE.ShaderMaterial {
@@ -17,8 +20,11 @@ export const useVorticityMaterial = () => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               resolution: { value: new THREE.Vector2() },
-               dataTex: { value: null },
+               uVelocity: { value: null },
+               uCurl: { value: null },
+               curl: { value: 0 },
+               dt: { value: 0 },
+               texelSize: { value: new THREE.Vector2() },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
