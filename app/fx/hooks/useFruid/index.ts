@@ -7,38 +7,70 @@ import { usePointer } from "../utils/usePointer";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 import { setUniform } from "../utils/setUniforms";
+import { HooksReturn } from "../types";
 
 export type FruidParams = {
-   density_dissipation: number;
-   velocity_dissipation: number;
-   velocity_acceleration: number;
-   pressure_dissipation: number;
-   pressure_iterations: number;
-   curl_strength: number;
-   splat_radius: number;
-   fruid_color: (velocity: THREE.Vector2) => THREE.Vector3;
+   density_dissipation?: number;
+   velocity_dissipation?: number;
+   velocity_acceleration?: number;
+   pressure_dissipation?: number;
+   pressure_iterations?: number;
+   curl_strength?: number;
+   splat_radius?: number;
+   fruid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | null;
 };
 
-/**
- * @returns handleUpdate useFrameで毎フレーム呼び出す関数
- */
-export const useFruid = () => {
+export type FruidObject = {
+   scene: THREE.Scene;
+   materials: THREE.Material[];
+   camera: THREE.Camera;
+   renderTarget: THREE.WebGLRenderTarget[];
+};
+
+export const useFruid = (): HooksReturn<FruidParams, FruidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const [materials, setMeshMaterial] = useMesh(scene);
    const camera = useCamera();
    const updatePointer = usePointer();
 
-   // FBO
-   const updateVelocityFBO = useDoubleFBO(scene, camera);
-   const updateDensityFBO = useDoubleFBO(scene, camera);
-   const updateCurlFBO = useSingleFBO(scene, camera);
-   const updateDivergenceFBO = useSingleFBO(scene, camera);
-   const updatePressureFBO = useDoubleFBO(scene, camera);
+   const [, updateVelocityFBO] = useDoubleFBO(scene, camera, false);
+   const [, updateDensityFBO] = useDoubleFBO(scene, camera, false);
+   const [, updateCurlFBO] = useSingleFBO(scene, camera, false);
+   const [, updateDivergenceFBO] = useSingleFBO(scene, camera, false);
+   const [, updatePressureFBO] = useDoubleFBO(scene, camera, false);
 
    const lastTime = useRef(0);
-   /**œ
-    * @returns rederTarget.texture
-    */
+   const scaledDiffVec = useRef(new THREE.Vector2(0, 0));
+   const spaltVec = useRef(new THREE.Vector3(0, 0));
+   const densityVec = useRef(new THREE.Vector3(0, 0));
+
+   const paramsRef = useRef<FruidParams>({
+      density_dissipation: 0.0,
+      velocity_dissipation: 0.0,
+      velocity_acceleration: 0.0,
+      pressure_dissipation: 0.0,
+      pressure_iterations: 20,
+      curl_strength: 0.0,
+      splat_radius: 0.001,
+      fruid_color: null,
+   });
+
+   const handleSetUniform = useCallback((params: FruidParams) => {
+      for (const key in params) {
+         if (params[key] !== undefined && params[key] !== null) {
+            paramsRef.current[key] = params[key];
+         }
+      }
+   }, []);
+   // const handleSetUniform = useCallback((params: FruidParams) => {
+   //    for (const key in params) {
+   //       const paramKey = key as keyof FruidParams;
+   //       if (params[paramKey] !== undefined && params[paramKey] !== null) {
+   //          paramsRef.current[paramKey] = params[paramKey];
+   //       }
+   //    }
+   // }, []);
+
    const handleUpdate = useCallback(
       (props: RootState, params: FruidParams) => {
          const { gl, pointer, clock, size } = props;
@@ -72,7 +104,7 @@ export const useFruid = () => {
             setUniform(
                materials.advectionMaterial,
                "dissipation",
-               velocity_dissipation
+               paramsRef.current.velocity_dissipation!
             );
          });
 
@@ -84,7 +116,7 @@ export const useFruid = () => {
             setUniform(
                materials.advectionMaterial,
                "dissipation",
-               density_dissipation
+               paramsRef.current.density_dissipation!
             );
          });
 
@@ -97,23 +129,27 @@ export const useFruid = () => {
                setUniform(materials.splatMaterial, "uTarget", read);
                setUniform(materials.splatMaterial, "point", currentPointer);
                const scaledDiff = diffPointer.multiply(
-                  new THREE.Vector2(size.width, size.height).multiplyScalar(
-                     velocity_acceleration
-                  )
+                  scaledDiffVec.current
+                     .set(size.width, size.height)
+                     .multiplyScalar(paramsRef.current.velocity_acceleration!)
                );
                setUniform(
                   materials.splatMaterial,
                   "color",
-                  new THREE.Vector3(scaledDiff.x, scaledDiff.y, 1.0)
+                  spaltVec.current.set(scaledDiff.x, scaledDiff.y, 1.0)
                );
-               setUniform(materials.splatMaterial, "radius", splat_radius);
+               setUniform(
+                  materials.splatMaterial,
+                  "radius",
+                  paramsRef.current.splat_radius!
+               );
             });
             updateDensityFBO(gl, ({ read }) => {
                setMeshMaterial(materials.splatMaterial);
                setUniform(materials.splatMaterial, "uTarget", read);
                const color: THREE.Vector3 = fruid_color
                   ? fruid_color(velocity)
-                  : new THREE.Vector3(1.0, 1.0, 1.0);
+                  : densityVec.current.set(1.0, 1.0, 1.0);
                setUniform(materials.splatMaterial, "color", color);
             });
          }
@@ -129,7 +165,11 @@ export const useFruid = () => {
             setMeshMaterial(materials.vorticityMaterial);
             setUniform(materials.vorticityMaterial, "uVelocity", read);
             setUniform(materials.vorticityMaterial, "uCurl", curlTex);
-            setUniform(materials.vorticityMaterial, "curl", curl_strength);
+            setUniform(
+               materials.vorticityMaterial,
+               "curl",
+               paramsRef.current.curl_strength!
+            );
             setUniform(materials.vorticityMaterial, "dt", dt);
          });
 
@@ -143,14 +183,18 @@ export const useFruid = () => {
          updatePressureFBO(gl, ({ read }) => {
             setMeshMaterial(materials.clearMaterial);
             setUniform(materials.clearMaterial, "uTexture", read);
-            setUniform(materials.clearMaterial, "value", pressure_dissipation);
+            setUniform(
+               materials.clearMaterial,
+               "value",
+               paramsRef.current.pressure_dissipation!
+            );
          });
 
          // solve pressure iterative (Gauss-Seidel)
          setMeshMaterial(materials.pressureMaterial);
          setUniform(materials.pressureMaterial, "uDivergence", divergenceTex);
          let pressureTexTemp: THREE.Texture;
-         for (let i = 0; i < pressure_iterations; i++) {
+         for (let i = 0; i < paramsRef.current.pressure_iterations!; i++) {
             pressureTexTemp = updatePressureFBO(gl, ({ read }) => {
                setUniform(materials.pressureMaterial, "uPressure", read);
             });
@@ -181,5 +225,5 @@ export const useFruid = () => {
          updateVelocityFBO,
       ]
    );
-   return handleUpdate;
+   return [handleUpdate];
 };

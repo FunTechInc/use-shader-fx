@@ -1,7 +1,5 @@
 precision mediump float;
 varying vec2 vUv;
-uniform vec2 u_resolution;
-uniform vec2 u_imageResolution;
 uniform sampler2D u_fx;
 uniform sampler2D u_postFx;
 uniform bool isBgActive;

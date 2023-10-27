@@ -41,12 +41,12 @@ export const CONFIG = {
    },
    //fogProjection
    fogProjection: {
-      timeStrength: 0.0,
-      distortionStrength: 0.0,
+      timeStrength: 0.2,
+      distortionStrength: 0.1,
       fogEdge0: 0.0,
       fogEdge1: 0.9,
       fogColor: new THREE.Color(0xffffff),
-      active: false,
+      active: true,
    },
 
    /*===============================================
@@ -67,12 +67,13 @@ export const CONFIG = {
       pressure_iterations: 20,
       curl_strength: 4,
       splat_radius: 0.002,
+      fruidVec: new THREE.Vector3(),
       fruid_color: (velocity: THREE.Vector2) => {
          const rCol = Math.max(0.0, velocity.x * 100);
          const gCol = Math.max(0.0, velocity.y * 100);
          const bCol = (rCol + gCol) / 2;
-         return new THREE.Vector3(rCol, gCol, bCol);
+         return CONFIG.fruid.fruidVec.set(rCol, gCol, bCol);
       },
    },
-   selectEffect: -1,
+   selectEffect: 1,
 };

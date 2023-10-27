@@ -1,40 +1,49 @@
 import * as THREE from "three";
-import { useFBO } from "@react-three/drei";
-import { useCallback, useEffect, useRef } from "react";
-import { useResolution } from "./useResolution";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useThree } from "@react-three/fiber";
 
-const FBO_OPTION = {
+export const FBO_OPTION = {
+   minFilter: THREE.LinearFilter,
+   magFilter: THREE.LinearFilter,
+   type: THREE.HalfFloatType,
    depthBuffer: false,
    stencilBuffer: false,
 };
 
-type TUpdateFBO = (
+type UpdateFBO = (
    gl: THREE.WebGLRenderer,
+   /**  call before FBO is rendered */
    onBeforeRender?: ({ read }: { read: THREE.Texture }) => void
 ) => THREE.Texture;
 
+type Return = [target: THREE.WebGLRenderTarget, updateFBO: UpdateFBO];
+
 /**
- * render targetを更新して、スワップしたFBテクスチャーを返す
- * updateRenderTargetはレンダーのタイミングで実行を制限したい場合があるので、
- * @returns [renderTarget,updateRenderTarget]
- * @param (gl,(fbo)=>void); 第2引数はFBOを受け取るレンダリング関数
+ * @param isSizeUpdate - Whether to update renderTarget size when dpr and size change, default:true
+ * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
 export const useSingleFBO = (
    scene: THREE.Scene,
-   camera: THREE.Camera
-): TUpdateFBO => {
+   camera: THREE.Camera,
+   isSizeUpdate = true
+): Return => {
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
 
-   //set FBO
-   renderTarget.current = useFBO(FBO_OPTION);
+   const size = useThree((state) => state.size);
+   const viewport = useThree((state) => state.viewport);
+   const _width = size.width * viewport.dpr;
+   const _height = size.height * viewport.dpr;
 
-   //resize
-   const resolution = useResolution();
+   renderTarget.current = useMemo(
+      () => new THREE.WebGLRenderTarget(_width, _height, FBO_OPTION),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      []
+   );
    useEffect(() => {
-      renderTarget.current?.setSize(resolution.x, resolution.y);
-   }, [resolution]);
+      isSizeUpdate && renderTarget.current?.setSize(_width, _height);
+   }, [_width, _height, isSizeUpdate]);
 
-   const updateRenderTarget: TUpdateFBO = useCallback(
+   const updateRenderTarget: UpdateFBO = useCallback(
       (gl, onBeforeRender) => {
          const fbo = renderTarget.current!;
          gl.setRenderTarget(fbo);
@@ -47,5 +56,5 @@ export const useSingleFBO = (
       [scene, camera]
    );
 
-   return updateRenderTarget;
+   return [renderTarget.current, updateRenderTarget];
 };

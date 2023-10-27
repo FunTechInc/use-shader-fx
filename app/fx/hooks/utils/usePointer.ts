@@ -6,6 +6,7 @@ import { useCallback, useRef } from "react";
  */
 export const usePointer = () => {
    const prevPointer = useRef(new THREE.Vector2());
+   const diffPointer = useRef(new THREE.Vector2());
    const lastUpdateTime = useRef<number>(0);
    const velocity = useRef(new THREE.Vector2(0, 0));
    const isMoved = useRef(false);
@@ -35,13 +36,10 @@ export const usePointer = () => {
       }
       prevPointer.current = current;
 
-      //get diff pointer
-      const diffPointer = new THREE.Vector2().subVectors(current, prevTemp);
-
       return {
          currentPointer: current,
          prevPointer: prevTemp,
-         diffPointer: diffPointer,
+         diffPointer: diffPointer.current.subVectors(current, prevTemp),
          velocity: velocity.current,
          isVelocityUpdate: isUpdate,
       };

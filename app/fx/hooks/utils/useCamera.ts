@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { useResolution } from "./useResolution";
+import { useMemo } from "react";
 
 const getCameraProps = (width: number, height: number) => {
    const frustumSize = height;
@@ -14,13 +15,17 @@ export const useCamera = () => {
       resolution.x,
       resolution.y
    );
-   const camera = new THREE.OrthographicCamera(
-      -width,
-      width,
-      height,
-      -height,
-      near,
-      far
+   const camera = useMemo(
+      () =>
+         new THREE.OrthographicCamera(
+            -width,
+            width,
+            height,
+            -height,
+            near,
+            far
+         ),
+      [width, height, near, far]
    );
    return camera;
 };

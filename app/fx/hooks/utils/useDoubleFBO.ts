@@ -1,12 +1,8 @@
 import * as THREE from "three";
 import { useFBO } from "@react-three/drei";
-import { useCallback, useEffect, useRef } from "react";
-import { useResolution } from "./useResolution";
-
-const FBO_OPTION = {
-   depthBuffer: false,
-   stencilBuffer: false,
-};
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useThree } from "@react-three/fiber";
+import { FBO_OPTION } from "./useSingleFBO";
 
 export type TRenderTarget = {
    read: THREE.WebGLRenderTarget | null;
@@ -14,8 +10,9 @@ export type TRenderTarget = {
    swap: () => void;
 };
 
-type TUpdateFBO = (
+type UpdateFBO = (
    gl: THREE.WebGLRenderer,
+   /**  call before FBO is rendered */
    onBeforeRender?: ({
       read,
       write,
@@ -25,16 +22,20 @@ type TUpdateFBO = (
    }) => void
 ) => THREE.Texture;
 
+type Return = [
+   target: { read: THREE.WebGLRenderTarget; write: THREE.WebGLRenderTarget },
+   updateFBO: UpdateFBO
+];
+
 /**
- * render targetを更新して、スワップしたFBテクスチャーを返す
- * updateRenderTargetはレンダーのタイミングで実行を制限したい場合があるので、
- * @returns [renderTarget,updateRenderTarget]
- * @param (gl,(fbo)=>void); 第2引数はFBOを受け取るレンダリング関数
+ * @param  isSizeUpdate - Whether to update renderTarget size when dpr and size change, default:true
+ * @returns [{read:THREE.WebGLRenderTarget,write:THREE.WebGLRenderTarget} , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
 export const useDoubleFBO = (
    scene: THREE.Scene,
-   camera: THREE.Camera
-): TUpdateFBO => {
+   camera: THREE.Camera,
+   isSizeUpdate = true
+): Return => {
    const renderTarget = useRef<TRenderTarget>({
       read: null,
       write: null,
@@ -45,19 +46,23 @@ export const useDoubleFBO = (
       },
    });
 
-   //set FBO
-   renderTarget.current.read = useFBO(FBO_OPTION);
+   const size = useThree((state) => state.size);
+   const viewport = useThree((state) => state.viewport);
+   const _width = size.width * viewport.dpr;
+   const _height = size.height * viewport.dpr;
+
+   renderTarget.current.read = useMemo(
+      () => new THREE.WebGLRenderTarget(_width, _height, FBO_OPTION),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      []
+   );
+   useEffect(() => {
+      isSizeUpdate && renderTarget.current.read?.setSize(_width, _height);
+   }, [_width, _height, isSizeUpdate]);
+
    renderTarget.current.write = useFBO(FBO_OPTION);
 
-   //resize
-   const resolution = useResolution();
-   useEffect(() => {
-      // must be called in useEffect
-      renderTarget.current.read?.setSize(resolution.x, resolution.y);
-      renderTarget.current.write?.setSize(resolution.x, resolution.y);
-   }, [resolution]);
-
-   const updateRenderTarget: TUpdateFBO = useCallback(
+   const updateRenderTarget: UpdateFBO = useCallback(
       (gl, onBeforeRender) => {
          const fbo = renderTarget.current;
          gl.setRenderTarget(fbo.write);
@@ -75,5 +80,8 @@ export const useDoubleFBO = (
       [scene, camera]
    );
 
-   return updateRenderTarget;
+   return [
+      { read: renderTarget.current.read, write: renderTarget.current.write },
+      updateRenderTarget,
+   ];
 };

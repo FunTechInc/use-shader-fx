@@ -36,5 +36,6 @@ export const useDuoTone = () => {
       },
       [updateRenderTarget, material]
    );
+
    return handleUpdate;
 };

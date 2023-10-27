@@ -12,10 +12,8 @@ declare global {
 }
 
 export type TMainShaderUniforms = {
-   u_fx: THREE.Texture;
+   u_fx: THREE.Texture | null;
    u_postFx: THREE.Texture;
-   u_resolution: THREE.Vec2;
-   u_imageResolution: THREE.Vec2;
    isBgActive: boolean;
 };
 
@@ -23,8 +21,6 @@ export const MainShaderMaterial = shaderMaterial(
    {
       u_fx: null,
       u_postFx: null,
-      u_resolution: new THREE.Vector2(0, 0),
-      u_imageResolution: new THREE.Vector2(1440, 1440),
       isBgActive: true,
    },
    vertexShader,

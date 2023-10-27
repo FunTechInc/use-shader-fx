@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend } from "@react-three/fiber";
 import { RippleParams, useRipple } from "./hooks/useRipple";
@@ -11,15 +11,13 @@ import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
 import { useGUI } from "./gui/useGUI";
 import { CONFIG } from "./config";
 import { DuoToneParams, useDuoTone } from "./hooks/useDuoTone";
-import {
-   FogProjectionParams,
-   useFogProjection,
-} from "./hooks/useFogProjection";
+import { useFogProjection } from "./hooks/useFogProjection";
+import { usePerformanceMonitor } from "@react-three/drei";
 
 extend({ MainShaderMaterial });
 
 /*===============================================
-TODO*extract paramsはライブラリからはずそっと：わかりにくくなる
+TODO*useFruidの整理から！
 ===============================================*/
 
 export const Scene = () => {
@@ -40,20 +38,34 @@ export const Scene = () => {
    //fx
    const updateRipple = useRipple({ texture: smoke, max: 100, size: 64 });
    const updateFruid = useFruid();
-   // const updateFlowmap = useFlowmap();
-   // const updateSimpleFruid = useSimpleFruid();
-   // const updateBrush = useBrush(smoke);
+   const updateFlowmap = useFlowmap();
+   const updateSimpleFruid = useSimpleFruid();
+   const updateBrush = useBrush(smoke);
 
    //post fx
    const updateTransitionBg = useTransitionBg();
    const updateDuoTone = useDuoTone();
-   const updateFogProjection = useFogProjection();
+   /*===============================================
+	TODO*これ配列じゃなくてオブジェクトにしよっ
+	そんでシーンとかマテリアルとか、FBOの配列とかを受けられるようにして、こっからでもサイズを変更できるような仕組みにしよっt
+	===============================================*/
+   const [updateFogProjection, setFogProjectionUniform, fogObject] =
+      useFogProjection();
+   /*===============================================
+	performance
+	===============================================*/
+   // usePerformanceMonitor({
+   // 		onChange: () => {
+   // 		setFogProjectionUniform({});
+   // 		}
+   // });
 
+   /*===============================================
+	frame
+	===============================================*/
    useFrame((props) => {
-      /*===============================================
-		fx
-		===============================================*/
-      let fx: THREE.Texture;
+      // fx
+      let fx = null;
       switch (CONFIG.selectEffect) {
          case 0:
             fx = updateRipple(props, {
@@ -77,14 +89,12 @@ export const Scene = () => {
             });
             break;
          default:
-            fx = new THREE.Texture();
             break;
       }
 
-      /*===============================================
-		post fx
-		===============================================*/
-      const bgTexture = updateTransitionBg(props, {
+      // post fx
+      let postFx: THREE.Texture;
+      postFx = updateTransitionBg(props, {
          imageResolution: CONFIG.transitionBg.imageResolution,
          noiseStrength: CONFIG.transitionBg.noiseStrength,
          progress: CONFIG.transitionBg.progress,
@@ -93,35 +103,29 @@ export const Scene = () => {
          noise: noise,
       });
 
-      let duoTone;
       if (CONFIG.duoTone.active) {
-         duoTone = updateDuoTone(props, {
+         postFx = updateDuoTone(props, {
             color0: CONFIG.duoTone.color0,
             color1: CONFIG.duoTone.color1,
-            texture: bgTexture,
+            texture: postFx,
          });
-      } else {
-         duoTone = bgTexture;
       }
 
-      let fogProjection;
       if (CONFIG.fogProjection.active) {
-         fogProjection = updateFogProjection(props, {
+         postFx = updateFogProjection(props, {
             timeStrength: CONFIG.fogProjection.timeStrength,
             distortionStrength: CONFIG.fogProjection.distortionStrength,
             fogEdge0: CONFIG.fogProjection.fogEdge0,
             fogEdge1: CONFIG.fogProjection.fogEdge1,
             fogColor: CONFIG.fogProjection.fogColor,
-            texture: duoTone,
+            texture: postFx,
          });
-      } else {
-         fogProjection = duoTone;
       }
 
       const main = mainShaderRef.current;
       if (main) {
          main.u_fx = fx;
-         main.u_postFx = fogProjection;
+         main.u_postFx = postFx;
          main.isBgActive = CONFIG.transitionBg.active;
       }
       updateGUI();
@@ -130,27 +134,7 @@ export const Scene = () => {
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <mainShaderMaterial
-            key={MainShaderMaterial.key}
-            ref={mainShaderRef}
-            u_resolution={
-               new THREE.Vector2(window.innerWidth, window.innerHeight)
-            }
-         />
+         <mainShaderMaterial key={MainShaderMaterial.key} ref={mainShaderRef} />
       </mesh>
    );
 };
-
-/*===============================================
-TODO:
-- resize
-- clean up
-
-TODO*
--drei の performance monitor調べる
-- Movement regressionてか、このページよく読む
-https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#movement-regression
-- dreiのパフォーマンス
--このページもよく読む
-https://docs.pmnd.rs/react-three-fiber/advanced/pitfalls
-===============================================*/
