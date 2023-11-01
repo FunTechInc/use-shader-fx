@@ -1,17 +1,20 @@
 # Usage
 
-こんな感じでフックは更新関数を受け取ります
+それぞれの fxHook からは{updateFx,setParams,fxObject}を受け取ります。
+
+-  updateFx - A function to be called inside `useFrame` that returns a `THREE.Texture`.
+-  setParams - A function to update the parameters, useful for performance tuning, etc.
+-  fxObject - An object containing various FX components such as scene, camera, material, and render target.
 
 ```js
-const updateFruid = useFruid();
+const { updateFx, setParams, fxObject } = useFruid();
 ```
 
-それを useFrame で毎フレーム呼び出します。
-返り値としてフレームバッファーテクスチャーを返します。
+updateFx は useFrame で実行します。第 1 引数には useFrame から受け取る RootState,第 2 引数に HookPrams を受け取ります。
 
 ```js
 useFrame((props) => {
-   const texture = updateFruid(props);
+   const texture = updateFx(props, params);
    const main = mainShaderRef.current;
    if (main) {
       main.u_bufferTexture = texture;
@@ -27,12 +30,23 @@ useFrame((props) => {
 ## useDoubleFBO
 
 FBO を生成して、ダブルバッファリングしたバッファーテクスチャーを swap して返してくれます。
+第 3 引数には options が入ります。
+
+-  isDpr: Whether to multiply dpr, default:false
+-  isSizeUpdate: Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
+
+drei の useFBO はデフォルトで dpr と size の変更で setSize してしまうため、バッファーテクスチャーが更新されてしまいます。そこで、dpr と size の更新に対して non reactive な hook を作成しました。options でそれぞれ reactive にすることが可能です。
+
+もし resize させたい場合は、fxHook が第 3 引数に受け取る fxObject に renderTarget も格納しています。
 
 ```js
-const updateRenderTarget = useDoubleFBO();
+const [velocityFBO, updateVelocityFBO] = useDoubleFBO(scene, camera, {
+   isDpr: true,
+   isSizeUpdate: true,
+});
 
 // how to render
-updateRenderTarget(gl, ({ read, write }) => {
+updateVelocityFBO(gl, ({ read, write }) => {
    // callback before gl.render()
 });
 ```
@@ -42,7 +56,7 @@ updateRenderTarget(gl, ({ read, write }) => {
 FBO を生成して、焼き付けられた texture を返す、更新関数を生成します。
 
 ```js
-const updateRenderTarget = useSingleFBO();
+const updateRenderTarget = useSingleFBO(scene, camera, options);
 
 // how to render
 updateRenderTarget(gl, ({ read }) => {
@@ -71,8 +85,10 @@ const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
 
 キャンバスのサイズの state のフック
 
+-  isDpr: Whether to multiply dpr, default:false
+
 ```js
-const resolution = useResolution();
+const resolution = useResolution(isDpr);
 ```
 
 ## useAddMesh
@@ -91,4 +107,23 @@ useAddMesh(scene, geometry, material);
 const setUniform = (material, key, value) => {
    material.uniforms[key].value = value;
 };
+```
+
+## useParams
+
+params の refObject とその更新用関数を返します。
+
+```ts
+const [params, setParams] =
+   useParams <FruidParams>
+   {
+      density_dissipation: 0.0,
+      velocity_dissipation: 0.0,
+      velocity_acceleration: 0.0,
+      pressure_dissipation: 0.0,
+      pressure_iterations: 20,
+      curl_strength: 0.0,
+      splat_radius: 0.001,
+      fruid_color: new THREE.Vector3(1.0, 1.0, 1.0),
+   };
 ```
