@@ -5,9 +5,12 @@ import { useCamera } from "../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 import { setUniform } from "../utils/setUniforms";
+import { HooksReturn } from "../types";
+import { useParams } from "../utils/useParams";
 
 export type TransitionBgParams = {
-   texture?: THREE.Texture[];
+   texture0?: THREE.Texture;
+   texture1?: THREE.Texture;
    imageResolution?: THREE.Vector2;
    noise?: THREE.Texture;
    noiseStrength?: number;
@@ -15,42 +18,61 @@ export type TransitionBgParams = {
    dir?: THREE.Vector2;
 };
 
-export const useTransitionBg = () => {
+export type TransitionBgObject = {
+   scene: THREE.Scene;
+   material: THREE.Material;
+   camera: THREE.Camera;
+   renderTarget: THREE.WebGLRenderTarget;
+};
+
+export const useTransitionBg = (): HooksReturn<
+   TransitionBgParams,
+   TransitionBgObject
+> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera();
-   const updateRenderTarget = useSingleFBO(scene, camera);
+   const [renderTarget, updateRenderTarget] = useSingleFBO(scene, camera);
 
-   const handleUpdate = useCallback(
-      (props: RootState, params: TransitionBgParams) => {
+   const [params, setParams] = useParams<TransitionBgParams>({
+      texture0: new THREE.Texture(),
+      texture1: new THREE.Texture(),
+      imageResolution: new THREE.Vector2(0, 0),
+      noise: new THREE.Texture(),
+      noiseStrength: 0.0,
+      progress: 0.0,
+      dir: new THREE.Vector2(0, 0),
+   });
+
+   const updateFx = useCallback(
+      (props: RootState, updateParams: TransitionBgParams) => {
          const { gl } = props;
-         const {
-            noise,
-            texture,
-            imageResolution,
-            noiseStrength,
-            progress,
-            dir,
-         } = params;
 
-         //set params
-         texture && setUniform(material, "uTexture0", texture[0]);
-         texture && setUniform(material, "uTexture1", texture[1]);
-         imageResolution &&
-            setUniform(material, "uImageResolution", imageResolution);
-         noise && setUniform(material, "noise", noise);
-         noiseStrength && setUniform(material, "noiseStrength", noiseStrength);
-         progress && setUniform(material, "progress", progress);
-         dir && setUniform(material, "dirX", dir.x);
-         dir && setUniform(material, "dirY", dir.y);
+         setParams(updateParams);
 
-         //update render target
+         setUniform(material, "uTexture0", params.texture0!);
+         setUniform(material, "uTexture1", params.texture1!);
+         setUniform(material, "uImageResolution", params.imageResolution!);
+         setUniform(material, "noise", params.noise!);
+         setUniform(material, "noiseStrength", params.noiseStrength!);
+         setUniform(material, "progress", params.progress!);
+         setUniform(material, "dirX", params.dir!.x);
+         setUniform(material, "dirY", params.dir!.y);
+
          const bufferTexture = updateRenderTarget(gl);
 
-         //return buffer
          return bufferTexture;
       },
-      [updateRenderTarget, material]
+      [updateRenderTarget, material, params, setParams]
    );
-   return handleUpdate;
+   return {
+      updateFx,
+      setParams,
+      fxObject: {
+         scene: scene,
+         material: material,
+         camera: camera,
+         renderTarget: renderTarget,
+      },
+   };
 };

@@ -1,8 +1,7 @@
 precision mediump float;
 
-uniform sampler2D tMap;
-uniform sampler2D tTexture;
-
+uniform sampler2D uMap;
+uniform sampler2D uTexture;
 uniform float uRadius;
 uniform float uAlpha;
 uniform float uDissipation;
@@ -57,7 +56,7 @@ vec4 createSmudge(){
 	}	
 	vec4 smudgedColor = vec4(0.0);
 	for(int i = 0; i < 9; i++) {
-		smudgedColor += texture2D(tMap, vUv + offsets[i]);
+		smudgedColor += texture2D(uMap, vUv + offsets[i]);
 	}
 	return smudgedColor / 9.0;
 }
@@ -68,7 +67,7 @@ vec4 createMotionBlur(vec4 baseColor, vec2 velocity, float motion, int samples) 
 	for(int i = 1; i < samples; i++) {
 		float t = float(i) / float(samples - 1);
 		vec2 offset = t * scaledVelocity / uResolution;
-		motionBlurredColor += texture2D(tMap, vUv + offset);
+		motionBlurredColor += texture2D(uMap, vUv + offset);
 	}
 	return motionBlurredColor / float(samples);
 }
@@ -99,7 +98,7 @@ void main() {
 	vec3 color = vec3(1.0,1.0,1.0);
 
 	//カラーにテクスチャーをマッピングする
-	vec4 textureColor = texture2D(tTexture, vUv);
+	vec4 textureColor = texture2D(uTexture, vUv);
 	vec3 finalColor = mix(color, textureColor.rgb, textureColor.a);
 
 	//始点と終点の直線上を判定する

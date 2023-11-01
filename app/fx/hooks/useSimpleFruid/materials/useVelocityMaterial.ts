@@ -26,9 +26,9 @@ export const useVelocityMaterial = () => {
                dataTex: { value: null },
                pointerPos: { value: null },
                beforePointerPos: { value: null },
-               viscosity: { value: 0.99 }, //粘度
-               forceRadius: { value: 90 }, //力を加える円の半径
-               forceCoefficient: { value: 1.0 },
+               viscosity: { value: 0.0 },
+               forceRadius: { value: 0.0 },
+               forceCoefficient: { value: 0.0 },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

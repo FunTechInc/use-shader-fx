@@ -1,67 +1,96 @@
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
-import { useDoubleFBO } from "../utils/useDoubleFBO";
+import { DoubleRenderTarget, useDoubleFBO } from "../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
 import { usePointer } from "../utils/usePointer";
 import { setUniform } from "../utils/setUniforms";
+import { HooksReturn } from "../types";
+import { useParams } from "../utils/useParams";
 
-const RADIUS = 0.04; // size of the stamp, percentage of the size
-const MAGNIFICATION = 0.0; //拡大率
-const ALPHA = 0.1; // opacity TODO*これバグってるいので修正
-const DISSIPATION = 1.0; // 拡散率。1にすると残り続ける
-const MOTION_BLUR = 0.0; //モーションブラーの強さ
-const MOTION_SAMPLE = 10; //モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大
-const SMUDGE = 0.0; //滲み効果の強さ
+export type BrushParams = {
+   /** ブラシに適用するテクスチャー */
+   texture?: THREE.Texture;
+   /** size of the stamp, percentage of the size */
+   radius?: number;
+   /** opacity TODO*これバグってるいので修正 */
+   alpha?: number;
+   /** 滲み効果の強さ */
+   smudge?: number;
+   /** 拡散率。1にすると残り続ける */
+   dissipation?: number;
+   /** 拡大率 */
+   magnification?: number;
+   /** モーションブラーの強さ */
+   motionBlur?: number;
+   /** モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大 */
+   motionSample?: number;
+};
 
-/**
- * @returns handleUpdate useFrameで毎フレーム呼び出す関数
- */
-export const useBrush = (texture?: THREE.Texture) => {
+export type BrushObject = {
+   scene: THREE.Scene;
+   material: THREE.Material;
+   camera: THREE.Camera;
+   renderTarget: DoubleRenderTarget;
+};
+
+export const useBrush = (): HooksReturn<BrushParams, BrushObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({
-      // texture,
-      scene,
-      radius: RADIUS,
-      alpha: ALPHA,
-      smudge: SMUDGE,
-      dissipation: DISSIPATION,
-      magnification: MAGNIFICATION,
-      motionBlur: MOTION_BLUR,
-      motionSample: MOTION_SAMPLE,
-   });
+   const material = useMesh(scene);
    const camera = useCamera();
    const updatePointer = usePointer();
-   const updateRenderTarget = useDoubleFBO(scene, camera);
+   const [renderTarget, updateRenderTarget] = useDoubleFBO(scene, camera);
 
-   /**
-    * @returns rederTarget.texture
-    */
-   const handleUpdate = useCallback(
-      (props: RootState) => {
+   const [params, setParams] = useParams<BrushParams>({
+      texture: new THREE.Texture(),
+      radius: 0.0,
+      alpha: 0.0,
+      smudge: 0.0,
+      dissipation: 0.0,
+      magnification: 0.0,
+      motionBlur: 0.0,
+      motionSample: 10,
+   });
+
+   const updateFx = useCallback(
+      (props: RootState, updateParams: BrushParams) => {
          const { gl, pointer } = props;
 
-         //update velocity
+         setParams(updateParams);
+
+         setUniform(material, "uTexture", params.texture!);
+         setUniform(material, "uRadius", params.radius!);
+         setUniform(material, "uAlpha", params.alpha!);
+         setUniform(material, "uSmudge", params.smudge!);
+         setUniform(material, "uDissipation", params.dissipation!);
+         setUniform(material, "uMagnification", params.magnification!);
+         setUniform(material, "uMotionBlur", params.motionBlur!);
+         setUniform(material, "uMotionSample", params.motionSample!);
+
          const { currentPointer, prevPointer, velocity } =
             updatePointer(pointer);
-         setUniform(material, "uMouse", currentPointer.clone());
-         setUniform(material, "uPrevMouse", prevPointer.clone());
-         setUniform(
-            material,
-            "uVelocity",
-            velocity.lerp(velocity, velocity.length() ? 0.15 : 0.1)
-         );
+         setUniform(material, "uMouse", currentPointer);
+         setUniform(material, "uPrevMouse", prevPointer);
+         setUniform(material, "uVelocity", velocity);
 
-         //update render target
          const bufferTexture = updateRenderTarget(gl, ({ read }) => {
-            setUniform(material, "tMap", read);
+            setUniform(material, "uMap", read);
          });
 
-         //return buffer
          return bufferTexture;
       },
-      [material, updatePointer, updateRenderTarget]
+      [material, updatePointer, updateRenderTarget, params, setParams]
    );
-   return handleUpdate;
+
+   return {
+      updateFx,
+      setParams,
+      fxObject: {
+         scene: scene,
+         material: material,
+         camera: camera,
+         renderTarget: renderTarget,
+      },
+   };
 };

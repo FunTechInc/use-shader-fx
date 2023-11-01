@@ -21,8 +21,8 @@ export const usePressureMaterial = () => {
             uniforms: {
                resolution: { value: new THREE.Vector2() },
                dataTex: { value: null },
-               alpha: { value: 1.0 }, //圧力計算時の係数
-               beta: { value: 1.0 }, //圧力計算時の係数
+               alpha: { value: 0.0 },
+               beta: { value: 0.0 },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

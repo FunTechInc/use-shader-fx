@@ -36,47 +36,34 @@ type TMaterials =
    | ClearMaterial
    | GradientSubtractMaterial
    | SplatMaterial;
-type TUseMeshReturnType = [
-   {
-      vorticityMaterial: VorticityMaterial;
-      curlMaterial: CurlMaterial;
-      advectionMaterial: AdvectionMaterial;
-      divergenceMaterial: DivergenceMaterial;
-      pressureMaterial: PressureMaterial;
-      clearMaterial: ClearMaterial;
-      gradientSubtractMaterial: GradientSubtractMaterial;
-      splatMaterial: SplatMaterial;
-   },
-   (material: TMaterials) => void
-];
 
+export type FruidMaterials = {
+   vorticityMaterial: VorticityMaterial;
+   curlMaterial: CurlMaterial;
+   advectionMaterial: AdvectionMaterial;
+   divergenceMaterial: DivergenceMaterial;
+   pressureMaterial: PressureMaterial;
+   clearMaterial: ClearMaterial;
+   gradientSubtractMaterial: GradientSubtractMaterial;
+   splatMaterial: SplatMaterial;
+};
+type TUseMeshReturnType = [FruidMaterials, (material: TMaterials) => void];
+
+/**
+ * Returns the material update function in the second argument
+ */
 export const useMesh = (scene: THREE.Scene): TUseMeshReturnType => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-
-   /*===============================================
-	各シェーダーマテリアルの初期化
-	===============================================*/
-   //初期シェーダー(initial)
    const initialMaterial = useInitialMaterial();
-   //更新用シェーダー
    const updateMaterial = initialMaterial.clone();
-   //カールシェーダー (curl)
    const curlMaterial = useCurlMaterial();
-   //うずまきシェーダー (vorticity)
    const vorticityMaterial = useVorticityMaterial();
-   //移流シェーダー(advection)
    const advectionMaterial = useAdvectionMaterial();
-   //発散シェーダー(divergence)
    const divergenceMaterial = useDivergenceMaterial();
-   //圧力シェーダー(pressure)
    const pressureMaterial = usePressureMaterial();
-   //クリアシェーダー
    const clearMaterial = useClearMaterial();
-   //gradientSubtract
    const gradientSubtractMaterial = useGradientSubtractMaterial();
-   //splatシェーダー
    const splatMaterial = useSplateMaterial();
-   //set object
    const materials = useMemo(
       () => ({
          vorticityMaterial,

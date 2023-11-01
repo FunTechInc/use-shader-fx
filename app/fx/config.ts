@@ -5,15 +5,12 @@ export const CONFIG = {
    /*===============================================
 	post fx
 	===============================================*/
-   //transitionBg
    transitionBg: {
-      texture: [new THREE.Texture()],
-      noise: new THREE.Texture(),
       noiseStrength: 0.0,
       progress: 0.0,
       dir: new THREE.Vector2(0.3, 0.2),
       imageResolution: new THREE.Vector2(1440, 1440),
-      active: true,
+      active: false,
       transformDir: 1,
       transform: () => {
          CONFIG.transitionBg.transformDir =
@@ -33,22 +30,19 @@ export const CONFIG = {
          });
       },
    },
-   //duoTone
    duoTone: {
       color0: new THREE.Color(0xffffff),
       color1: new THREE.Color(0x000000),
       active: false,
    },
-   //fogProjection
    fogProjection: {
       timeStrength: 0.2,
       distortionStrength: 0.1,
       fogEdge0: 0.0,
       fogEdge1: 0.9,
       fogColor: new THREE.Color(0xffffff),
-      active: true,
+      active: false,
    },
-
    /*===============================================
 	fx
 	===============================================*/
@@ -64,7 +58,6 @@ export const CONFIG = {
       velocity_dissipation: 0.99,
       velocity_acceleration: 8.0,
       pressure_dissipation: 0.9,
-      pressure_iterations: 20,
       curl_strength: 4,
       splat_radius: 0.002,
       fruidVec: new THREE.Vector3(),
@@ -74,6 +67,28 @@ export const CONFIG = {
          const bCol = (rCol + gCol) / 2;
          return CONFIG.fruid.fruidVec.set(rCol, gCol, bCol);
       },
+   },
+   brush: {
+      radius: 0.02,
+      alpha: 0.1,
+      smudge: 0.0,
+      dissipation: 0.98,
+      magnification: 0.0,
+      motionBlur: 0.0,
+   },
+   flowmap: {
+      radius: 0.1,
+      magnification: 0.0,
+      alpha: 0.1,
+      dissipation: 0.98,
+   },
+   simpleFruid: {
+      attenuation: 1.0,
+      alpha: 1.0,
+      beta: 1.0,
+      viscosity: 0.99,
+      forceRadius: 90,
+      forceCoefficient: 1.0,
    },
    selectEffect: 1,
 };

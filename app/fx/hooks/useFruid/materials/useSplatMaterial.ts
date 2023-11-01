@@ -35,7 +35,7 @@ export const useSplateMaterial = () => {
       []
    );
 
-   const resolution = useResolution();
+   const resolution = useResolution(true);
    useEffect(() => {
       splatMaterial.uniforms.aspectRatio.value = resolution.x / resolution.y;
    }, [resolution, splatMaterial]);

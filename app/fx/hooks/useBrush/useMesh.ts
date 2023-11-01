@@ -6,86 +6,33 @@ import { useResolution } from "../utils/useResolution";
 import { useAddMesh } from "../utils/useAddMesh";
 import { setUniform } from "../utils/setUniforms";
 
-type TcreateMesh = {
-   texture?: THREE.Texture;
-   scene: THREE.Scene;
-   radius: number;
-   alpha: number;
-   smudge: number;
-   dissipation: number;
-   magnification: number;
-   motionBlur: number;
-   motionSample: number;
-};
-
-type TUniforms = {
-   tMap: { value: THREE.Texture | null };
-   tTexture: { value: THREE.Texture | null };
-   uResolution: { value: THREE.Vector2 };
-   uRadius: { value: number };
-   uAlpha: { value: number };
-   uSmudge: { value: number };
-   uDissipation: { value: number };
-   uAspect: { value: number };
-   uMouse: { value: THREE.Vector2 };
-   uPrevMouse: { value: THREE.Vector2 };
-   uVelocity: { value: THREE.Vector2 };
-   uMagnification: { value: number };
-   uMotionBlur: { value: number };
-   uMotionSample: { value: number };
-};
-
-// Extend THREE.ShaderMaterial to strictly type the uniforms
-export class FlowmapShaderMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
-}
-
-export const useMesh = ({
-   texture,
-   scene,
-   radius,
-   alpha,
-   smudge,
-   dissipation,
-   magnification,
-   motionBlur,
-   motionSample,
-}: TcreateMesh) => {
+export const useMesh = (scene: THREE.Scene) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               tMap: {
+               uMap: {
                   value: null,
                },
-               tTexture: { value: texture },
                uResolution: { value: new THREE.Vector2(0, 0) },
                uAspect: { value: 1 },
-               uRadius: { value: radius },
-               uAlpha: { value: alpha },
-               uSmudge: { value: smudge },
-               uDissipation: { value: dissipation },
+               uTexture: { value: new THREE.Texture() },
+               uRadius: { value: 0.0 },
+               uAlpha: { value: 0.0 },
+               uSmudge: { value: 0.0 },
+               uDissipation: { value: 0.0 },
+               uMagnification: { value: 0.0 },
+               uMotionBlur: { value: 0.0 },
+               uMotionSample: { value: 10 },
                uMouse: { value: new THREE.Vector2(0, 0) },
                uPrevMouse: { value: new THREE.Vector2(0, 0) },
                uVelocity: { value: new THREE.Vector2(0, 0) },
-               uMagnification: { value: magnification },
-               uMotionBlur: { value: motionBlur },
-               uMotionSample: { value: motionSample },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
          }),
-      [
-         radius,
-         alpha,
-         dissipation,
-         magnification,
-         smudge,
-         texture,
-         motionBlur,
-         motionSample,
-      ]
+      []
    );
 
    const resolution = useResolution();
@@ -94,5 +41,5 @@ export const useMesh = ({
 
    useAddMesh(scene, geometry, material);
 
-   return material as FlowmapShaderMaterial;
+   return material;
 };

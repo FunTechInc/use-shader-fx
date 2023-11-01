@@ -12,5 +12,16 @@ export const setUniform = (
       | THREE.Texture
       | THREE.CubeTexture
 ) => {
-   material.uniforms[key].value = value;
+   if (
+      material.uniforms &&
+      material.uniforms[key] &&
+      value !== undefined &&
+      value !== null
+   ) {
+      material.uniforms[key].value = value;
+   } else {
+      console.error(
+         `Uniform key "${key}" does not exist in the material. or "${key}" is null | undefined`
+      );
+   }
 };

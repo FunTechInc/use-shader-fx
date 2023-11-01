@@ -5,6 +5,8 @@ import { useCamera } from "../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 import { setUniform } from "../utils/setUniforms";
+import { HooksReturn } from "../types";
+import { useParams } from "../utils/useParams";
 
 export type DuoToneParams = {
    texture?: THREE.Texture;
@@ -12,30 +14,50 @@ export type DuoToneParams = {
    color1?: THREE.Color;
 };
 
-export const useDuoTone = () => {
+export type DuoToneObject = {
+   scene: THREE.Scene;
+   material: THREE.Material;
+   camera: THREE.Camera;
+   renderTarget: THREE.WebGLRenderTarget;
+};
+
+export const useDuoTone = (): HooksReturn<DuoToneParams, DuoToneObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera();
-   const updateRenderTarget = useSingleFBO(scene, camera);
+   const [renderTarget, updateRenderTarget] = useSingleFBO(scene, camera);
 
-   const handleUpdate = useCallback(
-      (props: RootState, params: DuoToneParams) => {
+   const [params, setParams] = useParams<DuoToneParams>({
+      texture: new THREE.Texture(),
+      color0: new THREE.Color(0xffffff),
+      color1: new THREE.Color(0x000000),
+   });
+
+   const updateFx = useCallback(
+      (props: RootState, updateParams: DuoToneParams) => {
          const { gl } = props;
-         const { texture, color0, color1 } = params;
 
-         //set params
-         texture && setUniform(material, "uTexture", texture);
-         color0 && setUniform(material, "uColor0", color0);
-         color1 && setUniform(material, "uColor1", color1);
+         setParams(updateParams);
 
-         //update render target
+         setUniform(material, "uTexture", params.texture!);
+         setUniform(material, "uColor0", params.color0!);
+         setUniform(material, "uColor1", params.color1!);
+
          const bufferTexture = updateRenderTarget(gl);
 
-         //return buffer
          return bufferTexture;
       },
-      [updateRenderTarget, material]
+      [updateRenderTarget, material, setParams, params]
    );
 
-   return handleUpdate;
+   return {
+      updateFx,
+      setParams,
+      fxObject: {
+         scene: scene,
+         material: material,
+         camera: camera,
+         renderTarget: renderTarget,
+      },
+   };
 };

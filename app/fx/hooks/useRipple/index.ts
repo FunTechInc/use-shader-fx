@@ -5,18 +5,31 @@ import { useCamera } from "../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 import { usePointer } from "../utils/usePointer";
+import { HooksReturn } from "../types";
+import { useParams } from "../utils/useParams";
 
 export type RippleParams = {
+   /** rippleが出現する頻度,default:0.01 */
    frequency?: number;
+   /** rippleの回転,default:0.01 */
    rotation?: number;
-   /** hogehoge */
+   /** rippleがフェードアウトするスピード,default:0.9 */
    fadeout_speed?: number;
+   /** rippleの拡大率,default:0.15 */
    scale?: number;
+   /** rippleの透明度,default:0.6 */
    alpha?: number;
 };
 
-type TUseRipple = {
-   /**  */
+export type RippleObject = {
+   scene: THREE.Scene;
+   meshArr: THREE.Mesh[];
+   camera: THREE.Camera;
+   renderTarget: THREE.WebGLRenderTarget;
+};
+
+type UseRipple = {
+   /** texture applied to ripple */
    texture: THREE.Texture;
    /** @param {number} 64 */
    size?: number;
@@ -24,7 +37,15 @@ type TUseRipple = {
    max?: number;
 };
 
-export const useRipple = ({ texture, size = 64, max = 100 }: TUseRipple) => {
+/**
+ * @param size ripple size, default:64
+ * @param max ripple max length, default:100
+ */
+export const useRipple = ({
+   texture,
+   size = 64,
+   max = 100,
+}: UseRipple): HooksReturn<RippleParams, RippleObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const meshArr = useMesh({
       size: size,
@@ -34,24 +55,26 @@ export const useRipple = ({ texture, size = 64, max = 100 }: TUseRipple) => {
    });
    const camera = useCamera();
    const updatePointer = usePointer();
-   const updateRenderTarget = useSingleFBO(scene, camera);
+   const [renderTarget, updateRenderTarget] = useSingleFBO(scene, camera);
+
+   const [params, setParams] = useParams<RippleParams>({
+      frequency: 0.01,
+      rotation: 0.01,
+      fadeout_speed: 0.9,
+      scale: 0.15,
+      alpha: 0.6,
+   });
 
    const currentWave = useRef(0);
 
-   const handleUpdate = useCallback(
-      (props: RootState, params: RippleParams) => {
+   const updateFx = useCallback(
+      (props: RootState, updateParams: RippleParams) => {
          const { gl, pointer, size } = props;
-         const {
-            frequency = 0.01,
-            alpha = 0.6,
-            rotation = 0.01,
-            fadeout_speed = 0.9,
-            scale = 0.5,
-         } = params;
 
-         //update pointer and meshArr
+         setParams(updateParams);
+
          const { currentPointer, diffPointer } = updatePointer(pointer);
-         if (frequency < diffPointer.length()) {
+         if (params.frequency! < diffPointer.length()) {
             const mesh = meshArr[currentWave.current];
             mesh.visible = true;
             mesh.position.set(
@@ -60,26 +83,34 @@ export const useRipple = ({ texture, size = 64, max = 100 }: TUseRipple) => {
                0
             );
             mesh.scale.x = mesh.scale.y = 0.0;
-            (mesh.material as THREE.MeshBasicMaterial).opacity = alpha;
+            (mesh.material as THREE.MeshBasicMaterial).opacity = params.alpha!;
             currentWave.current = (currentWave.current + 1) % max;
          }
          meshArr.forEach((mesh) => {
             if (mesh.visible) {
                const material = mesh.material as THREE.MeshBasicMaterial;
-               mesh.rotation.z += rotation;
-               material.opacity *= fadeout_speed;
-               mesh.scale.x = fadeout_speed * mesh.scale.x + scale;
+               mesh.rotation.z += params.rotation!;
+               material.opacity *= params.fadeout_speed!;
+               mesh.scale.x =
+                  params.fadeout_speed! * mesh.scale.x + params.scale!;
                mesh.scale.y = mesh.scale.x;
                if (material.opacity < 0.002) mesh.visible = false;
             }
          });
 
-         //update render target
          const bufferTexture = updateRenderTarget(gl);
-         //return buffer
          return bufferTexture;
       },
-      [updateRenderTarget, meshArr, updatePointer, max]
+      [updateRenderTarget, meshArr, updatePointer, max, params, setParams]
    );
-   return handleUpdate;
+   return {
+      updateFx,
+      setParams,
+      fxObject: {
+         scene: scene,
+         camera: camera,
+         meshArr: meshArr,
+         renderTarget: renderTarget,
+      },
+   };
 };

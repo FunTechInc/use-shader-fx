@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
@@ -6,6 +6,7 @@ import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../utils/useSingleFBO";
 import { setUniform } from "../utils/setUniforms";
 import { HooksReturn } from "../types";
+import { useParams } from "../utils/useParams";
 
 export type FogProjectionParams = {
    texture?: THREE.Texture;
@@ -32,56 +33,46 @@ export const useFogProjection = (): HooksReturn<
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera();
-   const [renderTarget, updateRenderTarget] = useSingleFBO(
-      scene,
-      camera,
-      false
-   );
+   const [renderTarget, updateRenderTarget] = useSingleFBO(scene, camera);
 
-   const handleSetUniform = useCallback(
-      (params: FogProjectionParams) => {
-         const {
-            texture,
-            timeStrength,
-            distortionStrength,
-            fogEdge0,
-            fogEdge1,
-            fogColor,
-            noiseOct,
-            fbmOct,
-         } = params;
-         texture && setUniform(material, "uTexture", texture);
-         timeStrength && setUniform(material, "timeStrength", timeStrength);
-         distortionStrength &&
-            setUniform(material, "distortionStrength", distortionStrength);
-         fogEdge0 && setUniform(material, "fogEdge0", fogEdge0);
-         fogEdge1 && setUniform(material, "fogEdge1", fogEdge1);
-         fogColor && setUniform(material, "fogColor", fogColor);
-         noiseOct && setUniform(material, "noiseOct", noiseOct);
-         fbmOct && setUniform(material, "fbmOct", fbmOct);
-      },
-      [material]
-   );
+   const [params, setParams] = useParams<FogProjectionParams>({
+      texture: new THREE.Texture(),
+      timeStrength: 0.0,
+      distortionStrength: 0.0,
+      fogEdge0: 0.0,
+      fogEdge1: 0.9,
+      fogColor: new THREE.Color(0xffffff),
+      noiseOct: 8,
+      fbmOct: 3,
+   });
 
-   const handleUpdate = useCallback(
-      (props: RootState, params: FogProjectionParams) => {
+   const updateFx = useCallback(
+      (props: RootState, updateParams: FogProjectionParams) => {
          const { gl, clock } = props;
+         setParams(updateParams);
          setUniform(material, "uTime", clock.getElapsedTime());
-         handleSetUniform(params);
+         setUniform(material, "uTexture", params.texture!);
+         setUniform(material, "timeStrength", params.timeStrength!);
+         setUniform(material, "distortionStrength", params.distortionStrength!);
+         setUniform(material, "fogEdge0", params.fogEdge0!);
+         setUniform(material, "fogEdge1", params.fogEdge1!);
+         setUniform(material, "fogColor", params.fogColor!);
+         setUniform(material, "noiseOct", params.noiseOct!);
+         setUniform(material, "fbmOct", params.fbmOct!);
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
       },
-      [updateRenderTarget, material, handleSetUniform]
+      [updateRenderTarget, material, setParams, params]
    );
 
-   return [
-      handleUpdate,
-      handleSetUniform,
-      {
+   return {
+      updateFx,
+      setParams,
+      fxObject: {
          scene: scene,
          material: material,
          camera: camera,
          renderTarget: renderTarget,
       },
-   ];
+   };
 };

@@ -1,16 +1,18 @@
 import * as THREE from "three";
-import { useFBO } from "@react-three/drei";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useThree } from "@react-three/fiber";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { FBO_OPTION } from "./useSingleFBO";
+import { useResolution } from "./useResolution";
 
-export type TRenderTarget = {
+export type DoubleRenderTarget = {
    read: THREE.WebGLRenderTarget | null;
    write: THREE.WebGLRenderTarget | null;
-   swap: () => void;
 };
 
-type UpdateFBO = (
+interface RenderTarget extends DoubleRenderTarget {
+   swap: () => void;
+}
+
+type FBOUpdateFunction = (
    gl: THREE.WebGLRenderer,
    /**  call before FBO is rendered */
    onBeforeRender?: ({
@@ -23,20 +25,25 @@ type UpdateFBO = (
 ) => THREE.Texture;
 
 type Return = [
-   target: { read: THREE.WebGLRenderTarget; write: THREE.WebGLRenderTarget },
-   updateFBO: UpdateFBO
+   { read: THREE.WebGLRenderTarget; write: THREE.WebGLRenderTarget },
+   FBOUpdateFunction
 ];
 
 /**
- * @param  isSizeUpdate - Whether to update renderTarget size when dpr and size change, default:true
  * @returns [{read:THREE.WebGLRenderTarget,write:THREE.WebGLRenderTarget} , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
 export const useDoubleFBO = (
    scene: THREE.Scene,
    camera: THREE.Camera,
-   isSizeUpdate = true
+   options: {
+      /** isDpr Whether to multiply dpr, default:false */
+      isDpr?: boolean;
+      /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
+      isSizeUpdate?: boolean;
+   } = { isDpr: false, isSizeUpdate: false }
 ): Return => {
-   const renderTarget = useRef<TRenderTarget>({
+   const { isDpr = false, isSizeUpdate = false } = options;
+   const renderTarget = useRef<RenderTarget>({
       read: null,
       write: null,
       swap: function () {
@@ -46,23 +53,32 @@ export const useDoubleFBO = (
       },
    });
 
-   const size = useThree((state) => state.size);
-   const viewport = useThree((state) => state.viewport);
-   const _width = size.width * viewport.dpr;
-   const _height = size.height * viewport.dpr;
-
-   renderTarget.current.read = useMemo(
-      () => new THREE.WebGLRenderTarget(_width, _height, FBO_OPTION),
+   const resolution = useResolution(isDpr);
+   const initRenderTargets = useMemo(() => {
+      const read = new THREE.WebGLRenderTarget(
+         resolution.x,
+         resolution.y,
+         FBO_OPTION
+      );
+      const write = new THREE.WebGLRenderTarget(
+         resolution.x,
+         resolution.y,
+         FBO_OPTION
+      );
+      return { read, write };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      []
-   );
-   useEffect(() => {
-      isSizeUpdate && renderTarget.current.read?.setSize(_width, _height);
-   }, [_width, _height, isSizeUpdate]);
+   }, []);
+   renderTarget.current.read = initRenderTargets.read;
+   renderTarget.current.write = initRenderTargets.write;
 
-   renderTarget.current.write = useFBO(FBO_OPTION);
+   useLayoutEffect(() => {
+      if (isSizeUpdate) {
+         renderTarget.current.read?.setSize(resolution.x, resolution.y);
+         renderTarget.current.write?.setSize(resolution.x, resolution.y);
+      }
+   }, [resolution, isSizeUpdate]);
 
-   const updateRenderTarget: UpdateFBO = useCallback(
+   const updateRenderTarget: FBOUpdateFunction = useCallback(
       (gl, onBeforeRender) => {
          const fbo = renderTarget.current;
          gl.setRenderTarget(fbo.write);

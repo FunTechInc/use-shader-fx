@@ -5,8 +5,8 @@ import { useCallback, useRef } from "react";
  * @returns updatePointer frameで呼び出す更新関数を返す
  */
 export const usePointer = () => {
-   const prevPointer = useRef(new THREE.Vector2());
-   const diffPointer = useRef(new THREE.Vector2());
+   const prevPointer = useRef(new THREE.Vector2(0, 0));
+   const diffPointer = useRef(new THREE.Vector2(0, 0));
    const lastUpdateTime = useRef<number>(0);
    const velocity = useRef(new THREE.Vector2(0, 0));
    const isMoved = useRef(false);
@@ -15,9 +15,10 @@ export const usePointer = () => {
       const now = performance.now();
       const current = currentPointer.clone();
 
-      // get delta time
+      // first frame
       if (lastUpdateTime.current === 0) {
          lastUpdateTime.current = now;
+         prevPointer.current = current;
       }
       const deltaTime = Math.max(1, now - lastUpdateTime.current);
       lastUpdateTime.current = now;

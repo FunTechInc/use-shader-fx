@@ -1,7 +1,6 @@
 precision mediump float;
 
-uniform sampler2D tMap;
-
+uniform sampler2D uMap;
 uniform float uRadius;
 uniform float uAlpha;
 uniform float uDissipation;
@@ -21,7 +20,7 @@ void main() {
 	vec2 vel = uVelocity * uResolution;
 
 	// buffer color
-	vec4 bufferColor = texture2D(tMap, vUv) * uDissipation;
+	vec4 bufferColor = texture2D(uMap, vUv) * uDissipation;
 	
 	//	color
 	vec3 color = vec3(vel * vec2(1, -1), 1.0 - pow(1.0 - min(1.0, length(vel)), 1.0));

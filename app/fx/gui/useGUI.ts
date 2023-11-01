@@ -2,9 +2,6 @@ import { useCallback, useEffect, useMemo } from "react";
 import { CONFIG } from "../config";
 import GUI from "lil-gui";
 
-/**
- * @returns updateDisplays コントローラーをupdateDisplayする関数を返します
- */
 export const useGUI = () => {
    const gui = useMemo(
       () => new GUI({ closeFolders: true, title: "shader-fx" }),
@@ -50,17 +47,40 @@ export const useGUI = () => {
       /*===============================================
 		fx
 		===============================================*/
+      // fruid
       const fruid2 = gui.addFolder("fruid(fx)");
       fruid2.add(CONFIG.fruid, "density_dissipation", 0, 1, 0.01);
       fruid2.add(CONFIG.fruid, "velocity_dissipation", 0, 1, 0.01);
       fruid2.add(CONFIG.fruid, "pressure_dissipation", 0, 1, 0.01);
       fruid2.add(CONFIG.fruid, "velocity_acceleration", 0, 100, 1);
-      fruid2.add(CONFIG.fruid, "pressure_iterations", 0, 30, 1);
       fruid2.add(CONFIG.fruid, "curl_strength", 0, 100, 1);
       fruid2.add(CONFIG.fruid, "splat_radius", 0, 0.1, 0.001);
 
+      //brush
+      const brush = gui.addFolder("brush(fx)");
+      brush.add(CONFIG.brush, "radius", 0, 0.5, 0.01);
+      brush.add(CONFIG.brush, "alpha", 0, 1, 0.01);
+      brush.add(CONFIG.brush, "smudge", 0, 1, 0.01);
+      brush.add(CONFIG.brush, "dissipation", 0, 1, 0.01);
+      brush.add(CONFIG.brush, "magnification", 0, 1, 0.01);
+      brush.add(CONFIG.brush, "motionBlur", 0, 1, 0.01);
+
+      // simple fruid
+      const simpleFruid = gui.addFolder("simpleFruid(fx)");
+      simpleFruid.add(CONFIG.simpleFruid, "attenuation", 0, 1, 0.01);
+      simpleFruid.add(CONFIG.simpleFruid, "alpha", 0, 1, 0.01);
+      simpleFruid.add(CONFIG.simpleFruid, "beta", 0, 1, 0.01);
+      simpleFruid.add(CONFIG.simpleFruid, "viscosity", 0, 1, 0.01);
+      simpleFruid.add(CONFIG.simpleFruid, "forceRadius", 0, 100, 0.1);
+      simpleFruid.add(CONFIG.simpleFruid, "forceCoefficient", 0, 1, 0.1);
+
       //effect selector
-      gui.add(CONFIG, "selectEffect", { Ripple: 0, fruid: 1 });
+      gui.add(CONFIG, "selectEffect", {
+         Ripple: 0,
+         fruid: 1,
+         brush: 2,
+         simpleFruid: 3,
+      });
    }, [gui]);
 
    const updateDisplays = useCallback(() => {

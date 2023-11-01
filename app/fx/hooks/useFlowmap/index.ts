@@ -1,58 +1,77 @@
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../utils/useCamera";
-import { useDoubleFBO } from "../utils/useDoubleFBO";
+import { DoubleRenderTarget, useDoubleFBO } from "../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
 import { usePointer } from "../utils/usePointer";
 import { setUniform } from "../utils/setUniforms";
+import { HooksReturn } from "../types";
+import { useParams } from "../utils/useParams";
 
-const RADIUS = 0.1; // size of the stamp, percentage of the size
-const MAGNIFICATION = 0.0; //拡大率
-const ALPHA = 0.1; // opacity
-const DISSIPATION = 1.0; // 拡散率。1にすると残り続ける
+export type FlowmapParams = {
+   /** size of the stamp, percentage of the size */
+   radius?: number;
+   /** 拡大率 */
+   magnification?: number;
+   /** opacity */
+   alpha?: number;
+   /** 拡散率。1にすると残り続ける */
+   dissipation?: number;
+};
 
-/**
- * @returns handleUpdate useFrameで毎フレーム呼び出す関数
- */
-export const useFlowmap = () => {
+export type FlowmapObject = {
+   scene: THREE.Scene;
+   material: THREE.Material;
+   camera: THREE.Camera;
+   renderTarget: DoubleRenderTarget;
+};
+
+export const useFlowmap = (): HooksReturn<FlowmapParams, FlowmapObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({
-      scene,
-      radius: RADIUS,
-      alpha: ALPHA,
-      dissipation: DISSIPATION,
-      magnification: MAGNIFICATION,
-   });
+   const material = useMesh(scene);
    const camera = useCamera();
    const updatePointer = usePointer();
-   const updateRenderTarget = useDoubleFBO(scene, camera);
+   const [renderTarget, updateRenderTarget] = useDoubleFBO(scene, camera);
 
-   /**
-    * @returns rederTarget.texture
-    */
-   const handleUpdate = useCallback(
-      (props: RootState) => {
+   const [params, setParams] = useParams<FlowmapParams>({
+      radius: 0.0,
+      magnification: 0.0,
+      alpha: 0.0,
+      dissipation: 0.0,
+   });
+
+   const updateFx = useCallback(
+      (props: RootState, updateParams: FlowmapParams) => {
          const { gl, pointer } = props;
 
-         //update velocity
-         const { currentPointer, velocity } = updatePointer(pointer);
-         setUniform(material, "uMouse", currentPointer.clone());
-         setUniform(
-            material,
-            "uVelocity",
-            velocity.lerp(velocity, velocity.length() ? 0.15 : 0.1)
-         );
+         setParams(updateParams);
 
-         //update render target
+         setUniform(material, "uRadius", params.radius!);
+         setUniform(material, "uAlpha", params.alpha!);
+         setUniform(material, "uDissipation", params.dissipation!);
+         setUniform(material, "uMagnification", params.magnification!);
+
+         const { currentPointer, velocity } = updatePointer(pointer);
+         setUniform(material, "uMouse", currentPointer);
+         setUniform(material, "uVelocity", velocity);
+
          const bufferTexture = updateRenderTarget(gl, ({ read }) => {
-            setUniform(material, "tMap", read);
+            setUniform(material, "uMap", read);
          });
 
-         //return buffer
          return bufferTexture;
       },
-      [material, updatePointer, updateRenderTarget]
+      [material, updatePointer, updateRenderTarget, params, setParams]
    );
-   return handleUpdate;
+   return {
+      updateFx,
+      setParams,
+      fxObject: {
+         scene: scene,
+         material: material,
+         camera: camera,
+         renderTarget: renderTarget,
+      },
+   };
 };
