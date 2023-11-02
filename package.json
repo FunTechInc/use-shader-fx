@@ -1,5 +1,6 @@
 {
-   "name": "distortion-carousel",
+   "name": "use-shader-fx",
+   "description": "wide variety of shader effects for React",
    "version": "0.1.0",
    "private": true,
    "scripts": {
