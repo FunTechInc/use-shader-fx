@@ -8,9 +8,9 @@ export const CONFIG = {
    transitionBg: {
       noiseStrength: 0.0,
       progress: 0.0,
-      dir: new THREE.Vector2(0.3, 0.2),
-      imageResolution: new THREE.Vector2(1440, 1440),
-      active: false,
+      dir: new THREE.Vector2(0.3, 0.4),
+      imageResolution: new THREE.Vector2(1440, 1029),
+      active: true,
       transformDir: 1,
       transform: () => {
          CONFIG.transitionBg.transformDir =
@@ -21,12 +21,12 @@ export const CONFIG = {
          tl.to(CONFIG.transitionBg, {
             noiseStrength: 0.2,
             progress: 0.5,
-            ease: "power3.in",
+            ease: "power2.in",
          });
          tl.to(CONFIG.transitionBg, {
             noiseStrength: 0.0,
             progress: CONFIG.transitionBg.transformDir > 0 ? 0.0 : 1.0,
-            ease: "power3.out",
+            ease: "power2.out",
          });
       },
    },
@@ -36,11 +36,11 @@ export const CONFIG = {
       active: false,
    },
    fogProjection: {
-      timeStrength: 0.2,
-      distortionStrength: 0.1,
-      fogEdge0: 0.0,
-      fogEdge1: 0.9,
-      fogColor: new THREE.Color(0xffffff),
+      timeStrength: 0.23,
+      distortionStrength: 0.04,
+      fogEdge0: 0.43,
+      fogEdge1: 0.88,
+      fogColor: new THREE.Color(0xd5cea3),
       active: false,
    },
    /*===============================================
@@ -56,9 +56,9 @@ export const CONFIG = {
    fruid: {
       density_dissipation: 0.98,
       velocity_dissipation: 0.99,
-      velocity_acceleration: 8.0,
+      velocity_acceleration: 10.0,
       pressure_dissipation: 0.9,
-      curl_strength: 4,
+      curl_strength: 35,
       splat_radius: 0.002,
       fruidVec: new THREE.Vector3(),
       fruid_color: (velocity: THREE.Vector2) => {

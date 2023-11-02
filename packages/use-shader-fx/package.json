@@ -1,0 +1,52 @@
+{
+   "name": "@hmng8/use-shader-fx",
+   "version": "1.0.0",
+   "description": "",
+   "main": "./build/use-shader-fx.umd.cjs",
+   "module": "./build/use-shader-fx.js",
+   "types": "./types/index.d.ts",
+   "exports": {
+      ".": {
+         "types": "./types/index.d.ts",
+         "import": "./build/use-shader-fx.js",
+         "require": "./build/use-shader-fx.umd.cjs"
+      }
+   },
+   "type": "module",
+   "scripts": {
+      "type": "tsc",
+      "build": "tsc && vite build",
+      "clean": "rimraf build && rimraf types"
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/takuma-hmng8/use-shader-fx"
+   },
+   "keywords": [
+      "react",
+      "next"
+   ],
+   "author": "HASHIMOTO Takuma",
+   "license": "MIT",
+   "files": [
+      "build",
+      "types"
+   ],
+   "devDependencies": {
+      "@types/node": "20.5.6",
+      "@types/react": "18.2.21",
+      "@types/react-dom": "18.2.7",
+      "@types/three": "^0.155.1",
+      "eslint": "8.47.0",
+      "raw-loader": "^4.0.2",
+      "typescript": "5.2.2",
+      "vite": "^4.5.0",
+      "vite-plugin-glsl": "^1.1.2"
+   },
+   "peerDependencies": {
+      "@react-three/fiber": "^8.13.7",
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "three": "^0.155.0"
+   }
+}

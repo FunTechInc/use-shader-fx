@@ -1,56 +1,66 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
-import { useFrame, useLoader, extend } from "@react-three/fiber";
-import { RippleParams, useRipple } from "./hooks/useRipple";
-import { useFlowmap, FlowmapParams } from "./hooks/useFlowmap";
-import { useSimpleFruid } from "./hooks/useSimpleFruid";
-import { FruidParams, useFruid } from "./hooks/useFruid";
-import { useBrush } from "./hooks/useBrush";
-import { TransitionBgParams, useTransitionBg } from "./hooks/useTransitionBg";
+import { useRipple } from "@/packages/use-shader-fx/src";
+import { useFlowmap } from "@/packages/use-shader-fx/src";
+import { useSimpleFruid } from "@/packages/use-shader-fx/src";
+import { useFruid } from "@/packages/use-shader-fx/src";
+import { useBrush } from "@/packages/use-shader-fx/src";
+import { useTransitionBg } from "@/packages/use-shader-fx/src";
+import { useDuoTone } from "@/packages/use-shader-fx/src";
+import { useFogProjection } from "@/packages/use-shader-fx/src";
+import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
+import { usePerformanceMonitor } from "@react-three/drei";
 import { useGUI } from "./gui/useGUI";
 import { CONFIG } from "./config";
-import { DuoToneParams, useDuoTone } from "./hooks/useDuoTone";
-import {
-   FogProjectionParams,
-   useFogProjection,
-} from "./hooks/useFogProjection";
-import { usePerformanceMonitor } from "@react-three/drei";
 
 extend({ MainShaderMaterial });
 
+/*===============================================
+TODO*
+- dprは入れ込んだほうがいいかも?
+- 初期値とGUIの整理
+- read meの整理
+- fx hookは配列で返すようにするか
+	- 配列とオブジェクトの出ストラクチャリングについてちゃんとstyle bookにまとめよっと
+	- いや、名前に意味があるし、拡張性的には、オブジェクトか？
+		- usePointerは確実にオブジェクトで返すいのがいいよな。名前に意味があるし。順不同だから。
+		- そう考えると、順は確定してるし、今後も増やす必要はないから（むしろそういう設計にしたほうがいい）、配列か
+===============================================*/
+
 export const Scene = () => {
-   const [bg, bg2, smoke, ripple, noise, pNoise] = useLoader(
-      THREE.TextureLoader,
-      [
-         "background.jpg",
-         "background2.jpeg",
-         "smoke.png",
-         "ripple.png",
-         "noise.png",
-         "p-noise.webp",
-      ]
-   );
+   const [bg, bg2, ripple, noise] = useLoader(THREE.TextureLoader, [
+      "thumbnail.jpg",
+      "momo.jpg",
+      "ripple.png",
+      "noise.png",
+   ]);
    const updateGUI = useGUI();
    const mainShaderRef = useRef<TMainShaderUniforms>();
 
+   const size = useThree((state) => state.size);
+   const dpr = useThree((state) => state.viewport.dpr);
+
    // fx
-   const { updateFx: updateRipple } = useRipple({ texture: smoke });
-   const { updateFx: updateFruid, setParams: setFruid } = useFruid();
-   const { updateFx: updateFlowmap } = useFlowmap();
-   const { updateFx: updateSimpleFruid } = useSimpleFruid();
-   const { updateFx: updateBrush } = useBrush();
+   const { updateFx: updateRipple } = useRipple({ texture: ripple, size });
+   const { updateFx: updateFruid, setParams: setFruid } = useFruid({
+      size,
+      dpr,
+   });
+   const { updateFx: updateFlowmap } = useFlowmap({ size });
+   const { updateFx: updateSimpleFruid } = useSimpleFruid({ size });
+   const { updateFx: updateBrush } = useBrush({ size });
 
    // post fx
-   const { updateFx: updateTransitionBg } = useTransitionBg();
-   const { updateFx: updateDuoTone } = useDuoTone();
-   const { updateFx: updateFogProjection } = useFogProjection();
+   const { updateFx: updateTransitionBg } = useTransitionBg({ size, dpr });
+   const { updateFx: updateDuoTone } = useDuoTone({ size });
+   const { updateFx: updateFogProjection } = useFogProjection({ size });
 
    // Monitor performance changes and execute update functions of params
    usePerformanceMonitor({
-      onChange(api) {
+      onChange({ factor }) {
          setFruid({
-            pressure_iterations: Math.round(20 * api.factor),
+            pressure_iterations: Math.round(20 * factor),
          });
       },
    });
@@ -81,7 +91,7 @@ export const Scene = () => {
             break;
          case 2:
             fx = updateBrush(props, {
-               texture: smoke,
+               texture: ripple,
                radius: CONFIG.brush.radius,
                alpha: CONFIG.brush.alpha,
                smudge: CONFIG.brush.smudge,

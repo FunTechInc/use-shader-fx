@@ -1,3 +1,5 @@
+![use-shader-fx](public/app.jpg)
+
 # Usage
 
 それぞれの fxHook からは{updateFx,setParams,fxObject}を受け取ります。

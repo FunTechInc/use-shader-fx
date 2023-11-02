@@ -1,0 +1,23 @@
+{
+   "compilerOptions": {
+      "target": "es5",
+      "lib": ["dom", "dom.iterable", "esnext"],
+      "module": "esnext",
+      "moduleResolution": "node",
+      "allowJs": true,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
+      "isolatedModules": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "declaration": true,
+      "sourceMap": true,
+      "rootDir": "./src",
+      "declarationDir": "./types/",
+      "jsx": "react-jsx",
+      "emitDeclarationOnly": true
+   },
+   "include": ["./src/**/*", "glsl.d.ts"]
+}
