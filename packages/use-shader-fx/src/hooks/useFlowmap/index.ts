@@ -30,11 +30,13 @@ export type FlowmapObject = {
 
 export const useFlowmap = ({
    size,
+   dpr,
 }: {
    size: Size;
+   dpr: number;
 }): HooksReturn<FlowmapParams, FlowmapObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size });
+   const material = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const updatePointer = usePointer();
    const [renderTarget, updateRenderTarget] = useDoubleFBO({
@@ -73,14 +75,14 @@ export const useFlowmap = ({
       },
       [material, updatePointer, updateRenderTarget, params, setParams]
    );
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          material: material,
          camera: camera,
          renderTarget: renderTarget,
       },
-   };
+   ];
 };

@@ -25,6 +25,7 @@ export type SimpleFruidObject = {
     camera: THREE.Camera;
     renderTarget: DoubleRenderTarget;
 };
-export declare const useSimpleFruid: ({ size, }: {
+export declare const useSimpleFruid: ({ size, dpr, }: {
     size: Size;
+    dpr: number;
 }) => HooksReturn<SimpleFruidParams, SimpleFruidObject>;

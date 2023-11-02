@@ -32,8 +32,9 @@ type TUniforms = {
 export declare class MetamorphoseMaterial extends THREE.ShaderMaterial {
     uniforms: TUniforms;
 }
-export declare const useMesh: ({ scene, size, }: {
+export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
+    dpr: number;
 }) => MetamorphoseMaterial;
 export {};

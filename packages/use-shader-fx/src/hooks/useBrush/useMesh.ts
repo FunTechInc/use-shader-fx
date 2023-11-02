@@ -10,9 +10,11 @@ import { Size } from "@react-three/fiber";
 export const useMesh = ({
    scene,
    size,
+   dpr,
 }: {
    scene: THREE.Scene;
    size: Size;
+   dpr: number;
 }) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(
@@ -42,7 +44,7 @@ export const useMesh = ({
       []
    );
 
-   const resolution = useResolution(size);
+   const resolution = useResolution(size, dpr);
    useEffect(() => {
       setUniform(material, "uAspect", resolution.width / resolution.height);
       setUniform(material, "uResolution", resolution.clone());

@@ -10,20 +10,20 @@ import { RootState } from "@react-three/fiber";
  * @template T The type for the parameters of the hooks.
  * @template O The type for the FX object.
  */
-export type HooksReturn<T, O> = {
+export type HooksReturn<T, O> = [
    /**
     * An update function that returns THREE.Texture. Call it inside useFrame
     * @param props RootState
     * @param params params of hooks
     */
-   updateFx: (props: RootState, params: T) => THREE.Texture;
+   (props: RootState, params: T) => THREE.Texture,
    /**
     * Function to update params. It can be used for performance control, etc.
     * @param params params of hooks
     */
-   setParams: (params: T) => void;
+   (params: T) => void,
    /**
     * Contains each part of FX such as scene, camera, material, render target, etc.
     */
-   fxObject: O;
-};
+   O
+];

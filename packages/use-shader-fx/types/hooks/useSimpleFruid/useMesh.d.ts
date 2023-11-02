@@ -15,8 +15,9 @@ type TUseMeshReturnType = [
     SimpleFruidMaterials,
     (material: TMaterials) => void
 ];
-export declare const useMesh: ({ scene, size, }: {
+export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
+    dpr: number;
 }) => TUseMeshReturnType;
 export {};

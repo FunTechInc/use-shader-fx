@@ -70,14 +70,14 @@ export const useFogProjection = ({
       [updateRenderTarget, material, setParams, params]
    );
 
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          material: material,
          camera: camera,
          renderTarget: renderTarget,
       },
-   };
+   ];
 };

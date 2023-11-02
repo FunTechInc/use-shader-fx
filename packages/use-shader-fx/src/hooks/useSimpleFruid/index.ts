@@ -36,11 +36,13 @@ export type SimpleFruidObject = {
 
 export const useSimpleFruid = ({
    size,
+   dpr,
 }: {
    size: Size;
+   dpr: number;
 }): HooksReturn<SimpleFruidParams, SimpleFruidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const [materials, setMeshMaterial] = useMesh({ scene, size });
+   const [materials, setMeshMaterial] = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const updatePointer = usePointer();
 
@@ -131,14 +133,14 @@ export const useSimpleFruid = ({
          params,
       ]
    );
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          materials: materials,
          camera: camera,
          renderTarget: renderTarget,
       },
-   };
+   ];
 };

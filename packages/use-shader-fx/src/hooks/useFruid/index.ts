@@ -224,10 +224,10 @@ export const useFruid = ({
          params,
       ]
    );
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          materials: materials,
          camera: camera,
@@ -239,5 +239,5 @@ export const useFruid = ({
             pressure: pressureFBO,
          },
       },
-   };
+   ];
 };

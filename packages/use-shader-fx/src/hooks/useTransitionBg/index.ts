@@ -74,14 +74,14 @@ export const useTransitionBg = ({
       },
       [updateRenderTarget, material, params, setParams]
    );
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          material: material,
          camera: camera,
          renderTarget: renderTarget,
       },
-   };
+   ];
 };

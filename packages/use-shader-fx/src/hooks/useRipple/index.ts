@@ -103,14 +103,14 @@ export const useRipple = ({
       },
       [updateRenderTarget, meshArr, updatePointer, max, params, setParams]
    );
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          camera: camera,
          meshArr: meshArr,
          renderTarget: renderTarget,
       },
-   };
+   ];
 };

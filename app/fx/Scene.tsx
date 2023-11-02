@@ -18,14 +18,7 @@ extend({ MainShaderMaterial });
 
 /*===============================================
 TODO*
-- dprは入れ込んだほうがいいかも?
 - 初期値とGUIの整理
-- read meの整理
-- fx hookは配列で返すようにするか
-	- 配列とオブジェクトの出ストラクチャリングについてちゃんとstyle bookにまとめよっと
-	- いや、名前に意味があるし、拡張性的には、オブジェクトか？
-		- usePointerは確実にオブジェクトで返すいのがいいよな。名前に意味があるし。順不同だから。
-		- そう考えると、順は確定してるし、今後も増やす必要はないから（むしろそういう設計にしたほうがいい）、配列か
 ===============================================*/
 
 export const Scene = () => {
@@ -42,19 +35,19 @@ export const Scene = () => {
    const dpr = useThree((state) => state.viewport.dpr);
 
    // fx
-   const { updateFx: updateRipple } = useRipple({ texture: ripple, size });
-   const { updateFx: updateFruid, setParams: setFruid } = useFruid({
+   const [updateRipple] = useRipple({ texture: ripple, size });
+   const [updateFruid, setFruid] = useFruid({
       size,
       dpr,
    });
-   const { updateFx: updateFlowmap } = useFlowmap({ size });
-   const { updateFx: updateSimpleFruid } = useSimpleFruid({ size });
-   const { updateFx: updateBrush } = useBrush({ size });
+   const [updateFlowmap] = useFlowmap({ size, dpr });
+   const [updateSimpleFruid] = useSimpleFruid({ size, dpr });
+   const [updateBrush] = useBrush({ size, dpr });
 
    // post fx
-   const { updateFx: updateTransitionBg } = useTransitionBg({ size, dpr });
-   const { updateFx: updateDuoTone } = useDuoTone({ size });
-   const { updateFx: updateFogProjection } = useFogProjection({ size });
+   const [updateTransitionBg] = useTransitionBg({ size, dpr });
+   const [updateDuoTone] = useDuoTone({ size });
+   const [updateFogProjection] = useFogProjection({ size });
 
    // Monitor performance changes and execute update functions of params
    usePerformanceMonitor({
@@ -91,7 +84,7 @@ export const Scene = () => {
             break;
          case 2:
             fx = updateBrush(props, {
-               texture: ripple,
+               texture: noise,
                radius: CONFIG.brush.radius,
                alpha: CONFIG.brush.alpha,
                smudge: CONFIG.brush.smudge,

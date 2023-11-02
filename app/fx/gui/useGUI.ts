@@ -47,16 +47,22 @@ export const useGUI = () => {
       /*===============================================
 		fx
 		===============================================*/
-      // fruid
-      const fruid2 = gui.addFolder("fruid(fx)");
-      fruid2.add(CONFIG.fruid, "density_dissipation", 0, 1, 0.01);
-      fruid2.add(CONFIG.fruid, "velocity_dissipation", 0, 1, 0.01);
-      fruid2.add(CONFIG.fruid, "pressure_dissipation", 0, 1, 0.01);
-      fruid2.add(CONFIG.fruid, "velocity_acceleration", 0, 100, 1);
-      fruid2.add(CONFIG.fruid, "curl_strength", 0, 100, 1);
-      fruid2.add(CONFIG.fruid, "splat_radius", 0, 0.1, 0.001);
 
-      //brush
+      const ripple = gui.addFolder("ripple(fx)");
+      ripple.add(CONFIG.ripple, "frequency", 0, 1, 0.01);
+      ripple.add(CONFIG.ripple, "rotation", 0, 1, 0.01);
+      ripple.add(CONFIG.ripple, "fadeout_speed", 0, 1, 0.01);
+      ripple.add(CONFIG.ripple, "scale", 0, 1, 0.01);
+      ripple.add(CONFIG.ripple, "alpha", 0, 1, 0.01);
+
+      const fruid = gui.addFolder("fruid(fx)");
+      fruid.add(CONFIG.fruid, "density_dissipation", 0, 1, 0.01);
+      fruid.add(CONFIG.fruid, "velocity_dissipation", 0, 1, 0.01);
+      fruid.add(CONFIG.fruid, "pressure_dissipation", 0, 1, 0.01);
+      fruid.add(CONFIG.fruid, "velocity_acceleration", 0, 100, 1);
+      fruid.add(CONFIG.fruid, "curl_strength", 0, 100, 1);
+      fruid.add(CONFIG.fruid, "splat_radius", 0, 0.1, 0.001);
+
       const brush = gui.addFolder("brush(fx)");
       brush.add(CONFIG.brush, "radius", 0, 0.5, 0.01);
       brush.add(CONFIG.brush, "alpha", 0, 1, 0.01);
@@ -65,7 +71,12 @@ export const useGUI = () => {
       brush.add(CONFIG.brush, "magnification", 0, 1, 0.01);
       brush.add(CONFIG.brush, "motionBlur", 0, 1, 0.01);
 
-      // simple fruid
+      const flowmap = gui.addFolder("flowmap(fx)");
+      flowmap.add(CONFIG.flowmap, "radius", 0, 1, 0.01);
+      flowmap.add(CONFIG.flowmap, "magnification", 0, 1, 0.01);
+      flowmap.add(CONFIG.flowmap, "alpha", 0, 1, 0.01);
+      flowmap.add(CONFIG.flowmap, "dissipation", 0, 1, 0.01);
+
       const simpleFruid = gui.addFolder("simpleFruid(fx)");
       simpleFruid.add(CONFIG.simpleFruid, "attenuation", 0, 1, 0.01);
       simpleFruid.add(CONFIG.simpleFruid, "alpha", 0, 1, 0.01);
@@ -74,12 +85,12 @@ export const useGUI = () => {
       simpleFruid.add(CONFIG.simpleFruid, "forceRadius", 0, 100, 0.1);
       simpleFruid.add(CONFIG.simpleFruid, "forceCoefficient", 0, 1, 0.1);
 
-      //effect selector
       gui.add(CONFIG, "selectEffect", {
-         Ripple: 0,
+         ripple: 0,
          fruid: 1,
          brush: 2,
-         simpleFruid: 3,
+         flowmap: 3,
+         simpleFruid: 4,
       });
    }, [gui]);
 

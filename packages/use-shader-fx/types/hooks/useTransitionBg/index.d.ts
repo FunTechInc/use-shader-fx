@@ -16,6 +16,7 @@ export type TransitionBgObject = {
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
 };
-export declare const useTransitionBg: ({ size, }: {
+export declare const useTransitionBg: ({ size, dpr, }: {
     size: Size;
+    dpr: number;
 }) => HooksReturn<TransitionBgParams, TransitionBgObject>;

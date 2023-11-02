@@ -1,18 +1,20 @@
 ![use-shader-fx](public/app.jpg)
 
+`use-shader-fx` is a library designed to easily implement shader effects such as fluid simulations and noise. It relies on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) and has been designed with performance control in mind, especially when combined with [drei](https://github.com/pmndrs/drei).
+
 # Usage
 
-それぞれの fxHook からは{updateFx,setParams,fxObject}を受け取ります。
+From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. The `config` is an object, which varies for each Hook, containing details such as `size` and `dpr`.
 
--  updateFx - A function to be called inside `useFrame` that returns a `THREE.Texture`.
--  setParams - A function to update the parameters, useful for performance tuning, etc.
--  fxObject - An object containing various FX components such as scene, camera, material, and render target.
+1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
+2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
+3. `fxObject` - An object that holds various FX components, such as scene, camera, material, and renderTarget.
 
 ```js
-const { updateFx, setParams, fxObject } = useFruid();
+const [updateFx, setParams, fxObject] = useFruid(config);
 ```
 
-updateFx は useFrame で実行します。第 1 引数には useFrame から受け取る RootState,第 2 引数に HookPrams を受け取ります。
+Execute `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
 
 ```js
 useFrame((props) => {
@@ -24,57 +26,96 @@ useFrame((props) => {
 });
 ```
 
-# How to make "custom fx hook"
+# Performance
 
-カスタムフック開発に便利な utils をいくつか用意しています
-詳細は既存の hook を参照してください
+You can control the `dpr` using the `PerformanceMonitor` from [drei](https://github.com/pmndrs/drei). For more details, please refer to the [scaling-performance](https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance) of r3f.
+
+```js
+export const Fx = () => {
+   const [dpr, setDpr] = useState(1.5);
+   return (
+      <Canvas dpr={dpr}>
+         <PerformanceMonitor
+            factor={1}
+            onChange={({ factor }) => {
+               console.log(`dpr:${dpr}`);
+               setDpr(Math.round((0.5 + 1.5 * factor) * 10) / 10);
+            }}>
+            <Suspense fallback={null}>
+               <Scene />
+            </Suspense>
+            <Perf position={"bottom-right"} minimal={false} />
+         </PerformanceMonitor>
+      </Canvas>
+   );
+};
+```
+
+By using the `PerformanceMonitor`, you can subscribe to performance changes with `usePerformanceMonitor`. For more details, refer to [drei](https://github.com/pmndrs/drei#performancemonitor).
+
+With `setParams` received from `fxHooks`, it's possible to independently control high-load items such as iteration counts.
+
+```js
+usePerformanceMonitor({
+   onChange({ factor }) {
+      setParams({
+         pressure_iterations: Math.round(20 * factor),
+      });
+   },
+});
+```
+
+# How to make "custom fxHooks"
+
+With some functions provided by `use-shader-fx`, creating a custom hook is straightforward (the challenging part is only the shader!). Please refer to existing `fxHooks` for details.
 
 ## useDoubleFBO
 
-FBO を生成して、ダブルバッファリングしたバッファーテクスチャーを swap して返してくれます。
-第 3 引数には options が入ります。
+Generates FBO and returns a double-buffered buffer texture after swapping. The `useFBO` of `drei` by default performs `setSize` for `THREE.WebGLRenderTarget` upon changes in `dpr` and `size`, making it challenging to handle buffer textures during changes like dpr adjustments. Therefore, a non-reactive hook against updates of dpr and size was created. It's possible to make them reactive individually through options. If you want to `setSize` at a custom timing, the `fxObject` that the fxHook receives as the third argument also stores `renderTarget`.
 
--  isDpr: Whether to multiply dpr, default:false
--  isSizeUpdate: Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
+```ts
+type UseFboProps = {
+   scene: THREE.Scene;
+   camera: THREE.Camera;
+   size: Size;
+   /** If dpr is set, dpr will be multiplied, default:false */
+   dpr?: number | false;
+   /** Whether to resize on resizes. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
+   isSizeUpdate?: boolean;
+};
 
-drei の useFBO はデフォルトで dpr と size の変更で setSize してしまうため、バッファーテクスチャーが更新されてしまいます。そこで、dpr と size の更新に対して non reactive な hook を作成しました。options でそれぞれ reactive にすることが可能です。
+const [velocityFBO, updateVelocityFBO] = useDoubleFBO(UseFboProps);
+```
 
-もし resize させたい場合は、fxHook が第 3 引数に受け取る fxObject に renderTarget も格納しています。
+When you call the update function, it returns a double-buffered texture. The second argument gets a function called before `gl.render()`, allowing for operations like swapping materials or setting uniforms.
 
 ```js
-const [velocityFBO, updateVelocityFBO] = useDoubleFBO(scene, camera, {
-   isDpr: true,
-   isSizeUpdate: true,
-});
-
-// how to render
-updateVelocityFBO(gl, ({ read, write }) => {
+const texture = updateVelocityFBO(gl, ({ read, write }) => {
    // callback before gl.render()
+   setMeshMaterial(materials.advectionMaterial);
+   setUniform(materials.advectionMaterial, "uVelocity", read);
 });
 ```
 
 ## useSingleFBO
 
-FBO を生成して、焼き付けられた texture を返す、更新関数を生成します。
+This is a version without double buffering.
 
 ```js
-const updateRenderTarget = useSingleFBO(scene, camera, options);
-
-// how to render
-updateRenderTarget(gl, ({ read }) => {
-   // callback before gl.render()
-});
+const [renderTarget, updateRenderTarget] = useSingleFBO(UseFboProps);
 ```
 
 ## useCamera
 
+Generates and returns a `THREE.OrthographicCamera`.
+
 ```js
-const camera = useCamera();
+const camera = useCamera(size);
 ```
 
 ## usePointer
 
-フレームの pointer の vec2 を渡すと、currentPointer,prevPointer, diffPointer, isVelocityUpdate, velocity を返す更新関数を生成します。
+When given the `pointer` vector2 from r3f's `RootState`, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}.
 
 ```js
 const updatePointer = usePointer();
@@ -85,17 +126,15 @@ const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
 
 ## useResolution
 
-キャンバスのサイズの state のフック
+This hook returns `resolution`. If `dpr` isn't set (or set to false), dpr won't be multiplied.
 
--  isDpr: Whether to multiply dpr, default:false
-
-```js
-const resolution = useResolution(isDpr);
+```ts
+const resolution = useResolution(size: Size, dpr: number | false = false);
 ```
 
 ## useAddMesh
 
-メッシュを生成して、scene,geometry,material に add する。mesh を返す。
+Creates a mesh and adds it to scene, geometry, and material. Returns the mesh.
 
 ```js
 useAddMesh(scene, geometry, material);
@@ -103,7 +142,7 @@ useAddMesh(scene, geometry, material);
 
 ## setUniform
 
-シェーダーマテリアルの uniforms に value をセットする関数
+A function to set values in the uniforms of the shader material.
 
 ```js
 const setUniform = (material, key, value) => {
@@ -113,19 +152,11 @@ const setUniform = (material, key, value) => {
 
 ## useParams
 
-params の refObject とその更新用関数を返します。
+Returns the refObject of params and its update function.
 
 ```ts
-const [params, setParams] =
-   useParams <FruidParams>
-   {
-      density_dissipation: 0.0,
-      velocity_dissipation: 0.0,
-      velocity_acceleration: 0.0,
-      pressure_dissipation: 0.0,
-      pressure_iterations: 20,
-      curl_strength: 0.0,
-      splat_radius: 0.001,
-      fruid_color: new THREE.Vector3(1.0, 1.0, 1.0),
-   };
+const [params, setParams] = useParams<HooksParams>;
+{
+   // HookPrams
+}
 ```

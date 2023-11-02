@@ -26,6 +26,7 @@ export type BrushObject = {
     camera: THREE.Camera;
     renderTarget: DoubleRenderTarget;
 };
-export declare const useBrush: ({ size, }: {
+export declare const useBrush: ({ size, dpr, }: {
     size: Size;
+    dpr: number;
 }) => HooksReturn<BrushParams, BrushObject>;

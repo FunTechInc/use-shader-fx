@@ -43,9 +43,11 @@ type TUseMeshReturnType = [
 export const useMesh = ({
    scene,
    size,
+   dpr,
 }: {
    scene: THREE.Scene;
    size: Size;
+   dpr: number;
 }): TUseMeshReturnType => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const initialMaterial = useInitialMaterial();
@@ -69,7 +71,7 @@ export const useMesh = ({
       ]
    );
 
-   const resolution = useResolution(size);
+   const resolution = useResolution(size, dpr);
    useEffect(() => {
       for (const material of Object.values(materials)) {
          setUniform(material, "resolution", resolution);

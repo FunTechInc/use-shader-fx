@@ -18,6 +18,7 @@ export type FlowmapObject = {
     camera: THREE.Camera;
     renderTarget: DoubleRenderTarget;
 };
-export declare const useFlowmap: ({ size, }: {
+export declare const useFlowmap: ({ size, dpr, }: {
     size: Size;
+    dpr: number;
 }) => HooksReturn<FlowmapParams, FlowmapObject>;

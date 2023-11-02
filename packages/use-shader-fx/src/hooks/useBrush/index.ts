@@ -38,11 +38,13 @@ export type BrushObject = {
 
 export const useBrush = ({
    size,
+   dpr,
 }: {
    size: Size;
+   dpr: number;
 }): HooksReturn<BrushParams, BrushObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size });
+   const material = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const updatePointer = usePointer();
    const [renderTarget, updateRenderTarget] = useDoubleFBO({
@@ -92,14 +94,14 @@ export const useBrush = ({
       [material, updatePointer, updateRenderTarget, params, setParams]
    );
 
-   return {
+   return [
       updateFx,
       setParams,
-      fxObject: {
+      {
          scene: scene,
          material: material,
          camera: camera,
          renderTarget: renderTarget,
       },
-   };
+   ];
 };
