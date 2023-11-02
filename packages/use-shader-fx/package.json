@@ -1,6 +1,6 @@
 {
    "name": "@hmng8/use-shader-fx",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "wide variety of shader effects for React",
    "main": "./build/use-shader-fx.umd.cjs",
    "module": "./build/use-shader-fx.js",
@@ -44,9 +44,9 @@
       "vite-plugin-glsl": "^1.1.2"
    },
    "peerDependencies": {
-      "@react-three/fiber": "^8.13.7",
-      "react": "18.2.0",
-      "react-dom": "18.2.0",
-      "three": "^0.155.0"
+      "@react-three/fiber": ">=8.13.0",
+      "react": ">=18.0",
+      "react-dom": ">=18.0",
+      "three": ">=0.155.0"
    }
 }

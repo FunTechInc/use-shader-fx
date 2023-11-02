@@ -19,6 +19,8 @@ extend({ MainShaderMaterial });
 /*===============================================
 TODO*
 - 初期値とGUIの整理
+- renderTargetをclean upさせる
+- cameraとか諸々clean upさせないとか〜〜
 ===============================================*/
 
 export const Scene = () => {
