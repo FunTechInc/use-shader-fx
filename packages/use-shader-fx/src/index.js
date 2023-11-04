@@ -1,8 +1,8 @@
-export { useBrush } from "./hooks/useBrush";
-export { useDuoTone } from "./hooks/useDuoTone";
-export { useFlowmap } from "./hooks/useFlowmap";
-export { useFogProjection } from "./hooks/useFogProjection";
-export { useFruid } from "./hooks/useFruid";
-export { useRipple } from "./hooks/useRipple";
-export { useSimpleFruid } from "./hooks/useSimpleFruid";
-export { useTransitionBg } from "./hooks/useTransitionBg";
+export { useBrush } from "./hook/useBrush";
+export { useDuoTone } from "./hook/useDuoTone";
+export { useFlowmap } from "./hook/useFlowmap";
+export { useFogProjection } from "./hook/useFogProjection";
+export { useFruid } from "./hook/useFruid";
+export { useRipple } from "./hook/useRipple";
+export { useSimpleFruid } from "./hook/useSimpleFruid";
+export { useTransitionBg } from "./hook/useTransitionBg";

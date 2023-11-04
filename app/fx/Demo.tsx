@@ -9,21 +9,24 @@ import { useTransitionBg } from "@/packages/use-shader-fx/src";
 import { useDuoTone } from "@/packages/use-shader-fx/src";
 import { useFogProjection } from "@/packages/use-shader-fx/src";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
-import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
 import { usePerformanceMonitor } from "@react-three/drei";
 import { useGUI } from "./gui/useGUI";
 import { CONFIG } from "./config";
-
-extend({ MainShaderMaterial });
+import { FxMaterial, TFxMaterial } from "./FxMaterial";
+extend({ FxMaterial });
 
 /*===============================================
 TODO*
 - 初期値とGUIの整理
 - renderTargetをclean upさせる
 - cameraとか諸々clean upさせないとか〜〜
+- create kit branchつくる
+
+
+create kit test
 ===============================================*/
 
-export const Scene = () => {
+export const Demo = () => {
    const [bg, bg2, ripple, noise] = useLoader(THREE.TextureLoader, [
       "thumbnail.jpg",
       "momo.jpg",
@@ -31,7 +34,7 @@ export const Scene = () => {
       "noise.png",
    ]);
    const updateGUI = useGUI();
-   const mainShaderRef = useRef<TMainShaderUniforms>();
+   const fxMaterialRef = useRef<TFxMaterial>();
 
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
@@ -148,11 +151,11 @@ export const Scene = () => {
          });
       }
 
-      const main = mainShaderRef.current;
-      if (main) {
-         main.u_fx = fx;
-         main.u_postFx = postFx;
-         main.isBgActive = CONFIG.transitionBg.active;
+      const fxMaterial = fxMaterialRef.current;
+      if (fxMaterial) {
+         fxMaterial.u_fx = fx;
+         fxMaterial.u_postFx = postFx;
+         fxMaterial.isBgActive = CONFIG.transitionBg.active;
       }
       updateGUI();
    });
@@ -160,7 +163,7 @@ export const Scene = () => {
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <mainShaderMaterial key={MainShaderMaterial.key} ref={mainShaderRef} />
+         <fxMaterial key={FxMaterial.key} ref={fxMaterialRef} />
       </mesh>
    );
 };

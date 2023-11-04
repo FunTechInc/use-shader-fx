@@ -3,21 +3,13 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { shaderMaterial } from "@react-three/drei";
 
-declare global {
-   namespace JSX {
-      interface IntrinsicElements {
-         mainShaderMaterial: any;
-      }
-   }
-}
-
-export type TMainShaderUniforms = {
+export type TFxMaterial = {
    u_fx: THREE.Texture | null;
    u_postFx: THREE.Texture;
    isBgActive: boolean;
 };
 
-export const MainShaderMaterial = shaderMaterial(
+export const FxMaterial = shaderMaterial(
    {
       u_fx: null,
       u_postFx: null,
@@ -26,3 +18,11 @@ export const MainShaderMaterial = shaderMaterial(
    vertexShader,
    fragmentShader
 );
+
+declare global {
+   namespace JSX {
+      interface IntrinsicElements {
+         fxMaterial: any;
+      }
+   }
+}

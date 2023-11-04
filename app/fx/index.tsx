@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Scene } from "./Scene";
+import { Demo } from "./Demo";
 import { Perf } from "r3f-perf";
 import { PerformanceMonitor } from "@react-three/drei";
 
@@ -17,7 +17,7 @@ export const Fx = () => {
                setDpr(Math.round((0.5 + 1.5 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>
-               <Scene />
+               <Demo />
             </Suspense>
             <Perf position={"bottom-right"} minimal={false} />
          </PerformanceMonitor>
