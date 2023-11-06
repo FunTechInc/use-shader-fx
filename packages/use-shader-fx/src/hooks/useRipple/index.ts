@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
-import { useCamera } from "../utils/useCamera";
+import { useCamera } from "../../utils/useCamera";
 import { RootState, Size } from "@react-three/fiber";
-import { useSingleFBO } from "../utils/useSingleFBO";
-import { usePointer } from "../utils/usePointer";
+import { useSingleFBO } from "../../utils/useSingleFBO";
+import { usePointer } from "../../utils/usePointer";
 import { HooksReturn } from "../types";
-import { useParams } from "../utils/useParams";
+import { useParams } from "../../utils/useParams";
 
 export type RippleParams = {
    /** rippleが出現する頻度,default:0.01 */

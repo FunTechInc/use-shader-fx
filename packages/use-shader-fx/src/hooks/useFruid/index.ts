@@ -1,15 +1,15 @@
 import * as THREE from "three";
 import { FruidMaterials, useMesh } from "./useMesh";
-import { useCamera } from "../utils/useCamera";
-import { useDoubleFBO } from "../utils/useDoubleFBO";
+import { useCamera } from "../../utils/useCamera";
+import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useCallback, useMemo, useRef } from "react";
-import { usePointer } from "../utils/usePointer";
+import { usePointer } from "../../utils/usePointer";
 import { RootState, Size } from "@react-three/fiber";
-import { useSingleFBO } from "../utils/useSingleFBO";
-import { setUniform } from "../utils/setUniforms";
+import { useSingleFBO } from "../../utils/useSingleFBO";
+import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
-import { useParams } from "../utils/useParams";
-import { DoubleRenderTarget } from "../utils/types";
+import { useParams } from "../../utils/useParams";
+import { DoubleRenderTarget } from "../../utils/types";
 
 export type FruidParams = {
    density_dissipation?: number;

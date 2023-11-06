@@ -1,20 +1,24 @@
 import { useRef } from "react";
 import * as THREE from "three";
-import { useRipple } from "@/packages/use-shader-fx/src";
-import { useFlowmap } from "@/packages/use-shader-fx/src";
-import { useSimpleFruid } from "@/packages/use-shader-fx/src";
-import { useFruid } from "@/packages/use-shader-fx/src";
-import { useBrush } from "@/packages/use-shader-fx/src";
-import { useTransitionBg } from "@/packages/use-shader-fx/src";
-import { useDuoTone } from "@/packages/use-shader-fx/src";
-import { useFogProjection } from "@/packages/use-shader-fx/src";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
-import { MainShaderMaterial, TMainShaderUniforms } from "./ShaderMaterial";
 import { usePerformanceMonitor } from "@react-three/drei";
-import { useGUI } from "./gui/useGUI";
+
+import {
+   useRipple,
+   useFlowmap,
+   useSimpleFruid,
+   useFruid,
+   useBrush,
+   useTransitionBg,
+   useDuoTone,
+   useFogProjection,
+} from "@/packages/use-shader-fx/src";
+
+import { FxMaterial, TFxMaterial } from "./fxMaterial";
+import { useGUI } from "./useGUI";
 import { CONFIG } from "./config";
 
-extend({ MainShaderMaterial });
+extend({ FxMaterial });
 
 /*===============================================
 TODO*
@@ -23,7 +27,7 @@ TODO*
 - cameraとか諸々clean upさせないとか〜〜
 ===============================================*/
 
-export const Scene = () => {
+export const Demo = () => {
    const [bg, bg2, ripple, noise] = useLoader(THREE.TextureLoader, [
       "thumbnail.jpg",
       "momo.jpg",
@@ -31,7 +35,7 @@ export const Scene = () => {
       "noise.png",
    ]);
    const updateGUI = useGUI();
-   const mainShaderRef = useRef<TMainShaderUniforms>();
+   const mainShaderRef = useRef<TFxMaterial>();
 
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
@@ -160,7 +164,7 @@ export const Scene = () => {
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <mainShaderMaterial key={MainShaderMaterial.key} ref={mainShaderRef} />
+         <fxMaterial key={FxMaterial.key} ref={mainShaderRef} />
       </mesh>
    );
 };

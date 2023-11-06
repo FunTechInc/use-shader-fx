@@ -1,14 +1,14 @@
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
-import { useCamera } from "../utils/useCamera";
-import { useDoubleFBO } from "../utils/useDoubleFBO";
+import { useCamera } from "../../utils/useCamera";
+import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
 import { RootState, Size } from "@react-three/fiber";
-import { usePointer } from "../utils/usePointer";
-import { setUniform } from "../utils/setUniforms";
+import { usePointer } from "../../utils/usePointer";
+import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
-import { useParams } from "../utils/useParams";
-import { DoubleRenderTarget } from "../utils/types";
+import { useParams } from "../../utils/useParams";
+import { DoubleRenderTarget } from "../../utils/types";
 
 export type BrushParams = {
    /** ブラシに適用するテクスチャー */

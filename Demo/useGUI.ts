@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { CONFIG } from "../config";
+import { CONFIG } from "./config";
 import GUI from "lil-gui";
 
 export const useGUI = () => {

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { DuoToneMaterial } from "./useMesh";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
 export type DuoToneParams = {
@@ -8,7 +9,7 @@ export type DuoToneParams = {
 };
 export type DuoToneObject = {
     scene: THREE.Scene;
-    material: THREE.Material;
+    material: DuoToneMaterial;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
 };

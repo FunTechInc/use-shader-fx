@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
-import { useCamera } from "../utils/useCamera";
+import { useCamera } from "../../utils/useCamera";
 import { RootState, Size } from "@react-three/fiber";
-import { useSingleFBO } from "../utils/useSingleFBO";
-import { setUniform } from "../utils/setUniforms";
+import { useSingleFBO } from "../../utils/useSingleFBO";
+import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
-import { useParams } from "../utils/useParams";
+import { useParams } from "../../utils/useParams";
 
 export type FogProjectionParams = {
    texture?: THREE.Texture;

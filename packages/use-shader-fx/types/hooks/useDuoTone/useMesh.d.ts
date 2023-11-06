@@ -10,8 +10,8 @@ type TUniforms = {
         value: THREE.Color;
     };
 };
-export declare class MetamorphoseMaterial extends THREE.ShaderMaterial {
+export declare class DuoToneMaterial extends THREE.ShaderMaterial {
     uniforms: TUniforms;
 }
-export declare const useMesh: (scene: THREE.Scene) => MetamorphoseMaterial;
+export declare const useMesh: (scene: THREE.Scene) => DuoToneMaterial;
 export {};

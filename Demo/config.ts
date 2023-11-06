@@ -3,7 +3,7 @@ import gsap from "gsap";
 
 export const CONFIG = {
    /*===============================================
-	post fx
+	post fx : textureを受け取り、そのテクスチャーにfxをかけて、テクスチャーを返します
 	===============================================*/
    transitionBg: {
       noiseStrength: 0.0,
@@ -44,7 +44,7 @@ export const CONFIG = {
       active: false,
    },
    /*===============================================
-	fx
+	fx : 流体やrippleなど、単体で動作するfxです
 	===============================================*/
    ripple: {
       frequency: 0.01,

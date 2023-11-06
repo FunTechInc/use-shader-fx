@@ -18,15 +18,15 @@ import {
    VorticityMaterial,
    useVorticityMaterial,
 } from "./materials/useVorticityMaterial";
-import { useResolution } from "../utils/useResolution";
+import { useResolution } from "../../utils/useResolution";
 import { ClearMaterial, useClearMaterial } from "./materials/useClearMaterial";
 import {
    GradientSubtractMaterial,
    useGradientSubtractMaterial,
 } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial, useSplateMaterial } from "./materials/useSplatMaterial";
-import { useAddMesh } from "../utils/useAddMesh";
-import { setUniform } from "../utils/setUniforms";
+import { useAddMesh } from "../../utils/useAddMesh";
+import { setUniform } from "../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 
 type TMaterials =

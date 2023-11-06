@@ -17,9 +17,9 @@ import {
    PressureMaterial,
    usePressureMaterial,
 } from "./materials/usePressureMaterial";
-import { useResolution } from "../utils/useResolution";
-import { useAddMesh } from "../utils/useAddMesh";
-import { setUniform } from "../utils/setUniforms";
+import { useResolution } from "../../utils/useResolution";
+import { useAddMesh } from "../../utils/useAddMesh";
+import { setUniform } from "../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 
 type TMaterials =

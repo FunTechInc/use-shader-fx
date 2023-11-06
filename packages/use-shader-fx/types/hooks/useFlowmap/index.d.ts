@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
-import { DoubleRenderTarget } from "../utils/types";
+import { DoubleRenderTarget } from "../../utils/types";
 export type FlowmapParams = {
     /** size of the stamp, percentage of the size */
     radius?: number;

@@ -1,11 +1,9 @@
-import { Fx } from "./fx/";
-
-import s from "./page.module.scss";
+import { ShaderFx } from "./ShaderFx";
 
 export default function Home() {
    return (
-      <div className={s.canvasWrapper}>
-         <Fx />
+      <div style={{ width: "100%", height: "100svh" }}>
+         <ShaderFx />
       </div>
    );
 }

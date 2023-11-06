@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { useResolution } from "../utils/useResolution";
+import { useResolution } from "../../utils/useResolution";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../utils/useAddMesh";
+import { useAddMesh } from "../../utils/useAddMesh";
 import { Size } from "@react-three/fiber";
 
 type TUniforms = {

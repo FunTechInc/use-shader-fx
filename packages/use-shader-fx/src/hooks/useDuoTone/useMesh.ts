@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../utils/useAddMesh";
+import { useAddMesh } from "../../utils/useAddMesh";
 
 type TUniforms = {
    uTexture: { value: THREE.Texture };
@@ -10,7 +10,7 @@ type TUniforms = {
    uColor1: { value: THREE.Color };
 };
 
-export class MetamorphoseMaterial extends THREE.ShaderMaterial {
+export class DuoToneMaterial extends THREE.ShaderMaterial {
    uniforms!: TUniforms;
 }
 
@@ -30,5 +30,5 @@ export const useMesh = (scene: THREE.Scene) => {
       []
    );
    useAddMesh(scene, geometry, material);
-   return material as MetamorphoseMaterial;
+   return material as DuoToneMaterial;
 };

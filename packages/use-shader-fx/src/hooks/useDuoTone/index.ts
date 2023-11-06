@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import * as THREE from "three";
-import { useMesh } from "./useMesh";
-import { useCamera } from "../utils/useCamera";
+import { DuoToneMaterial, useMesh } from "./useMesh";
+import { useCamera } from "../../utils/useCamera";
 import { RootState, Size } from "@react-three/fiber";
-import { useSingleFBO } from "../utils/useSingleFBO";
-import { setUniform } from "../utils/setUniforms";
+import { useSingleFBO } from "../../utils/useSingleFBO";
+import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
-import { useParams } from "../utils/useParams";
+import { useParams } from "../../utils/useParams";
 
 export type DuoToneParams = {
    texture?: THREE.Texture;
@@ -16,7 +16,7 @@ export type DuoToneParams = {
 
 export type DuoToneObject = {
    scene: THREE.Scene;
-   material: THREE.Material;
+   material: DuoToneMaterial;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
 };

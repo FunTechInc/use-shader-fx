@@ -2,9 +2,9 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useEffect, useMemo } from "react";
-import { useAddMesh } from "../utils/useAddMesh";
-import { useResolution } from "../utils/useResolution";
-import { setUniform } from "../utils/setUniforms";
+import { useAddMesh } from "../../utils/useAddMesh";
+import { useResolution } from "../../utils/useResolution";
+import { setUniform } from "../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 
 export const useMesh = ({

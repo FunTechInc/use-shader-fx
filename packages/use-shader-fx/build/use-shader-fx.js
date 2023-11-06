@@ -1588,13 +1588,21 @@ const Ze = ({
   ];
 };
 export {
+  o as setUniform,
+  O as useAddMesh,
   Qe as useBrush,
+  U as useCamera,
+  A as useDoubleFBO,
   et as useDuoTone,
   tt as useFlowmap,
   nt as useFogProjection,
   rt as useFruid,
+  B as useParams,
+  z as usePointer,
+  F as useResolution,
   ot as useRipple,
   at as useSimpleFruid,
+  E as useSingleFBO,
   it as useTransitionBg
 };
 //# sourceMappingURL=use-shader-fx.js.map

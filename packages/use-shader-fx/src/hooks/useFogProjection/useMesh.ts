@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../utils/useAddMesh";
+import { useAddMesh } from "../../utils/useAddMesh";
 
 export const useMesh = (scene: THREE.Scene) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);

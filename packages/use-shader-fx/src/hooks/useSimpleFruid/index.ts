@@ -1,14 +1,14 @@
 import * as THREE from "three";
 import { SimpleFruidMaterials, useMesh } from "./useMesh";
-import { useCamera } from "../utils/useCamera";
-import { useDoubleFBO } from "../utils/useDoubleFBO";
+import { useCamera } from "../../utils/useCamera";
+import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
-import { usePointer } from "../utils/usePointer";
+import { usePointer } from "../../utils/usePointer";
 import { RootState, Size } from "@react-three/fiber";
-import { setUniform } from "../utils/setUniforms";
-import { useParams } from "../utils/useParams";
+import { setUniform } from "../../utils/setUniforms";
+import { useParams } from "../../utils/useParams";
 import { HooksReturn } from "../types";
-import { DoubleRenderTarget } from "../utils/types";
+import { DoubleRenderTarget } from "../../utils/types";
 
 export type SimpleFruidParams = {
    /** 圧力のヤコビ法の計算回数 */

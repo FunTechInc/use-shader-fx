@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { FruidMaterials } from "./useMesh";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
-import { DoubleRenderTarget } from "../utils/types";
+import { DoubleRenderTarget } from "../../utils/types";
 export type FruidParams = {
     density_dissipation?: number;
     velocity_dissipation?: number;

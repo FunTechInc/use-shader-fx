@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { SimpleFruidMaterials } from "./useMesh";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
-import { DoubleRenderTarget } from "../utils/types";
+import { DoubleRenderTarget } from "../../utils/types";
 export type SimpleFruidParams = {
     /** 圧力のヤコビ法の計算回数 */
     pressure_iterations?: number;
