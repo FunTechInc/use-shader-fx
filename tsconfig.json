@@ -27,7 +27,7 @@
       "**/*.ts",
       "**/*.tsx",
       ".next/types/**/*.ts",
-      "glsl.d.ts"
+      "custom.d.ts"
    ],
    "exclude": ["node_modules"]
 }

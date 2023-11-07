@@ -10,13 +10,11 @@ import { useParams } from "../../utils/useParams";
 
 export type FogProjectionParams = {
    texture?: THREE.Texture;
-   timeStrength?: number;
+   noiseMap?: THREE.Texture;
    distortionStrength?: number;
    fogEdge0?: number;
    fogEdge1?: number;
    fogColor?: THREE.Color;
-   noiseOct?: number;
-   fbmOct?: number;
 };
 
 export type FogProjectionObject = {
@@ -42,13 +40,11 @@ export const useFogProjection = ({
 
    const [params, setParams] = useParams<FogProjectionParams>({
       texture: new THREE.Texture(),
-      timeStrength: 0.0,
+      noiseMap: new THREE.Texture(),
       distortionStrength: 0.0,
       fogEdge0: 0.0,
       fogEdge1: 0.9,
       fogColor: new THREE.Color(0xffffff),
-      noiseOct: 8,
-      fbmOct: 3,
    });
 
    const updateFx = useCallback(
@@ -57,13 +53,11 @@ export const useFogProjection = ({
          setParams(updateParams);
          setUniform(material, "uTime", clock.getElapsedTime());
          setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "timeStrength", params.timeStrength!);
+         setUniform(material, "uNoiseMap", params.noiseMap!);
          setUniform(material, "distortionStrength", params.distortionStrength!);
          setUniform(material, "fogEdge0", params.fogEdge0!);
          setUniform(material, "fogEdge1", params.fogEdge1!);
          setUniform(material, "fogColor", params.fogColor!);
-         setUniform(material, "noiseOct", params.noiseOct!);
-         setUniform(material, "fbmOct", params.fbmOct!);
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
       },

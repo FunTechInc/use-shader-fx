@@ -11,14 +11,14 @@ type TUniforms = {
    uImageResolution: { value: THREE.Vector2 };
    uTexture0: { value: THREE.Texture };
    uTexture1: { value: THREE.Texture };
-   noise: { value: THREE.Texture };
+   uNoiseMap: { value: THREE.Texture };
    noiseStrength: { value: number };
    progress: { value: number };
    dirX: { value: number };
    dirY: { value: number };
 };
 
-export class MetamorphoseMaterial extends THREE.ShaderMaterial {
+export class TransitionBgMaterial extends THREE.ShaderMaterial {
    uniforms!: TUniforms;
 }
 
@@ -40,7 +40,7 @@ export const useMesh = ({
                uImageResolution: { value: new THREE.Vector2() },
                uTexture0: { value: new THREE.Texture() },
                uTexture1: { value: new THREE.Texture() },
-               noise: { value: new THREE.Texture() },
+               uNoiseMap: { value: new THREE.Texture() },
                noiseStrength: { value: 0.0 },
                progress: { value: 0.0 },
                dirX: { value: 0.0 },
@@ -59,5 +59,5 @@ export const useMesh = ({
 
    useAddMesh(scene, geometry, material);
 
-   return material as MetamorphoseMaterial;
+   return material as TransitionBgMaterial;
 };

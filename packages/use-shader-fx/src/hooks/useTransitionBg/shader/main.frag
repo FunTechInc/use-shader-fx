@@ -6,7 +6,7 @@ uniform vec2 uImageResolution;
 
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
-uniform sampler2D noise;
+uniform sampler2D uNoiseMap;
 uniform float noiseStrength;
 uniform float progress;
 uniform float dirX;
@@ -23,7 +23,7 @@ void main() {
 	);
 
 	// noise
-	vec2 noiseMap = texture2D(noise, uv).rg;
+	vec2 noiseMap = texture2D(uNoiseMap, uv).rg;
 	noiseMap=noiseMap*2.0-1.0;
 	uv += noiseMap * noiseStrength;
 

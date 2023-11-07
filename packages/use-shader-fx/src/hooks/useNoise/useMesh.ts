@@ -6,15 +6,12 @@ import { useAddMesh } from "../../utils/useAddMesh";
 
 type TUniforms = {
    uTime: { value: number };
-   uTexture: { value: THREE.Texture };
-   uNoiseMap: { value: THREE.Texture };
-   distortionStrength: { value: number };
-   fogEdge0: { value: number };
-   fogEdge1: { value: number };
-   fogColor: { value: THREE.Color };
+   timeStrength: { value: number };
+   noiseOctaves: { value: number };
+   fbmOctaves: { value: number };
 };
 
-export class FogProjectionMaterial extends THREE.ShaderMaterial {
+export class NoiseMaterial extends THREE.ShaderMaterial {
    uniforms!: TUniforms;
 }
 
@@ -25,12 +22,9 @@ export const useMesh = (scene: THREE.Scene) => {
          new THREE.ShaderMaterial({
             uniforms: {
                uTime: { value: 0.0 },
-               uTexture: { value: new THREE.Texture() },
-               uNoiseMap: { value: new THREE.Texture() },
-               distortionStrength: { value: 0.0 },
-               fogEdge0: { value: 0.0 },
-               fogEdge1: { value: 0.9 },
-               fogColor: { value: new THREE.Color(0xffffff) },
+               timeStrength: { value: 0.0 },
+               noiseOctaves: { value: 0 },
+               fbmOctaves: { value: 0 },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -38,5 +32,5 @@ export const useMesh = (scene: THREE.Scene) => {
       []
    );
    useAddMesh(scene, geometry, material);
-   return material as FogProjectionMaterial;
+   return material as NoiseMaterial;
 };
