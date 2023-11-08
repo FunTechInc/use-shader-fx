@@ -9,8 +9,11 @@ import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type DuoToneParams = {
+   /** このtextureをduotoneにします , Default:new THREE.Texture() */
    texture?: THREE.Texture;
+   /** 1色目 ,　Default:new THREE.Color(0xffffff) */
    color0?: THREE.Color;
+   /** 2色目 , Default: new THREE.Color(0x000000) */
    color1?: THREE.Color;
 };
 
@@ -21,6 +24,15 @@ export type DuoToneObject = {
    renderTarget: THREE.WebGLRenderTarget;
 };
 
+export const DuoToneInitialParams: DuoToneParams = {
+   texture: new THREE.Texture(),
+   color0: new THREE.Color(0xffffff),
+   color1: new THREE.Color(0x000000),
+};
+
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
 export const useDuoTone = ({
    size,
 }: {
@@ -35,11 +47,7 @@ export const useDuoTone = ({
       size,
    });
 
-   const [params, setParams] = useParams<DuoToneParams>({
-      texture: new THREE.Texture(),
-      color0: new THREE.Color(0xffffff),
-      color1: new THREE.Color(0x000000),
-   });
+   const [params, setParams] = useParams<DuoToneParams>(DuoToneInitialParams);
 
    const updateFx = useCallback(
       (props: RootState, updateParams: DuoToneParams) => {

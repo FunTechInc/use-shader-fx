@@ -10,11 +10,11 @@ import { HooksReturn } from "../types";
 
 export type NoiseParams = {
    /** 時間係数 default:0.3 */
-   timeStrength: number;
+   timeStrength?: number;
    /** noiseの振幅回数 default:8 */
-   noiseOctaves: number;
+   noiseOctaves?: number;
    /** fbmの振幅回数 default:3 */
-   fbmOctaves: number;
+   fbmOctaves?: number;
 };
 
 export type NoiseObject = {
@@ -22,6 +22,12 @@ export type NoiseObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+};
+
+export const NoiseInitialParams = {
+   timeStrength: 0.3,
+   noiseOctaves: 8,
+   fbmOctaves: 3,
 };
 
 export const useNoise = ({
@@ -41,11 +47,7 @@ export const useNoise = ({
       dpr,
    });
 
-   const [params, setParams] = useParams<NoiseParams>({
-      timeStrength: 0.0,
-      noiseOctaves: 0,
-      fbmOctaves: 0,
-   });
+   const [params, setParams] = useParams<NoiseParams>(NoiseInitialParams);
 
    const updateFx = useCallback(
       (props: RootState, updateParams: NoiseParams) => {

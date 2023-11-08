@@ -23,7 +23,6 @@ extend({ FxMaterial });
 /*===============================================
 TODO*
 
-- useNoise => useFbmNoise
 - storybookを試す
 - storybookの導入
 - packageの作り込み
