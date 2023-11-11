@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
-import { FxMaterial, TFxMaterial } from "../utils/fxMaterial";
+import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
 import { useDuoTone, useTransitionBg } from "../../packages/use-shader-fx/src";
 import { DuoToneParams } from "../../packages/use-shader-fx/src/hooks/useDuoTone";
 import { CONSTANT } from "../constant";

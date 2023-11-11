@@ -6,11 +6,11 @@ import {
    TFxTextureMaterial,
 } from "../../utils/fxTextureMaterial";
 import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
-import { useNoise, useTransitionBg } from "../../packages/use-shader-fx/src";
+import { useFruid, useTransitionBg } from "../../packages/use-shader-fx/src";
 import {
-   NoiseParams,
-   NOISE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useNoise";
+   FRUID_PARAMS,
+   FruidParams,
+} from "../../packages/use-shader-fx/src/hooks/useFruid";
 import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
@@ -18,33 +18,41 @@ import { useGUI } from "../../utils/useGUI";
 extend({ FxMaterial, FxTextureMaterial });
 
 // GUI
-const CONFIG: NoiseParams = NOISE_PARAMS;
+const CONFIG: FruidParams = FRUID_PARAMS;
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG, "timeStrength", 0, 10, 0.01);
-   gui.add(CONFIG, "noiseOctaves", 0, 10, 1);
-   gui.add(CONFIG, "fbmOctaves", 0, 10, 1);
+   gui.add(CONFIG, "density_dissipation", 0, 1, 0.01);
+   gui.add(CONFIG, "velocity_dissipation", 0, 1, 0.01);
+   gui.add(CONFIG, "velocity_acceleration", 0, 100, 1);
+   gui.add(CONFIG, "pressure_dissipation", 0, 1, 0.01);
+   gui.add(CONFIG, "pressure_iterations", 0, 30, 1);
+   gui.add(CONFIG, "curl_strength", 0, 100, 1);
+   gui.add(CONFIG, "splat_radius", 0, 0.2, 0.001);
 };
 const setConfig = () => {
    return {
-      timeStrength: CONFIG.timeStrength,
-      noiseOctaves: CONFIG.noiseOctaves,
-      fbmOctaves: CONFIG.fbmOctaves,
-   } as NoiseParams;
+      density_dissipation: CONFIG.density_dissipation,
+      velocity_dissipation: CONFIG.velocity_dissipation,
+      velocity_acceleration: CONFIG.velocity_acceleration,
+      pressure_dissipation: CONFIG.pressure_dissipation,
+      pressure_iterations: CONFIG.pressure_iterations,
+      curl_strength: CONFIG.curl_strength,
+      splat_radius: CONFIG.splat_radius,
+   } as FruidParams;
 };
 
 /**
- * noise 単体で使うというよりは、他のhookのnoiseに渡す感じで使いましょう！fxの重ねがけをするときに、noiseの計算を一度にするためです。
+ * 流体エッフェクト
  */
-export const UseNoise = (args: NoiseParams) => {
+export const UseFruid = (args: FruidParams) => {
    const updateGUI = useGUI(setGUI);
 
    const fxRef = React.useRef<TFxMaterial>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateNoise] = useNoise({ size, dpr });
+   const [updateFruid] = useFruid({ size, dpr });
 
    useFrame((props) => {
-      const fx = updateNoise(props, setConfig());
+      const fx = updateFruid(props, setConfig());
       fxRef.current!.u_fx = fx;
       updateGUI();
    });
@@ -57,12 +65,12 @@ export const UseNoise = (args: NoiseParams) => {
    );
 };
 
-export const UseNoiseWithTexture = (args: NoiseParams) => {
+export const UseFruidWithTexture = (args: FruidParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<TFxTextureMaterial>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateNoise] = useNoise({ size, dpr });
+   const [updateFruid] = useFruid({ size, dpr });
 
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });
@@ -73,7 +81,7 @@ export const UseNoiseWithTexture = (args: NoiseParams) => {
          texture0: bg,
       });
 
-      const fx = updateNoise(props, setConfig());
+      const fx = updateFruid(props, setConfig());
 
       fxRef.current!.u_postFx = bgTexture;
       fxRef.current!.u_fx = fx;

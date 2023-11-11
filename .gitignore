@@ -36,3 +36,6 @@ next-env.d.ts
 
 # Storybook
 storybook-static/
+
+# exclude CreateShaderFx
+CreateShaderFx/

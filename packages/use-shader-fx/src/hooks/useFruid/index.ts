@@ -12,13 +12,21 @@ import { useParams } from "../../utils/useParams";
 import { DoubleRenderTarget } from "../../utils/types";
 
 export type FruidParams = {
+   /** density disspation , default:0.98 */
    density_dissipation?: number;
+   /** velocity dissipation , default:0.99 */
    velocity_dissipation?: number;
+   /** velocity acceleration , default:10.0 */
    velocity_acceleration?: number;
+   /** pressure dissipation , default:0.9 */
    pressure_dissipation?: number;
+   /** pressure iterations. パフォーマンスに影響する , default:20 */
    pressure_iterations?: number;
+   /** curl_strength , default:35 */
    curl_strength?: number;
+   /** splat radius , default:0.002 */
    splat_radius?: number;
+   /** 流体のカラー.THREE.Vector3 あるいは、THREE.Vector3を返す関数を受け入れます.関数はvelocity:THREE.Vector2を引数に取ります.  , default:THREE.Vector3(1.0, 1.0, 1.0) */
    fruid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
 };
 
@@ -33,6 +41,17 @@ export type FruidObject = {
       divergence: THREE.WebGLRenderTarget;
       pressure: DoubleRenderTarget;
    };
+};
+
+export const FRUID_PARAMS: FruidParams = {
+   density_dissipation: 0.98,
+   velocity_dissipation: 0.99,
+   velocity_acceleration: 10.0,
+   pressure_dissipation: 0.9,
+   pressure_iterations: 20,
+   curl_strength: 35,
+   splat_radius: 0.002,
+   fruid_color: new THREE.Vector3(1.0, 1.0, 1.0),
 };
 
 export const useFruid = ({
@@ -66,16 +85,7 @@ export const useFruid = ({
    const scaledDiffVec = useRef(new THREE.Vector2(0, 0));
    const spaltVec = useRef(new THREE.Vector3(0, 0, 0));
 
-   const [params, setParams] = useParams<FruidParams>({
-      density_dissipation: 0.0,
-      velocity_dissipation: 0.0,
-      velocity_acceleration: 0.0,
-      pressure_dissipation: 0.0,
-      pressure_iterations: 20,
-      curl_strength: 0.0,
-      splat_radius: 0.001,
-      fruid_color: new THREE.Vector3(1.0, 1.0, 1.0),
-   });
+   const [params, setParams] = useParams<FruidParams>(FRUID_PARAMS);
 
    const updateFx = useCallback(
       (props: RootState, updateParams: FruidParams) => {

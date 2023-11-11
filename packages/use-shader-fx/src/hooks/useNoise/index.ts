@@ -24,7 +24,7 @@ export type NoiseObject = {
    renderTarget: THREE.WebGLRenderTarget;
 };
 
-export const NoiseInitialParams = {
+export const NOISE_PARAMS: NoiseParams = {
    timeStrength: 0.3,
    noiseOctaves: 8,
    fbmOctaves: 3,
@@ -47,7 +47,7 @@ export const useNoise = ({
       dpr,
    });
 
-   const [params, setParams] = useParams<NoiseParams>(NoiseInitialParams);
+   const [params, setParams] = useParams<NoiseParams>(NOISE_PARAMS);
 
    const updateFx = useCallback(
       (props: RootState, updateParams: NoiseParams) => {

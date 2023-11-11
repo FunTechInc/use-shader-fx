@@ -24,7 +24,7 @@ export type DuoToneObject = {
    renderTarget: THREE.WebGLRenderTarget;
 };
 
-export const DuoToneInitialParams: DuoToneParams = {
+export const DUOTONE_PARAMS: DuoToneParams = {
    texture: new THREE.Texture(),
    color0: new THREE.Color(0xffffff),
    color1: new THREE.Color(0x000000),
@@ -47,7 +47,7 @@ export const useDuoTone = ({
       size,
    });
 
-   const [params, setParams] = useParams<DuoToneParams>(DuoToneInitialParams);
+   const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);
 
    const updateFx = useCallback(
       (props: RootState, updateParams: DuoToneParams) => {

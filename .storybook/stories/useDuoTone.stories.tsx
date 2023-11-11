@@ -5,7 +5,7 @@ import { Setup } from "../utils/Setup";
 import type { Meta } from "@storybook/react";
 import { UseDuoTone } from "./UseDuoTone";
 import {
-   DuoToneInitialParams,
+   DUOTONE_PARAMS,
    DuoToneParams,
 } from "../../packages/use-shader-fx/src/hooks/useDuoTone";
 
@@ -19,6 +19,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-   args: DuoToneInitialParams,
-   argTypes: setArgTypes<DuoToneParams>(DuoToneInitialParams),
+   args: DUOTONE_PARAMS,
+   argTypes: setArgTypes<DuoToneParams>(DUOTONE_PARAMS),
 };

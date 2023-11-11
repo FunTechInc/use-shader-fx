@@ -2,7 +2,6 @@ import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { usePerformanceMonitor } from "@react-three/drei";
-
 import {
    useRipple,
    useFlowmap,
@@ -13,25 +12,22 @@ import {
    useFogProjection,
    useNoise,
 } from "@/packages/use-shader-fx/src";
+import {
+   FxTextureMaterial,
+   TFxTextureMaterial,
+} from "@/utils/fxTextureMaterial";
+import { CONFIG, setGUI } from "./config";
+import { useGUI } from "@/utils/useGUI";
 
-import { FxMaterial, TFxMaterial } from "./fxMaterial";
-import { useGUI } from "./useGUI";
-import { CONFIG } from "./config";
-
-extend({ FxMaterial });
+extend({ FxTextureMaterial });
 
 /*===============================================
 TODO*
-
-- storybookを試す
-- storybookの導入
 - packageの作り込み
+	- renderTargetをclean upさせる
+	- cameraとか諸々clean upさせないとか
 - CreateKitの作り込み
-	- Create kitはnpxコマンドで実行するとintegrationされるみたいな仕様にしたい
 - 初期値とGUIの整理
-- renderTargetをclean upさせる
-- cameraとか諸々clean upさせないとか
-
 - demoをもっと簡略化して、かっこいいビジュアルつくる
 	- you can experience more effects hereみたいなリンクつけてstory bookに飛ばす
 ===============================================*/
@@ -42,8 +38,8 @@ export const Demo = () => {
       "momo.jpg",
       "ripple.png",
    ]);
-   const updateGUI = useGUI();
-   const mainShaderRef = useRef<TFxMaterial>();
+   const updateGUI = useGUI(setGUI);
+   const mainShaderRef = useRef<TFxTextureMaterial>();
 
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
@@ -163,7 +159,6 @@ export const Demo = () => {
       if (main) {
          main.u_fx = fx;
          main.u_postFx = postFx;
-         main.isBgActive = CONFIG.transitionBg.active;
       }
       updateGUI();
    });
@@ -171,7 +166,7 @@ export const Demo = () => {
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterial key={FxMaterial.key} ref={mainShaderRef} />
+         <fxTextureMaterial key={FxTextureMaterial.key} ref={mainShaderRef} />
       </mesh>
    );
 };
