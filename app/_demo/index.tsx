@@ -4,7 +4,6 @@ import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { usePerformanceMonitor } from "@react-three/drei";
 import {
    useRipple,
-   useFlowmap,
    useFruid,
    useBrush,
    useTransitionBg,
@@ -23,10 +22,11 @@ extend({ FxTextureMaterial });
 
 /*===============================================
 TODO*
+- structuredCloneしていく
+	- 関数はディープコピーできないので注意〜
 - packageの作り込み
 	- renderTargetをclean upさせる
 	- cameraとか、scene、マテリアルとか諸々clean upさせないとか
-	- brushの調整
 - CreateKitの作り込み
 - 初期値とGUIの整理
 - demoをもっと簡略化して、かっこいいビジュアルつくる
@@ -37,7 +37,7 @@ export const Demo = () => {
    const [bg, bg2, ripple] = useLoader(THREE.TextureLoader, [
       "thumbnail.jpg",
       "momo.jpg",
-      "ripple.png",
+      "smoke.png",
    ]);
    const updateGUI = useGUI(setGUI);
    const mainShaderRef = useRef<TFxTextureMaterial>();
@@ -54,7 +54,6 @@ export const Demo = () => {
       size,
       dpr,
    });
-   const [updateFlowmap] = useFlowmap({ size, dpr });
    const [updateBrush] = useBrush({ size, dpr });
 
    // post fx
@@ -105,19 +104,9 @@ export const Demo = () => {
             fx = updateBrush(props, {
                texture: noise,
                radius: CONFIG.brush.radius,
-               alpha: CONFIG.brush.alpha,
                smudge: CONFIG.brush.smudge,
                dissipation: CONFIG.brush.dissipation,
-               magnification: CONFIG.brush.magnification,
                motionBlur: CONFIG.brush.motionBlur,
-            });
-            break;
-         case 3:
-            fx = updateFlowmap(props, {
-               radius: CONFIG.flowmap.radius,
-               magnification: CONFIG.flowmap.magnification,
-               alpha: CONFIG.flowmap.alpha,
-               dissipation: CONFIG.flowmap.dissipation,
             });
             break;
          default:
@@ -146,7 +135,6 @@ export const Demo = () => {
 
       if (CONFIG.fogProjection.active) {
          postFx = updateFogProjection(props, {
-            // timeStrength: CONFIG.fogProjection.timeStrength,
             distortionStrength: CONFIG.fogProjection.distortionStrength,
             fogEdge0: CONFIG.fogProjection.fogEdge0,
             fogEdge1: CONFIG.fogProjection.fogEdge1,

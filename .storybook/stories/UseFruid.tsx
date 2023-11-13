@@ -6,14 +6,14 @@ import {
    TFxTextureMaterial,
 } from "../../utils/fxTextureMaterial";
 import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { CONSTANT } from "../constant";
+import GUI from "lil-gui";
+import { useGUI } from "../../utils/useGUI";
 import { useFruid, useTransitionBg } from "../../packages/use-shader-fx/src";
 import {
    FRUID_PARAMS,
    FruidParams,
 } from "../../packages/use-shader-fx/src/hooks/useFruid";
-import { CONSTANT } from "../constant";
-import GUI from "lil-gui";
-import { useGUI } from "../../utils/useGUI";
 
 extend({ FxMaterial, FxTextureMaterial });
 

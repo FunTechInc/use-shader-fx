@@ -19,6 +19,7 @@ export const ShaderFx = () => {
                setDpr(Math.round((0.5 + 1.5 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>
+               {/* When creating fx, please rewrite to CreateShaderFx */}
                <Demo />
             </Suspense>
             <Perf position={"bottom-left"} minimal={false} />

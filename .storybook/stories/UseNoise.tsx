@@ -2,13 +2,13 @@ import * as React from "react";
 import { useFrame, extend, useThree } from "@react-three/fiber";
 import { FxTextureMaterial } from "../../utils/fxTextureMaterial";
 import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import GUI from "lil-gui";
+import { useGUI } from "../../utils/useGUI";
 import { useNoise } from "../../packages/use-shader-fx/src";
 import {
    NoiseParams,
    NOISE_PARAMS,
 } from "../../packages/use-shader-fx/src/hooks/useNoise";
-import GUI from "lil-gui";
-import { useGUI } from "../../utils/useGUI";
 
 extend({ FxMaterial, FxTextureMaterial });
 

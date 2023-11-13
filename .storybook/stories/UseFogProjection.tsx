@@ -2,6 +2,9 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { CONSTANT } from "../constant";
+import GUI from "lil-gui";
+import { useGUI } from "../../utils/useGUI";
 import {
    useFogProjection,
    useTransitionBg,
@@ -11,9 +14,6 @@ import {
    FogProjectionParams,
    FOGPROJECTION_PARAMS,
 } from "../../packages/use-shader-fx/src/hooks/useFogProjection";
-import { CONSTANT } from "../constant";
-import GUI from "lil-gui";
-import { useGUI } from "../../utils/useGUI";
 
 extend({ FxMaterial });
 

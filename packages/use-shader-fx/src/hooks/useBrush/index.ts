@@ -64,7 +64,9 @@ export const useBrush = ({
       size,
    });
 
-   const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);
+   const [params, setParams] = useParams<BrushParams>(
+      structuredClone(BRUSH_PARAMS)
+   );
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: BrushParams) => {

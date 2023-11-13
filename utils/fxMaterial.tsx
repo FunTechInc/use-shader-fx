@@ -32,6 +32,7 @@ export const FxMaterial = shaderMaterial(
 		void main() {
 			vec2 uv = vUv;
 			gl_FragColor = texture2D(u_fx, uv);
+			gl_FragColor.a = 1.0;
 		}
 	`
 );

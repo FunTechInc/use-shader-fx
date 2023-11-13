@@ -71,17 +71,9 @@ export const CONFIG = {
    },
    brush: {
       radius: 0.02,
-      alpha: 0.1,
       smudge: 0.0,
       dissipation: 0.98,
-      magnification: 0.0,
       motionBlur: 0.0,
-   },
-   flowmap: {
-      radius: 0.1,
-      magnification: 0.0,
-      alpha: 0.1,
-      dissipation: 0.98,
    },
    selectEffect: 1,
 };
@@ -143,16 +135,9 @@ export const setGUI = (gui: GUI) => {
    brush.add(CONFIG.brush, "magnification", 0, 1, 0.01);
    brush.add(CONFIG.brush, "motionBlur", 0, 1, 0.01);
 
-   const flowmap = gui.addFolder("flowmap(fx)");
-   flowmap.add(CONFIG.flowmap, "radius", 0, 1, 0.01);
-   flowmap.add(CONFIG.flowmap, "magnification", 0, 1, 0.01);
-   flowmap.add(CONFIG.flowmap, "alpha", 0, 1, 0.01);
-   flowmap.add(CONFIG.flowmap, "dissipation", 0, 1, 0.01);
-
    gui.add(CONFIG, "selectEffect", {
       ripple: 0,
       fruid: 1,
       brush: 2,
-      flowmap: 3,
    });
 };

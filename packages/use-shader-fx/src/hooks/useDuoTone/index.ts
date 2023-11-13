@@ -47,7 +47,9 @@ export const useDuoTone = ({
       size,
    });
 
-   const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);
+   const [params, setParams] = useParams<DuoToneParams>(
+      structuredClone(DUOTONE_PARAMS)
+   );
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: DuoToneParams) => {

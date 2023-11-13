@@ -16,7 +16,7 @@ export type TransitionBgParams = {
    /** 画像の比率 , default:THREE.Vector2(0, 0) */
    imageResolution?: THREE.Vector2;
    /** transitionする際に乗算するnoise texture. useNoiseでもいいけど、画像として書き出したnoise textureでも可 , default:THREE.Texture() */
-   uNoiseMap?: THREE.Texture;
+   noiseMap?: THREE.Texture;
    /** noiseの強さ , default:0.0 */
    noiseStrength?: number;
    /** texture0とtexture1を切り替えるスイッチ値 */
@@ -36,7 +36,7 @@ export const TRANSITIONBG_PARAMS: TransitionBgParams = {
    texture0: new THREE.Texture(),
    texture1: new THREE.Texture(),
    imageResolution: new THREE.Vector2(0, 0),
-   uNoiseMap: new THREE.Texture(),
+   noiseMap: new THREE.Texture(),
    noiseStrength: 0.0,
    progress: 0.0,
    dir: new THREE.Vector2(0, 0),
@@ -75,7 +75,7 @@ export const useTransitionBg = ({
          setUniform(material, "uTexture0", params.texture0!);
          setUniform(material, "uTexture1", params.texture1!);
          setUniform(material, "uImageResolution", params.imageResolution!);
-         setUniform(material, "uNoiseMap", params.uNoiseMap!);
+         setUniform(material, "uNoiseMap", params.noiseMap!);
          setUniform(material, "noiseStrength", params.noiseStrength!);
          setUniform(material, "progress", params.progress!);
          setUniform(material, "dirX", params.dir!.x);

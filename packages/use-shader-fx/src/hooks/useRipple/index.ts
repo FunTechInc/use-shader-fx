@@ -11,11 +11,11 @@ import { useParams } from "../../utils/useParams";
 export type RippleParams = {
    /** rippleが出現する頻度,default:0.01 */
    frequency?: number;
-   /** rippleの回転,default:0.01 */
+   /** rippleの回転,default:0.05 */
    rotation?: number;
    /** rippleがフェードアウトするスピード,default:0.9 */
    fadeout_speed?: number;
-   /** rippleの拡大率,default:0.15 */
+   /** rippleの拡大率,default:0.3 */
    scale?: number;
    /** rippleの透明度,default:0.6 */
    alpha?: number;
@@ -30,9 +30,9 @@ export type RippleObject = {
 
 export const RIPPLE_PARAMS: RippleParams = {
    frequency: 0.01,
-   rotation: 0.01,
+   rotation: 0.05,
    fadeout_speed: 0.9,
-   scale: 0.15,
+   scale: 0.3,
    alpha: 0.6,
 };
 
