@@ -54,6 +54,9 @@ export const FRUID_PARAMS: FruidParams = {
    fruid_color: new THREE.Vector3(1.0, 1.0, 1.0),
 };
 
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
 export const useFruid = ({
    size,
    dpr,
@@ -88,10 +91,10 @@ export const useFruid = ({
    const [params, setParams] = useParams<FruidParams>(FRUID_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams: FruidParams) => {
+      (props: RootState, updateParams?: FruidParams) => {
          const { gl, pointer, clock, size } = props;
 
-         setParams(updateParams);
+         updateParams && setParams(updateParams);
 
          if (lastTime.current === 0) {
             lastTime.current = clock.getElapsedTime();

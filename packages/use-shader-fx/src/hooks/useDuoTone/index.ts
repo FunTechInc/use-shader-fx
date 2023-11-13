@@ -9,7 +9,7 @@ import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type DuoToneParams = {
-   /** このtextureをduotoneにします , Default:new THREE.Texture() */
+   /** Make this texture duotone , Default:new THREE.Texture() */
    texture?: THREE.Texture;
    /** 1色目 ,　Default:new THREE.Color(0xffffff) */
    color0?: THREE.Color;
@@ -50,10 +50,10 @@ export const useDuoTone = ({
    const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams: DuoToneParams) => {
+      (props: RootState, updateParams?: DuoToneParams) => {
          const { gl } = props;
 
-         setParams(updateParams);
+         updateParams && setParams(updateParams);
 
          setUniform(material, "uTexture", params.texture!);
          setUniform(material, "uColor0", params.color0!);

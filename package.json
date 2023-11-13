@@ -9,7 +9,8 @@
       "start": "next start",
       "lint": "next lint",
       "storybook": "storybook dev -p 6006",
-      "build-storybook": "storybook build"
+      "build-storybook": "storybook build",
+      "create-fx": "git clone https://github.com/takuma-hmng8/CreateShaderFx"
    },
    "dependencies": {
       "@react-three/drei": "^9.88.7",
@@ -35,6 +36,7 @@
       "zustand": "^4.4.1"
    },
    "devDependencies": {
+      "@hmng8/use-shader-fx": "^1.0.3",
       "@storybook/addon-essentials": "^7.5.3",
       "@storybook/addon-interactions": "^7.5.3",
       "@storybook/addon-links": "^7.5.3",

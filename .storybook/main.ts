@@ -26,14 +26,3 @@ const config: StorybookConfig = {
    },
 };
 export default config;
-
-/*===============================================
-TODO*
-- withTexture storyが必要なのは
-	- noiseもやるか〜
-	- brush
-	- flowmap
-	- fruid
-	- ripple
-- あと、GUIつくる
-===============================================*/

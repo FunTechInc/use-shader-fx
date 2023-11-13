@@ -30,6 +30,9 @@ export const NOISE_PARAMS: NoiseParams = {
    fbmOctaves: 3,
 };
 
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
 export const useNoise = ({
    size,
    dpr,
@@ -50,10 +53,10 @@ export const useNoise = ({
    const [params, setParams] = useParams<NoiseParams>(NOISE_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams: NoiseParams) => {
+      (props: RootState, updateParams?: NoiseParams) => {
          const { gl, clock } = props;
 
-         setParams(updateParams);
+         updateParams && setParams(updateParams);
 
          setUniform(material, "timeStrength", params.timeStrength!);
          setUniform(material, "noiseOctaves", params.noiseOctaves!);

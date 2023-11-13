@@ -1,5 +1,11 @@
 import * as THREE from "three";
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import {
+   useCallback,
+   useEffect,
+   useLayoutEffect,
+   useMemo,
+   useRef,
+} from "react";
 import { FBO_OPTION } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
 import { DoubleRenderTarget, UseFboProps } from "./types";

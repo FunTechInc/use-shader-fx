@@ -7,7 +7,7 @@ import {
    NOISE_PARAMS,
    NoiseParams,
 } from "../../packages/use-shader-fx/src/hooks/useNoise";
-import { UseNoise, UseNoiseWithTexture } from "./UseNoise";
+import { UseNoise } from "./UseNoise";
 
 const meta = {
    title: "useNoise",
@@ -24,12 +24,7 @@ const storySetting = {
    argTypes: setArgTypes<NoiseParams>(NOISE_PARAMS),
 };
 
-export const OnlyNoise: Story = {
+export const Default: Story = {
    render: (args) => <UseNoise {...args} />,
-   ...storySetting,
-};
-
-export const WithTexture: Story = {
-   render: (args) => <UseNoiseWithTexture {...args} />,
    ...storySetting,
 };

@@ -3,16 +3,14 @@ precision mediump float;
 uniform sampler2D uMap;
 uniform sampler2D uTexture;
 uniform float uRadius;
-uniform float uAlpha;
 uniform float uDissipation;
-uniform float uMagnification;
 uniform vec2 uResolution;
 uniform float uSmudge;
 uniform float uAspect;
 uniform vec2 uMouse;
 uniform vec2 uPrevMouse;
 uniform vec2 uVelocity;
-
+uniform vec3 uColor;
 uniform float uMotionBlur;
 uniform int uMotionSample;
 
@@ -77,34 +75,31 @@ void main() {
 	// UV座標を[-1, 1]の範囲に変換
 	vec2 st = vUv * 2.0 - 1.0;
 	
-	//速度ベクトル
+	// 速度ベクトル
 	vec2 velocity = uVelocity * uResolution;
 
 	// 滲みを加える
 	vec4 smudgedColor = createSmudge();
 	
-	//モーションブラー
-	vec4 motionBlurredColor = createMotionBlur(smudgedColor, uVelocity, uMotionBlur,uMotionSample);
+	// モーションブラー
+	vec4 motionBlurredColor = createMotionBlur(smudgedColor, velocity, uMotionBlur,uMotionSample);
 
-	//バッファーテクスチャー
+	// バッファーテクスチャー
 	vec4 bufferColor = motionBlurredColor * uDissipation;
 
 	// radius
-	float modifiedRadius = uRadius + (length(velocity) * uMagnification);
-	modifiedRadius = max(0.0,modifiedRadius);
+	float modifiedRadius = max(0.0,uRadius);
 
-	//	color TODO:カラーに速度を反映させるかどうか、最初のフレームのカラーをどうするか
-	// vec3 color = vec3(velocity * vec2(1, -1), 1.0 - pow(1.0 - min(1.0, length(velocity)), 1.0));
-	vec3 color = vec3(1.0,1.0,1.0);
+	//	color 
+	vec3 color = uColor;
 
-	//カラーにテクスチャーをマッピングする
+	// カラーにテクスチャーをマッピングする
 	vec4 textureColor = texture2D(uTexture, vUv);
 	vec3 finalColor = mix(color, textureColor.rgb, textureColor.a);
 
-	//始点と終点の直線上を判定する
+	// 始点と終点の直線上を判定する
 	float onLine = isOnLine(st, uPrevMouse, uMouse, modifiedRadius, uAspect);
-
-	//最終出力
 	bufferColor.rgb = mix(bufferColor.rgb, finalColor, onLine);
-	gl_FragColor = bufferColor;
+	
+	gl_FragColor = vec4(bufferColor.rgb,1.0);
 }

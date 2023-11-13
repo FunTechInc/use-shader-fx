@@ -104,7 +104,7 @@ export const useMesh = ({
          resolution.x / resolution.y
       );
       for (const material of Object.values(materials)) {
-         setUniform(
+         setUniform<any>(
             material,
             "texelSize",
             new THREE.Vector2(1.0 / resolution.x, 1.0 / resolution.y)

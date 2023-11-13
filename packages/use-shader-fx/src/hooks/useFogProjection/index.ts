@@ -9,11 +9,17 @@ import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type FogProjectionParams = {
+   /** Make this texture FogProjection , default:THREE.Texture */
    texture?: THREE.Texture;
+   /** 重ねがけるnoise texture, default:THREE.Texture */
    noiseMap?: THREE.Texture;
+   /** 乗算するdistortionの強さ , default:0.03 */
    distortionStrength?: number;
+   /** noiseを反映する底地 , default:0.0 */
    fogEdge0?: number;
+   /** noiseを反映する天井値 , default:0.9  */
    fogEdge1?: number;
+   /** fogのカラー , default: THREE.Color(0xffffff) */
    fogColor?: THREE.Color;
 };
 
@@ -24,6 +30,18 @@ export type FogProjectionObject = {
    renderTarget: THREE.WebGLRenderTarget;
 };
 
+export const FOGPROJECTION_PARAMS: FogProjectionParams = {
+   texture: new THREE.Texture(),
+   noiseMap: new THREE.Texture(),
+   distortionStrength: 0.03,
+   fogEdge0: 0.0,
+   fogEdge1: 0.9,
+   fogColor: new THREE.Color(0xffffff),
+};
+
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
 export const useFogProjection = ({
    size,
 }: {
@@ -38,19 +56,13 @@ export const useFogProjection = ({
       size,
    });
 
-   const [params, setParams] = useParams<FogProjectionParams>({
-      texture: new THREE.Texture(),
-      noiseMap: new THREE.Texture(),
-      distortionStrength: 0.0,
-      fogEdge0: 0.0,
-      fogEdge1: 0.9,
-      fogColor: new THREE.Color(0xffffff),
-   });
+   const [params, setParams] =
+      useParams<FogProjectionParams>(FOGPROJECTION_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams: FogProjectionParams) => {
+      (props: RootState, updateParams?: FogProjectionParams) => {
          const { gl, clock } = props;
-         setParams(updateParams);
+         updateParams && setParams(updateParams);
          setUniform(material, "uTime", clock.getElapsedTime());
          setUniform(material, "uTexture", params.texture!);
          setUniform(material, "uNoiseMap", params.noiseMap!);

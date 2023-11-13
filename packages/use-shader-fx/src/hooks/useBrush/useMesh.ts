@@ -7,6 +7,26 @@ import { useAddMesh } from "../../utils/useAddMesh";
 import { setUniform } from "../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 
+type TUniforms = {
+   uMap: { value: THREE.Texture };
+   uResolution: { value: THREE.Texture };
+   uAspect: { value: number };
+   uTexture: { value: THREE.Texture };
+   uRadius: { value: number };
+   uSmudge: { value: number };
+   uDissipation: { value: number };
+   uMotionBlur: { value: number };
+   uMotionSample: { value: number };
+   uMouse: { value: number };
+   uPrevMouse: { value: number };
+   uVelocity: { value: number };
+   uColor: { value: THREE.Color };
+};
+
+export class BrushMaterial extends THREE.ShaderMaterial {
+   uniforms!: TUniforms;
+}
+
 export const useMesh = ({
    scene,
    size,
@@ -21,22 +41,19 @@ export const useMesh = ({
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               uMap: {
-                  value: null,
-               },
+               uMap: { value: new THREE.Texture() },
                uResolution: { value: new THREE.Vector2(0, 0) },
-               uAspect: { value: 1 },
+               uAspect: { value: 0.0 },
                uTexture: { value: new THREE.Texture() },
                uRadius: { value: 0.0 },
-               uAlpha: { value: 0.0 },
                uSmudge: { value: 0.0 },
                uDissipation: { value: 0.0 },
-               uMagnification: { value: 0.0 },
                uMotionBlur: { value: 0.0 },
-               uMotionSample: { value: 10 },
+               uMotionSample: { value: 0 },
                uMouse: { value: new THREE.Vector2(0, 0) },
                uPrevMouse: { value: new THREE.Vector2(0, 0) },
                uVelocity: { value: new THREE.Vector2(0, 0) },
+               uColor: { value: new THREE.Color(0xffffff) },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -52,5 +69,5 @@ export const useMesh = ({
 
    useAddMesh(scene, geometry, material);
 
-   return material;
+   return material as BrushMaterial;
 };

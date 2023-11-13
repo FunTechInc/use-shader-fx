@@ -25,7 +25,8 @@ extend({ FxTextureMaterial });
 TODO*
 - packageの作り込み
 	- renderTargetをclean upさせる
-	- cameraとか諸々clean upさせないとか
+	- cameraとか、scene、マテリアルとか諸々clean upさせないとか
+	- brushの調整
 - CreateKitの作り込み
 - 初期値とGUIの整理
 - demoをもっと簡略化して、かっこいいビジュアルつくる

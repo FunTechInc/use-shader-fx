@@ -1,10 +1,15 @@
 import * as THREE from "three";
 import { useCallback, useRef } from "react";
 
-/**
- * @returns updatePointer frameで呼び出す更新関数を返す
- */
-export const usePointer = () => {
+type UpdatePointer = (currentPointer: THREE.Vector2) => {
+   currentPointer: THREE.Vector2;
+   prevPointer: THREE.Vector2;
+   diffPointer: THREE.Vector2;
+   velocity: THREE.Vector2;
+   isVelocityUpdate: boolean;
+};
+
+export const usePointer = (): UpdatePointer => {
    const prevPointer = useRef(new THREE.Vector2(0, 0));
    const diffPointer = useRef(new THREE.Vector2(0, 0));
    const lastUpdateTime = useRef<number>(0);

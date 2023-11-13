@@ -11,22 +11,20 @@ import { useParams } from "../../utils/useParams";
 import { DoubleRenderTarget } from "../../utils/types";
 
 export type BrushParams = {
-   /** ブラシに適用するテクスチャー */
+   /** ブラシに適用するテクスチャー.aの値でmixさせてます , default:THREE.Texture() */
    texture?: THREE.Texture;
-   /** size of the stamp, percentage of the size */
+   /** size of the stamp, percentage of the size ,default:0.05 */
    radius?: number;
-   /** opacity TODO*これバグってるいので修正 */
-   alpha?: number;
-   /** 滲み効果の強さ */
+   /** 滲み効果の強さ , default:0.0*/
    smudge?: number;
-   /** 拡散率。1にすると残り続ける */
+   /** 拡散率。1にすると残り続ける ,default:0.9 */
    dissipation?: number;
-   /** 拡大率 */
-   magnification?: number;
-   /** モーションブラーの強さ */
+   /** モーションブラーの強さ , default:0.0 */
    motionBlur?: number;
-   /** モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大 */
+   /** モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大, default: 5 */
    motionSample?: number;
+   /** ブラシの色 , default:THREE.Color(0xffffff) */
+   color?: THREE.Color;
 };
 
 export type BrushObject = {
@@ -36,6 +34,19 @@ export type BrushObject = {
    renderTarget: DoubleRenderTarget;
 };
 
+export const BRUSH_PARAMS: BrushParams = {
+   texture: new THREE.Texture(),
+   radius: 0.05,
+   smudge: 0.0,
+   dissipation: 0.9,
+   motionBlur: 0.0,
+   motionSample: 5,
+   color: new THREE.Color(0xffffff),
+};
+
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
 export const useBrush = ({
    size,
    dpr,
@@ -53,31 +64,21 @@ export const useBrush = ({
       size,
    });
 
-   const [params, setParams] = useParams<BrushParams>({
-      texture: new THREE.Texture(),
-      radius: 0.0,
-      alpha: 0.0,
-      smudge: 0.0,
-      dissipation: 0.0,
-      magnification: 0.0,
-      motionBlur: 0.0,
-      motionSample: 10,
-   });
+   const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams: BrushParams) => {
+      (props: RootState, updateParams?: BrushParams) => {
          const { gl, pointer } = props;
 
-         setParams(updateParams);
+         updateParams && setParams(updateParams);
 
          setUniform(material, "uTexture", params.texture!);
          setUniform(material, "uRadius", params.radius!);
-         setUniform(material, "uAlpha", params.alpha!);
          setUniform(material, "uSmudge", params.smudge!);
          setUniform(material, "uDissipation", params.dissipation!);
-         setUniform(material, "uMagnification", params.magnification!);
          setUniform(material, "uMotionBlur", params.motionBlur!);
          setUniform(material, "uMotionSample", params.motionSample!);
+         setUniform(material, "uColor", params.color!);
 
          const { currentPointer, prevPointer, velocity } =
             updatePointer(pointer);

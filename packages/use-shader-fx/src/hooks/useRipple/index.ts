@@ -28,6 +28,17 @@ export type RippleObject = {
    renderTarget: THREE.WebGLRenderTarget;
 };
 
+export const RIPPLE_PARAMS: RippleParams = {
+   frequency: 0.01,
+   rotation: 0.01,
+   fadeout_speed: 0.9,
+   scale: 0.15,
+   alpha: 0.6,
+};
+
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
 export const useRipple = ({
    texture,
    scale = 64,
@@ -57,21 +68,15 @@ export const useRipple = ({
       size,
    });
 
-   const [params, setParams] = useParams<RippleParams>({
-      frequency: 0.01,
-      rotation: 0.01,
-      fadeout_speed: 0.9,
-      scale: 0.15,
-      alpha: 0.6,
-   });
+   const [params, setParams] = useParams<RippleParams>(RIPPLE_PARAMS);
 
    const currentWave = useRef(0);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams: RippleParams) => {
+      (props: RootState, updateParams?: RippleParams) => {
          const { gl, pointer, size } = props;
 
-         setParams(updateParams);
+         updateParams && setParams(updateParams);
 
          const { currentPointer, diffPointer } = updatePointer(pointer);
          if (params.frequency! < diffPointer.length()) {
