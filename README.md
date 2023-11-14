@@ -2,6 +2,13 @@
 
 `use-shader-fx` is a library designed to easily implement shader effects such as fluid simulations and noise. It relies on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) and has been designed with performance control in mind, especially when combined with [drei](https://github.com/pmndrs/drei).
 
+For details on each FX, please refer to Storybook
+👉 [Storybook](https://use-shader-fx-stories.vercel.app/) 👈
+
+```bash
+npm install @hmng8/use-shader-fx
+```
+
 # Usage
 
 From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. The `config` is an object, which varies for each Hook, containing details such as `size` and `dpr`.
@@ -68,6 +75,15 @@ usePerformanceMonitor({
 # How to make "custom fxHooks"
 
 With some functions provided by `use-shader-fx`, creating a custom hook is straightforward (the challenging part is only the shader!). Please refer to existing `fxHooks` for details.
+
+In addition, we have prepared a template in the repository below that is useful for creating custom hooks, so please clone and use it in the location where you created your custom hook.
+
+```bash
+git clone https://github.com/takuma-hmng8/CreateShaderFx
+```
+
+If you can create a cool FX, please contribute!
+👉 [CONTRIBUTING](CONTRIBUTING.md)! 👈
 
 ## useDoubleFBO
 
