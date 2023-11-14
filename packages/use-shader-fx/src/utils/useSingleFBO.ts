@@ -1,5 +1,11 @@
 import * as THREE from "three";
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import {
+   useCallback,
+   useEffect,
+   useLayoutEffect,
+   useMemo,
+   useRef,
+} from "react";
 import { useResolution } from "./useResolution";
 import { UseFboProps } from "./types";
 
@@ -45,6 +51,13 @@ export const useSingleFBO = ({
          renderTarget.current?.setSize(resolution.x, resolution.y);
       }
    }, [resolution, isSizeUpdate]);
+
+   useEffect(() => {
+      const currentRenderTarget = renderTarget.current;
+      return () => {
+         currentRenderTarget?.dispose();
+      };
+   }, []);
 
    const updateRenderTarget: FBOUpdateFunction = useCallback(
       (gl, onBeforeRender) => {

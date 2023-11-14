@@ -36,7 +36,7 @@ export const FxTextureMaterial = shaderMaterial(
 			vec2 uv = vUv;
 
 			vec2 fxmap = texture2D(u_fx, uv).rg;
-			uv += fxmap * 0.1;
+			uv += fxmap;
 
 			vec3 postFx = texture2D(u_postFx, uv).rgb;
 			

@@ -9,11 +9,11 @@ import { useParams } from "../../utils/useParams";
 import { HooksReturn } from "../types";
 
 export type NoiseParams = {
-   /** 時間係数 default:0.3 */
+   /** time factor default:0.3 */
    timeStrength?: number;
-   /** noiseの振幅回数 default:8 */
+   /** noiseOctaves, affects performance default:8 */
    noiseOctaves?: number;
-   /** fbmの振幅回数 default:3 */
+   /** fbmOctaves, affects performance default:3 */
    fbmOctaves?: number;
 };
 

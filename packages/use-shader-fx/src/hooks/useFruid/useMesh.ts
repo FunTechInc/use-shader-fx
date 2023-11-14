@@ -118,6 +118,14 @@ export const useMesh = ({
       mesh.material = updateMaterial;
    }, [initialMaterial, mesh, updateMaterial]);
 
+   useEffect(() => {
+      return () => {
+         for (const material of Object.values(materials)) {
+            material.dispose();
+         }
+      };
+   }, [materials]);
+
    const setMeshMaterial = useCallback(
       (material: TMaterials) => {
          mesh.material = material;

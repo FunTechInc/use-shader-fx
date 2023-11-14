@@ -9,6 +9,7 @@ type UpdatePointer = (currentPointer: THREE.Vector2) => {
    isVelocityUpdate: boolean;
 };
 
+/** When given the pointer vector2 from r3f's RootState, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}. */
 export const usePointer = (): UpdatePointer => {
    const prevPointer = useRef(new THREE.Vector2(0, 0));
    const diffPointer = useRef(new THREE.Vector2(0, 0));

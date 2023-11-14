@@ -1,5 +1,5 @@
 /**
- * argTypeのコントロールを無効にし、Default値をセットします。Default値はInitialParamsの値を文字列に変換してセットしています。オブジェクトの場合はJSON文字列にます。
+ * Disables the argType control and sets the Default value. The Default value is set by converting the InitialParams value to a string. For objects, it is a JSON string.
  */
 export const setArgTypes = <T extends Record<string, any>>(args: T) => {
    return Object.keys(args).reduce<

@@ -27,10 +27,10 @@ void main() {
 	noiseMap=noiseMap*2.0-1.0;
 	uv += noiseMap * noiseStrength;
 
-	// uvをセンター基準に
+	// center uv
 	vec2 centeredUV = uv - vec2(0.5);
 	
-	//texture 0
+	// texture 0
 	float xOffsetTexture0 = 0.5 - dirX * progress;
 	float yOffsetTexture0 = 0.5 - dirY * progress;
 	vec2 samplePosTexture0 = vec2(xOffsetTexture0, yOffsetTexture0) + centeredUV;

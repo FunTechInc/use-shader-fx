@@ -25,9 +25,6 @@ const setConfig = () => {
    } as DuoToneParams;
 };
 
-/**
- * テクスチャーを受け取って、DuoToneにしてテクスチャーを返します。
- */
 export const UseDuoTone = (args: DuoToneParams) => {
    const updateGUI = useGUI(setGUI);
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);

@@ -13,8 +13,7 @@ import {
 
 extend({ FxMaterial });
 
-// GUI
-const CONFIG: TransitionBgParams = TRANSITIONBG_PARAMS;
+const CONFIG: TransitionBgParams = structuredClone(TRANSITIONBG_PARAMS);
 const DIR = new THREE.Vector2(0, 0);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "noiseStrength", 0, 1, 0.01);
@@ -31,7 +30,7 @@ const setConfig = () => {
 };
 
 /**
- * 背景
+ * Transition the two background textures using the progress value. Noise can also be added
  */
 export const UseTransitionBg = (args: TransitionBgParams) => {
    const updateGUI = useGUI(setGUI);

@@ -11,9 +11,9 @@ import { useParams } from "../../utils/useParams";
 export type DuoToneParams = {
    /** Make this texture duotone , Default:new THREE.Texture() */
    texture?: THREE.Texture;
-   /** 1色目 ,　Default:new THREE.Color(0xffffff) */
+   /** 1st color ,　Default:new THREE.Color(0xffffff) */
    color0?: THREE.Color;
-   /** 2色目 , Default: new THREE.Color(0x000000) */
+   /** 2nd color , Default: new THREE.Color(0x000000) */
    color1?: THREE.Color;
 };
 
@@ -47,9 +47,7 @@ export const useDuoTone = ({
       size,
    });
 
-   const [params, setParams] = useParams<DuoToneParams>(
-      structuredClone(DUOTONE_PARAMS)
-   );
+   const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: DuoToneParams) => {

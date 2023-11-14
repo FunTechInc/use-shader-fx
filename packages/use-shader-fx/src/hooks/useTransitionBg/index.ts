@@ -9,19 +9,19 @@ import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type TransitionBgParams = {
-   /** 0番目のtexture , default:THREE.Texture() */
+   /** 1st texture , default:THREE.Texture() */
    texture0?: THREE.Texture;
-   /** 1番目のtexture , default:THREE.Texture() */
+   /** 2nd texture , default:THREE.Texture() */
    texture1?: THREE.Texture;
-   /** 画像の比率 , default:THREE.Vector2(0, 0) */
+   /** background image ratio , default:THREE.Vector2(0, 0) */
    imageResolution?: THREE.Vector2;
-   /** transitionする際に乗算するnoise texture. useNoiseでもいいけど、画像として書き出したnoise textureでも可 , default:THREE.Texture() */
+   /** Noise texture to be multiplied when transitioning. You can use useNoise, but you can also use noise texture exported as an image. , default:THREE.Texture() */
    noiseMap?: THREE.Texture;
-   /** noiseの強さ , default:0.0 */
+   /** noise strength , default:0.0 */
    noiseStrength?: number;
-   /** texture0とtexture1を切り替えるスイッチ値 */
+   /** Switch value to switch between texture0 and texture1 */
    progress?: number;
-   /** transitionする方向 , default: THREE.Vector2(0, 0) */
+   /** direction of transition , default: THREE.Vector2(0, 0) */
    dir?: THREE.Vector2;
 };
 

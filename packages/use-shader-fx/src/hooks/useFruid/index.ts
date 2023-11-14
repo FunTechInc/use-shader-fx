@@ -20,13 +20,13 @@ export type FruidParams = {
    velocity_acceleration?: number;
    /** pressure dissipation , default:0.9 */
    pressure_dissipation?: number;
-   /** pressure iterations. パフォーマンスに影響する , default:20 */
+   /** pressure iterations. affects performance , default:20 */
    pressure_iterations?: number;
    /** curl_strength , default:35 */
    curl_strength?: number;
    /** splat radius , default:0.002 */
    splat_radius?: number;
-   /** 流体のカラー.THREE.Vector3 あるいは、THREE.Vector3を返す関数を受け入れます.関数はvelocity:THREE.Vector2を引数に取ります.  , default:THREE.Vector3(1.0, 1.0, 1.0) */
+   /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
    fruid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
 };
 

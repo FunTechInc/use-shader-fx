@@ -12,8 +12,7 @@ import {
 
 extend({ FxMaterial, FxTextureMaterial });
 
-// GUI
-const CONFIG: NoiseParams = NOISE_PARAMS;
+const CONFIG: NoiseParams = structuredClone(NOISE_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "timeStrength", 0, 10, 0.01);
    gui.add(CONFIG, "noiseOctaves", 0, 10, 1);
@@ -28,7 +27,7 @@ const setConfig = () => {
 };
 
 /**
- * noise 単体で使うというよりは、他のhookのnoiseに渡す感じで使いましょう！fxの重ねがけをするときに、noiseの計算を一度にするためです。
+ * Rather than using noise alone, use it by passing it to noise of another hook! This is to calculate noise at once when overlapping fx.
  */
 export const UseNoise = (args: NoiseParams) => {
    const updateGUI = useGUI(setGUI);

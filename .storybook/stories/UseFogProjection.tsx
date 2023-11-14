@@ -17,8 +17,7 @@ import {
 
 extend({ FxMaterial });
 
-// GUI
-const CONFIG: FogProjectionParams = FOGPROJECTION_PARAMS;
+const CONFIG: FogProjectionParams = structuredClone(FOGPROJECTION_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "distortionStrength", 0, 1, 0.01);
    gui.add(CONFIG, "fogEdge0", 0, 1, 0.01);
@@ -35,7 +34,7 @@ const setConfig = () => {
 };
 
 /**
- * 受け取ったテクスチャーに、noiseを重ねて、テクスチャーを返します。まるで霧に映像を投影するような感じ！
+ * Adds noise to the received texture and returns the texture. It's like projecting an image onto fog!
  */
 export const UseFogProjection = (args: FogProjectionParams) => {
    const updateGUI = useGUI(setGUI);

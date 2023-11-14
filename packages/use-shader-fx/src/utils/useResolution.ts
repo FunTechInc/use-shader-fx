@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Size } from "@react-three/fiber";
 
 /**
- * @params isDpr Whether to multiply dpr, default:false
+ * @params dpr if dpr is set, it returns the resolution which is size multiplied by dpr.
  */
 export const useResolution = (size: Size, dpr: number | false = false) => {
    const _width = dpr ? size.width * dpr : size.width;

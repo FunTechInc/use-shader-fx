@@ -17,8 +17,7 @@ import {
 
 extend({ FxMaterial, FxTextureMaterial });
 
-// GUI
-const CONFIG: FruidParams = FRUID_PARAMS;
+const CONFIG: FruidParams = structuredClone(FRUID_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "density_dissipation", 0, 1, 0.01);
    gui.add(CONFIG, "velocity_dissipation", 0, 1, 0.01);
@@ -40,9 +39,6 @@ const setConfig = () => {
    } as FruidParams;
 };
 
-/**
- * 流体エッフェクト
- */
 export const UseFruid = (args: FruidParams) => {
    const updateGUI = useGUI(setGUI);
 

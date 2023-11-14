@@ -11,15 +11,15 @@ import { useParams } from "../../utils/useParams";
 export type FogProjectionParams = {
    /** Make this texture FogProjection , default:THREE.Texture */
    texture?: THREE.Texture;
-   /** 重ねがけるnoise texture, default:THREE.Texture */
+   /** noise texture to map, default:THREE.Texture */
    noiseMap?: THREE.Texture;
-   /** 乗算するdistortionの強さ , default:0.03 */
+   /** distortion strength , default:0.03 */
    distortionStrength?: number;
-   /** noiseを反映する底地 , default:0.0 */
+   /** value that reflects noise , default:0.0 */
    fogEdge0?: number;
-   /** noiseを反映する天井値 , default:0.9  */
+   /** value that reflects noise , default:0.9  */
    fogEdge1?: number;
-   /** fogのカラー , default: THREE.Color(0xffffff) */
+   /** fog color , default: THREE.Color(0xffffff) */
    fogColor?: THREE.Color;
 };
 

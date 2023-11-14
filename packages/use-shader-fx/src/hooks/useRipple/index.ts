@@ -9,15 +9,15 @@ import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type RippleParams = {
-   /** rippleが出現する頻度,default:0.01 */
+   /** How often ripples appear,default:0.01 */
    frequency?: number;
-   /** rippleの回転,default:0.05 */
+   /** rotation rate,default:0.05 */
    rotation?: number;
-   /** rippleがフェードアウトするスピード,default:0.9 */
+   /** fadeout speed,default:0.9 */
    fadeout_speed?: number;
-   /** rippleの拡大率,default:0.3 */
+   /** scale rate,default:0.3 */
    scale?: number;
-   /** rippleの透明度,default:0.6 */
+   /** alpha,default:0.6 */
    alpha?: number;
 };
 

@@ -78,6 +78,14 @@ export const useDoubleFBO = ({
       }
    }, [resolution, isSizeUpdate]);
 
+   useEffect(() => {
+      const currentRenderTarget = renderTarget.current;
+      return () => {
+         currentRenderTarget.read?.dispose();
+         currentRenderTarget.write?.dispose();
+      };
+   }, []);
+
    const updateRenderTarget: FBOUpdateFunction = useCallback(
       (gl, onBeforeRender) => {
          const fbo = renderTarget.current;

@@ -13,7 +13,7 @@ import {
 
 extend({ FxMaterial });
 
-const CONFIG: BrushParams = BRUSH_PARAMS;
+const CONFIG: BrushParams = structuredClone(BRUSH_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "radius", 0, 0.1, 0.01);
    gui.add(CONFIG, "smudge", 0, 10, 0.01);
@@ -33,9 +33,6 @@ const setConfig = () => {
    } as BrushParams;
 };
 
-/**
- * ブラシ
- */
 export const UseBrush = (args: BrushParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<TFxMaterial>();

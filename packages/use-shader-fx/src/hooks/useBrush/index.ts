@@ -11,19 +11,19 @@ import { useParams } from "../../utils/useParams";
 import { DoubleRenderTarget } from "../../utils/types";
 
 export type BrushParams = {
-   /** ブラシに適用するテクスチャー.aの値でmixさせてます , default:THREE.Texture() */
+   /** Texture applied to the brush.Mixed with the value of a , default:THREE.Texture() */
    texture?: THREE.Texture;
    /** size of the stamp, percentage of the size ,default:0.05 */
    radius?: number;
-   /** 滲み効果の強さ , default:0.0*/
+   /** Strength of smudge effect , default:0.0*/
    smudge?: number;
-   /** 拡散率。1にすると残り続ける ,default:0.9 */
+   /** dissipation rate. If set to 1, it will remain. ,default:1.0 */
    dissipation?: number;
-   /** モーションブラーの強さ , default:0.0 */
+   /** Strength of motion blur , default:0.0 */
    motionBlur?: number;
-   /** モーションブラーのサンプル数 これを高くするとパフォーマンスへの影響大, default: 5 */
+   /** Number of motion blur samples. Affects performance default: 5 */
    motionSample?: number;
-   /** ブラシの色 , default:THREE.Color(0xffffff) */
+   /** brush color , default:THREE.Color(0xffffff) */
    color?: THREE.Color;
 };
 
@@ -38,7 +38,7 @@ export const BRUSH_PARAMS: BrushParams = {
    texture: new THREE.Texture(),
    radius: 0.05,
    smudge: 0.0,
-   dissipation: 0.9,
+   dissipation: 1.0,
    motionBlur: 0.0,
    motionSample: 5,
    color: new THREE.Color(0xffffff),
@@ -64,9 +64,7 @@ export const useBrush = ({
       size,
    });
 
-   const [params, setParams] = useParams<BrushParams>(
-      structuredClone(BRUSH_PARAMS)
-   );
+   const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: BrushParams) => {

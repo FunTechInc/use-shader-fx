@@ -24,6 +24,7 @@ export const useMesh = ({ scale, max, texture, scene }: TcreateMesh) => {
          }),
       [texture]
    );
+
    useEffect(() => {
       for (let i = 0; i < max; i++) {
          const mesh = new THREE.Mesh(geometry.clone(), material.clone());
@@ -33,5 +34,21 @@ export const useMesh = ({ scale, max, texture, scene }: TcreateMesh) => {
          meshArr.current.push(mesh);
       }
    }, [geometry, material, scene, max]);
+
+   useEffect(() => {
+      return () => {
+         meshArr.current.forEach((mesh) => {
+            mesh.geometry.dispose();
+            if (Array.isArray(mesh.material)) {
+               mesh.material.forEach((material) => material.dispose());
+            } else {
+               mesh.material.dispose();
+            }
+            scene.remove(mesh);
+         });
+         meshArr.current = [];
+      };
+   }, [scene]);
+
    return meshArr.current;
 };

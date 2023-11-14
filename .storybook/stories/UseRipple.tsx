@@ -17,8 +17,7 @@ import {
 
 extend({ FxMaterial, FxTextureMaterial });
 
-// GUI
-const CONFIG: RippleParams = RIPPLE_PARAMS;
+const CONFIG: RippleParams = structuredClone(RIPPLE_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "frequency", 0, 0.1, 0.01);
    gui.add(CONFIG, "rotation", 0, 1, 0.01);
@@ -36,9 +35,6 @@ const setConfig = () => {
    } as RippleParams;
 };
 
-/**
- * リップル
- */
 export const UseRipple = (args: RippleParams) => {
    const [ripple] = useLoader(THREE.TextureLoader, ["smoke.png"]);
    const updateGUI = useGUI(setGUI);
