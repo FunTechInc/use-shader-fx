@@ -6,7 +6,7 @@ import { CONFIG, setGUI } from "./config";
 import { useGUI } from "@/utils/useGUI";
 import {
    FxTextureMaterial,
-   TFxTextureMaterial,
+   FxTextureMaterialProps,
 } from "@/utils/fxTextureMaterial";
 import {
    useFruid,
@@ -23,7 +23,7 @@ export const Demo = () => {
       "momo.jpg",
    ]);
    const updateGUI = useGUI(setGUI);
-   const mainShaderRef = useRef<TFxTextureMaterial>();
+   const mainShaderRef = useRef<FxTextureMaterialProps>();
 
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);

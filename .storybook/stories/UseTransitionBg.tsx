@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
-import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
@@ -38,7 +38,7 @@ export const UseTransitionBg = (args: TransitionBgParams) => {
       "thumbnail.jpg",
       "momo.jpg",
    ]);
-   const fxRef = React.useRef<TFxMaterial>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });

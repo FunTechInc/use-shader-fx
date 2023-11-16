@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
-import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import {
    FxTextureMaterial,
-   TFxTextureMaterial,
+   FxTextureMaterialProps,
 } from "../../utils/fxTextureMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
@@ -38,7 +38,7 @@ const setConfig = () => {
 export const UseRipple = (args: RippleParams) => {
    const [ripple] = useLoader(THREE.TextureLoader, ["smoke.png"]);
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<TFxMaterial>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const [updateRipple] = useRipple({ size, texture: ripple });
    useFrame((props) => {
@@ -61,7 +61,7 @@ export const UseRippleWithTexture = (args: RippleParams) => {
       "smoke.png",
    ]);
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<TFxTextureMaterial>();
+   const fxRef = React.useRef<FxTextureMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });

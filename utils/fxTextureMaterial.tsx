@@ -9,7 +9,7 @@ declare global {
    }
 }
 
-export type TFxTextureMaterial = {
+export type FxTextureMaterialProps = {
    u_fx: THREE.Texture | null;
    u_postFx: THREE.Texture | null;
 };

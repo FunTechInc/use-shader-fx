@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
-import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { CONSTANT } from "../constant";
@@ -35,7 +35,7 @@ const setConfig = () => {
 
 export const UseBrush = (args: BrushParams) => {
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<TFxMaterial>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateBrush] = useBrush({ size, dpr });
@@ -56,7 +56,7 @@ export const UseBrush = (args: BrushParams) => {
 export const UseBrushWithTexture = (args: BrushParams) => {
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<TFxMaterial>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });

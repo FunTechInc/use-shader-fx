@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useFrame, extend, useThree } from "@react-three/fiber";
 import { FxTextureMaterial } from "../../utils/fxTextureMaterial";
-import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { useNoise } from "../../packages/use-shader-fx/src";
@@ -32,7 +32,7 @@ const setConfig = () => {
 export const UseNoise = (args: NoiseParams) => {
    const updateGUI = useGUI(setGUI);
 
-   const fxRef = React.useRef<TFxMaterial>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateNoise] = useNoise({ size, dpr });

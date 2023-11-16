@@ -3,9 +3,9 @@ import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import {
    FxTextureMaterial,
-   TFxTextureMaterial,
+   FxTextureMaterialProps,
 } from "../../utils/fxTextureMaterial";
-import { FxMaterial, TFxMaterial } from "../../utils/fxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
@@ -42,7 +42,7 @@ const setConfig = () => {
 export const UseFruid = (args: FruidParams) => {
    const updateGUI = useGUI(setGUI);
 
-   const fxRef = React.useRef<TFxMaterial>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateFruid] = useFruid({ size, dpr });
@@ -63,7 +63,7 @@ export const UseFruid = (args: FruidParams) => {
 
 export const UseFruidWithTexture = (args: FruidParams) => {
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<TFxTextureMaterial>();
+   const fxRef = React.useRef<FxTextureMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateFruid] = useFruid({ size, dpr });
