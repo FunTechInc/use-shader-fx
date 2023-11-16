@@ -4,14 +4,12 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
 
-type TUniforms = {
-   uTexture: { value: THREE.Texture };
-   uColor0: { value: THREE.Color };
-   uColor1: { value: THREE.Color };
-};
-
 export class DuoToneMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uTexture: { value: THREE.Texture };
+      uColor0: { value: THREE.Color };
+      uColor1: { value: THREE.Color };
+   };
 }
 
 export const useMesh = (scene: THREE.Scene) => {

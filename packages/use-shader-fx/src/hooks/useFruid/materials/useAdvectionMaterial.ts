@@ -3,16 +3,14 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/advection.frag";
 
-type TUniforms = {
-   uVelocity: { value: THREE.Texture };
-   uSource: { value: THREE.Texture };
-   texelSize: { value: THREE.Vector2 };
-   dt: { value: number };
-   dissipation: { value: number };
-};
-
 export class AdvectionMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uVelocity: { value: THREE.Texture };
+      uSource: { value: THREE.Texture };
+      texelSize: { value: THREE.Vector2 };
+      dt: { value: number };
+      dissipation: { value: number };
+   };
 }
 
 export const useAdvectionMaterial = () => {

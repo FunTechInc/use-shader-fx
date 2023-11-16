@@ -3,14 +3,12 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/gradientSubtract.frag";
 
-type TUniforms = {
-   uPressure: { value: THREE.Texture };
-   uVelocity: { value: THREE.Texture };
-   texelSize: { value: THREE.Vector2 };
-};
-
 export class GradientSubtractMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uPressure: { value: THREE.Texture };
+      uVelocity: { value: THREE.Texture };
+      texelSize: { value: THREE.Vector2 };
+   };
 }
 
 export const useGradientSubtractMaterial = () => {

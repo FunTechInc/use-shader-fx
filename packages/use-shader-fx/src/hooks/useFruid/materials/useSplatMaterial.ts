@@ -3,17 +3,15 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/splat.frag";
 
-type TUniforms = {
-   uTarget: { value: THREE.Texture };
-   aspectRatio: { value: number };
-   color: { value: THREE.Vector3 };
-   point: { value: THREE.Vector2 };
-   radius: { value: number };
-   texelSize: { value: THREE.Vector2 };
-};
-
 export class SplatMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uTarget: { value: THREE.Texture };
+      aspectRatio: { value: number };
+      color: { value: THREE.Vector3 };
+      point: { value: THREE.Vector2 };
+      radius: { value: number };
+      texelSize: { value: THREE.Vector2 };
+   };
 }
 
 export const useSplateMaterial = () => {

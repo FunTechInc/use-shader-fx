@@ -7,24 +7,22 @@ import { useAddMesh } from "../../utils/useAddMesh";
 import { setUniform } from "../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 
-type TUniforms = {
-   uMap: { value: THREE.Texture };
-   uResolution: { value: THREE.Texture };
-   uAspect: { value: number };
-   uTexture: { value: THREE.Texture };
-   uRadius: { value: number };
-   uSmudge: { value: number };
-   uDissipation: { value: number };
-   uMotionBlur: { value: number };
-   uMotionSample: { value: number };
-   uMouse: { value: number };
-   uPrevMouse: { value: number };
-   uVelocity: { value: number };
-   uColor: { value: THREE.Color };
-};
-
 export class BrushMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uMap: { value: THREE.Texture };
+      uResolution: { value: THREE.Texture };
+      uAspect: { value: number };
+      uTexture: { value: THREE.Texture };
+      uRadius: { value: number };
+      uSmudge: { value: number };
+      uDissipation: { value: number };
+      uMotionBlur: { value: number };
+      uMotionSample: { value: number };
+      uMouse: { value: number };
+      uPrevMouse: { value: number };
+      uVelocity: { value: number };
+      uColor: { value: THREE.Color };
+   };
 }
 
 export const useMesh = ({

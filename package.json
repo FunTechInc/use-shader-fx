@@ -36,7 +36,7 @@
       "zustand": "^4.4.1"
    },
    "devDependencies": {
-      "@hmng8/use-shader-fx": "^1.0.5",
+      "@hmng8/use-shader-fx": "^1.0.6",
       "@storybook/addon-essentials": "^7.5.3",
       "@storybook/addon-interactions": "^7.5.3",
       "@storybook/addon-links": "^7.5.3",

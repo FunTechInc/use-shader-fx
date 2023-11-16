@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-type TcreateMesh = {
+type UseMeshProps = {
    scale: number;
    max: number;
    texture?: THREE.Texture;
    scene: THREE.Scene;
 };
-export const useMesh = ({ scale, max, texture, scene }: TcreateMesh) => {
+
+export const useMesh = ({ scale, max, texture, scene }: UseMeshProps) => {
    const meshArr = useRef<THREE.Mesh[]>([]);
    const geometry = useMemo(
       () => new THREE.PlaneGeometry(scale, scale),

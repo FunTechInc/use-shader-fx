@@ -23,7 +23,7 @@ type FBOUpdateFunction = (
    onBeforeRender?: ({ read }: { read: THREE.Texture }) => void
 ) => THREE.Texture;
 
-type Return = [THREE.WebGLRenderTarget, FBOUpdateFunction];
+type UseSingleFBOReturn = [THREE.WebGLRenderTarget, FBOUpdateFunction];
 
 /**
  * @param dpr If dpr is set, dpr will be multiplied, default:false
@@ -36,7 +36,7 @@ export const useSingleFBO = ({
    size,
    dpr = false,
    isSizeUpdate = false,
-}: UseFboProps): Return => {
+}: UseFboProps): UseSingleFBOReturn => {
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
 
    const resolution = useResolution(size, dpr);

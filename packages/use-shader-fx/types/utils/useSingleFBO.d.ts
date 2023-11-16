@@ -12,11 +12,11 @@ type FBOUpdateFunction = (gl: THREE.WebGLRenderer,
 onBeforeRender?: ({ read }: {
     read: THREE.Texture;
 }) => void) => THREE.Texture;
-type Return = [THREE.WebGLRenderTarget, FBOUpdateFunction];
+type UseSingleFBOReturn = [THREE.WebGLRenderTarget, FBOUpdateFunction];
 /**
  * @param dpr If dpr is set, dpr will be multiplied, default:false
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
  * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
-export declare const useSingleFBO: ({ scene, camera, size, dpr, isSizeUpdate, }: UseFboProps) => Return;
+export declare const useSingleFBO: ({ scene, camera, size, dpr, isSizeUpdate, }: UseFboProps) => UseSingleFBOReturn;
 export {};

@@ -4,18 +4,16 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
 
-type TUniforms = {
-   uTime: { value: number };
-   uTexture: { value: THREE.Texture };
-   uNoiseMap: { value: THREE.Texture };
-   distortionStrength: { value: number };
-   fogEdge0: { value: number };
-   fogEdge1: { value: number };
-   fogColor: { value: THREE.Color };
-};
-
 export class FogProjectionMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uTime: { value: number };
+      uTexture: { value: THREE.Texture };
+      uNoiseMap: { value: THREE.Texture };
+      distortionStrength: { value: number };
+      fogEdge0: { value: number };
+      fogEdge1: { value: number };
+      fogColor: { value: THREE.Color };
+   };
 }
 
 export const useMesh = (scene: THREE.Scene) => {

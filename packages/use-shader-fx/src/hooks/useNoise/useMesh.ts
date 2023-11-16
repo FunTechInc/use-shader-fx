@@ -4,15 +4,13 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
 
-type TUniforms = {
-   uTime: { value: number };
-   timeStrength: { value: number };
-   noiseOctaves: { value: number };
-   fbmOctaves: { value: number };
-};
-
 export class NoiseMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uTime: { value: number };
+      timeStrength: { value: number };
+      noiseOctaves: { value: number };
+      fbmOctaves: { value: number };
+   };
 }
 
 export const useMesh = (scene: THREE.Scene) => {

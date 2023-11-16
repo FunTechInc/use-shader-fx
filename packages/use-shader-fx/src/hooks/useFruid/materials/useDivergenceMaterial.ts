@@ -3,13 +3,11 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/divergence.frag";
 
-type TUniforms = {
-   uVelocity: { value: THREE.Texture };
-   texelSize: { value: THREE.Vector2 };
-};
-
 export class DivergenceMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uVelocity: { value: THREE.Texture };
+      texelSize: { value: THREE.Vector2 };
+   };
 }
 
 export const useDivergenceMaterial = () => {

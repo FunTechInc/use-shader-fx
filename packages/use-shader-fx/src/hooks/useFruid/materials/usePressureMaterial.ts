@@ -3,14 +3,12 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/pressure.frag";
 
-type TUniforms = {
-   uPressure: { value: THREE.Texture };
-   uDivergence: { value: THREE.Texture };
-   texelSize: { value: THREE.Vector2 };
-};
-
 export class PressureMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uPressure: { value: THREE.Texture };
+      uDivergence: { value: THREE.Texture };
+      texelSize: { value: THREE.Vector2 };
+   };
 }
 
 export const usePressureMaterial = () => {

@@ -26,7 +26,7 @@ type FBOUpdateFunction = (
    }) => void
 ) => THREE.Texture;
 
-type Return = [
+type UseDoubleFBOReturn = [
    { read: THREE.WebGLRenderTarget; write: THREE.WebGLRenderTarget },
    FBOUpdateFunction
 ];
@@ -42,7 +42,7 @@ export const useDoubleFBO = ({
    size,
    dpr = false,
    isSizeUpdate = false,
-}: UseFboProps): Return => {
+}: UseFboProps): UseDoubleFBOReturn => {
    const renderTarget = useRef<RenderTarget>({
       read: null,
       write: null,

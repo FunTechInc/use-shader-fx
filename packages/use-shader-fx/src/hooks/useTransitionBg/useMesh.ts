@@ -6,20 +6,18 @@ import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
 import { Size } from "@react-three/fiber";
 
-type TUniforms = {
-   uResolution: { value: THREE.Vector2 };
-   uImageResolution: { value: THREE.Vector2 };
-   uTexture0: { value: THREE.Texture };
-   uTexture1: { value: THREE.Texture };
-   uNoiseMap: { value: THREE.Texture };
-   noiseStrength: { value: number };
-   progress: { value: number };
-   dirX: { value: number };
-   dirY: { value: number };
-};
-
 export class TransitionBgMaterial extends THREE.ShaderMaterial {
-   uniforms!: TUniforms;
+   uniforms!: {
+      uResolution: { value: THREE.Vector2 };
+      uImageResolution: { value: THREE.Vector2 };
+      uTexture0: { value: THREE.Texture };
+      uTexture1: { value: THREE.Texture };
+      uNoiseMap: { value: THREE.Texture };
+      noiseStrength: { value: number };
+      progress: { value: number };
+      dirX: { value: number };
+      dirY: { value: number };
+   };
 }
 
 export const useMesh = ({
