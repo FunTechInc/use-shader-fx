@@ -1,11 +1,14 @@
 // fxHooks
-export { useBrush } from "./hooks/useBrush";
-export { useDuoTone } from "./hooks/useDuoTone";
-export { useFogProjection } from "./hooks/useFogProjection";
-export { useFruid } from "./hooks/useFruid";
-export { useRipple } from "./hooks/useRipple";
-export { useTransitionBg } from "./hooks/useTransitionBg";
-export { useNoise } from "./hooks/useNoise";
+export { useBrush, BRUSH_PARAMS } from "./hooks/useBrush";
+export { useDuoTone, DUOTONE_PARAMS } from "./hooks/useDuoTone";
+export {
+   useFogProjection,
+   FOGPROJECTION_PARAMS,
+} from "./hooks/useFogProjection";
+export { useFruid, FRUID_PARAMS } from "./hooks/useFruid";
+export { useRipple, RIPPLE_PARAMS } from "./hooks/useRipple";
+export { useTransitionBg, TRANSITIONBG_PARAMS } from "./hooks/useTransitionBg";
+export { useNoise, NOISE_PARAMS } from "./hooks/useNoise";
 
 // utils
 export { setUniform } from "./utils/setUniforms";
