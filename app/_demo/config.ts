@@ -14,8 +14,7 @@ export const CONFIG = {
       active: true,
       transformDir: 1,
       transform: () => {
-         CONFIG.transitionBg.transformDir =
-            CONFIG.transitionBg.transformDir * -1;
+         CONFIG.transitionBg.transformDir *= -1;
          const tl = gsap.timeline({
             defaults: { duration: 2 },
          });
