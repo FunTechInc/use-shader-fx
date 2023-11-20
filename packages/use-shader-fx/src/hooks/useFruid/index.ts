@@ -74,12 +74,15 @@ export const useFruid = ({
          scene,
          camera,
          size,
-         dpr,
+         isSizeUpdate: true,
       }),
-      [scene, camera, size, dpr]
+      [scene, camera, size]
    );
    const [velocityFBO, updateVelocityFBO] = useDoubleFBO(fboProps);
-   const [densityFBO, updateDensityFBO] = useDoubleFBO(fboProps);
+   const [densityFBO, updateDensityFBO] = useDoubleFBO({
+      ...fboProps,
+      isSizeUpdate: false,
+   });
    const [curlFBO, updateCurlFBO] = useSingleFBO(fboProps);
    const [divergenceFBO, updateDivergenceFBO] = useSingleFBO(fboProps);
    const [pressureFBO, updatePressureFBO] = useDoubleFBO(fboProps);
