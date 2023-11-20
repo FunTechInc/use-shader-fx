@@ -9,7 +9,7 @@ import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
-import { DoubleRenderTarget } from "../../utils/types";
+import { DoubleRenderTarget, UseFboProps } from "../../utils/types";
 
 export type FruidParams = {
    /** density disspation , default:0.98 */
@@ -69,7 +69,7 @@ export const useFruid = ({
    const camera = useCamera(size);
    const updatePointer = usePointer();
 
-   const fboProps = useMemo(
+   const fboProps = useMemo<UseFboProps>(
       () => ({
          scene,
          camera,
