@@ -62,6 +62,7 @@ export const useBrush = ({
       scene,
       camera,
       size,
+      dpr,
    });
 
    const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);

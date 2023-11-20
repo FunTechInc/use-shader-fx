@@ -44,8 +44,10 @@ export const FOGPROJECTION_PARAMS: FogProjectionParams = {
  */
 export const useFogProjection = ({
    size,
+   dpr,
 }: {
    size: Size;
+   dpr: number;
 }): HooksReturn<FogProjectionParams, FogProjectionObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
@@ -54,6 +56,7 @@ export const useFogProjection = ({
       scene,
       camera,
       size,
+      dpr,
    });
 
    const [params, setParams] =

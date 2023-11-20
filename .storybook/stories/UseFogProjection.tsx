@@ -44,7 +44,7 @@ export const UseFogProjection = (args: FogProjectionParams) => {
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });
    const [updateNoise] = useNoise({ size, dpr });
-   const [updateFogProjection] = useFogProjection({ size });
+   const [updateFogProjection] = useFogProjection({ size, dpr });
 
    useFrame((props) => {
       const bgTexture = updateTransitionBg(props, {

@@ -20,6 +20,7 @@ export declare const DUOTONE_PARAMS: DuoToneParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useDuoTone: ({ size, }: {
+export declare const useDuoTone: ({ size, dpr, }: {
     size: Size;
+    dpr: number;
 }) => HooksReturn<DuoToneParams, DuoToneObject>;

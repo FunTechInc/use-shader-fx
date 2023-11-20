@@ -35,8 +35,10 @@ export const DUOTONE_PARAMS: DuoToneParams = {
  */
 export const useDuoTone = ({
    size,
+   dpr,
 }: {
    size: Size;
+   dpr: number;
 }): HooksReturn<DuoToneParams, DuoToneObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
@@ -45,6 +47,7 @@ export const useDuoTone = ({
       scene,
       camera,
       size,
+      dpr,
    });
 
    const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);

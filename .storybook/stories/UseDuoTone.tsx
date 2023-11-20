@@ -32,7 +32,7 @@ export const UseDuoTone = (args: DuoToneParams) => {
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });
-   const [updateDuoTone] = useDuoTone({ size });
+   const [updateDuoTone] = useDuoTone({ size, dpr });
 
    useFrame((props) => {
       const bgTexture = updateTransitionBg(props, {

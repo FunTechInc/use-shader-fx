@@ -16,7 +16,7 @@ export const ShaderFx = () => {
             factor={1}
             onChange={({ factor }) => {
                console.log(`dpr:${dpr}`);
-               setDpr(Math.round((0.5 + 1.5 * factor) * 10) / 10);
+               setDpr(Math.round((0.2 + 1.3 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>
                {/* When creating fx, please rewrite to CreateShaderFx */}

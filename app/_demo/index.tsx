@@ -36,7 +36,7 @@ export const Demo = () => {
    });
 
    const [updateTransitionBg] = useTransitionBg({ size, dpr });
-   const [updateFogProjection] = useFogProjection({ size });
+   const [updateFogProjection] = useFogProjection({ size, dpr });
 
    usePerformanceMonitor({
       onChange({ factor }) {
