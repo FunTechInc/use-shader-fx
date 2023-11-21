@@ -25,7 +25,7 @@ export const FxMaterial = shaderMaterial(
 		}
 	`,
    `
-		precision mediump float;
+		precision highp float;
 		varying vec2 vUv;
 		uniform sampler2D u_fx;
 

@@ -27,7 +27,7 @@ export const FxTextureMaterial = shaderMaterial(
 		}
 	`,
    `
-		precision mediump float;
+		precision highp float;
 		varying vec2 vUv;
 		uniform sampler2D u_fx;
 		uniform sampler2D u_postFx;

@@ -1,6 +1,3 @@
-precision mediump float;
-precision mediump sampler2D;
-
 varying vec2 vUv;
 varying vec2 vL;
 varying vec2 vR;
