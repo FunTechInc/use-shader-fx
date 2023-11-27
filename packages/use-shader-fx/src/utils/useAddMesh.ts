@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 /** Generate mesh from geometry and material and add to scene */
 export const useAddMesh = (
    scene: THREE.Scene,
-   geometry: THREE.PlaneGeometry,
+   geometry: THREE.BufferGeometry,
    material: THREE.Material
 ) => {
    const mesh = useMemo(
