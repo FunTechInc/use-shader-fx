@@ -161,9 +161,7 @@ useAddMesh(scene, geometry, material);
 A function to set values in the uniforms of the shader material.
 
 ```js
-const setUniform = (material, key, value) => {
-   material.uniforms[key].value = value;
-};
+setUniform(material, "key", someValue);
 ```
 
 ## useParams
