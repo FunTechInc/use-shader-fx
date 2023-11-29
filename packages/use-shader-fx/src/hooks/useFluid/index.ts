@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { FruidMaterials, useMesh } from "./useMesh";
+import { FluidMaterials, useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useCallback, useMemo, useRef } from "react";
@@ -11,7 +11,7 @@ import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 import { DoubleRenderTarget, UseFboProps } from "../../utils/types";
 
-export type FruidParams = {
+export type FluidParams = {
    /** density disspation , default:0.98 */
    density_dissipation?: number;
    /** velocity dissipation , default:0.99 */
@@ -27,12 +27,12 @@ export type FruidParams = {
    /** splat radius , default:0.002 */
    splat_radius?: number;
    /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
-   fruid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
+   fluid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
 };
 
-export type FruidObject = {
+export type FluidObject = {
    scene: THREE.Scene;
-   materials: FruidMaterials;
+   materials: FluidMaterials;
    camera: THREE.Camera;
    renderTarget: {
       velocity: DoubleRenderTarget;
@@ -43,7 +43,7 @@ export type FruidObject = {
    };
 };
 
-export const FRUID_PARAMS: FruidParams = {
+export const FLUID_PARAMS: FluidParams = {
    density_dissipation: 0.98,
    velocity_dissipation: 0.99,
    velocity_acceleration: 10.0,
@@ -51,19 +51,19 @@ export const FRUID_PARAMS: FruidParams = {
    pressure_iterations: 20,
    curl_strength: 35,
    splat_radius: 0.002,
-   fruid_color: new THREE.Vector3(1.0, 1.0, 1.0),
+   fluid_color: new THREE.Vector3(1.0, 1.0, 1.0),
 };
 
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export const useFruid = ({
+export const useFluid = ({
    size,
    dpr,
 }: {
    size: Size;
    dpr: number;
-}): HooksReturn<FruidParams, FruidObject> => {
+}): HooksReturn<FluidParams, FluidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const [materials, setMeshMaterial] = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -87,10 +87,10 @@ export const useFruid = ({
    const scaledDiffVec = useRef(new THREE.Vector2(0, 0));
    const spaltVec = useRef(new THREE.Vector3(0, 0, 0));
 
-   const [params, setParams] = useParams<FruidParams>(FRUID_PARAMS);
+   const [params, setParams] = useParams<FluidParams>(FLUID_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: FruidParams) => {
+      (props: RootState, updateParams?: FluidParams) => {
          const { gl, pointer, clock, size } = props;
 
          updateParams && setParams(updateParams);
@@ -157,9 +157,9 @@ export const useFruid = ({
                setMeshMaterial(materials.splatMaterial);
                setUniform(materials.splatMaterial, "uTarget", read);
                const color: THREE.Vector3 =
-                  typeof params.fruid_color === "function"
-                     ? params.fruid_color(velocity)
-                     : params.fruid_color!;
+                  typeof params.fluid_color === "function"
+                     ? params.fluid_color(velocity)
+                     : params.fluid_color!;
                setUniform(materials.splatMaterial, "color", color);
             });
          }

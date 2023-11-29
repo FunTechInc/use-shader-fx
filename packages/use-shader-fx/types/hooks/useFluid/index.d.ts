@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { FruidMaterials } from "./useMesh";
+import { FluidMaterials } from "./useMesh";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
 import { DoubleRenderTarget } from "../../utils/types";
-export type FruidParams = {
+export type FluidParams = {
     /** density disspation , default:0.98 */
     density_dissipation?: number;
     /** velocity dissipation , default:0.99 */
@@ -19,11 +19,11 @@ export type FruidParams = {
     /** splat radius , default:0.002 */
     splat_radius?: number;
     /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
-    fruid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
+    fluid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
 };
-export type FruidObject = {
+export type FluidObject = {
     scene: THREE.Scene;
-    materials: FruidMaterials;
+    materials: FluidMaterials;
     camera: THREE.Camera;
     renderTarget: {
         velocity: DoubleRenderTarget;
@@ -33,11 +33,11 @@ export type FruidObject = {
         pressure: DoubleRenderTarget;
     };
 };
-export declare const FRUID_PARAMS: FruidParams;
+export declare const FLUID_PARAMS: FluidParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useFruid: ({ size, dpr, }: {
+export declare const useFluid: ({ size, dpr, }: {
     size: Size;
     dpr: number;
-}) => HooksReturn<FruidParams, FruidObject>;
+}) => HooksReturn<FluidParams, FluidObject>;

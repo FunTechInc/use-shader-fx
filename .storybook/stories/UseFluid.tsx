@@ -9,15 +9,15 @@ import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { useFruid, useTransitionBg } from "../../packages/use-shader-fx/src";
+import { useFluid, useTransitionBg } from "../../packages/use-shader-fx/src";
 import {
-   FRUID_PARAMS,
-   FruidParams,
-} from "../../packages/use-shader-fx/src/hooks/useFruid";
+   FLUID_PARAMS,
+   FluidParams,
+} from "../../packages/use-shader-fx/src/hooks/useFluid";
 
 extend({ FxMaterial, FxTextureMaterial });
 
-const CONFIG: FruidParams = structuredClone(FRUID_PARAMS);
+const CONFIG: FluidParams = structuredClone(FLUID_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "density_dissipation", 0, 1, 0.01);
    gui.add(CONFIG, "velocity_dissipation", 0, 1, 0.01);
@@ -36,19 +36,19 @@ const setConfig = () => {
       pressure_iterations: CONFIG.pressure_iterations,
       curl_strength: CONFIG.curl_strength,
       splat_radius: CONFIG.splat_radius,
-   } as FruidParams;
+   } as FluidParams;
 };
 
-export const UseFruid = (args: FruidParams) => {
+export const UseFluid = (args: FluidParams) => {
    const updateGUI = useGUI(setGUI);
 
    const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateFruid] = useFruid({ size, dpr });
+   const [updateFluid] = useFluid({ size, dpr });
 
    useFrame((props) => {
-      const fx = updateFruid(props, setConfig());
+      const fx = updateFluid(props, setConfig());
       fxRef.current!.u_fx = fx;
       updateGUI();
    });
@@ -61,12 +61,12 @@ export const UseFruid = (args: FruidParams) => {
    );
 };
 
-export const UseFruidWithTexture = (args: FruidParams) => {
+export const UseFluidWithTexture = (args: FluidParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxTextureMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateFruid] = useFruid({ size, dpr });
+   const [updateFluid] = useFluid({ size, dpr });
 
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const [updateTransitionBg] = useTransitionBg({ size, dpr });
@@ -77,7 +77,7 @@ export const UseFruidWithTexture = (args: FruidParams) => {
          texture0: bg,
       });
 
-      const fx = updateFruid(props, setConfig());
+      const fx = updateFluid(props, setConfig());
 
       fxRef.current!.u_postFx = bgTexture;
       fxRef.current!.u_fx = fx;

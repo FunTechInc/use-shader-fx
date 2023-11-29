@@ -4,30 +4,30 @@ import { setArgTypes } from "../utils/setArgTypes";
 import { Setup } from "../utils/Setup";
 import type { Meta } from "@storybook/react";
 import {
-   FRUID_PARAMS,
-   FruidParams,
-} from "../../packages/use-shader-fx/src/hooks/useFruid";
-import { UseFruid, UseFruidWithTexture } from "./UseFruid";
+   FLUID_PARAMS,
+   FluidParams,
+} from "../../packages/use-shader-fx/src/hooks/useFluid";
+import { UseFluid, UseFluidWithTexture } from "./UseFluid";
 
 const meta = {
-   title: "useFruid",
-   component: UseFruid,
+   title: "useFluid",
+   component: UseFluid,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],
-} satisfies Meta<typeof UseFruid>;
+} satisfies Meta<typeof UseFluid>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 const storySetting = {
-   args: FRUID_PARAMS,
-   argTypes: setArgTypes<FruidParams>(FRUID_PARAMS),
+   args: FLUID_PARAMS,
+   argTypes: setArgTypes<FluidParams>(FLUID_PARAMS),
 };
-export const Fruid: Story = {
-   render: (args) => <UseFruid {...args} />,
+export const Fluid: Story = {
+   render: (args) => <UseFluid {...args} />,
    ...storySetting,
 };
 export const WithTexture: Story = {
-   render: (args) => <UseFruidWithTexture {...args} />,
+   render: (args) => <UseFluidWithTexture {...args} />,
    ...storySetting,
 };

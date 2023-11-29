@@ -828,7 +828,7 @@ const Oe = () => p(
   pressure_iterations: 20,
   curl_strength: 35,
   splat_radius: 2e-3,
-  fruid_color: new t.Vector3(1, 1, 1)
+  fluid_color: new t.Vector3(1, 1, 1)
 }, Ke = ({
   size: n,
   dpr: i
@@ -880,7 +880,7 @@ const Oe = () => p(
           );
         }), d(V, ({ read: x }) => {
           o(e.splatMaterial), a(e.splatMaterial, "uTarget", x);
-          const O = typeof w.fruid_color == "function" ? w.fruid_color(te) : w.fruid_color;
+          const O = typeof w.fluid_color == "function" ? w.fluid_color(te) : w.fluid_color;
           a(e.splatMaterial, "color", O);
         }));
         const ne = y(V, () => {
@@ -1248,8 +1248,8 @@ const Xe = (n) => {
 export {
   se as BRUSH_PARAMS,
   fe as DUOTONE_PARAMS,
+  Ee as FLUID_PARAMS,
   ge as FOGPROJECTION_PARAMS,
-  Ee as FRUID_PARAMS,
   Ye as NOISE_PARAMS,
   $e as RIPPLE_PARAMS,
   Ge as TRANSITIONBG_PARAMS,
@@ -1259,8 +1259,8 @@ export {
   U as useCamera,
   A as useDoubleFBO,
   He as useDuoTone,
+  Ke as useFluid,
   Je as useFogProjection,
-  Ke as useFruid,
   et as useNoise,
   F as useParams,
   W as usePointer,

@@ -38,7 +38,7 @@ type TMaterials =
    | GradientSubtractMaterial
    | SplatMaterial;
 
-export type FruidMaterials = {
+export type FluidMaterials = {
    vorticityMaterial: VorticityMaterial;
    curlMaterial: CurlMaterial;
    advectionMaterial: AdvectionMaterial;
@@ -48,7 +48,7 @@ export type FruidMaterials = {
    gradientSubtractMaterial: GradientSubtractMaterial;
    splatMaterial: SplatMaterial;
 };
-type TUseMeshReturnType = [FruidMaterials, (material: TMaterials) => void];
+type TUseMeshReturnType = [FluidMaterials, (material: TMaterials) => void];
 
 /**
  * Returns the material update function in the second argument
