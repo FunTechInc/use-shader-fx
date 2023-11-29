@@ -99,3 +99,51 @@ export const Demo = () => {
       </mesh>
    );
 };
+
+/*===============================================
+the simplest demo
+===============================================*/
+
+// import * as THREE from "three";
+// import { useRef } from "react";
+// import { useFrame, useThree } from "@react-three/fiber";
+// import { useFruid } from "@hmng8/use-shader-fx";
+
+// export const Demo = () => {
+//    const ref = useRef<THREE.ShaderMaterial>(null);
+//    const size = useThree((state) => state.size);
+//    const dpr = useThree((state) => state.viewport.dpr);
+//    const [updateFruid] = useFruid({ size, dpr });
+//    useFrame((props) => {
+//       ref.current!.uniforms.u_fx.value = updateFruid(props);
+//    });
+
+//    return (
+//       <mesh>
+//          <planeGeometry args={[2, 2]} />
+//          <shaderMaterial
+//             ref={ref}
+//             vertexShader={`
+// 					varying vec2 vUv;
+// 						void main() {
+// 							vUv = uv;
+// 							gl_Position = vec4(position, 1.0);
+// 						}
+// 						`}
+//             fragmentShader={`
+// 						precision highp float;
+// 						varying vec2 vUv;
+// 						uniform sampler2D u_fx;
+
+// 						void main() {
+// 							vec2 uv = vUv;
+// 							gl_FragColor = texture2D(u_fx, uv);
+// 						}
+// 					`}
+//             uniforms={{
+//                u_fx: { value: null },
+//             }}
+//          />
+//       </mesh>
+//    );
+// };
