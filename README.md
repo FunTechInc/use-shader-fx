@@ -18,7 +18,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 3. `fxObject` - An object that holds various FX components, such as scene, camera, material, and renderTarget.
 
 ```js
-const [updateFx, setParams, fxObject] = useFluid(config);
+const [updateFx, setParams, fxObject] = useSomeFx(config);
 ```
 
 Execute `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
