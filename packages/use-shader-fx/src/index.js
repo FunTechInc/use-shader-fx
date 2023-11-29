@@ -5,7 +5,7 @@ export {
    useFogProjection,
    FOGPROJECTION_PARAMS,
 } from "./hooks/useFogProjection";
-export { useFruid, FRUID_PARAMS } from "./hooks/useFruid";
+export { useFluid, FLUID_PARAMS } from "./hooks/useFluid";
 export { useRipple, RIPPLE_PARAMS } from "./hooks/useRipple";
 export { useTransitionBg, TRANSITIONBG_PARAMS } from "./hooks/useTransitionBg";
 export { useNoise, NOISE_PARAMS } from "./hooks/useNoise";

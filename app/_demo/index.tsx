@@ -8,7 +8,7 @@ import {
    FxTransparentMaterialProps,
 } from "@/utils/fxTransparentMaterial";
 import {
-   useFruid,
+   useFluid,
    useFogProjection,
    useNoise,
 } from "@/packages/use-shader-fx/src";
@@ -24,7 +24,7 @@ export const Demo = () => {
 
    const [updateNoise] = useNoise({ size, dpr });
 
-   const [updateFruid, setFruid] = useFruid({
+   const [updateFluid, setFluid] = useFluid({
       size,
       dpr,
    });
@@ -33,7 +33,7 @@ export const Demo = () => {
 
    usePerformanceMonitor({
       onChange({ factor }) {
-         setFruid({
+         setFluid({
             pressure_iterations: Math.max(2, Math.floor(20 * factor)),
          });
       },
@@ -44,14 +44,14 @@ export const Demo = () => {
          timeStrength: 0.4,
       });
 
-      const fx = updateFruid(props, {
-         density_dissipation: CONFIG.fruid.density_dissipation,
-         velocity_dissipation: CONFIG.fruid.velocity_dissipation,
-         velocity_acceleration: CONFIG.fruid.velocity_acceleration,
-         pressure_dissipation: CONFIG.fruid.pressure_dissipation,
-         curl_strength: CONFIG.fruid.curl_strength,
-         splat_radius: CONFIG.fruid.splat_radius,
-         fruid_color: CONFIG.fruid.fruid_color,
+      const fx = updateFluid(props, {
+         density_dissipation: CONFIG.fluid.density_dissipation,
+         velocity_dissipation: CONFIG.fluid.velocity_dissipation,
+         velocity_acceleration: CONFIG.fluid.velocity_acceleration,
+         pressure_dissipation: CONFIG.fluid.pressure_dissipation,
+         curl_strength: CONFIG.fluid.curl_strength,
+         splat_radius: CONFIG.fluid.splat_radius,
+         fluid_color: CONFIG.fluid.fluid_color,
       });
 
       const postFx = updateFogProjection(props, {
@@ -88,15 +88,15 @@ the simplest demo
 // import * as THREE from "three";
 // import { useRef } from "react";
 // import { useFrame, useThree } from "@react-three/fiber";
-// import { useFruid } from "@hmng8/use-shader-fx";
+// import { useFluid } from "@hmng8/use-shader-fx";
 
 // export const Demo = () => {
 //    const ref = useRef<THREE.ShaderMaterial>(null);
 //    const size = useThree((state) => state.size);
 //    const dpr = useThree((state) => state.viewport.dpr);
-//    const [updateFruid] = useFruid({ size, dpr });
+//    const [updateFluid] = useFluid({ size, dpr });
 //    useFrame((props) => {
-//       ref.current!.uniforms.u_fx.value = updateFruid(props);
+//       ref.current!.uniforms.u_fx.value = updateFluid(props);
 //    });
 
 //    return (

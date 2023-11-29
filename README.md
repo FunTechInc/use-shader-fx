@@ -18,7 +18,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 3. `fxObject` - An object that holds various FX components, such as scene, camera, material, and renderTarget.
 
 ```js
-const [updateFx, setParams, fxObject] = useFruid(config);
+const [updateFx, setParams, fxObject] = useFluid(config);
 ```
 
 Execute `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
@@ -41,15 +41,15 @@ This is the simplest example!
 import * as THREE from "three";
 import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useFruid } from "@hmng8/use-shader-fx";
+import { useFluid } from "@hmng8/use-shader-fx";
 
 export const Demo = () => {
    const ref = useRef<THREE.ShaderMaterial>(null);
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateFruid] = useFruid({ size, dpr });
+   const [updateFluid] = useFluid({ size, dpr });
    useFrame((props) => {
-      ref.current!.uniforms.u_fx.value = updateFruid(props);
+      ref.current!.uniforms.u_fx.value = updateFluid(props);
    });
 
    return (
