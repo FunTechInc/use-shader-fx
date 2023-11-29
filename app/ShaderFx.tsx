@@ -9,7 +9,7 @@ import { Demo } from "./_demo";
 // import CreateShaderFx from "@/CreateShaderFx";
 
 export const ShaderFx = () => {
-   const [dpr, setDpr] = useState(0.5);
+   const [dpr, setDpr] = useState(1.0);
    return (
       <Canvas dpr={dpr}>
          <PerformanceMonitor

@@ -1,8 +1,11 @@
 import "the-new-css-reset/css/reset.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({
+   subsets: ["latin"],
+   variable: "--font-playfair",
+});
 
 const metadata: Metadata = {
    title: "use-shader-fx",
@@ -17,8 +20,12 @@ export default function RootLayout({
    return (
       <html lang="en">
          <body
-            className={inter.className}
-            style={{ overflow: "hidden", height: "100svh" }}>
+            className={playfair.className}
+            style={{
+               overflow: "hidden",
+               height: "100svh",
+               // background: "#f8f8f8",
+            }}>
             {children}
          </body>
       </html>
