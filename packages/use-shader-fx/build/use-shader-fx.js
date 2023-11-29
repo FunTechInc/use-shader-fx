@@ -837,14 +837,10 @@ const Oe = () => p(
     () => ({
       scene: r,
       camera: l,
-      size: n,
-      isSizeUpdate: !0
+      size: n
     }),
     [r, l, n]
-  ), [s, v] = A(u), [f, d] = A({
-    ...u,
-    isSizeUpdate: !1
-  }), [m, y] = D(u), [h, T] = D(u), [R, P] = A(u), M = S(0), B = S(new t.Vector2(0, 0)), $ = S(new t.Vector3(0, 0, 0)), [w, g] = F(Ee);
+  ), [s, v] = A(u), [f, d] = A(u), [m, y] = D(u), [h, T] = D(u), [R, P] = A(u), M = S(0), B = S(new t.Vector2(0, 0)), $ = S(new t.Vector3(0, 0, 0)), [w, g] = F(Ee);
   return [
     C(
       (H, q) => {
