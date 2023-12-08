@@ -19,15 +19,7 @@ export default function RootLayout({
 }) {
    return (
       <html lang="en">
-         <body
-            className={playfair.className}
-            style={{
-               overflow: "hidden",
-               height: "100svh",
-               // background: "#f8f8f8",
-            }}>
-            {children}
-         </body>
+         <body className={playfair.className}>{children}</body>
       </html>
    );
 }
