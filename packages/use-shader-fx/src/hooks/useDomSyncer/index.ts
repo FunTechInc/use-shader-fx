@@ -1,18 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCamera } from "../../utils/useCamera";
 import { RootState, Size } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
-import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
-
-import vertexShader from "./shader/main.vert";
-import fragmentShader from "./shader/main.frag";
+import { errorHandling } from "./utils/errorHandling";
+import { createMesh } from "./utils/createMesh";
+import { intersectionHandler } from "./utils/intersectionHandler";
+import { updateRect } from "./utils/updateRect";
 
 export type DomSyncerParams = {
    texture: THREE.Texture[];
    dom: (HTMLElement | Element | null)[];
+   resolution?: THREE.Vector2[];
 };
 
 export type DomSyncerObject = {
@@ -24,6 +25,7 @@ export type DomSyncerObject = {
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
    texture: [],
    dom: [],
+   resolution: [],
 };
 
 /**
@@ -47,24 +49,19 @@ export const useDomSyncer = (
       size,
       dpr,
    });
+   const [params, setParams] = useParams<DomSyncerParams>(DOMSYNCER_PARAMS);
 
+   // dependenciesをtriggerして、meshと
    const [refreshTrigger, setRefreshTrigger] = useState(true);
    useEffect(() => {
       setRefreshTrigger(true);
-      return () => {
-         for (let i = 0; i < scene.children.length; i++) {
-            const child = scene.children[i];
-            if (child instanceof THREE.Mesh) {
-               child.geometry.dispose();
-               child.material.dispose();
-            }
-         }
-         scene.remove(...scene.children);
-      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, dependencies);
 
-   const [params, setParams] = useParams<DomSyncerParams>(DOMSYNCER_PARAMS);
+   const resolutionRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
+   const intersectionObserverRef = useRef<IntersectionObserver[]>([]);
+   const intersectionDomRef = useRef<(HTMLElement | Element | null)[]>([]);
+   const isIntersectingRef = useRef<boolean[]>([]);
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: DomSyncerParams) => {
@@ -73,66 +70,45 @@ export const useDomSyncer = (
          updateParams && setParams(updateParams);
 
          /*===============================================
-			エラー
+			エラーハンドリング
 			===============================================*/
-         if (params.dom.length !== params.texture.length) {
-            throw new Error("domとテクスチャーの数は一致しません！");
-         }
-         if (params.dom.length === 0 || params.texture.length === 0) {
-            throw new Error("配列が空ですよ！");
-         }
+         errorHandling(params);
 
          /*===============================================
-         // 最初の1回だけ、materialを生成して、sceneに渡す
+         最初の1回だけ、materialを生成して、sceneに渡す
 			===============================================*/
          if (refreshTrigger) {
-            for (let i = 0; i < params.dom.length; i++) {
-               const object = new THREE.Mesh(
-                  new THREE.PlaneGeometry(1, 1),
-                  new THREE.ShaderMaterial({
-                     vertexShader: vertexShader,
-                     fragmentShader: fragmentShader,
-                     transparent: true,
-                     uniforms: {
-                        u_texture: { value: params.texture[i] },
-                     },
-                  })
-               );
-               scene.add(object);
-            }
+            createMesh({
+               params,
+               size,
+               resolutionRef,
+               scene,
+            });
+
+            intersectionHandler({
+               intersectionObserverRef,
+               intersectionDomRef,
+               isIntersectingRef,
+               params,
+            });
+
             setRefreshTrigger(false);
          }
 
          /*===============================================
-			rectを計算する
-			//TODO*　intersection してる時だけ計算するようにしたい
+			rectを更新する
 			===============================================*/
-         for (let i = 0; i < scene.children.length; i++) {
-            const domElement = params.dom[i];
-            if (!domElement) {
-               throw new Error("domが取得できてないっぽい！");
-            }
-            const rect = domElement.getBoundingClientRect();
-            const object = scene.children[i];
-            object.scale.set(rect.width, rect.height, 1.0);
-            object.position.set(
-               rect.left + rect.width * 0.5 - size.width * 0.5,
-               -rect.top - rect.height * 0.5 + size.height * 0.5,
-               0.0
-            );
-         }
+         updateRect({
+            params,
+            size,
+            resolutionRef,
+            scene,
+            isIntersectingRef,
+         });
 
-         const bufferTexture = updateRenderTarget(gl);
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
-      [
-         updateRenderTarget,
-         setParams,
-         refreshTrigger,
-         scene,
-         params.dom,
-         params.texture,
-      ]
+      [updateRenderTarget, setParams, refreshTrigger, scene, params]
    );
 
    return [

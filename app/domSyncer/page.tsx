@@ -49,7 +49,7 @@ export default function Page() {
                         key={i}
                         style={{
                            width: "calc(50% - 40px)",
-                           height: "80vh",
+                           height: "120vh",
                         }}></div>
                   ))}
                </>
@@ -61,7 +61,7 @@ export default function Page() {
                         key={i}
                         style={{
                            width: "100%",
-                           height: "50vh",
+                           height: "120vh",
                         }}></div>
                   ))}
                </>

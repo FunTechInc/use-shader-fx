@@ -2,7 +2,7 @@ precision highp float;
 
 varying vec2 vUv;
 uniform vec2 uResolution;
-uniform vec2 uImageResolution;
+uniform vec2 uTextureResolution;
 
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
@@ -14,8 +14,8 @@ uniform float dirY;
 
 void main() {
 	vec2 bgRatio=vec2(
-		min((uResolution.x/uResolution.y)/(uImageResolution.x/uImageResolution.y),1.),
-		min((uResolution.y/uResolution.x)/(uImageResolution.y/uImageResolution.x),1.)
+		min((uResolution.x/uResolution.y)/(uTextureResolution.x/uTextureResolution.y),1.),
+		min((uResolution.y/uResolution.x)/(uTextureResolution.y/uTextureResolution.x),1.)
 	);
 	vec2 uv=vec2(
 		vUv.x*bgRatio.x+(1.-bgRatio.x)*.5,

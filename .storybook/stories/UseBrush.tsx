@@ -64,7 +64,7 @@ export const UseBrushWithTexture = (args: BrushParams) => {
 
    useFrame((props) => {
       const bgTexture = updateTransitionBg(props, {
-         imageResolution: CONSTANT.imageResolution,
+         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
       const fx = updateBrush(props, {

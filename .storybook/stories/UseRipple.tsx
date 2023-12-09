@@ -69,7 +69,7 @@ export const UseRippleWithTexture = (args: RippleParams) => {
 
    useFrame((props) => {
       const bgTexture = updateTransitionBg(props, {
-         imageResolution: CONSTANT.imageResolution,
+         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
       const fx = updateRipple(props, setConfig());

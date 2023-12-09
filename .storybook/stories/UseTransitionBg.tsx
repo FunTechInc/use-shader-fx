@@ -48,7 +48,7 @@ export const UseTransitionBg = (args: TransitionBgParams) => {
       const noise = updateNoise(props);
       const fx = updateTransitionBg(props, {
          noiseMap: noise,
-         imageResolution: CONSTANT.imageResolution,
+         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
          texture1: momo,
          ...setConfig(),
