@@ -3,7 +3,7 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 
-import { useAddMesh } from "@hmng8/use-shader-fx";
+import { useAddMesh } from "../../utils/useAddMesh";
 
 export class SampleMaterial extends THREE.ShaderMaterial {
    uniforms!: {      

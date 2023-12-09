@@ -2,14 +2,14 @@ import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { RootState, Size } from "@react-three/fiber";
 import { useMesh } from "./useMesh";
-import {
-   useCamera,   
-   useSingleFBO,
-   useDoubleFBO,
-   setUniform,
-   useParams,
-} from "@hmng8/use-shader-fx";
-import type { HooksReturn } from "@hmng8/use-shader-fx/types/hooks";
+
+import { useCamera } from "../../utils/useCamera";
+import { useSingleFBO } from "../../utils/useSingleFBO";
+import { useDoubleFBO } from "../../utils/useDoubleFBO";
+import { setUniform } from "../../utils/setUniforms";
+import { useParams } from "../../utils/useParams";
+
+import type { HooksReturn } from "../types";
 
 export type SimpleBlurParams = {   
    /** Make this texture blur , Default:new THREE.Texture() */
