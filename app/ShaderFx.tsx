@@ -4,11 +4,8 @@ import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Perf } from "r3f-perf";
 import { PerformanceMonitor } from "@react-three/drei";
-import { Demo } from "./_demo";
 
-// import CreateShaderFx from "@/CreateShaderFx";
-
-export const ShaderFx = () => {
+export const ShaderFx = ({ children }: { children: React.ReactNode }) => {
    const [dpr, setDpr] = useState(1.0);
    return (
       <Canvas dpr={dpr}>
@@ -18,10 +15,7 @@ export const ShaderFx = () => {
                console.log(`dpr:${dpr}`);
                setDpr(Math.round((0.5 + 1.0 * factor) * 10) / 10);
             }}>
-            <Suspense fallback={null}>
-               {/* When creating fx, please rewrite to CreateShaderFx */}
-               <Demo />
-            </Suspense>
+            <Suspense fallback={null}>{children}</Suspense>
             <Perf position={"bottom-left"} minimal={false} />
          </PerformanceMonitor>
       </Canvas>

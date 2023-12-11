@@ -15,7 +15,7 @@ import {
 
 extend({ FxTransparentMaterial });
 
-export const Demo = () => {
+export const Home = () => {
    const updateGUI = useGUI(setGUI);
    const mainShaderRef = useRef<FxTransparentMaterialProps>();
 
@@ -90,7 +90,7 @@ the simplest demo
 // import { useFrame, useThree } from "@react-three/fiber";
 // import { useFluid } from "@hmng8/use-shader-fx";
 
-// export const Demo = () => {
+// export const Home = () => {
 //    const ref = useRef<THREE.ShaderMaterial>(null);
 //    const size = useThree((state) => state.size);
 //    const dpr = useThree((state) => state.viewport.dpr);

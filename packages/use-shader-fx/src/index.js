@@ -9,6 +9,7 @@ export { useFluid, FLUID_PARAMS } from "./hooks/useFluid";
 export { useRipple, RIPPLE_PARAMS } from "./hooks/useRipple";
 export { useTransitionBg, TRANSITIONBG_PARAMS } from "./hooks/useTransitionBg";
 export { useNoise, NOISE_PARAMS } from "./hooks/useNoise";
+export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
 export { useSimpleBlur, SIMPLEBLUR_PARAMS } from './hooks/useSimpleBlur'
 
 // utils

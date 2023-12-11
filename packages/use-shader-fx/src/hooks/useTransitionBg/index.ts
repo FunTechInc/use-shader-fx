@@ -13,8 +13,8 @@ export type TransitionBgParams = {
    texture0?: THREE.Texture;
    /** 2nd texture , default:THREE.Texture() */
    texture1?: THREE.Texture;
-   /** background image ratio , default:THREE.Vector2(0, 0) */
-   imageResolution?: THREE.Vector2;
+   /** background texture resolution , default:THREE.Vector2(0, 0) */
+   textureResolution?: THREE.Vector2;
    /** Noise texture to be multiplied when transitioning. You can use useNoise, but you can also use noise texture exported as an image. , default:THREE.Texture() */
    noiseMap?: THREE.Texture;
    /** noise strength , default:0.0 */
@@ -35,7 +35,7 @@ export type TransitionBgObject = {
 export const TRANSITIONBG_PARAMS: TransitionBgParams = {
    texture0: new THREE.Texture(),
    texture1: new THREE.Texture(),
-   imageResolution: new THREE.Vector2(0, 0),
+   textureResolution: new THREE.Vector2(0, 0),
    noiseMap: new THREE.Texture(),
    noiseStrength: 0.0,
    progress: 0.0,
@@ -74,7 +74,7 @@ export const useTransitionBg = ({
 
          setUniform(material, "uTexture0", params.texture0!);
          setUniform(material, "uTexture1", params.texture1!);
-         setUniform(material, "uImageResolution", params.imageResolution!);
+         setUniform(material, "uTextureResolution", params.textureResolution!);
          setUniform(material, "uNoiseMap", params.noiseMap!);
          setUniform(material, "noiseStrength", params.noiseStrength!);
          setUniform(material, "progress", params.progress!);

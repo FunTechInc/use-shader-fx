@@ -11,11 +11,14 @@ declare global {
 
 export type FxMaterialProps = {
    u_fx: THREE.Texture | null;
+   /** Set it to 0.0 if you want it to be transparent. */
+   u_alpha: number | null;
 };
 
 export const FxMaterial = shaderMaterial(
    {
       u_fx: null,
+      u_alpha: 1.0,
    },
    `
 		varying vec2 vUv;
@@ -28,11 +31,14 @@ export const FxMaterial = shaderMaterial(
 		precision highp float;
 		varying vec2 vUv;
 		uniform sampler2D u_fx;
+		uniform float u_alpha;
 
 		void main() {
 			vec2 uv = vUv;
 			gl_FragColor = texture2D(u_fx, uv);
-			gl_FragColor.a = 1.0;
+			if(u_alpha > 0.0){
+				gl_FragColor.a = u_alpha;
+			}
 		}
 	`
 );

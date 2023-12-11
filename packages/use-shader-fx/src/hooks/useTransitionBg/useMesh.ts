@@ -9,7 +9,7 @@ import { Size } from "@react-three/fiber";
 export class TransitionBgMaterial extends THREE.ShaderMaterial {
    uniforms!: {
       uResolution: { value: THREE.Vector2 };
-      uImageResolution: { value: THREE.Vector2 };
+      uTextureResolution: { value: THREE.Vector2 };
       uTexture0: { value: THREE.Texture };
       uTexture1: { value: THREE.Texture };
       uNoiseMap: { value: THREE.Texture };
@@ -35,7 +35,7 @@ export const useMesh = ({
          new THREE.ShaderMaterial({
             uniforms: {
                uResolution: { value: new THREE.Vector2() },
-               uImageResolution: { value: new THREE.Vector2() },
+               uTextureResolution: { value: new THREE.Vector2() },
                uTexture0: { value: new THREE.Texture() },
                uTexture1: { value: new THREE.Texture() },
                uNoiseMap: { value: new THREE.Texture() },

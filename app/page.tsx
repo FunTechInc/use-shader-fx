@@ -1,9 +1,14 @@
-import { ShaderFx } from "./ShaderFx";
+"use client";
 
-export default function Home() {
+import { ShaderFx } from "./ShaderFx";
+import { Home } from "./_home";
+
+export default function Page() {
    return (
       <div style={{ width: "100%", height: "100svh" }}>
-         <ShaderFx />
+         <ShaderFx>
+            <Home />
+         </ShaderFx>
          <h1
             style={{
                fontSize: "10vw",

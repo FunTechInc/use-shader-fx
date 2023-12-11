@@ -48,7 +48,7 @@ export const UseFogProjection = (args: FogProjectionParams) => {
 
    useFrame((props) => {
       const bgTexture = updateTransitionBg(props, {
-         imageResolution: CONSTANT.imageResolution,
+         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
       const noise = updateNoise(props);
