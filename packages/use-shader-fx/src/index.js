@@ -10,6 +10,7 @@ export { useRipple, RIPPLE_PARAMS } from "./hooks/useRipple";
 export { useTransitionBg, TRANSITIONBG_PARAMS } from "./hooks/useTransitionBg";
 export { useNoise, NOISE_PARAMS } from "./hooks/useNoise";
 export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
+export { useSimpleBlur, SIMPLEBLUR_PARAMS } from './hooks/useSimpleBlur'
 
 // utils
 export { setUniform } from "./utils/setUniforms";
@@ -20,3 +21,4 @@ export { useParams } from "./utils/useParams";
 export { usePointer } from "./utils/usePointer";
 export { useResolution } from "./utils/useResolution";
 export { useSingleFBO } from "./utils/useSingleFBO";
+
