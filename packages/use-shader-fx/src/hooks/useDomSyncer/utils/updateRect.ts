@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { DomSyncerParams } from "../";
 import { Size } from "@react-three/fiber";
+import { setUniform } from "../../../utils/setUniforms";
 
 export const updateRect = ({
    params,
@@ -16,9 +17,9 @@ export const updateRect = ({
    isIntersectingRef: React.MutableRefObject<boolean[]>;
 }) => {
    scene.children.forEach((mesh, i) => {
-      const domElement = params.dom[i];
+      const domElement = params.dom![i];
       if (!domElement) {
-         throw new Error("domが取得できてないっぽい！");
+         throw new Error("DOM is null.");
       }
       if (isIntersectingRef.current[i]) {
          const rect = domElement.getBoundingClientRect();
@@ -29,8 +30,13 @@ export const updateRect = ({
             0.0
          );
          if (mesh instanceof THREE.Mesh) {
-            mesh.material.uniforms.u_resolution.value =
-               resolutionRef.current.set(rect.width, rect.height);
+            const material = mesh.material;
+            setUniform(
+               material,
+               "u_resolution",
+               resolutionRef.current.set(rect.width, rect.height)
+            );
+            setUniform(material, "u_textureResolution", params.resolution![i]);
          }
       }
    });

@@ -5,27 +5,36 @@ import { RootState, Size } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
-import { errorHandling } from "./utils/errorHandling";
+import { errorHandler } from "./utils/errorHandler";
 import { createMesh } from "./utils/createMesh";
-import { intersectionHandler } from "./utils/intersectionHandler";
+import { useIntersectionHandler } from "./utils/useIntersectionHandler";
 import { updateRect } from "./utils/updateRect";
+import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
 
 export type DomSyncerParams = {
-   texture: THREE.Texture[];
-   dom: (HTMLElement | Element | null)[];
+   texture?: THREE.Texture[];
+   dom?: (HTMLElement | Element | null)[];
    resolution?: THREE.Vector2[];
+   boderRadius?: number[];
 };
 
 export type DomSyncerObject = {
    scene: THREE.Scene;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   /**
+    * The syncing DOM also returns a crossing decision.
+    * @param index - Index of the dom for which you want to return an intersection decision. -1 will return the entire array.
+    * @param once - If set to true, it will continue to return true once crossed.
+    */
+   isIntersecting: IsIntersecting;
 };
 
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
    texture: [],
    dom: [],
    resolution: [],
+   boderRadius: [],
 };
 
 /**
@@ -51,17 +60,19 @@ export const useDomSyncer = (
    });
    const [params, setParams] = useParams<DomSyncerParams>(DOMSYNCER_PARAMS);
 
-   // dependenciesをtriggerして、meshと
+   // Avoid instancing vec2 every frame
+   const resolutionRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
+
+   // Update monitored doms according to the dependency array
    const [refreshTrigger, setRefreshTrigger] = useState(true);
    useEffect(() => {
       setRefreshTrigger(true);
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, dependencies);
 
-   const resolutionRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
-   const intersectionObserverRef = useRef<IntersectionObserver[]>([]);
-   const intersectionDomRef = useRef<(HTMLElement | Element | null)[]>([]);
-   const isIntersectingRef = useRef<boolean[]>([]);
+   const intersectionHandler = useIntersectionHandler();
+   const { isIntersectingOnceRef, isIntersectingRef, isIntersecting } =
+      useIsIntersecting();
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: DomSyncerParams) => {
@@ -69,35 +80,24 @@ export const useDomSyncer = (
 
          updateParams && setParams(updateParams);
 
-         /*===============================================
-			エラーハンドリング
-			===============================================*/
-         errorHandling(params);
+         errorHandler(params);
 
-         /*===============================================
-         最初の1回だけ、materialを生成して、sceneに渡す
-			===============================================*/
          if (refreshTrigger) {
             createMesh({
                params,
                size,
-               resolutionRef,
                scene,
             });
 
             intersectionHandler({
-               intersectionObserverRef,
-               intersectionDomRef,
                isIntersectingRef,
+               isIntersectingOnceRef,
                params,
             });
 
             setRefreshTrigger(false);
          }
 
-         /*===============================================
-			rectを更新する
-			===============================================*/
          updateRect({
             params,
             size,
@@ -108,7 +108,16 @@ export const useDomSyncer = (
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, setParams, refreshTrigger, scene, params]
+      [
+         updateRenderTarget,
+         setParams,
+         intersectionHandler,
+         refreshTrigger,
+         scene,
+         params,
+         isIntersectingOnceRef,
+         isIntersectingRef,
+      ]
    );
 
    return [
@@ -118,6 +127,7 @@ export const useDomSyncer = (
          scene: scene,
          camera: camera,
          renderTarget: renderTarget,
+         isIntersecting: isIntersecting,
       },
    ];
 };

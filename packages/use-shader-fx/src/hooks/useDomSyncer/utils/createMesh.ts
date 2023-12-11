@@ -7,15 +7,12 @@ import fragmentShader from "../shader/main.frag";
 export const createMesh = ({
    params,
    size,
-   resolutionRef,
    scene,
 }: {
    params: DomSyncerParams;
    size: Size;
-   resolutionRef: React.MutableRefObject<THREE.Vector2>;
    scene: THREE.Scene;
 }) => {
-   // clean up
    if (scene.children.length > 0) {
       scene.children.forEach((child) => {
          if (child instanceof THREE.Mesh) {
@@ -26,13 +23,7 @@ export const createMesh = ({
       scene.remove(...scene.children);
    }
 
-   // add mesh to scene
-   params.texture.forEach((texture, i) => {
-      // If texture resolution is null, use size
-      const textureResolution = params.resolution![i]
-         ? params.resolution![i]
-         : new THREE.Vector2(size.width, size.height);
-
+   params.texture!.forEach((texture, i) => {
       const mesh = new THREE.Mesh(
          new THREE.PlaneGeometry(1, 1),
          new THREE.ShaderMaterial({
@@ -41,8 +32,11 @@ export const createMesh = ({
             transparent: true,
             uniforms: {
                u_texture: { value: texture },
-               u_textureResolution: { value: textureResolution },
-               u_resolution: { value: resolutionRef.current },
+               u_textureResolution: { value: new THREE.Vector2(0, 0) },
+               u_resolution: { value: new THREE.Vector2(0, 0) },
+               u_borderRadius: {
+                  value: params.boderRadius![i] ? params.boderRadius![i] : 0.0,
+               },
             },
          })
       );

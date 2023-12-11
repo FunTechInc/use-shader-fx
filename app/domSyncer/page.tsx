@@ -30,6 +30,8 @@ export default function Page() {
                position: "fixed",
                bottom: 0,
                right: 0,
+               zIndex: 1000,
+               cursor: "pointer",
             }}>
             stateの切り替え
          </button>
@@ -49,7 +51,10 @@ export default function Page() {
                         key={i}
                         style={{
                            width: "calc(50% - 40px)",
-                           height: "120vh",
+                           height: "800px",
+                           border: "8px solid #000",
+                           zIndex: 100,
+                           borderRadius: `${i * 50}px`,
                         }}></div>
                   ))}
                </>
@@ -61,7 +66,8 @@ export default function Page() {
                         key={i}
                         style={{
                            width: "100%",
-                           height: "120vh",
+                           height: "80vh",
+                           zIndex: 100,
                         }}></div>
                   ))}
                </>

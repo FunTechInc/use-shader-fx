@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {
@@ -9,11 +9,6 @@ import {
 } from "@/packages/use-shader-fx/src";
 
 extend({ FxMaterial });
-
-/*===============================================
-TODO* 
-- 角丸
-===============================================*/
 
 const CONSTANT = {
    textureResolution: new THREE.Vector2(1440, 1029),
@@ -29,17 +24,26 @@ export const DomSyncer = ({ state }: { state: number }) => {
 
    const [updateNoise] = useNoise({ size, dpr });
    const [updateTransitionBg] = useTransitionBg({ size, dpr });
-   const [updateDomSyncer] = useDomSyncer({ size, dpr }, [state]);
 
    const domArr = useRef<(HTMLElement | Element)[]>([]);
-   useEffect(() => {
+
+   const [updateDomSyncer, setDomSyncer, domSyncerObj] = useDomSyncer(
+      { size, dpr },
+      [state]
+   );
+   useLayoutEffect(() => {
       if (state === 0) {
          domArr.current = [...document.querySelectorAll(".item")!];
       } else {
          domArr.current = [...document.querySelectorAll(".item2")!];
       }
-   }, [state]);
+      setDomSyncer({
+         dom: domArr.current,
+         boderRadius: [...Array(domArr.current.length)].map((_, i) => i * 50.0),
+      });
+   }, [state, setDomSyncer, momo]);
 
+   const resolutionRef = useRef(new THREE.Vector2(0, 0));
    useFrame((props) => {
       const noise = updateNoise(props);
       const fx = updateTransitionBg(props, {
@@ -47,16 +51,17 @@ export const DomSyncer = ({ state }: { state: number }) => {
          textureResolution: CONSTANT.textureResolution,
          texture0: momo,
          texture1: momo,
-         noiseStrength: 0.0,
+         noiseStrength: 0.05,
       });
 
       const syncedTexture = updateDomSyncer(props, {
-         dom: domArr.current,
          texture: [...Array(domArr.current.length)].map(() => fx),
-         resolution: [...Array(domArr.current.length)].map(
-            () => CONSTANT.textureResolution
+         resolution: [...Array(domArr.current.length)].map(() =>
+            resolutionRef.current.set(props.size.width, props.size.height)
          ),
       });
+
+      // console.log(domSyncerObj.isIntersecting(-1, false));
 
       const main = mainShaderRef.current;
       if (main) {
