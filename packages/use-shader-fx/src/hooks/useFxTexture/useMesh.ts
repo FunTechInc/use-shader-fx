@@ -12,8 +12,11 @@ export class TransitionBgMaterial extends THREE.ShaderMaterial {
       uTextureResolution: { value: THREE.Vector2 };
       uTexture0: { value: THREE.Texture };
       uTexture1: { value: THREE.Texture };
-      uNoiseMap: { value: THREE.Texture };
-      noiseStrength: { value: number };
+      padding: { value: number };
+      uMap: { value: THREE.Texture };
+      edgeIntensity: { value: number };
+      mapIntensity: { value: number };
+      epicenter: { value: THREE.Vector2 };
       progress: { value: number };
       dirX: { value: number };
       dirY: { value: number };
@@ -38,8 +41,11 @@ export const useMesh = ({
                uTextureResolution: { value: new THREE.Vector2() },
                uTexture0: { value: new THREE.Texture() },
                uTexture1: { value: new THREE.Texture() },
-               uNoiseMap: { value: new THREE.Texture() },
-               noiseStrength: { value: 0.0 },
+               padding: { value: 0.0 },
+               uMap: { value: new THREE.Texture() },
+               edgeIntensity: { value: 0.0 },
+               mapIntensity: { value: 0.0 },
+               epicenter: { value: new THREE.Vector2(0.0, 0.0) },
                progress: { value: 0.0 },
                dirX: { value: 0.0 },
                dirY: { value: 0.0 },

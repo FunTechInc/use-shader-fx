@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useFrame, extend, useThree } from "@react-three/fiber";
-import { FxTextureMaterial } from "../../utils/fxTextureMaterial";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
@@ -10,7 +9,7 @@ import {
    NOISE_PARAMS,
 } from "../../packages/use-shader-fx/src/hooks/useNoise";
 
-extend({ FxMaterial, FxTextureMaterial });
+extend({ FxMaterial });
 
 const CONFIG: NoiseParams = structuredClone(NOISE_PARAMS);
 const setGUI = (gui: GUI) => {

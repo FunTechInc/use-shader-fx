@@ -4,6 +4,15 @@ import { Size } from "@react-three/fiber";
 import vertexShader from "../shader/main.vert";
 import fragmentShader from "../shader/main.frag";
 
+export class DomSyncerMaterial extends THREE.ShaderMaterial {
+   uniforms!: {
+      u_texture: { value: THREE.Texture };
+      u_textureResolution: { value: THREE.Vector2 };
+      u_resolution: { value: THREE.Vector2 };
+      u_borderRadius: { value: number };
+   };
+}
+
 export const createMesh = ({
    params,
    size,
@@ -40,7 +49,6 @@ export const createMesh = ({
             },
          })
       );
-
       scene.add(mesh);
    });
 };

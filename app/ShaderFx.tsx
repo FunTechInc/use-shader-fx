@@ -6,7 +6,7 @@ import { Perf } from "r3f-perf";
 import { PerformanceMonitor } from "@react-three/drei";
 
 export const ShaderFx = ({ children }: { children: React.ReactNode }) => {
-   const [dpr, setDpr] = useState(1.0);
+   const [dpr, setDpr] = useState(1.5);
    return (
       <Canvas dpr={dpr}>
          <PerformanceMonitor

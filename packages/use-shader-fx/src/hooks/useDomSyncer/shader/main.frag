@@ -14,6 +14,7 @@ void main() {
 	);
 	vec2 adjustedUv = vUv * ratio + (1.0 - ratio) * 0.5;
 	vec3 textureColor = texture2D(u_texture, adjustedUv).rgb;
+	float textureAlpha = texture2D(u_texture, adjustedUv).a;
 
 	// Based on https://mofu-dev.com/en/blog/three-dom-alignment/
 	float maxSide = max(u_resolution.x, u_resolution.y);
@@ -32,6 +33,9 @@ void main() {
 	float roundAlpha = smoothstep(radius + 0.001, radius, length(alphaUv2));
 
 	alpha = min(1.0, alpha + roundAlpha);
+
+	// multiply texture alpha
+	alpha *= textureAlpha;
 
 	gl_FragColor = vec4(textureColor, alpha);
 }

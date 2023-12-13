@@ -7,7 +7,7 @@ import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
    useFogProjection,
-   useTransitionBg,
+   useFxTexture,
    useNoise,
 } from "../../packages/use-shader-fx/src";
 import {
@@ -42,12 +42,12 @@ export const UseFogProjection = (args: FogProjectionParams) => {
    const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateTransitionBg] = useTransitionBg({ size, dpr });
+   const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateNoise] = useNoise({ size, dpr });
    const [updateFogProjection] = useFogProjection({ size, dpr });
 
    useFrame((props) => {
-      const bgTexture = updateTransitionBg(props, {
+      const bgTexture = updateFxTexture(props, {
          textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });

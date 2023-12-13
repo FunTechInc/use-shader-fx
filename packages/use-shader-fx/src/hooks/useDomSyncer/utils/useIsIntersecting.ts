@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 
 export type IsIntersecting = (
    index: number,
@@ -8,7 +8,8 @@ export type IsIntersecting = (
 export const useIsIntersecting = () => {
    const isIntersectingRef = useRef<boolean[]>([]);
    const isIntersectingOnceRef = useRef<boolean[]>([]);
-   const isIntersecting: IsIntersecting = (index, once = false) => {
+
+   const isIntersecting: IsIntersecting = useCallback((index, once = false) => {
       isIntersectingRef.current.forEach((value, i) => {
          if (value) {
             isIntersectingOnceRef.current[i] = true;
@@ -18,7 +19,7 @@ export const useIsIntersecting = () => {
          ? [...isIntersectingOnceRef.current]
          : [...isIntersectingRef.current];
       return index < 0 ? temp : temp[index];
-   };
+   }, []);
 
    return {
       isIntersectingRef,

@@ -8,36 +8,45 @@ import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
-export type TransitionBgParams = {
+export type FxTextureParams = {
    /** 1st texture , default:THREE.Texture() */
    texture0?: THREE.Texture;
    /** 2nd texture , default:THREE.Texture() */
    texture1?: THREE.Texture;
    /** background texture resolution , default:THREE.Vector2(0, 0) */
    textureResolution?: THREE.Vector2;
-   /** Noise texture to be multiplied when transitioning. You can use useNoise, but you can also use noise texture exported as an image. , default:THREE.Texture() */
-   noiseMap?: THREE.Texture;
-   /** noise strength , default:0.0 */
-   noiseStrength?: number;
+   /** add transparent padding, 0.0 ~ 1.0 , default:0.0 */
+   padding?: number;
+   /** The color map. The uv value is affected according to this rbg , default:THREE.Texture() */
+   map?: THREE.Texture;
+   /** intensity of map , default:0.0 */
+   mapIntensity?: number;
+   /** Intensity of effect on edges , default:0.0 */
+   edgeIntensity?: number;
+   /** epicenter of fx, -1 ~ 1 , default:vec2(0.0,0.0)*/
+   epicenter?: THREE.Vector2;
    /** Switch value to switch between texture0 and texture1 */
    progress?: number;
    /** direction of transition , default: THREE.Vector2(0, 0) */
    dir?: THREE.Vector2;
 };
 
-export type TransitionBgObject = {
+export type FxTextureObject = {
    scene: THREE.Scene;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
 };
 
-export const TRANSITIONBG_PARAMS: TransitionBgParams = {
+export const FXTEXTURE_PARAMS: FxTextureParams = {
    texture0: new THREE.Texture(),
    texture1: new THREE.Texture(),
    textureResolution: new THREE.Vector2(0, 0),
-   noiseMap: new THREE.Texture(),
-   noiseStrength: 0.0,
+   padding: 0.0,
+   map: new THREE.Texture(),
+   mapIntensity: 0.0,
+   edgeIntensity: 0.0,
+   epicenter: new THREE.Vector2(0, 0),
    progress: 0.0,
    dir: new THREE.Vector2(0, 0),
 };
@@ -45,13 +54,13 @@ export const TRANSITIONBG_PARAMS: TransitionBgParams = {
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export const useTransitionBg = ({
+export const useFxTexture = ({
    size,
    dpr,
 }: {
    size: Size;
    dpr: number;
-}): HooksReturn<TransitionBgParams, TransitionBgObject> => {
+}): HooksReturn<FxTextureParams, FxTextureObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -63,11 +72,10 @@ export const useTransitionBg = ({
       isSizeUpdate: true,
    });
 
-   const [params, setParams] =
-      useParams<TransitionBgParams>(TRANSITIONBG_PARAMS);
+   const [params, setParams] = useParams<FxTextureParams>(FXTEXTURE_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: TransitionBgParams) => {
+      (props: RootState, updateParams?: FxTextureParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
@@ -75,8 +83,11 @@ export const useTransitionBg = ({
          setUniform(material, "uTexture0", params.texture0!);
          setUniform(material, "uTexture1", params.texture1!);
          setUniform(material, "uTextureResolution", params.textureResolution!);
-         setUniform(material, "uNoiseMap", params.noiseMap!);
-         setUniform(material, "noiseStrength", params.noiseStrength!);
+         setUniform(material, "padding", params.padding!);
+         setUniform(material, "uMap", params.map!);
+         setUniform(material, "mapIntensity", params.mapIntensity!);
+         setUniform(material, "edgeIntensity", params.edgeIntensity!);
+         setUniform(material, "epicenter", params.epicenter!);
          setUniform(material, "progress", params.progress!);
          setUniform(material, "dirX", params.dir!.x);
          setUniform(material, "dirY", params.dir!.y);

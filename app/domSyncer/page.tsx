@@ -42,6 +42,7 @@ export default function Page() {
                justifyContent: "center",
                gap: "40px",
                padding: "16px",
+               pointerEvents: "none",
             }}>
             {domSwitch === 0 ? (
                <>
@@ -51,8 +52,7 @@ export default function Page() {
                         key={i}
                         style={{
                            width: "calc(50% - 40px)",
-                           height: "800px",
-                           border: "8px solid #000",
+                           height: "120vh",
                            zIndex: 100,
                            borderRadius: `${i * 50}px`,
                         }}></div>

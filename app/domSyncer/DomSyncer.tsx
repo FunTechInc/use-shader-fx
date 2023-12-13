@@ -4,64 +4,108 @@ import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {
    useDomSyncer,
-   useNoise,
-   useTransitionBg,
+   useWave,
+   useFxTexture,
 } from "@/packages/use-shader-fx/src";
+import { WaveParams } from "@/packages/use-shader-fx/src/hooks/useWave";
+import gsap from "gsap";
 
 extend({ FxMaterial });
 
-const CONSTANT = {
+const CONFIG: {
+   textureResolution: THREE.Vector2;
+   waveArr: WaveParams[];
+   waveConfig: WaveParams;
+} = {
    textureResolution: new THREE.Vector2(1440, 1029),
+   waveArr: [],
+   waveConfig: {
+      epicenter: new THREE.Vector2(0.0, 0.0),
+      progress: 0.0,
+      strength: 0.2,
+   },
 };
 
 export const DomSyncer = ({ state }: { state: number }) => {
    const mainShaderRef = useRef<FxMaterialProps>();
+   const resolutionRef = useRef(new THREE.Vector2(0, 0));
+   const textureRef = useRef(new THREE.Texture());
 
    const [momo] = useLoader(THREE.TextureLoader, ["momo.jpg"]);
 
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
 
-   const [updateNoise] = useNoise({ size, dpr });
-   const [updateTransitionBg] = useTransitionBg({ size, dpr });
-
-   const domArr = useRef<(HTMLElement | Element)[]>([]);
+   const [updateFxTexture] = useFxTexture({ size, dpr });
+   const [updateWave] = useWave({ size, dpr });
 
    const [updateDomSyncer, setDomSyncer, domSyncerObj] = useDomSyncer(
       { size, dpr },
       [state]
    );
+
+   const domArr = useRef<(HTMLElement | Element)[]>([]);
+
    useLayoutEffect(() => {
+      CONFIG.waveArr = [];
       if (state === 0) {
          domArr.current = [...document.querySelectorAll(".item")!];
       } else {
          domArr.current = [...document.querySelectorAll(".item2")!];
       }
+      CONFIG.waveArr = [...Array(domArr.current.length)].map(() => ({
+         ...CONFIG.waveConfig,
+      }));
+
       setDomSyncer({
          dom: domArr.current,
          boderRadius: [...Array(domArr.current.length)].map((_, i) => i * 50.0),
+         onIntersect: [...Array(domArr.current.length)].map(
+            (_, i) => (entry) => {
+               if (
+                  entry.isIntersecting &&
+                  !domSyncerObj.isIntersecting(i, false)
+               ) {
+                  gsap.fromTo(
+                     CONFIG.waveArr[i],
+                     {
+                        progress: 0.0,
+                     },
+                     {
+                        progress: 1.0,
+                        duration: 10.0,
+                     }
+                  );
+               }
+            }
+         ),
       });
-   }, [state, setDomSyncer, momo]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [state]);
 
-   const resolutionRef = useRef(new THREE.Vector2(0, 0));
    useFrame((props) => {
-      const noise = updateNoise(props);
-      const fx = updateTransitionBg(props, {
-         noiseMap: noise,
-         textureResolution: CONSTANT.textureResolution,
-         texture0: momo,
-         texture1: momo,
-         noiseStrength: 0.05,
-      });
-
       const syncedTexture = updateDomSyncer(props, {
-         texture: [...Array(domArr.current.length)].map(() => fx),
+         texture: [...Array(domArr.current.length)].map((_, i) => {
+            if (domSyncerObj.isIntersecting(i, false)) {
+               textureRef.current = updateFxTexture(props, {
+                  padding: 0.0,
+                  map: updateWave(props, {
+                     epicenter: CONFIG.waveArr[i].epicenter,
+                     progress: CONFIG.waveArr[i].progress,
+                     strength: CONFIG.waveArr[i].strength,
+                  }),
+                  mapIntensity: 0.4,
+                  edgeIntensity: 0.0,
+                  textureResolution: CONFIG.textureResolution,
+                  texture0: momo,
+               });
+            }
+            return textureRef.current;
+         }),
          resolution: [...Array(domArr.current.length)].map(() =>
             resolutionRef.current.set(props.size.width, props.size.height)
          ),
       });
-
-      // console.log(domSyncerObj.isIntersecting(-1, false));
 
       const main = mainShaderRef.current;
       if (main) {
