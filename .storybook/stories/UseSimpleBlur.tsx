@@ -1,19 +1,17 @@
 import * as React from "react";
 import * as THREE from "three";
-import { useFrame, extend, useThree, useLoader} from "@react-three/fiber";
-import { FxTextureMaterial } from "../../utils/fxTextureMaterial";
+import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { CONSTANT } from "../constant";
-import { useSimpleBlur,useTransitionBg} from "../../packages/use-shader-fx/src";
+import { useSimpleBlur, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    SimpleBlurParams,
    SIMPLEBLUR_PARAMS,
 } from "../../packages/use-shader-fx/src/hooks/useSimpleBlur";
 
-
-extend({ FxMaterial, FxTextureMaterial });
+extend({ FxMaterial });
 
 const CONFIG: SimpleBlurParams = structuredClone(SIMPLEBLUR_PARAMS);
 const setGUI = (gui: GUI) => {
@@ -34,17 +32,17 @@ export const UseSimpleBlur = (args: SimpleBlurParams) => {
    const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateTransitionBg] = useTransitionBg({ size, dpr });
+   const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateSimpleBlur] = useSimpleBlur({ size, dpr });
 
    useFrame((props) => {
-      const bgTexture = updateTransitionBg(props, {
-         imageResolution: CONSTANT.imageResolution,
+      const bgTexture = updateFxTexture(props, {
+         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
-      });      
+      });
       const fx = updateSimpleBlur(props, {
          ...setConfig(),
-         texture: bgTexture
+         texture: bgTexture,
       });
       fxRef.current!.u_fx = fx;
       updateGUI();

@@ -12,10 +12,16 @@ import { updateRect } from "./utils/updateRect";
 import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
 
 export type DomSyncerParams = {
-   texture?: THREE.Texture[];
+   /** DOM array you want to synchronize */
    dom?: (HTMLElement | Element | null)[];
+   /** Texture array that you want to synchronize with the DOM rectangle */
+   texture?: THREE.Texture[];
+   /** Texture resolution array to pass */
    resolution?: THREE.Vector2[];
+   /** default:0.0[] */
    boderRadius?: number[];
+   /** Array of callback functions when crossed */
+   onIntersect?: ((entry: IntersectionObserverEntry) => void)[];
 };
 
 export type DomSyncerObject = {
@@ -23,7 +29,8 @@ export type DomSyncerObject = {
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    /**
-    * The syncing DOM also returns a crossing decision.
+    * A function that returns a determination whether the DOM intersects or not.
+    * The boolean will be updated after executing the onIntersect function.
     * @param index - Index of the dom for which you want to return an intersection decision. -1 will return the entire array.
     * @param once - If set to true, it will continue to return true once crossed.
     */
@@ -35,6 +42,7 @@ export const DOMSYNCER_PARAMS: DomSyncerParams = {
    dom: [],
    resolution: [],
    boderRadius: [],
+   onIntersect: [],
 };
 
 /**
@@ -57,6 +65,7 @@ export const useDomSyncer = (
       camera,
       size,
       dpr,
+      isSizeUpdate: true,
    });
    const [params, setParams] = useParams<DomSyncerParams>(DOMSYNCER_PARAMS);
 

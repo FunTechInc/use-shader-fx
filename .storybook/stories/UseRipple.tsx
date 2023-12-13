@@ -2,20 +2,16 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import {
-   FxTextureMaterial,
-   FxTextureMaterialProps,
-} from "../../utils/fxTextureMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { CONSTANT } from "../constant";
-import { useRipple, useTransitionBg } from "../../packages/use-shader-fx/src";
+import { useRipple, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    RippleParams,
    RIPPLE_PARAMS,
 } from "../../packages/use-shader-fx/src/hooks/useRipple";
 
-extend({ FxMaterial, FxTextureMaterial });
+extend({ FxMaterial });
 
 const CONFIG: RippleParams = structuredClone(RIPPLE_PARAMS);
 const setGUI = (gui: GUI) => {
@@ -61,27 +57,30 @@ export const UseRippleWithTexture = (args: RippleParams) => {
       "smoke.png",
    ]);
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<FxTextureMaterialProps>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateTransitionBg] = useTransitionBg({ size, dpr });
+   const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateRipple] = useRipple({ size, texture: ripple });
 
    useFrame((props) => {
-      const bgTexture = updateTransitionBg(props, {
+      const fx = updateRipple(props, setConfig());
+
+      const bgTexture = updateFxTexture(props, {
          textureResolution: CONSTANT.textureResolution,
          texture0: bg,
+         map: fx,
+         mapIntensity: 1.3,
       });
-      const fx = updateRipple(props, setConfig());
-      fxRef.current!.u_postFx = bgTexture;
-      fxRef.current!.u_fx = fx;
+
+      fxRef.current!.u_fx = bgTexture;
       updateGUI();
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxTextureMaterial key={FxTextureMaterial.key} ref={fxRef} />
+         <fxMaterial key={FxMaterial.key} ref={fxRef} />
       </mesh>
    );
 };

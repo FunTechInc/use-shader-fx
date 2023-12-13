@@ -3,22 +3,22 @@ import type { StoryObj } from "@storybook/react";
 import { setArgTypes } from "../utils/setArgTypes";
 import { Setup } from "../utils/Setup";
 import type { Meta } from "@storybook/react";
-import { UseTransitionBg } from "./UseTransitionBg";
+import { UseFxTexture } from "./UseFxTexture";
 import {
-   TransitionBgParams,
-   TRANSITIONBG_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useTransitionBg";
+   FxTextureParams,
+   FXTEXTURE_PARAMS,
+} from "../../packages/use-shader-fx/src/hooks/useFxTexture";
 
 const meta = {
-   title: "useTransitionBg",
-   component: UseTransitionBg,
+   title: "useFxTexture",
+   component: UseFxTexture,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],
-} satisfies Meta<typeof UseTransitionBg>;
+} satisfies Meta<typeof UseFxTexture>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-   args: TRANSITIONBG_PARAMS,
-   argTypes: setArgTypes<TransitionBgParams>(TRANSITIONBG_PARAMS),
+   args: FXTEXTURE_PARAMS,
+   argTypes: setArgTypes<FxTextureParams>(FXTEXTURE_PARAMS),
 };

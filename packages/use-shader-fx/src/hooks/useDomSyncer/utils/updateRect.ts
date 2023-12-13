@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { DomSyncerParams } from "../";
 import { Size } from "@react-three/fiber";
 import { setUniform } from "../../../utils/setUniforms";
+import { DomSyncerMaterial } from "./createMesh";
 
 export const updateRect = ({
    params,
@@ -30,13 +31,19 @@ export const updateRect = ({
             0.0
          );
          if (mesh instanceof THREE.Mesh) {
-            const material = mesh.material;
+            const material: DomSyncerMaterial = mesh.material;
+            setUniform(material, "u_texture", params.texture![i]);
+            setUniform(material, "u_textureResolution", params.resolution![i]);
             setUniform(
                material,
                "u_resolution",
                resolutionRef.current.set(rect.width, rect.height)
             );
-            setUniform(material, "u_textureResolution", params.resolution![i]);
+            setUniform(
+               material,
+               "u_borderRadius",
+               params.boderRadius![i] ? params.boderRadius![i] : 0.0
+            );
          }
       }
    });

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import { CONSTANT } from "../constant";
-import { useDuoTone, useTransitionBg } from "../../packages/use-shader-fx/src";
+import { useDuoTone, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    DuoToneParams,
    DUOTONE_PARAMS,
@@ -31,11 +31,11 @@ export const UseDuoTone = (args: DuoToneParams) => {
    const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
-   const [updateTransitionBg] = useTransitionBg({ size, dpr });
+   const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateDuoTone] = useDuoTone({ size, dpr });
 
    useFrame((props) => {
-      const bgTexture = updateTransitionBg(props, {
+      const bgTexture = updateFxTexture(props, {
          textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });

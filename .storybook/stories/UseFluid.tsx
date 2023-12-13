@@ -1,21 +1,17 @@
 import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
-import {
-   FxTextureMaterial,
-   FxTextureMaterialProps,
-} from "../../utils/fxTextureMaterial";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { useFluid, useTransitionBg } from "../../packages/use-shader-fx/src";
+import { useFluid, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    FLUID_PARAMS,
    FluidParams,
 } from "../../packages/use-shader-fx/src/hooks/useFluid";
 
-extend({ FxMaterial, FxTextureMaterial });
+extend({ FxMaterial });
 
 const CONFIG: FluidParams = structuredClone(FLUID_PARAMS);
 const setGUI = (gui: GUI) => {
@@ -63,31 +59,35 @@ export const UseFluid = (args: FluidParams) => {
 
 export const UseFluidWithTexture = (args: FluidParams) => {
    const updateGUI = useGUI(setGUI);
-   const fxRef = React.useRef<FxTextureMaterialProps>();
+   const fxRef = React.useRef<FxMaterialProps>();
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
    const [updateFluid] = useFluid({ size, dpr });
 
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
-   const [updateTransitionBg] = useTransitionBg({ size, dpr });
+   const [updateFxTexture] = useFxTexture({ size, dpr });
 
    useFrame((props) => {
-      const bgTexture = updateTransitionBg(props, {
+      const fx = updateFluid(props, setConfig());
+
+      const bgTexture = updateFxTexture(props, {
+         map: fx,
+         padding: 0.1,
+         mapIntensity: 0.3,
+         edgeIntensity: 0.3,
          textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
 
-      const fx = updateFluid(props, setConfig());
-
-      fxRef.current!.u_postFx = bgTexture;
-      fxRef.current!.u_fx = fx;
+      fxRef.current!.u_fx = bgTexture;
+      fxRef.current!.u_alpha = 0.0;
       updateGUI();
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxTextureMaterial key={FxTextureMaterial.key} ref={fxRef} />
+         <fxMaterial key={FxMaterial.key} ref={fxRef} />
       </mesh>
    );
 };

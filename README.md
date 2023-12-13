@@ -224,3 +224,78 @@ const [params, setParams] = useParams<HooksParams>;
    // HookPrams
 }
 ```
+
+# Other Hooks
+
+## useDomSyncer
+
+The second argument contains the dependency array that updates the DOM. For example, you can pass a `pathname` when navigating pages.
+
+```tsx
+const [updateDomSyncer, setDomSyncer, domSyncerObj] = useDomSyncer(
+   { size, dpr },
+   [state]
+);
+
+useLayoutEffect(() => {
+   if (state === 0) {
+      domArr.current = [...document.querySelectorAll(".item")!];
+   } else {
+      domArr.current = [...document.querySelectorAll(".item2")!];
+   }
+   setDomSyncer({
+      dom: domArr.current,
+      boderRadius: [...Array(domArr.current.length)].map((_, i) => i * 50.0),
+      onIntersect: [...Array(domArr.current.length)].map((_, i) => (entry) => {
+         if (entry.isIntersecting && !domSyncerObj.isIntersecting(i, true)) {
+            // some callback
+         }
+      }),
+   });
+}, [state]);
+
+useFrame((props) => {
+   const syncedTexture = updateDomSyncer(props, {
+      texture: [...Array(domArr.current.length)].map((_, i) => {
+         if (domSyncerObj.isIntersecting(i, false)) {
+            textureRef.current = updateFxTexture(props, {
+               map: someFx,
+               texture0: someTexture,
+            });
+         }
+      }),
+      resolution: [...Array(domArr.current.length)].map(() =>
+         resolutionRef.current.set(props.size.width, props.size.height)
+      ),
+   });
+});
+```
+
+`domSyncerObj` contains an isIntersecting function that returns the DOM intersection test
+The boolean will be updated after executing the `onIntersect` function.
+
+```tsx
+/**
+ * @param index - Index of the dom for which you want to return an intersection decision. -1 will return the entire array.
+ * @param once - If set to true, it will continue to return true once crossed.
+ */
+
+domSyncerObj.isIntersecting(index, isOnce); // return boolean;
+```
+
+`DomSyncerParams` can be passed the `onIntersect` function.
+
+```tsx
+type DomSyncerParams = {
+   /** DOM array you want to synchronize */
+   dom?: (HTMLElement | Element | null)[];
+   /** Texture array that you want to synchronize with the DOM rectangle */
+   texture?: THREE.Texture[];
+   /** Texture resolution array to pass */
+   resolution?: THREE.Vector2[];
+   /** default:0.0[] */
+   boderRadius?: number[];
+   /** Array of callback functions when crossed */
+   onIntersect?: ((entry: IntersectionObserverEntry) => void)[];
+};
+```
