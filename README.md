@@ -225,6 +225,18 @@ const [params, setParams] = useParams<HooksParams>;
 }
 ```
 
+## useCopyTexture
+
+Generate an FBO array to copy the texture.
+
+```tsx
+const [renderTargets, copyTexture] = useCopyTexture(
+   { scene, camera, size, dpr },
+   length
+);
+copyTexture(gl, index); // return texture
+```
+
 # Other Hooks
 
 ## useDomSyncer
@@ -254,6 +266,11 @@ useLayoutEffect(() => {
    });
 }, [state]);
 
+const [, copyTexture] = useCopyTexture(
+   { scene: fxTextureObj.scene, camera: fxTextureObj.camera, size, dpr },
+   domArr.current.length
+);
+
 useFrame((props) => {
    const syncedTexture = updateDomSyncer(props, {
       texture: [...Array(domArr.current.length)].map((_, i) => {
@@ -262,6 +279,7 @@ useFrame((props) => {
                map: someFx,
                texture0: someTexture,
             });
+            return copyTexture(props.gl, i);
          }
       }),
       resolution: [...Array(domArr.current.length)].map(() =>

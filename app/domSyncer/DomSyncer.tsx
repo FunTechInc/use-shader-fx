@@ -1,11 +1,12 @@
 import * as THREE from "three";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {
    useDomSyncer,
    useWave,
    useFxTexture,
+   useCopyTexture,
 } from "@/packages/use-shader-fx/src";
 import { WaveParams } from "@/packages/use-shader-fx/src/hooks/useWave";
 import gsap from "gsap";
@@ -36,7 +37,7 @@ export const DomSyncer = ({ state }: { state: number }) => {
    const size = useThree((state) => state.size);
    const dpr = useThree((state) => state.viewport.dpr);
 
-   const [updateFxTexture] = useFxTexture({ size, dpr });
+   const [updateFxTexture, , fxTextureObj] = useFxTexture({ size, dpr });
    const [updateWave] = useWave({ size, dpr });
 
    const [updateDomSyncer, setDomSyncer, domSyncerObj] = useDomSyncer(
@@ -48,6 +49,7 @@ export const DomSyncer = ({ state }: { state: number }) => {
 
    useLayoutEffect(() => {
       CONFIG.waveArr = [];
+
       if (state === 0) {
          domArr.current = [...document.querySelectorAll(".item")!];
       } else {
@@ -83,11 +85,16 @@ export const DomSyncer = ({ state }: { state: number }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [state]);
 
+   const [, copyTexture] = useCopyTexture(
+      { scene: fxTextureObj.scene, camera: fxTextureObj.camera, size, dpr },
+      domArr.current.length
+   );
+
    useFrame((props) => {
       const syncedTexture = updateDomSyncer(props, {
          texture: [...Array(domArr.current.length)].map((_, i) => {
             if (domSyncerObj.isIntersecting(i, false)) {
-               textureRef.current = updateFxTexture(props, {
+               updateFxTexture(props, {
                   padding: 0.0,
                   map: updateWave(props, {
                      epicenter: CONFIG.waveArr[i].epicenter,
@@ -99,6 +106,8 @@ export const DomSyncer = ({ state }: { state: number }) => {
                   textureResolution: CONFIG.textureResolution,
                   texture0: momo,
                });
+
+               return copyTexture(props.gl, i);
             }
             return textureRef.current;
          }),
