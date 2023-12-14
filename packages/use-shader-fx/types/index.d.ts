@@ -6,6 +6,7 @@ export { useParams } from "./utils/useParams";
 export { usePointer } from "./utils/usePointer";
 export { useResolution } from "./utils/useResolution";
 export { useSingleFBO } from "./utils/useSingleFBO";
+export { useCopyTexture } from "./utils/useCopyTexture";
 export { useBrush, BRUSH_PARAMS } from "./hooks/useBrush";
 export { useDuoTone, DUOTONE_PARAMS } from "./hooks/useDuoTone";
 export { useFogProjection, FOGPROJECTION_PARAMS } from "./hooks/useFogProjection";

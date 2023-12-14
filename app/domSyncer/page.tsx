@@ -52,7 +52,7 @@ export default function Page() {
                         key={i}
                         style={{
                            width: "calc(50% - 40px)",
-                           height: "120vh",
+                           height: "80vh",
                            zIndex: 100,
                            borderRadius: `${i * 50}px`,
                         }}></div>

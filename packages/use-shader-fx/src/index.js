@@ -22,3 +22,4 @@ export { useParams } from "./utils/useParams";
 export { usePointer } from "./utils/usePointer";
 export { useResolution } from "./utils/useResolution";
 export { useSingleFBO } from "./utils/useSingleFBO";
+export { useCopyTexture } from "./utils/useCopyTexture";
