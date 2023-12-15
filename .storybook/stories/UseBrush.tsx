@@ -36,8 +36,9 @@ const setConfig = () => {
 export const UseBrush = (args: BrushParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
    const [updateBrush] = useBrush({ size, dpr });
    useFrame((props) => {
       const fx = updateBrush(props, setConfig());
@@ -57,8 +58,9 @@ export const UseBrushWithTexture = (args: BrushParams) => {
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
    const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateBrush] = useBrush({ size, dpr });
 

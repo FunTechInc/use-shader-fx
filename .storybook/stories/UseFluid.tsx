@@ -39,8 +39,9 @@ export const UseFluid = (args: FluidParams) => {
    const updateGUI = useGUI(setGUI);
 
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
    const [updateFluid] = useFluid({ size, dpr });
 
    useFrame((props) => {
@@ -60,8 +61,9 @@ export const UseFluid = (args: FluidParams) => {
 export const UseFluidWithTexture = (args: FluidParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
    const [updateFluid] = useFluid({ size, dpr });
 
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);

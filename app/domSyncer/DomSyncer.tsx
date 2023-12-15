@@ -34,8 +34,9 @@ export const DomSyncer = ({ state }: { state: number }) => {
 
    const [momo] = useLoader(THREE.TextureLoader, ["momo.jpg"]);
 
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
 
    const [updateFxTexture, , fxTextureObj] = useFxTexture({ size, dpr });
    const [updateWave] = useWave({ size, dpr });
