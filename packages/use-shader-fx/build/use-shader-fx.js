@@ -1,5 +1,5 @@
 import * as n from "three";
-import { useMemo as p, useEffect as _, useRef as y, useLayoutEffect as N, useCallback as S, useState as oe } from "react";
+import { useMemo as p, useEffect as _, useRef as y, useLayoutEffect as W, useCallback as S, useState as oe } from "react";
 var ae = `varying vec2 vUv;
 
 void main() {
@@ -199,7 +199,7 @@ const O = (t, i = !1) => {
     () => new n.WebGLRenderTarget(l.x, l.y, I),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
-  ), N(() => {
+  ), W(() => {
     var s;
     o && ((s = u.current) == null || s.setSize(l.x, l.y));
   }, [l, o]), _(() => {
@@ -242,7 +242,7 @@ const O = (t, i = !1) => {
     );
     return { read: v, write: d };
   }, []);
-  u.current.read = a.read, u.current.write = a.write, N(() => {
+  u.current.read = a.read, u.current.write = a.write, W(() => {
     var v, d;
     o && ((v = u.current.read) == null || v.setSize(l.x, l.y), (d = u.current.write) == null || d.setSize(l.x, l.y));
   }, [l, o]), _(() => {
@@ -424,16 +424,17 @@ void main() {
 
 	float noiseMap = texture2D(uNoiseMap,uv).r;
 	
-	float noiseTextureMap = noiseMap*2.0-1.0;
-	uv += noiseTextureMap * distortionStrength;
-	vec3 textureMap = texture2D(uTexture, uv).rgb;
+	float nNoiseMap = noiseMap*2.0-1.0;
+	uv += nNoiseMap * distortionStrength;
+
+	vec4 textureMap = texture2D(uTexture, uv);
 
 	float edge0 = fogEdge0;
 	float edge1 = fogEdge1;
 	float blendValue = smoothstep(edge0, edge1, noiseMap);
 
-	vec3 outputColor = blendValue * fogColor + (1.0 - blendValue) * textureMap;
-	gl_FragColor = vec4(outputColor, 1.0);
+	vec3 outputColor = blendValue * fogColor + (1.0 - blendValue) * textureMap.rgb;
+	gl_FragColor = vec4(outputColor, textureMap.a);
 }`;
 const ge = (t) => {
   const i = p(() => new n.PlaneGeometry(2, 2), []), r = p(
@@ -851,14 +852,14 @@ const Ee = () => p(
           0.02
         );
         T.current = G.getElapsedTime();
-        const W = v(P, ({ read: w }) => {
+        const N = v(P, ({ read: w }) => {
           o(e.advectionMaterial), c(e.advectionMaterial, "uVelocity", w), c(e.advectionMaterial, "uSource", w), c(e.advectionMaterial, "dt", H), c(
             e.advectionMaterial,
             "dissipation",
             C.velocity_dissipation
           );
         }), K = f(P, ({ read: w }) => {
-          o(e.advectionMaterial), c(e.advectionMaterial, "uVelocity", W), c(e.advectionMaterial, "uSource", w), c(
+          o(e.advectionMaterial), c(e.advectionMaterial, "uVelocity", N), c(e.advectionMaterial, "uSource", w), c(
             e.advectionMaterial,
             "dissipation",
             C.density_dissipation
@@ -884,7 +885,7 @@ const Ee = () => p(
           c(e.splatMaterial, "color", A);
         }));
         const ne = x(P, () => {
-          o(e.curlMaterial), c(e.curlMaterial, "uVelocity", W);
+          o(e.curlMaterial), c(e.curlMaterial, "uVelocity", N);
         });
         v(P, ({ read: w }) => {
           o(e.vorticityMaterial), c(e.vorticityMaterial, "uVelocity", w), c(e.vorticityMaterial, "uCurl", ne), c(
@@ -894,7 +895,7 @@ const Ee = () => p(
           ), c(e.vorticityMaterial, "dt", H);
         });
         const re = h(P, () => {
-          o(e.divergenceMaterial), c(e.divergenceMaterial, "uVelocity", W);
+          o(e.divergenceMaterial), c(e.divergenceMaterial, "uVelocity", N);
         });
         b(P, ({ read: w }) => {
           o(e.clearMaterial), c(e.clearMaterial, "uTexture", w), c(
@@ -1094,7 +1095,7 @@ void main() {
 	gl_FragColor = mix(color0, color1, progress);
 
 }`;
-const We = ({
+const Ne = ({
   scene: t,
   size: i,
   dpr: r
@@ -1123,7 +1124,7 @@ const We = ({
   return _(() => {
     o.uniforms.uResolution.value = u.clone();
   }, [u, o]), E(t, e, o), o;
-}, Ne = {
+}, We = {
   texture0: new n.Texture(),
   texture1: new n.Texture(),
   textureResolution: new n.Vector2(0, 0),
@@ -1138,13 +1139,13 @@ const We = ({
   size: t,
   dpr: i
 }) => {
-  const r = p(() => new n.Scene(), []), e = We({ scene: r, size: t, dpr: i }), o = V(t), [u, l] = U({
+  const r = p(() => new n.Scene(), []), e = Ne({ scene: r, size: t, dpr: i }), o = V(t), [u, l] = U({
     scene: r,
     camera: o,
     dpr: i,
     size: t,
     isSizeUpdate: !0
-  }), [a, s] = F(Ne);
+  }), [a, s] = F(We);
   return [
     S(
       (d, f) => {
@@ -1688,7 +1689,7 @@ const st = ({
   l.current = p(() => Array.from(
     { length: u },
     () => new n.WebGLRenderTarget(a.x, a.y, I)
-  ), [u]), N(() => {
+  ), [u]), W(() => {
     o && l.current.forEach(
       (v) => v.setSize(a.x, a.y)
     );
@@ -1713,7 +1714,7 @@ export {
   fe as DUOTONE_PARAMS,
   Ae as FLUID_PARAMS,
   xe as FOGPROJECTION_PARAMS,
-  Ne as FXTEXTURE_PARAMS,
+  We as FXTEXTURE_PARAMS,
   He as NOISE_PARAMS,
   Ie as RIPPLE_PARAMS,
   at as SIMPLEBLUR_PARAMS,
