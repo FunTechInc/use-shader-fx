@@ -1394,7 +1394,7 @@ const Ke = ({
         s.left + s.width * 0.5 - i.width * 0.5,
         -s.top - s.height * 0.5 + i.height * 0.5,
         0
-      ), u instanceof n.Mesh) {
+      ), t.rotation[l] && u.rotation.copy(t.rotation[l]), u instanceof n.Mesh) {
         const v = u.material;
         c(v, "u_texture", t.texture[l]), c(v, "u_textureResolution", t.resolution[l]), c(
           v,
@@ -1426,6 +1426,7 @@ const Ke = ({
   dom: [],
   resolution: [],
   boderRadius: [],
+  rotation: [],
   onIntersect: []
 }, ht = ({
   size: t,
