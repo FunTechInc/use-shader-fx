@@ -30,6 +30,11 @@ export const updateRect = ({
             -rect.top - rect.height * 0.5 + size.height * 0.5,
             0.0
          );
+
+         if (params.rotation![i]) {
+            mesh.rotation.copy(params.rotation![i]);
+         }
+
          if (mesh instanceof THREE.Mesh) {
             const material: DomSyncerMaterial = mesh.material;
             setUniform(material, "u_texture", params.texture![i]);

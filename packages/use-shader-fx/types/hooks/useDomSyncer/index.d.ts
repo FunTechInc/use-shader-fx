@@ -12,6 +12,8 @@ export type DomSyncerParams = {
     resolution?: THREE.Vector2[];
     /** default:0.0[] */
     boderRadius?: number[];
+    /** the angle you want to rotate */
+    rotation?: THREE.Euler[];
     /** Array of callback functions when crossed */
     onIntersect?: ((entry: IntersectionObserverEntry) => void)[];
 };

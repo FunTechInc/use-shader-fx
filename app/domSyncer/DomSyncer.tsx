@@ -62,6 +62,9 @@ export const DomSyncer = ({ state }: { state: number }) => {
       setDomSyncer({
          dom: domArr.current,
          boderRadius: [...Array(domArr.current.length)].map((_, i) => i * 50.0),
+         rotation: [...Array(domArr.current.length)].map(
+            (_, i) => new THREE.Euler(0.0, 0.0, i * 0.1)
+         ),
          onIntersect: [...Array(domArr.current.length)].map(
             (_, i) => (entry) => {
                if (
