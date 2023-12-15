@@ -19,8 +19,9 @@ export const Home = () => {
    const updateGUI = useGUI(setGUI);
    const mainShaderRef = useRef<FxTransparentMaterialProps>();
 
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
 
    const [updateNoise] = useNoise({ size, dpr });
 

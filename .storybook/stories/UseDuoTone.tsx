@@ -29,8 +29,9 @@ export const UseDuoTone = (args: DuoToneParams) => {
    const updateGUI = useGUI(setGUI);
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
    const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateDuoTone] = useDuoTone({ size, dpr });
 

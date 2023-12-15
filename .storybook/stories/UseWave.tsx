@@ -46,8 +46,9 @@ export const UseWave = (args: WaveParams) => {
    const updateGUI = useGUI(setGUI);
 
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
    const [updateWave] = useWave({ size, dpr });
 
    useFrame((props) => {
@@ -67,8 +68,9 @@ export const UseWave = (args: WaveParams) => {
 export const UseWaveWithTexture = (args: WaveParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
+   const { size, dpr } = useThree((state) => {
+      return { size: state.size, dpr: state.viewport.dpr };
+   });
 
    const [updateWave] = useWave({ size, dpr });
    const [updateFxTexture] = useFxTexture({ size, dpr });
