@@ -14,16 +14,16 @@ void main() {
 
 	float noiseMap = texture2D(uNoiseMap,uv).r;
 	
-	float noiseTextureMap = noiseMap*2.0-1.0;
-	uv += noiseTextureMap * distortionStrength;
-	vec3 textureMap = texture2D(uTexture, uv).rgb;
+	float nNoiseMap = noiseMap*2.0-1.0;
+	uv += nNoiseMap * distortionStrength;
+
+	vec4 textureMap = texture2D(uTexture, uv);
 
 	float edge0 = fogEdge0;
 	float edge1 = fogEdge1;
 	float blendValue = smoothstep(edge0, edge1, noiseMap);
 
-	vec3 outputColor = blendValue * fogColor + (1.0 - blendValue) * textureMap;
-	gl_FragColor = vec4(outputColor, 1.0);
+	vec3 outputColor = blendValue * fogColor + (1.0 - blendValue) * textureMap.rgb;
+	gl_FragColor = vec4(outputColor, textureMap.a);
 }
-
 
