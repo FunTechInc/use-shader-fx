@@ -4,15 +4,15 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
 
-export class FogProjectionMaterial extends THREE.ShaderMaterial {
+export class BlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
       uTime: { value: number };
       uTexture: { value: THREE.Texture };
-      uNoiseMap: { value: THREE.Texture };
+      uMap: { value: THREE.Texture };
       distortionStrength: { value: number };
-      fogEdge0: { value: number };
-      fogEdge1: { value: number };
-      fogColor: { value: THREE.Color };
+      edge0: { value: number };
+      edge1: { value: number };
+      color: { value: THREE.Color };
    };
 }
 
@@ -24,11 +24,11 @@ export const useMesh = (scene: THREE.Scene) => {
             uniforms: {
                uTime: { value: 0.0 },
                uTexture: { value: new THREE.Texture() },
-               uNoiseMap: { value: new THREE.Texture() },
+               uMap: { value: new THREE.Texture() },
                distortionStrength: { value: 0.0 },
-               fogEdge0: { value: 0.0 },
-               fogEdge1: { value: 0.9 },
-               fogColor: { value: new THREE.Color(0xffffff) },
+               edge0: { value: 0.0 },
+               edge1: { value: 0.9 },
+               color: { value: new THREE.Color(0xffffff) },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
@@ -36,5 +36,5 @@ export const useMesh = (scene: THREE.Scene) => {
       []
    );
    useAddMesh(scene, geometry, material);
-   return material as FogProjectionMaterial;
+   return material as BlendingMaterial;
 };

@@ -16,7 +16,7 @@ extend({ FxMaterial });
 const CONFIG: FxTextureParams = structuredClone(FXTEXTURE_PARAMS);
 const DIR = new THREE.Vector2(0, 0);
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG, "mapIntensity", 0, 1, 0.01);
+   gui.add(CONFIG, "mapIntensity", 0, 10, 0.1);
    gui.add(CONFIG, "progress", 0, 1, 0.01);
    gui.add(DIR, "x", -1, 1, 0.01);
    gui.add(DIR, "y", -1, 1, 0.01);

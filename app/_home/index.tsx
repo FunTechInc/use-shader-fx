@@ -3,21 +3,19 @@ import { useFrame, extend, useThree } from "@react-three/fiber";
 import { usePerformanceMonitor } from "@react-three/drei";
 import { CONFIG, setGUI } from "./config";
 import { useGUI } from "@/utils/useGUI";
-import {
-   FxTransparentMaterial,
-   FxTransparentMaterialProps,
-} from "@/utils/fxTransparentMaterial";
+import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {
    useFluid,
-   useFogProjection,
+   useBlending,
    useNoise,
+   useBrightnessPicker,
 } from "@/packages/use-shader-fx/src";
 
-extend({ FxTransparentMaterial });
+extend({ FxMaterial });
 
 export const Home = () => {
    const updateGUI = useGUI(setGUI);
-   const mainShaderRef = useRef<FxTransparentMaterialProps>();
+   const mainShaderRef = useRef<FxMaterialProps>();
 
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
@@ -30,7 +28,9 @@ export const Home = () => {
       dpr,
    });
 
-   const [updateFogProjection] = useFogProjection({ size, dpr });
+   const [updateBlending] = useBlending({ size, dpr });
+
+   const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
 
    usePerformanceMonitor({
       onChange({ factor }) {
@@ -42,7 +42,9 @@ export const Home = () => {
 
    useFrame((props) => {
       const noise = updateNoise(props, {
-         timeStrength: 0.4,
+         scale: 0.002,
+         timeStrength: 0.2,
+         warpStrength: 2.0,
       });
 
       const fx = updateFluid(props, {
@@ -55,18 +57,23 @@ export const Home = () => {
          fluid_color: CONFIG.fluid.fluid_color,
       });
 
-      const postFx = updateFogProjection(props, {
+      const postFx = updateBlending(props, {
          distortionStrength: CONFIG.fogProjection.distortionStrength,
-         fogEdge0: CONFIG.fogProjection.fogEdge0,
-         fogEdge1: CONFIG.fogProjection.fogEdge1,
-         fogColor: CONFIG.fogProjection.fogColor,
+         edge0: CONFIG.fogProjection.fogEdge0,
+         edge1: CONFIG.fogProjection.fogEdge1,
+         color: CONFIG.fogProjection.fogColor,
          texture: fx,
-         noiseMap: noise,
+         map: noise,
+      });
+
+      const final = updateBrightnessPicker(props, {
+         texture: postFx,
       });
 
       const main = mainShaderRef.current;
       if (main) {
-         main.u_fx = postFx;
+         main.u_fx = final;
+         main.u_alpha = 0.0;
       }
       updateGUI();
    });
@@ -74,30 +81,33 @@ export const Home = () => {
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxTransparentMaterial
-            key={FxTransparentMaterial.key}
-            ref={mainShaderRef}
-         />
+         <fxMaterial ref={mainShaderRef} />
       </mesh>
    );
 };
 
 /*===============================================
-the simplest demo
+playground
 ===============================================*/
 
 // import * as THREE from "three";
 // import { useRef } from "react";
 // import { useFrame, useThree } from "@react-three/fiber";
-// import { useFluid } from "@hmng8/use-shader-fx";
+// import { useNoise } from "@/packages/use-shader-fx/src";
 
 // export const Home = () => {
 //    const ref = useRef<THREE.ShaderMaterial>(null);
 //    const size = useThree((state) => state.size);
 //    const dpr = useThree((state) => state.viewport.dpr);
-//    const [updateFluid] = useFluid({ size, dpr });
+//    const [updateNoise] = useNoise({ size, dpr });
+
 //    useFrame((props) => {
-//       ref.current!.uniforms.u_fx.value = updateFluid(props);
+//       ref.current!.uniforms.u_fx.value = updateNoise(props, {
+//          scale: 0.002,
+//          warpOctaves: 2,
+//          timeStrength: 0.2,
+//          warpStrength: 20.0,
+//       });
 //    });
 
 //    return (
@@ -116,10 +126,22 @@ the simplest demo
 // 						precision highp float;
 // 						varying vec2 vUv;
 // 						uniform sampler2D u_fx;
-
+// 						float sq(float x) {
+// 							return x*x*7.0;
+// 						}
 // 						void main() {
 // 							vec2 uv = vUv;
-// 							gl_FragColor = texture2D(u_fx, uv);
+// 							vec3 noise = texture2D(u_fx, uv).rgb;
+// 							vec3 col;
+// 							vec2 p = noise.rg * .4;
+// 							for(float j = 0.0; j < 3.0; j++){
+// 								for(float i = 1.0; i < 8.0; i++){
+// 										p.x += 0.01 / (i + j) * cos(i * 10.0 * p.y + sin(i + j));
+// 										p.y += 0.01 / (i + j)* cos(i * 10.0 * p.x + sin(i + j));
+// 								}
+// 								col[int(j)] = sin(.5 * 7.0*sq(p.x)) + sin(7.0*sq(p.y));
+// 							}
+// 							gl_FragColor = vec4(col, 1.0);
 // 						}
 // 					`}
 //             uniforms={{

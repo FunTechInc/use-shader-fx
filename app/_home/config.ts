@@ -2,15 +2,15 @@ import * as THREE from "three";
 import GUI from "lil-gui";
 
 import { FLUID_PARAMS } from "@/packages/use-shader-fx/src/hooks/useFluid";
-import { FOGPROJECTION_PARAMS } from "@/packages/use-shader-fx/src/hooks/useFogProjection";
+import { BLENDING_PARAMS } from "@/packages/use-shader-fx/src/hooks/useBlending";
 
 export const CONFIG = {
    fogProjection: {
-      ...structuredClone(FOGPROJECTION_PARAMS),
-      fogColor: new THREE.Color(0xffffff),
-      fogEdge0: 0.5,
-      fogEdge1: 1.0,
-      distortionStrength: 0.2,
+      ...structuredClone(BLENDING_PARAMS),
+      fogColor: new THREE.Color(0x000000),
+      fogEdge0: 0.0,
+      fogEdge1: 0.9,
+      distortionStrength: 3.0,
    },
    fluid: {
       ...structuredClone(FLUID_PARAMS),

@@ -6,37 +6,37 @@ import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
-   useFogProjection,
+   useBlending,
    useFxTexture,
    useNoise,
 } from "../../packages/use-shader-fx/src";
 import {
-   FogProjectionParams,
-   FOGPROJECTION_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useFogProjection";
+   BlendingParams,
+   BLENDING_PARAMS,
+} from "../../packages/use-shader-fx/src/hooks/useBlending";
 
 extend({ FxMaterial });
 
-const CONFIG: FogProjectionParams = structuredClone(FOGPROJECTION_PARAMS);
+const CONFIG: BlendingParams = structuredClone(BLENDING_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "distortionStrength", 0, 1, 0.01);
-   gui.add(CONFIG, "fogEdge0", 0, 1, 0.01);
-   gui.add(CONFIG, "fogEdge1", 0, 1, 0.01);
-   gui.addColor(CONFIG, "fogColor");
+   gui.add(CONFIG, "edge0", 0, 1, 0.01);
+   gui.add(CONFIG, "edge1", 0, 1, 0.01);
+   gui.addColor(CONFIG, "color");
 };
 const setConfig = () => {
    return {
       distortionStrength: CONFIG.distortionStrength,
-      fogEdge0: CONFIG.fogEdge0,
-      fogEdge1: CONFIG.fogEdge1,
-      fogColor: CONFIG.fogColor,
-   } as FogProjectionParams;
+      edge0: CONFIG.edge0,
+      edge1: CONFIG.edge1,
+      color: CONFIG.color,
+   } as BlendingParams;
 };
 
 /**
- * Adds noise to the received texture and returns the texture. It's like projecting an image onto fog!
+ * Blending the texture passed as map
  */
-export const UseFogProjection = (args: FogProjectionParams) => {
+export const UseBlending = (args: BlendingParams) => {
    const updateGUI = useGUI(setGUI);
    const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const fxRef = React.useRef<FxMaterialProps>();
@@ -45,7 +45,7 @@ export const UseFogProjection = (args: FogProjectionParams) => {
    });
    const [updateFxTexture] = useFxTexture({ size, dpr });
    const [updateNoise] = useNoise({ size, dpr });
-   const [updateFogProjection] = useFogProjection({ size, dpr });
+   const [updateBlending] = useBlending({ size, dpr });
 
    useFrame((props) => {
       const bgTexture = updateFxTexture(props, {
@@ -53,9 +53,9 @@ export const UseFogProjection = (args: FogProjectionParams) => {
          texture0: bg,
       });
       const noise = updateNoise(props);
-      const fx = updateFogProjection(props, {
+      const fx = updateBlending(props, {
          texture: bgTexture,
-         noiseMap: noise,
+         map: noise,
          ...setConfig(),
       });
       fxRef.current!.u_fx = fx;
