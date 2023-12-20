@@ -8,47 +8,47 @@ import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
-export type FogProjectionParams = {
-   /** Make this texture FogProjection , default:THREE.Texture */
+export type BlendingParams = {
+   /** Make this texture Blending , default:THREE.Texture */
    texture?: THREE.Texture;
-   /** noise texture to map, default:THREE.Texture */
-   noiseMap?: THREE.Texture;
+   /** map texture, default:THREE.Texture */
+   map?: THREE.Texture;
    /** distortion strength , default:0.03 */
    distortionStrength?: number;
    /** value that reflects noise , default:0.0 */
-   fogEdge0?: number;
+   edge0?: number;
    /** value that reflects noise , default:0.9  */
-   fogEdge1?: number;
-   /** fog color , default: THREE.Color(0xffffff) */
-   fogColor?: THREE.Color;
+   edge1?: number;
+   /** dodge color , default: THREE.Color(0xffffff) */
+   color?: THREE.Color;
 };
 
-export type FogProjectionObject = {
+export type BlendingObject = {
    scene: THREE.Scene;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
 };
 
-export const FOGPROJECTION_PARAMS: FogProjectionParams = {
+export const BLENDING_PARAMS: BlendingParams = {
    texture: new THREE.Texture(),
-   noiseMap: new THREE.Texture(),
-   distortionStrength: 0.03,
-   fogEdge0: 0.0,
-   fogEdge1: 0.9,
-   fogColor: new THREE.Color(0xffffff),
+   map: new THREE.Texture(),
+   distortionStrength: 0.3,
+   edge0: 0.0,
+   edge1: 0.9,
+   color: new THREE.Color(0xffffff),
 };
 
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export const useFogProjection = ({
+export const useBlending = ({
    size,
    dpr,
 }: {
    size: Size;
    dpr: number;
-}): HooksReturn<FogProjectionParams, FogProjectionObject> => {
+}): HooksReturn<BlendingParams, BlendingObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -59,20 +59,19 @@ export const useFogProjection = ({
       dpr,
    });
 
-   const [params, setParams] =
-      useParams<FogProjectionParams>(FOGPROJECTION_PARAMS);
+   const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: FogProjectionParams) => {
+      (props: RootState, updateParams?: BlendingParams) => {
          const { gl, clock } = props;
          updateParams && setParams(updateParams);
          setUniform(material, "uTime", clock.getElapsedTime());
          setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uNoiseMap", params.noiseMap!);
+         setUniform(material, "uMap", params.map!);
          setUniform(material, "distortionStrength", params.distortionStrength!);
-         setUniform(material, "fogEdge0", params.fogEdge0!);
-         setUniform(material, "fogEdge1", params.fogEdge1!);
-         setUniform(material, "fogColor", params.fogColor!);
+         setUniform(material, "edge0", params.edge0!);
+         setUniform(material, "edge1", params.edge1!);
+         setUniform(material, "color", params.color!);
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
       },

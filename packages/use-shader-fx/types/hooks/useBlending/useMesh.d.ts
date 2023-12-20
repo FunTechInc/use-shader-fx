@@ -1,5 +1,5 @@
 import * as THREE from "three";
-export declare class FogProjectionMaterial extends THREE.ShaderMaterial {
+export declare class BlendingMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTime: {
             value: number;
@@ -7,21 +7,21 @@ export declare class FogProjectionMaterial extends THREE.ShaderMaterial {
         uTexture: {
             value: THREE.Texture;
         };
-        uNoiseMap: {
+        uMap: {
             value: THREE.Texture;
         };
         distortionStrength: {
             value: number;
         };
-        fogEdge0: {
+        edge0: {
             value: number;
         };
-        fogEdge1: {
+        edge1: {
             value: number;
         };
-        fogColor: {
+        color: {
             value: THREE.Color;
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => FogProjectionMaterial;
+export declare const useMesh: (scene: THREE.Scene) => BlendingMaterial;

@@ -9,12 +9,20 @@ import { useParams } from "../../utils/useParams";
 import { HooksReturn } from "../types";
 
 export type NoiseParams = {
+   /** noise scale , default:0.004 */
+   scale?: number;
    /** time factor default:0.3 */
    timeStrength?: number;
-   /** noiseOctaves, affects performance default:8 */
+   /** noiseOctaves, affects performance default:2 */
    noiseOctaves?: number;
-   /** fbmOctaves, affects performance default:3 */
+   /** fbmOctaves, affects performance default:2 */
    fbmOctaves?: number;
+   /** domain warping octaves , affects performance default:2  */
+   warpOctaves?: number;
+   /** direction of domain warping , default:(2.0,2,0) */
+   warpDirection?: THREE.Vector2;
+   /** strength of domain warping , default:8.0 */
+   warpStrength?: number;
 };
 
 export type NoiseObject = {
@@ -25,13 +33,19 @@ export type NoiseObject = {
 };
 
 export const NOISE_PARAMS: NoiseParams = {
+   scale: 0.004,
    timeStrength: 0.3,
-   noiseOctaves: 8,
-   fbmOctaves: 3,
+   noiseOctaves: 2,
+   fbmOctaves: 2,
+   warpOctaves: 2,
+   warpDirection: new THREE.Vector2(2.0, 2.0),
+   warpStrength: 8.0,
 };
 
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ *
+ * It is a basic value noise with `fbm` and `domain warping`
  */
 export const useNoise = ({
    size,
@@ -58,9 +72,13 @@ export const useNoise = ({
 
          updateParams && setParams(updateParams);
 
+         setUniform(material, "scale", params.scale!);
          setUniform(material, "timeStrength", params.timeStrength!);
          setUniform(material, "noiseOctaves", params.noiseOctaves!);
          setUniform(material, "fbmOctaves", params.fbmOctaves!);
+         setUniform(material, "warpOctaves", params.warpOctaves!);
+         setUniform(material, "warpDirection", params.warpDirection!);
+         setUniform(material, "warpStrength", params.warpStrength!);
 
          setUniform(material, "uTime", clock.getElapsedTime());
 

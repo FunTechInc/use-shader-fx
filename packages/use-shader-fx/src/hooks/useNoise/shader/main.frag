@@ -1,23 +1,31 @@
 precision highp float;
+precision highp int;
 
 varying vec2 vUv;
 uniform float uTime;
 uniform float timeStrength;
 uniform int noiseOctaves;
 uniform int fbmOctaves;
+uniform int warpOctaves;
+uniform vec2 warpDirection;
+uniform float warpStrength;
+uniform float scale;
 
 const float per  = 0.5;
 const float PI   = 3.14159265359;
 
+float rnd(vec2 n) {
+	float a = 0.129898;
+	float b = 0.78233;
+	float c = 437.585453;
+	float dt= dot(n ,vec2(a, b));
+	float sn= mod(dt, PI);
+	return fract(sin(sn) * c);
+}
+
 float interpolate(float a, float b, float x){
     float f = (1.0 - cos(x * PI)) * 0.5;
     return a * (1.0 - f) + b * f;
-}
-
-float rnd(vec2 p){
-	vec3 p3 = fract(vec3(p.xyx) * .1995);
-	p3 += dot(p3, p3.yzx + 11.28);
-	return fract((p3.x + p3.y) * p3.z);
 }
 
 float irnd(vec2 p){
@@ -54,8 +62,15 @@ float fbm(vec2 x, float time) {
 	return v;
 }
 
-void main() {
-	float noiseMap = fbm(gl_FragCoord.xy ,uTime * timeStrength);
-	gl_FragColor = vec4(noiseMap,noiseMap,noiseMap,1.0);
+float warp(vec2 x, float g,float time){
+	float val = 0.0;
+	for (int i = 0; i < warpOctaves; i++){
+		val = fbm(x + g * vec2(cos(warpDirection.x * val), sin(warpDirection.y * val)), time);
+	}
+	return val;
 }
 
+void main() {
+	float noise = warp(gl_FragCoord.xy * scale ,warpStrength,uTime * timeStrength);
+	gl_FragColor = vec4(vec3(noise),1.0);
+}

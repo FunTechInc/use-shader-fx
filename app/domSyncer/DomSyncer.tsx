@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {

@@ -1,31 +1,31 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
-export type FogProjectionParams = {
-    /** Make this texture FogProjection , default:THREE.Texture */
+export type BlendingParams = {
+    /** Make this texture Blending , default:THREE.Texture */
     texture?: THREE.Texture;
-    /** noise texture to map, default:THREE.Texture */
-    noiseMap?: THREE.Texture;
+    /** map texture, default:THREE.Texture */
+    map?: THREE.Texture;
     /** distortion strength , default:0.03 */
     distortionStrength?: number;
     /** value that reflects noise , default:0.0 */
-    fogEdge0?: number;
+    edge0?: number;
     /** value that reflects noise , default:0.9  */
-    fogEdge1?: number;
-    /** fog color , default: THREE.Color(0xffffff) */
-    fogColor?: THREE.Color;
+    edge1?: number;
+    /** dodge color , default: THREE.Color(0xffffff) */
+    color?: THREE.Color;
 };
-export type FogProjectionObject = {
+export type BlendingObject = {
     scene: THREE.Scene;
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
 };
-export declare const FOGPROJECTION_PARAMS: FogProjectionParams;
+export declare const BLENDING_PARAMS: BlendingParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useFogProjection: ({ size, dpr, }: {
+export declare const useBlending: ({ size, dpr, }: {
     size: Size;
     dpr: number;
-}) => HooksReturn<FogProjectionParams, FogProjectionObject>;
+}) => HooksReturn<BlendingParams, BlendingObject>;

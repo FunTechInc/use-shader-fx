@@ -4,6 +4,9 @@ export declare class NoiseMaterial extends THREE.ShaderMaterial {
         uTime: {
             value: number;
         };
+        scale: {
+            value: number;
+        };
         timeStrength: {
             value: number;
         };
@@ -11,6 +14,15 @@ export declare class NoiseMaterial extends THREE.ShaderMaterial {
             value: number;
         };
         fbmOctaves: {
+            value: number;
+        };
+        warpOctaves: {
+            value: number;
+        };
+        warpDirection: {
+            value: THREE.Vector2;
+        };
+        warpStrength: {
             value: number;
         };
     };

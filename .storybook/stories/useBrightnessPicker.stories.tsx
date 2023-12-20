@@ -3,22 +3,22 @@ import type { StoryObj } from "@storybook/react";
 import { setArgTypes } from "../utils/setArgTypes";
 import { Setup } from "../utils/Setup";
 import type { Meta } from "@storybook/react";
-import { UseFogProjection } from "./UseFogProjection";
+import { UseBrightnessPicker } from "./UseBrightnessPicker";
 import {
-   FogProjectionParams,
-   FOGPROJECTION_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useFogProjection";
+   BrightnessPickerParams,
+   BRIGHTNESSPICKER_PARAMS,
+} from "../../packages/use-shader-fx/src/hooks/useBrightnessPicker";
 
 const meta = {
-   title: "useFogProjection",
-   component: UseFogProjection,
+   title: "useBrightnessPicker",
+   component: UseBrightnessPicker,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],
-} satisfies Meta<typeof UseFogProjection>;
+} satisfies Meta<typeof UseBrightnessPicker>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-   args: FOGPROJECTION_PARAMS,
-   argTypes: setArgTypes<FogProjectionParams>(FOGPROJECTION_PARAMS),
+   args: BRIGHTNESSPICKER_PARAMS,
+   argTypes: setArgTypes<BrightnessPickerParams>(BRIGHTNESSPICKER_PARAMS),
 };
