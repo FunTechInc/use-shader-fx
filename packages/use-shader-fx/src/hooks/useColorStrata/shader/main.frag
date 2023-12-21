@@ -21,7 +21,7 @@ void main() {
 		}
 		col[int(j)] = fract(p.x * laminateDetail.x + p.y * laminateDetail.y);
 	}
-	col *= colorFactor;
+	col *= colorFactor * alpha;
 	col = clamp(col, 0.0, 1.0);
 	gl_FragColor = vec4(col, alpha);
 }

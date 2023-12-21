@@ -22,6 +22,7 @@ export const Home = () => {
 
    setBlending({
       mapIntensity: 0.45,
+      brightness: new THREE.Vector3(0.2, 0.2, 0.2),
    });
 
    setNoise({
@@ -52,15 +53,15 @@ export const Home = () => {
    useFrame((props) => {
       const noise = updateNoise(props);
       const fluid = updateFluid(props);
-      const picked = updateBrightnessPicker(props, {
-         texture: fluid,
-      });
       const blending = updateBlending(props, {
-         texture: picked,
+         texture: fluid,
          map: noise,
       });
-      const colorStrata = updateColorStrata(props, {
+      const picked = updateBrightnessPicker(props, {
          texture: blending,
+      });
+      const colorStrata = updateColorStrata(props, {
+         texture: picked,
       });
       ref.current!.uniforms.u_fx.value = colorStrata;
    });
