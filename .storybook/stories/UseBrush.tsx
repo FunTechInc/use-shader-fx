@@ -24,12 +24,7 @@ const setGUI = (gui: GUI) => {
 };
 const setConfig = () => {
    return {
-      radius: CONFIG.radius,
-      smudge: CONFIG.smudge,
-      dissipation: CONFIG.dissipation,
-      motionBlur: CONFIG.motionBlur,
-      motionSample: CONFIG.motionSample,
-      color: CONFIG.color,
+      ...CONFIG,
    } as BrushParams;
 };
 

@@ -13,6 +13,7 @@ export {
    useBrightnessPicker,
    BRIGHTNESSPICKER_PARAMS,
 } from "./hooks/useBrightnessPicker";
+export { useColorStrata, COLORSTRATA_PARAMS } from "./hooks/useColorStrata";
 
 // utils
 export { setUniform } from "./utils/setUniforms";

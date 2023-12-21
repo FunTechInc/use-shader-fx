@@ -14,18 +14,22 @@ import {
 extend({ FxMaterial });
 
 const CONFIG: FxTextureParams = structuredClone(FXTEXTURE_PARAMS);
-const DIR = new THREE.Vector2(0, 0);
+
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "mapIntensity", 0, 10, 0.1);
+   gui.add(CONFIG, "edgeIntensity", 0, 10, 0.1);
+   const epicenter = gui.addFolder("epicenter");
+   epicenter.add(CONFIG.epicenter!, "x", -1, 1, 0.1);
+   epicenter.add(CONFIG.epicenter!, "y", -1, 1, 0.1);
    gui.add(CONFIG, "progress", 0, 1, 0.01);
-   gui.add(DIR, "x", -1, 1, 0.01);
-   gui.add(DIR, "y", -1, 1, 0.01);
+   const dir = gui.addFolder("dir");
+   dir.add(CONFIG.dir!, "x", -1, 1, 0.01);
+   dir.add(CONFIG.dir!, "y", -1, 1, 0.01);
+   gui.add(CONFIG, "padding", 0, 0.3, 0.01);
 };
 const setConfig = () => {
    return {
-      mapIntensity: CONFIG.mapIntensity,
-      progress: CONFIG.progress,
-      dir: DIR,
+      ...CONFIG,
    } as FxTextureParams;
 };
 
@@ -48,11 +52,11 @@ export const UseFxTexture = (args: FxTextureParams) => {
    useFrame((props) => {
       const noise = updateNoise(props);
       const fx = updateFxTexture(props, {
+         ...setConfig(),
          map: noise,
          textureResolution: CONSTANT.textureResolution,
          texture0: bg,
          texture1: momo,
-         ...setConfig(),
       });
       fxRef.current!.u_fx = fx;
       updateGUI();

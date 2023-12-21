@@ -23,11 +23,7 @@ const setGUI = (gui: GUI) => {
 };
 const setConfig = () => {
    return {
-      frequency: CONFIG.frequency,
-      rotation: CONFIG.rotation,
-      fadeout_speed: CONFIG.fadeout_speed,
-      scale: CONFIG.scale,
-      alpha: CONFIG.alpha,
+      ...CONFIG,
    } as RippleParams;
 };
 

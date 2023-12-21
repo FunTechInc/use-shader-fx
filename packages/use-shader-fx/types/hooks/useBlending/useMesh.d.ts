@@ -1,25 +1,25 @@
 import * as THREE from "three";
 export declare class BlendingMaterial extends THREE.ShaderMaterial {
     uniforms: {
-        uTime: {
-            value: number;
-        };
-        uTexture: {
+        u_texture: {
             value: THREE.Texture;
         };
-        uMap: {
+        u_map: {
             value: THREE.Texture;
         };
-        distortionStrength: {
+        u_mapIntensity: {
             value: number;
         };
-        edge0: {
+        u_brightness: {
+            value: THREE.Vector3;
+        };
+        u_min: {
             value: number;
         };
-        edge1: {
+        u_max: {
             value: number;
         };
-        color: {
+        u_color: {
             value: THREE.Color;
         };
     };

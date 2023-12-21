@@ -13,12 +13,14 @@ export type BlendingParams = {
    texture?: THREE.Texture;
    /** map texture, default:THREE.Texture */
    map?: THREE.Texture;
-   /** distortion strength , default:0.03 */
-   distortionStrength?: number;
-   /** value that reflects noise , default:0.0 */
-   edge0?: number;
-   /** value that reflects noise , default:0.9  */
-   edge1?: number;
+   /** map strength , r,g value are affecting , default:0.3 */
+   mapIntensity?: number;
+   /** default:(0.5,0.5,0.5) */
+   brightness?: THREE.Vector3;
+   /** default:0.0 */
+   min?: number;
+   /** default:1.0 */
+   max?: number;
    /** dodge color , default: THREE.Color(0xffffff) */
    color?: THREE.Color;
 };
@@ -33,9 +35,10 @@ export type BlendingObject = {
 export const BLENDING_PARAMS: BlendingParams = {
    texture: new THREE.Texture(),
    map: new THREE.Texture(),
-   distortionStrength: 0.3,
-   edge0: 0.0,
-   edge1: 0.9,
+   mapIntensity: 0.3,
+   brightness: new THREE.Vector3(0.5, 0.5, 0.5),
+   min: 0.0,
+   max: 1.0,
    color: new THREE.Color(0xffffff),
 };
 
@@ -63,15 +66,15 @@ export const useBlending = ({
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: BlendingParams) => {
-         const { gl, clock } = props;
+         const { gl } = props;
          updateParams && setParams(updateParams);
-         setUniform(material, "uTime", clock.getElapsedTime());
-         setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uMap", params.map!);
-         setUniform(material, "distortionStrength", params.distortionStrength!);
-         setUniform(material, "edge0", params.edge0!);
-         setUniform(material, "edge1", params.edge1!);
-         setUniform(material, "color", params.color!);
+         setUniform(material, "u_texture", params.texture!);
+         setUniform(material, "u_map", params.map!);
+         setUniform(material, "u_mapIntensity", params.mapIntensity!);
+         setUniform(material, "u_brightness", params.brightness!);
+         setUniform(material, "u_min", params.min!);
+         setUniform(material, "u_max", params.max!);
+         setUniform(material, "u_color", params.color!);
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
       },

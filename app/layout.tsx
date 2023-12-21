@@ -8,8 +8,8 @@ const playfair = Playfair_Display({
 });
 
 const metadata: Metadata = {
-   title: "use-shader-fx",
-   description: "wide variety of shader effects for React",
+   title: "use-shader-fx | The only difficult part is coding the shaders.",
+   description: "The only difficult part is coding the shaders.",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
    children: React.ReactNode;
 }) {
    return (
-      <html lang="en">
+      <html lang="en" style={{ overflow: "hidden" }}>
          <body className={playfair.className}>{children}</body>
       </html>
    );

@@ -20,9 +20,7 @@ const setGUI = (gui: GUI) => {
 };
 const setConfig = () => {
    return {
-      texture: CONFIG.texture,
-      blurSize: CONFIG.blurSize,
-      blurPower: CONFIG.blurPower,
+      ...CONFIG,
    } as SimpleBlurParams;
 };
 
