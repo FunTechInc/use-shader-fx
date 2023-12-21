@@ -19,17 +19,14 @@ extend({ FxMaterial });
 
 const CONFIG: BlendingParams = structuredClone(BLENDING_PARAMS);
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG, "distortionStrength", 0, 1, 0.01);
-   gui.add(CONFIG, "edge0", 0, 1, 0.01);
-   gui.add(CONFIG, "edge1", 0, 1, 0.01);
+   gui.add(CONFIG, "mapIntensity", 0, 1, 0.01);
+   gui.add(CONFIG, "min", 0, 1, 0.01);
+   gui.add(CONFIG, "max", 0, 1, 0.01);
    gui.addColor(CONFIG, "color");
 };
 const setConfig = () => {
    return {
-      distortionStrength: CONFIG.distortionStrength,
-      edge0: CONFIG.edge0,
-      edge1: CONFIG.edge1,
-      color: CONFIG.color,
+      ...CONFIG,
    } as BlendingParams;
 };
 

@@ -20,8 +20,7 @@ const setGUI = (gui: GUI) => {
 };
 const setConfig = () => {
    return {
-      color0: CONFIG.color0,
-      color1: CONFIG.color1,
+      ...CONFIG,
    } as DuoToneParams;
 };
 
@@ -41,8 +40,8 @@ export const UseDuoTone = (args: DuoToneParams) => {
          texture0: bg,
       });
       const fx = updateDuoTone(props, {
-         texture: bgTexture,
          ...setConfig(),
+         texture: bgTexture,
       });
       fxRef.current!.u_fx = fx;
       updateGUI();

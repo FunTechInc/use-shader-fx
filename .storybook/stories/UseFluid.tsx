@@ -25,13 +25,7 @@ const setGUI = (gui: GUI) => {
 };
 const setConfig = () => {
    return {
-      density_dissipation: CONFIG.density_dissipation,
-      velocity_dissipation: CONFIG.velocity_dissipation,
-      velocity_acceleration: CONFIG.velocity_acceleration,
-      pressure_dissipation: CONFIG.pressure_dissipation,
-      pressure_iterations: CONFIG.pressure_iterations,
-      curl_strength: CONFIG.curl_strength,
-      splat_radius: CONFIG.splat_radius,
+      ...CONFIG,
    } as FluidParams;
 };
 

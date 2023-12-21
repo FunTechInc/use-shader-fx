@@ -13,17 +13,11 @@ import {
 
 extend({ FxMaterial });
 
-const CONFIG = {
-   ...structuredClone(WAVE_PARAMS),
-   epicenter: {
-      vec2: new THREE.Vector2(0.0, 0.0),
-      x: 0.0,
-      y: 0.0,
-   },
-};
+const CONFIG: WaveParams = structuredClone(WAVE_PARAMS);
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG.epicenter, "x", -1, 1, 0.1);
-   gui.add(CONFIG.epicenter, "y", -1, 1, 0.1);
+   const epicenter = gui.addFolder("epicenter");
+   epicenter.add(CONFIG.epicenter!, "x", -1, 1, 0.1);
+   epicenter.add(CONFIG.epicenter!, "y", -1, 1, 0.1);
    gui.add(CONFIG, "progress", 0, 1, 0.1);
    gui.add(CONFIG, "width", 0, 1, 0.1);
    gui.add(CONFIG, "strength", 0, 1, 0.1);
@@ -31,14 +25,7 @@ const setGUI = (gui: GUI) => {
 };
 const setConfig = () => {
    return {
-      epicenter: CONFIG.epicenter.vec2.set(
-         CONFIG.epicenter.x,
-         CONFIG.epicenter.y
-      ),
-      progress: CONFIG.progress,
-      width: CONFIG.width,
-      strength: CONFIG.strength,
-      mode: CONFIG.mode,
+      ...CONFIG,
    } as WaveParams;
 };
 

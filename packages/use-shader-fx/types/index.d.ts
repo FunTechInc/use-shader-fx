@@ -18,3 +18,4 @@ export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
 export { useSimpleBlur, SIMPLEBLUR_PARAMS } from "./hooks/useSimpleBlur";
 export { useWave, WAVE_PARAMS } from "./hooks/useWave";
 export { useBrightnessPicker, BRIGHTNESSPICKER_PARAMS } from "./hooks/useBrightnessPicker";
+export { useColorStrata, COLORSTRATA_PARAMS } from "./hooks/useColorStrata";

@@ -12,7 +12,7 @@ export type FxTextureParams = {
     padding?: number;
     /** The color map. The uv value is affected according to this rbg , default:THREE.Texture() */
     map?: THREE.Texture;
-    /** intensity of map , default:0.0 */
+    /** intensity of map , r,g value are affecting , default:0.0 */
     mapIntensity?: number;
     /** Intensity of effect on edges , default:0.0 */
     edgeIntensity?: number;

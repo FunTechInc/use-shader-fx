@@ -6,13 +6,13 @@ import { useAddMesh } from "../../utils/useAddMesh";
 
 export class BlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
-      uTime: { value: number };
-      uTexture: { value: THREE.Texture };
-      uMap: { value: THREE.Texture };
-      distortionStrength: { value: number };
-      edge0: { value: number };
-      edge1: { value: number };
-      color: { value: THREE.Color };
+      u_texture: { value: THREE.Texture };
+      u_map: { value: THREE.Texture };
+      u_mapIntensity: { value: number };
+      u_brightness: { value: THREE.Vector3 };
+      u_min: { value: number };
+      u_max: { value: number };
+      u_color: { value: THREE.Color };
    };
 }
 
@@ -22,13 +22,13 @@ export const useMesh = (scene: THREE.Scene) => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               uTime: { value: 0.0 },
-               uTexture: { value: new THREE.Texture() },
-               uMap: { value: new THREE.Texture() },
-               distortionStrength: { value: 0.0 },
-               edge0: { value: 0.0 },
-               edge1: { value: 0.9 },
-               color: { value: new THREE.Color(0xffffff) },
+               u_texture: { value: new THREE.Texture() },
+               u_map: { value: new THREE.Texture() },
+               u_mapIntensity: { value: 0.0 },
+               u_brightness: { value: new THREE.Vector3() },
+               u_min: { value: 0.0 },
+               u_max: { value: 0.9 },
+               u_color: { value: new THREE.Color(0xffffff) },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

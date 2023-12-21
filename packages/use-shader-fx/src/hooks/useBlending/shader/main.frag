@@ -1,29 +1,31 @@
 precision highp float;
 
 varying vec2 vUv;
-uniform float uTime;
-uniform sampler2D uTexture;
-uniform sampler2D uMap;
-uniform float distortionStrength;
-uniform float edge0;
-uniform float edge1;
-uniform vec3 color;
+uniform sampler2D u_texture;
+uniform sampler2D u_map;
+uniform float u_mapIntensity;
+uniform vec3 u_brightness;
+uniform float u_min;
+uniform float u_max;
+uniform vec3 u_color;
 
 void main() {
 	vec2 uv = vUv;
 
-	vec2 map = texture2D(uMap, uv).rg;
-	vec2 normalizedMap = map * 2.0 - 1.0;
+	vec3 mapColor = texture2D(u_map, uv).rgb;
+	vec3 normalizedMap = mapColor * 2.0 - 1.0;
+
+	float brightness = dot(mapColor,u_brightness);
 	
 	uv = uv * 2.0 - 1.0;
-	uv *= mix(vec2(1.0), abs(normalizedMap), distortionStrength);
+	uv *= mix(vec2(1.0), abs(normalizedMap.rg), u_mapIntensity);
 	uv = (uv + 1.0) / 2.0;
 
-	vec4 textureMap = texture2D(uTexture, uv);
+	vec4 textureMap = texture2D(u_texture, uv);
 
-	float blendValue = smoothstep(edge0, edge1, map.r);
+	float blendValue = smoothstep(u_min, u_max, brightness);
 
-	vec3 outputColor = blendValue * color + (1.0 - blendValue) * textureMap.rgb;
+	vec3 outputColor = blendValue * u_color + (1.0 - blendValue) * textureMap.rgb;
 
 	gl_FragColor = vec4(outputColor, textureMap.a);
 }

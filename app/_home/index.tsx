@@ -1,87 +1,96 @@
+import * as THREE from "three";
 import { useRef } from "react";
-import { useFrame, extend, useThree } from "@react-three/fiber";
-import { usePerformanceMonitor } from "@react-three/drei";
-import { CONFIG, setGUI } from "./config";
-import { useGUI } from "@/utils/useGUI";
-import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
+import { useFrame, useThree } from "@react-three/fiber";
 import {
+   useNoise,
    useFluid,
    useBlending,
-   useNoise,
+   useColorStrata,
    useBrightnessPicker,
 } from "@/packages/use-shader-fx/src";
 
-extend({ FxMaterial });
-
 export const Home = () => {
-   const updateGUI = useGUI(setGUI);
-   const mainShaderRef = useRef<FxMaterialProps>();
-
+   const ref = useRef<THREE.ShaderMaterial>(null);
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
-
-   const [updateNoise] = useNoise({ size, dpr });
-
-   const [updateFluid, setFluid] = useFluid({
-      size,
-      dpr,
-   });
-
-   const [updateBlending] = useBlending({ size, dpr });
-
+   const [updateNoise, setNoise] = useNoise({ size, dpr });
+   const [updateFluid, setFluid] = useFluid({ size, dpr });
+   const [updateBlending, setBlending] = useBlending({ size, dpr });
+   const [updateColorStrata, setColorStrata] = useColorStrata({ size, dpr });
    const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
 
-   usePerformanceMonitor({
-      onChange({ factor }) {
-         setFluid({
-            pressure_iterations: Math.max(2, Math.floor(20 * factor)),
-         });
-      },
+   setBlending({
+      mapIntensity: 0.45,
+   });
+
+   setNoise({
+      scale: 1.0,
+      warpOctaves: 1,
+      noiseOctaves: 1,
+      fbmOctaves: 1,
+      timeStrength: 1.2,
+      warpStrength: 20.0,
+   });
+
+   setFluid({
+      density_dissipation: 0.96,
+      velocity_dissipation: 0.99,
+      curl_strength: 0.0,
+      splat_radius: 0.0045,
+      pressure_iterations: 1,
+   });
+
+   setColorStrata({
+      laminateLayer: 2,
+      laminateInterval: new THREE.Vector2(2.0, 2.0),
+      laminateDetail: new THREE.Vector2(1.4, 1.2),
+      distortion: new THREE.Vector2(1.4, 1.2),
+      colorFactor: new THREE.Vector3(1.2, 1.0, 3.2),
    });
 
    useFrame((props) => {
-      const noise = updateNoise(props, {
-         scale: 0.002,
-         timeStrength: 0.2,
-         warpStrength: 2.0,
+      const noise = updateNoise(props);
+      const fluid = updateFluid(props);
+      const picked = updateBrightnessPicker(props, {
+         texture: fluid,
       });
-
-      const fx = updateFluid(props, {
-         density_dissipation: CONFIG.fluid.density_dissipation,
-         velocity_dissipation: CONFIG.fluid.velocity_dissipation,
-         velocity_acceleration: CONFIG.fluid.velocity_acceleration,
-         pressure_dissipation: CONFIG.fluid.pressure_dissipation,
-         curl_strength: CONFIG.fluid.curl_strength,
-         splat_radius: CONFIG.fluid.splat_radius,
-         fluid_color: CONFIG.fluid.fluid_color,
-      });
-
-      const postFx = updateBlending(props, {
-         distortionStrength: CONFIG.fogProjection.distortionStrength,
-         edge0: CONFIG.fogProjection.fogEdge0,
-         edge1: CONFIG.fogProjection.fogEdge1,
-         color: CONFIG.fogProjection.fogColor,
-         texture: fx,
+      const blending = updateBlending(props, {
+         texture: picked,
          map: noise,
       });
-
-      const final = updateBrightnessPicker(props, {
-         texture: postFx,
+      const colorStrata = updateColorStrata(props, {
+         texture: blending,
       });
-
-      const main = mainShaderRef.current;
-      if (main) {
-         main.u_fx = final;
-         main.u_alpha = 0.0;
-      }
-      updateGUI();
+      ref.current!.uniforms.u_fx.value = colorStrata;
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterial ref={mainShaderRef} />
+         <shaderMaterial
+            ref={ref}
+            vertexShader={`
+					varying vec2 vUv;
+						void main() {
+							vUv = uv;
+							gl_Position = vec4(position, 1.0);
+						}
+						`}
+            fragmentShader={`
+						precision highp float;
+						varying vec2 vUv;
+						uniform sampler2D u_fx;
+						
+						void main() {
+							vec2 uv = vUv;
+							gl_FragColor = texture2D(u_fx, uv);
+						}
+					`}
+            uniforms={{
+               u_fx: { value: null },
+            }}
+         />
       </mesh>
    );
 };
@@ -93,21 +102,68 @@ playground
 // import * as THREE from "three";
 // import { useRef } from "react";
 // import { useFrame, useThree } from "@react-three/fiber";
-// import { useNoise } from "@/packages/use-shader-fx/src";
+// import {
+//    useNoise,
+//    useFluid,
+//    useBlending,
+//    useColorStrata,
+//    useBrightnessPicker,
+// } from "@/packages/use-shader-fx/src";
 
 // export const Home = () => {
 //    const ref = useRef<THREE.ShaderMaterial>(null);
-//    const size = useThree((state) => state.size);
-//    const dpr = useThree((state) => state.viewport.dpr);
-//    const [updateNoise] = useNoise({ size, dpr });
+//    const { size, dpr } = useThree((state) => {
+//       return { size: state.size, dpr: state.viewport.dpr };
+//    });
+//    const [updateNoise, setNoise] = useNoise({ size, dpr });
+//    const [updateFluid, setFluid] = useFluid({ size, dpr });
+//    const [updateBlending, setBlending] = useBlending({ size, dpr });
+//    const [updateColorStrata, setColorStrata] = useColorStrata({ size, dpr });
+//    const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
+
+//    setBlending({
+//       color: new THREE.Color(0xff0000),
+//       brightness: new THREE.Vector3(0.2, 0.2, 0.2),
+//       mapIntensity: 0.4,
+//    });
+
+//    setNoise({
+//       scale: 1.0,
+//       warpOctaves: 1,
+//       noiseOctaves: 1,
+//       fbmOctaves: 1,
+//       timeStrength: 1.2,
+//       warpStrength: 20.0,
+//    });
+
+//    setFluid({
+//       curl_strength: 0.0,
+//       splat_radius: 0.002,
+//       pressure_iterations: 2,
+//    });
+
+//    setColorStrata({
+//       laminateLayer: 2,
+//       laminateInterval: new THREE.Vector2(2.0, 2.0),
+//       laminateDetail: new THREE.Vector2(1.4, 1.2),
+//       distortion: new THREE.Vector2(1.4, 1.2),
+//       colorFactor: new THREE.Vector3(1.2, 1.0, 3.2),
+//    });
 
 //    useFrame((props) => {
-//       ref.current!.uniforms.u_fx.value = updateNoise(props, {
-//          scale: 0.002,
-//          warpOctaves: 2,
-//          timeStrength: 0.2,
-//          warpStrength: 20.0,
+//       const noise = updateNoise(props);
+//       const fluid = updateFluid(props);
+//       const picked = updateBrightnessPicker(props, {
+//          texture: fluid,
 //       });
+//       const blending = updateBlending(props, {
+//          texture: picked,
+//          map: noise,
+//       });
+//       const colorStrata = updateColorStrata(props, {
+//          texture: blending,
+//       });
+//       ref.current!.uniforms.u_fx.value = colorStrata;
 //    });
 
 //    return (
@@ -126,22 +182,10 @@ playground
 // 						precision highp float;
 // 						varying vec2 vUv;
 // 						uniform sampler2D u_fx;
-// 						float sq(float x) {
-// 							return x*x*7.0;
-// 						}
+
 // 						void main() {
 // 							vec2 uv = vUv;
-// 							vec3 noise = texture2D(u_fx, uv).rgb;
-// 							vec3 col;
-// 							vec2 p = noise.rg * .4;
-// 							for(float j = 0.0; j < 3.0; j++){
-// 								for(float i = 1.0; i < 8.0; i++){
-// 										p.x += 0.01 / (i + j) * cos(i * 10.0 * p.y + sin(i + j));
-// 										p.y += 0.01 / (i + j)* cos(i * 10.0 * p.x + sin(i + j));
-// 								}
-// 								col[int(j)] = sin(.5 * 7.0*sq(p.x)) + sin(7.0*sq(p.y));
-// 							}
-// 							gl_FragColor = vec4(col, 1.0);
+// 							gl_FragColor = texture2D(u_fx, uv);
 // 						}
 // 					`}
 //             uniforms={{

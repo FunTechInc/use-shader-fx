@@ -6,12 +6,14 @@ export type BlendingParams = {
     texture?: THREE.Texture;
     /** map texture, default:THREE.Texture */
     map?: THREE.Texture;
-    /** distortion strength , default:0.03 */
-    distortionStrength?: number;
-    /** value that reflects noise , default:0.0 */
-    edge0?: number;
-    /** value that reflects noise , default:0.9  */
-    edge1?: number;
+    /** map strength , r,g value are affecting , default:0.3 */
+    mapIntensity?: number;
+    /** default:(0.5,0.5,0.5) */
+    brightness?: THREE.Vector3;
+    /** default:0.0 */
+    min?: number;
+    /** default:1.0 */
+    max?: number;
     /** dodge color , default: THREE.Color(0xffffff) */
     color?: THREE.Color;
 };

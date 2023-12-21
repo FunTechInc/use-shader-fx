@@ -13,15 +13,18 @@ extend({ FxMaterial });
 
 const CONFIG: NoiseParams = structuredClone(NOISE_PARAMS);
 const setGUI = (gui: GUI) => {
+   gui.add(CONFIG, "scale", 0, 10, 0.001);
    gui.add(CONFIG, "timeStrength", 0, 10, 0.01);
-   gui.add(CONFIG, "noiseOctaves", 0, 10, 1);
-   gui.add(CONFIG, "fbmOctaves", 0, 10, 1);
+   gui.add(CONFIG, "noiseOctaves", 1, 10, 1);
+   gui.add(CONFIG, "fbmOctaves", 1, 10, 1);
+   gui.add(CONFIG, "warpOctaves", 1, 10, 1);
+   gui.add(CONFIG.warpDirection!, "x", 1, 10, 0.1);
+   gui.add(CONFIG.warpDirection!, "y", 1, 10, 0.1);
+   gui.add(CONFIG, "warpStrength", 1, 50, 0.1);
 };
 const setConfig = () => {
    return {
-      timeStrength: CONFIG.timeStrength,
-      noiseOctaves: CONFIG.noiseOctaves,
-      fbmOctaves: CONFIG.fbmOctaves,
+      ...CONFIG,
    } as NoiseParams;
 };
 

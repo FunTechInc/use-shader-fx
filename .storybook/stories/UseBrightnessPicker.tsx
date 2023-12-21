@@ -15,25 +15,17 @@ import {
 
 extend({ FxMaterial });
 
-const CONFIG = {
-   ...structuredClone(BRIGHTNESSPICKER_PARAMS),
-   r: 0.5,
-   g: 0.5,
-   b: 0.5,
-};
-const brightness = new THREE.Vector3(CONFIG.r, CONFIG.g, CONFIG.b);
+const CONFIG: BrightnessPickerParams = structuredClone(BRIGHTNESSPICKER_PARAMS);
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG, "r", 0, 1, 0.01);
-   gui.add(CONFIG, "g", 0, 1, 0.01);
-   gui.add(CONFIG, "b", 0, 1, 0.01);
+   gui.add(CONFIG.brightness!, "x", 0, 1, 0.01);
+   gui.add(CONFIG.brightness!, "y", 0, 1, 0.01);
+   gui.add(CONFIG.brightness!, "z", 0, 1, 0.01);
    gui.add(CONFIG, "min", 0, 1, 0.01);
    gui.add(CONFIG, "max", 0, 1, 0.01);
 };
 const setConfig = () => {
    return {
-      brightness: brightness.set(CONFIG.r, CONFIG.g, CONFIG.b),
-      min: CONFIG.min,
-      max: CONFIG.max,
+      ...CONFIG,
    } as BrightnessPickerParams;
 };
 
@@ -53,8 +45,8 @@ export const UseBrightnessPicker = (args: BrightnessPickerParams) => {
    useFrame((props) => {
       const noise = updateNoise(props);
       const fx = updateBrightnessPicker(props, {
-         texture: noise,
          ...setConfig(),
+         texture: noise,
       });
       fxRef.current!.u_fx = fx;
       fxRef.current!.u_alpha = 0.0;
