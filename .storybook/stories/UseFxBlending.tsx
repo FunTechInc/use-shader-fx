@@ -6,56 +6,49 @@ import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
-   useBlending,
-   useFxTexture,
+   useFxBlending,
+   useFluid,
    useNoise,
 } from "../../packages/use-shader-fx/src";
 import {
-   BlendingParams,
-   BLENDING_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useBlending";
+   FxBlendingParams,
+   FXBLENDING_PARAMS,
+} from "../../packages/use-shader-fx/src/hooks/useFxBlending";
 
 extend({ FxMaterial });
 
-const CONFIG: BlendingParams = structuredClone(BLENDING_PARAMS);
+const CONFIG: FxBlendingParams = structuredClone(FXBLENDING_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "mapIntensity", 0, 1, 0.01);
-   gui.add(CONFIG, "min", 0, 1, 0.01);
-   gui.add(CONFIG, "max", 0, 1, 0.01);
-   gui.addColor(CONFIG, "color");
 };
 const setConfig = () => {
    return {
       ...CONFIG,
-   } as BlendingParams;
+   } as FxBlendingParams;
 };
 
 /**
- * Blend map to texture. You can set the threshold for blending with brightness. You can set the dodge color by setting color. If you don't want to reflect the map's color, you can use useFxBlending instead.
+ * Blend map to texture. You can change the intensity of fx applied by the rg value of map. Unlike "useBlending", the map color is not reflected.
  */
-export const UseBlending = (args: BlendingParams) => {
+export const UseFxBlending = (args: FxBlendingParams) => {
    const updateGUI = useGUI(setGUI);
-   const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
    const fxRef = React.useRef<FxMaterialProps>();
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
-   const [updateFxTexture] = useFxTexture({ size, dpr });
+   const [updateFluid] = useFluid({ size, dpr });
    const [updateNoise] = useNoise({ size, dpr });
-   const [updateBlending] = useBlending({ size, dpr });
+   const [updateFxBlending] = useFxBlending({ size, dpr });
 
    useFrame((props) => {
-      const bgTexture = updateFxTexture(props, {
-         textureResolution: CONSTANT.textureResolution,
-         texture0: bg,
-      });
       const noise = updateNoise(props);
-      const fx = updateBlending(props, {
+      const fluid = updateFluid(props);
+      const blending = updateFxBlending(props, {
          ...setConfig(),
-         texture: bgTexture,
+         texture: fluid,
          map: noise,
       });
-      fxRef.current!.u_fx = fx;
+      fxRef.current!.u_fx = blending;
       updateGUI();
    });
 

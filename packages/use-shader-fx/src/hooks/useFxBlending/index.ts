@@ -8,52 +8,39 @@ import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
-export type BlendingParams = {
+export type FxBlendingParams = {
    /** Make this texture Blending , default:THREE.Texture */
    texture?: THREE.Texture;
    /** map texture, default:THREE.Texture */
    map?: THREE.Texture;
    /** map strength , r,g value are affecting , default:0.3 */
    mapIntensity?: number;
-   /** default:(0.5,0.5,0.5) */
-   brightness?: THREE.Vector3;
-   /** default:0.0 */
-   min?: number;
-   /** default:1.0 */
-   max?: number;
-   /** dodge color , default: THREE.Color(0xffffff) */
-   color?: THREE.Color;
 };
 
-export type BlendingObject = {
+export type FxBlendingObject = {
    scene: THREE.Scene;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
 };
 
-export const BLENDING_PARAMS: BlendingParams = {
+export const FXBLENDING_PARAMS: FxBlendingParams = {
    texture: new THREE.Texture(),
    map: new THREE.Texture(),
    mapIntensity: 0.3,
-   brightness: new THREE.Vector3(0.5, 0.5, 0.5),
-   min: 0.0,
-   max: 1.0,
-   color: new THREE.Color(0xffffff),
 };
 
 /**
- * Blend map to texture. You can set the threshold for blending with brightness. You can set the dodge color by setting color. 
-If you don't want to reflect the map's color, you can use useFxBlending instead.
+ * Blend map to texture. You can change the intensity of fx applied by the rg value of map. Unlike "useBlending", the map color is not reflected.
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export const useBlending = ({
+export const useFxBlending = ({
    size,
    dpr,
 }: {
    size: Size;
    dpr: number;
-}): HooksReturn<BlendingParams, BlendingObject> => {
+}): HooksReturn<FxBlendingParams, FxBlendingObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -64,19 +51,15 @@ export const useBlending = ({
       dpr,
    });
 
-   const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);
+   const [params, setParams] = useParams<FxBlendingParams>(FXBLENDING_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: BlendingParams) => {
+      (props: RootState, updateParams?: FxBlendingParams) => {
          const { gl } = props;
          updateParams && setParams(updateParams);
          setUniform(material, "u_texture", params.texture!);
          setUniform(material, "u_map", params.map!);
          setUniform(material, "u_mapIntensity", params.mapIntensity!);
-         setUniform(material, "u_brightness", params.brightness!);
-         setUniform(material, "u_min", params.min!);
-         setUniform(material, "u_max", params.max!);
-         setUniform(material, "u_color", params.color!);
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
       },
