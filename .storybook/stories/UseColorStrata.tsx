@@ -4,7 +4,7 @@ import { useFrame, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { useColorStrata, useNoise } from "../../packages/use-shader-fx/src";
+import { useColorStrata } from "../../packages/use-shader-fx/src";
 import {
    COLORSTRATA_PARAMS,
    ColorStrataParams,
@@ -13,8 +13,10 @@ import {
 extend({ FxMaterial });
 
 const CONFIG: ColorStrataParams = structuredClone(COLORSTRATA_PARAMS);
+
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG, "laminateLayer", 0, 10, 1);
+   gui.add(CONFIG, "laminateLayer", 0, 20, 1);
+   gui.add(CONFIG, "scale", 0, 1, 0.01);
    const laminateInterval = gui.addFolder("laminateInterval");
    laminateInterval.add(CONFIG.laminateInterval!, "x", 0, 2, 0.01);
    laminateInterval.add(CONFIG.laminateInterval!, "y", 0, 2, 0.01);
@@ -28,6 +30,9 @@ const setGUI = (gui: GUI) => {
    colorFactor.add(CONFIG.colorFactor!, "x", 0, 10, 0.01);
    colorFactor.add(CONFIG.colorFactor!, "y", 0, 10, 0.01);
    colorFactor.add(CONFIG.colorFactor!, "z", 0, 10, 0.01);
+   const timeStrength = gui.addFolder("timeStrength");
+   timeStrength.add(CONFIG.timeStrength!, "x", 0, 2, 0.01);
+   timeStrength.add(CONFIG.timeStrength!, "y", 0, 2, 0.01);
 };
 const setConfig = () => {
    return {
@@ -67,14 +72,10 @@ export const UseColorStrataWithNoise = (args: ColorStrataParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateColorStrata] = useColorStrata({ size, dpr });
-   const [updateNoise] = useNoise({ size, dpr });
 
    useFrame((props) => {
-      const noise = updateNoise(props);
-
       const fx = updateColorStrata(props, {
          ...setConfig(),
-         texture: noise,
       });
 
       fxRef.current!.u_fx = fx;

@@ -11,6 +11,8 @@ import { useParams } from "../../utils/useParams";
 export type ColorStrataParams = {
    /** default: null */
    texture?: THREE.Texture | false;
+   /** Valid when texture is false. default : 1 */
+   scale?: number;
    /** default: 1.0 */
    laminateLayer?: number;
    /** default: (0.1, 0.1) */
@@ -21,6 +23,12 @@ export type ColorStrataParams = {
    distortion?: THREE.Vector2;
    /** default: (1.0, 1.0,1.0) */
    colorFactor?: THREE.Vector3;
+   /** default: (0.0, 0.0) */
+   timeStrength?: THREE.Vector2;
+   /** default:null */
+   noise?: THREE.Texture | false;
+   /** default : (0.0,0.0) */
+   noiseStrength?: THREE.Vector2;
 };
 
 export type ColorStrataObject = {
@@ -32,11 +40,15 @@ export type ColorStrataObject = {
 
 export const COLORSTRATA_PARAMS: ColorStrataParams = {
    texture: false,
+   scale: 1.0,
    laminateLayer: 1.0,
    laminateInterval: new THREE.Vector2(0.1, 0.1),
    laminateDetail: new THREE.Vector2(1, 1),
    distortion: new THREE.Vector2(0, 0),
    colorFactor: new THREE.Vector3(1, 1, 1),
+   timeStrength: new THREE.Vector2(0, 0),
+   noise: false,
+   noiseStrength: new THREE.Vector2(0, 0),
 };
 
 /**
@@ -63,7 +75,7 @@ export const useColorStrata = ({
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: ColorStrataParams) => {
-         const { gl } = props;
+         const { gl, clock } = props;
          updateParams && setParams(updateParams);
 
          if (params.texture) {
@@ -71,13 +83,25 @@ export const useColorStrata = ({
             setUniform(material, "isTexture", true);
          } else {
             setUniform(material, "isTexture", false);
+            setUniform(material, "scale", params.scale!);
          }
+
+         if (params.noise) {
+            setUniform(material, "noise", params.noise);
+            setUniform(material, "isNoise", true);
+            setUniform(material, "noiseStrength", params.noiseStrength!);
+         } else {
+            setUniform(material, "isNoise", false);
+         }
+
+         setUniform(material, "uTime", clock.getElapsedTime());
 
          setUniform(material, "laminateLayer", params.laminateLayer!);
          setUniform(material, "laminateInterval", params.laminateInterval!);
          setUniform(material, "laminateDetail", params.laminateDetail!);
          setUniform(material, "distortion", params.distortion!);
          setUniform(material, "colorFactor", params.colorFactor!);
+         setUniform(material, "timeStrength", params.timeStrength!);
 
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
