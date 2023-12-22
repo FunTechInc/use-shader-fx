@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import {
    useNoise,
    useFluid,
-   useBlending,
+   useFxBlending,
    useColorStrata,
    useBrightnessPicker,
 } from "@/packages/use-shader-fx/src";
@@ -16,13 +16,12 @@ export const Home = () => {
    });
    const [updateNoise, setNoise] = useNoise({ size, dpr });
    const [updateFluid, setFluid] = useFluid({ size, dpr });
-   const [updateBlending, setBlending] = useBlending({ size, dpr });
+   const [updateFxBlending, setFxBlending] = useFxBlending({ size, dpr });
    const [updateColorStrata, setColorStrata] = useColorStrata({ size, dpr });
    const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
 
-   setBlending({
+   setFxBlending({
       mapIntensity: 0.45,
-      brightness: new THREE.Vector3(0.2, 0.2, 0.2),
    });
 
    setNoise({
@@ -53,7 +52,7 @@ export const Home = () => {
    useFrame((props) => {
       const noise = updateNoise(props);
       const fluid = updateFluid(props);
-      const blending = updateBlending(props, {
+      const blending = updateFxBlending(props, {
          texture: fluid,
          map: noise,
       });
