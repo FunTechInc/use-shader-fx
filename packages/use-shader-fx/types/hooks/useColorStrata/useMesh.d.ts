@@ -7,6 +7,18 @@ export declare class ColorStrataMaterial extends THREE.ShaderMaterial {
         isTexture: {
             value: boolean;
         };
+        scale: {
+            value: number;
+        };
+        noise: {
+            value: THREE.Texture;
+        };
+        noiseStrength: {
+            value: THREE.Vector2;
+        };
+        isNoise: {
+            value: boolean;
+        };
         laminateLayer: {
             value: number;
         };
@@ -21,6 +33,12 @@ export declare class ColorStrataMaterial extends THREE.ShaderMaterial {
         };
         colorFactor: {
             value: THREE.Vector3;
+        };
+        uTime: {
+            value: number;
+        };
+        timeStrength: {
+            value: THREE.Vector2;
         };
     };
 }

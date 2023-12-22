@@ -8,11 +8,17 @@ export class ColorStrataMaterial extends THREE.ShaderMaterial {
    uniforms!: {
       uTexture: { value: THREE.Texture };
       isTexture: { value: boolean };
+      scale: { value: number };
+      noise: { value: THREE.Texture };
+      noiseStrength: { value: THREE.Vector2 };
+      isNoise: { value: boolean };
       laminateLayer: { value: number };
       laminateInterval: { value: THREE.Vector2 };
       laminateDetail: { value: THREE.Vector2 };
       distortion: { value: THREE.Vector2 };
       colorFactor: { value: THREE.Vector3 };
+      uTime: { value: number };
+      timeStrength: { value: THREE.Vector2 };
    };
 }
 
@@ -24,11 +30,17 @@ export const useMesh = (scene: THREE.Scene) => {
             uniforms: {
                uTexture: { value: new THREE.Texture() },
                isTexture: { value: false },
+               scale: { value: 1.0 },
+               noise: { value: new THREE.Texture() },
+               noiseStrength: { value: new THREE.Vector2(0, 0) },
+               isNoise: { value: false },
                laminateLayer: { value: 1.0 },
                laminateInterval: { value: new THREE.Vector2(0.1, 0.1) },
                laminateDetail: { value: new THREE.Vector2(1, 1) },
                distortion: { value: new THREE.Vector2(0, 0) },
                colorFactor: { value: new THREE.Vector3(1, 1, 1) },
+               uTime: { value: 0 },
+               timeStrength: { value: new THREE.Vector2(0, 0) },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
