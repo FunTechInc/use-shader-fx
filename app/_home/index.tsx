@@ -18,7 +18,10 @@ export const Home = () => {
    const [updateFluid, setFluid] = useFluid({ size, dpr });
    const [updateFxBlending, setFxBlending] = useFxBlending({ size, dpr });
    const [updateColorStrata, setColorStrata] = useColorStrata({ size, dpr });
-   const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
+   const [updateBrightnessPicker, setBrightnessPicker] = useBrightnessPicker({
+      size,
+      dpr,
+   });
 
    setFxBlending({
       mapIntensity: 0.45,
