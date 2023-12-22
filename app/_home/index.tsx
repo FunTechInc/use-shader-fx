@@ -18,7 +18,7 @@ export const Home = () => {
    const [updateFluid, setFluid] = useFluid({ size, dpr });
    const [updateFxBlending, setFxBlending] = useFxBlending({ size, dpr });
    const [updateColorStrata, setColorStrata] = useColorStrata({ size, dpr });
-   const [updateBrightnessPicker, setBrightnessPicker] = useBrightnessPicker({
+   const [updateBrightnessPicker] = useBrightnessPicker({
       size,
       dpr,
    });
