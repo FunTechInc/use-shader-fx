@@ -616,7 +616,7 @@ void main() {
 	vec2 uv = vUv;
 	vec3 color = texture2D(u_texture, uv).rgb;
 	float brightness = dot(color,u_brightness);
-	float alpha = smoothstep(u_min, u_max, brightness);
+	float alpha = clamp(smoothstep(u_min, u_max, brightness),0.0,1.0);
 	gl_FragColor = vec4(color, alpha);
 }`;const pn=t=>{const i=a.useMemo(()=>new n.PlaneGeometry(2,2),[]),r=a.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_brightness:{value:new n.Vector3},u_min:{value:0},u_max:{value:1}},vertexShader:mn,fragmentShader:dn}),[]);return D(t,i,r),r},Q={texture:new n.Texture,brightness:new n.Vector3(.5,.5,.5),min:0,max:1},gn=({size:t,dpr:i})=>{const r=a.useMemo(()=>new n.Scene,[]),e=pn(r),u=_(t),[l,v]=R({scene:r,camera:u,size:t,dpr:i}),[o,c]=b(Q);return[a.useCallback((m,d)=>{const{gl:g}=m;return d&&c(d),s(e,"u_texture",o.texture),s(e,"u_brightness",o.brightness),s(e,"u_min",o.min),s(e,"u_max",o.max),v(g)},[v,e,c,o]),c,{scene:r,material:e,camera:u,renderTarget:l}]};var xn=`varying vec2 vUv;
 
@@ -646,14 +646,14 @@ void main() {
 	vec2 pos = isTexture ? texture2D(uTexture, uv).rg : uv * scale;
 	vec2 noise = isNoise ? texture2D(noise, uv).rg : vec2(0.0);
 	float alpha = isTexture ? texture2D(uTexture, uv).a : 1.0;
+	
+	alpha = (alpha < 1e-10) ? 0.0 : alpha;
 
 	vec3 col;
 	for(float j = 0.0; j < 3.0; j++){
 		for(float i = 1.0; i < laminateLayer; i++){
-
 			float timeNoiseSin = sin(uTime / (i + j)) * timeStrength.x + noise.r * noiseStrength.x;
 			float timeNoiseCos = cos(uTime / (i + j)) * timeStrength.y + noise.g * noiseStrength.y;
-
 			pos.x += laminateInterval.x / (i + j) * cos(i * distortion.x * pos.y + timeNoiseSin + sin(i + j));
 			pos.y += laminateInterval.y / (i + j) * cos(i * distortion.y * pos.x + timeNoiseCos + sin(i + j));
 		}
