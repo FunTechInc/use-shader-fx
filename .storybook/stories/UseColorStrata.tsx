@@ -4,7 +4,7 @@ import { useFrame, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { useColorStrata } from "../../packages/use-shader-fx/src";
+import { useColorStrata, useNoise } from "../../packages/use-shader-fx/src";
 import {
    COLORSTRATA_PARAMS,
    ColorStrataParams,
@@ -72,10 +72,13 @@ export const UseColorStrataWithNoise = (args: ColorStrataParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateColorStrata] = useColorStrata({ size, dpr });
+   const [updateNoise] = useNoise({ size, dpr });
 
    useFrame((props) => {
+      const noise = updateNoise(props);
       const fx = updateColorStrata(props, {
          ...setConfig(),
+         texture: noise,
       });
 
       fxRef.current!.u_fx = fx;
