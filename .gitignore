@@ -39,3 +39,6 @@ storybook-static/
 
 # exclude CreateShaderFx
 CreateShaderFx/
+
+# exclude private demo
+app/private/
