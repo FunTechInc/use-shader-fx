@@ -47,14 +47,21 @@ export const DomSyncer = ({ state }: { state: number }) => {
    );
 
    const domArr = useRef<(HTMLElement | Element)[]>([]);
+   const contentArr = useRef<HTMLElement[]>([]);
 
    useLayoutEffect(() => {
       CONFIG.waveArr = [];
 
       if (state === 0) {
          domArr.current = [...document.querySelectorAll(".item")!];
+         contentArr.current = Array.from(
+            document.querySelectorAll<HTMLElement>(".content")
+         );
       } else {
          domArr.current = [...document.querySelectorAll(".item2")!];
+         contentArr.current = Array.from(
+            document.querySelectorAll<HTMLElement>(".content2")
+         );
       }
       CONFIG.waveArr = [...Array(domArr.current.length)].map(() => ({
          ...CONFIG.waveConfig,
@@ -118,6 +125,17 @@ export const DomSyncer = ({ state }: { state: number }) => {
          resolution: [...Array(domArr.current.length)].map(() =>
             resolutionRef.current.set(props.size.width, props.size.height)
          ),
+      });
+
+      contentArr.current.forEach((content, i) => {
+         if (
+            domSyncerObj.domRects[i] &&
+            domSyncerObj.isIntersecting(i, false)
+         ) {
+            content.style.opacity = "1.0";
+            content.style.top = `${domSyncerObj.domRects[i].top}px`;
+            content.style.left = `${domSyncerObj.domRects[i].left}px`;
+         }
       });
 
       const main = mainShaderRef.current;

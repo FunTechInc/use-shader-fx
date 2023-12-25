@@ -13,7 +13,7 @@ export default function Page() {
                position: "fixed",
                top: 0,
                width: "100%",
-               height: "100%",
+               height: "100vh",
             }}>
             <ShaderFx>
                <DomSyncer state={domSwitch} />
@@ -47,28 +47,52 @@ export default function Page() {
             {domSwitch === 0 ? (
                <>
                   {[...Array(4)].map((_, i) => (
-                     <div
-                        className="item"
-                        key={i}
-                        style={{
-                           width: "calc(50% - 40px)",
-                           height: "80vh",
-                           zIndex: 100,
-                           borderRadius: `${i * 50}px`,
-                        }}></div>
+                     <div key={i} style={{ width: "calc(50% - 40px)" }}>
+                        <div
+                           className="item"
+                           style={{
+                              height: "120vh",
+                              zIndex: 100,
+                              borderRadius: `${i * 50}px`,
+                           }}></div>
+                        <div
+                           className="content"
+                           style={{
+                              marginTop: "40px",
+                              position: "fixed",
+                              top: 0,
+                              left: 0,
+                              opacity: 0,
+                           }}>
+                           <h1 style={{ fontSize: "40px" }}>title</h1>
+                           <p style={{ fontSize: "26px" }}>text</p>
+                        </div>
+                     </div>
                   ))}
                </>
             ) : (
                <>
                   {[...Array(2)].map((_, i) => (
-                     <div
-                        className="item2"
-                        key={i}
-                        style={{
-                           width: "100%",
-                           height: "80vh",
-                           zIndex: 100,
-                        }}></div>
+                     <div key={i} style={{ width: "100%" }}>
+                        <div
+                           className="item2"
+                           style={{
+                              height: "80vh",
+                              zIndex: 100,
+                           }}></div>
+                        <div
+                           className="content2"
+                           style={{
+                              marginTop: "40px",
+                              position: "fixed",
+                              top: 0,
+                              left: 0,
+                              opacity: 0,
+                           }}>
+                           <h1 style={{ fontSize: "20px" }}>title</h1>
+                           <p style={{ fontSize: "16px" }}>text</p>
+                        </div>
+                     </div>
                   ))}
                </>
             )}
