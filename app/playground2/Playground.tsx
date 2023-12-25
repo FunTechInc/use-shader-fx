@@ -4,24 +4,27 @@ import * as THREE from "three";
 import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import {
-   useNoise,
    useFluid,
    useFxBlending,
    useColorStrata,
-   useBrightnessPicker,
 } from "@/packages/use-shader-fx/src";
 import {
-   NoiseParams,
-   NOISE_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useNoise";
+   FluidParams,
+   FLUID_PARAMS,
+} from "@/packages/use-shader-fx/src/hooks/useFluid";
 import {
    ColorStrataParams,
    COLORSTRATA_PARAMS,
 } from "@/packages/use-shader-fx/src/hooks/useColorStrata";
+import {
+   FxBlendingParams,
+   FXBLENDING_PARAMS,
+} from "@/packages/use-shader-fx/src/hooks/useFxBlending";
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
 
 const CONFIG = {
+   fluid: structuredClone(FLUID_PARAMS) as FluidParams,
    colorStrata: {
       ...structuredClone(COLORSTRATA_PARAMS),
       laminateLayer: 20,
@@ -32,9 +35,19 @@ const CONFIG = {
       timeStrength: new THREE.Vector2(1, 1),
       noiseStrength: new THREE.Vector2(1, 1),
    } as ColorStrataParams,
+   fxBlending: structuredClone(FXBLENDING_PARAMS) as FxBlendingParams,
 };
 
 const setGUI = (gui: GUI) => {
+   //fluid
+   const fluid = gui.addFolder("fluid");
+   fluid.add(CONFIG.fluid, "density_dissipation", 0, 1, 0.01);
+   fluid.add(CONFIG.fluid, "velocity_dissipation", 0, 1, 0.01);
+   fluid.add(CONFIG.fluid, "velocity_acceleration", 0, 100, 1);
+   fluid.add(CONFIG.fluid, "pressure_dissipation", 0, 1, 0.01);
+   fluid.add(CONFIG.fluid, "pressure_iterations", 0, 30, 1);
+   fluid.add(CONFIG.fluid, "curl_strength", 0, 100, 1);
+   fluid.add(CONFIG.fluid, "splat_radius", 0, 0.2, 0.001);
    //color strata
    const colorStrata = gui.addFolder("colorStrata");
    colorStrata.add(CONFIG.colorStrata, "laminateLayer", 0, 20, 1);
@@ -58,11 +71,16 @@ const setGUI = (gui: GUI) => {
    const noiseStrength = colorStrata.addFolder("noiseStrength");
    noiseStrength.add(CONFIG.colorStrata.noiseStrength!, "x", 0, 5, 0.01);
    noiseStrength.add(CONFIG.colorStrata.noiseStrength!, "y", 0, 5, 0.01);
+   // fx blending
+   const fxBlending = gui.addFolder("fxBlending");
+   fxBlending.add(CONFIG.fxBlending, "mapIntensity", 0, 10, 0.01);
 };
 
 const setConfig = () => {
    return {
+      fluid: { ...CONFIG.fluid },
       colorStrata: { ...CONFIG.colorStrata },
+      fxBlending: { ...CONFIG.fxBlending },
    };
 };
 
@@ -73,16 +91,23 @@ export const Playground = () => {
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
-
+   const [updateFluid] = useFluid({ size, dpr });
+   const [updateFxBlending] = useFxBlending({ size, dpr });
    const [updateColorStrata] = useColorStrata({ size, dpr });
 
    useFrame((props) => {
+      const fluid = updateFluid(props, {
+         ...setConfig().fluid,
+      });
       const colorStrata = updateColorStrata(props, {
          ...setConfig().colorStrata,
-         texture: false,
-         noise: false,
       });
-      ref.current!.uniforms.u_fx.value = colorStrata;
+      const blending = updateFxBlending(props, {
+         ...setConfig().fxBlending,
+         texture: colorStrata,
+         map: fluid,
+      });
+      ref.current!.uniforms.u_fx.value = blending;
       updateGUI();
    });
 
