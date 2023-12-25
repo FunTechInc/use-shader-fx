@@ -129,12 +129,12 @@ export const DomSyncer = ({ state }: { state: number }) => {
 
       contentArr.current.forEach((content, i) => {
          if (
-            domSyncerObj.domRects[i] &&
+            domSyncerObj.DOMRects[i] &&
             domSyncerObj.isIntersecting(i, false)
          ) {
             content.style.opacity = "1.0";
-            content.style.top = `${domSyncerObj.domRects[i].top}px`;
-            content.style.left = `${domSyncerObj.domRects[i].left}px`;
+            content.style.top = `${domSyncerObj.DOMRects[i].top}px`;
+            content.style.left = `${domSyncerObj.DOMRects[i].left}px`;
          }
       });
 
