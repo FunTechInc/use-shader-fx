@@ -26,6 +26,7 @@ export const useUpdateDomRect = (): UseUpdateDomRectReturn => {
 
    const updateDomRects: UpdateDomRect = useCallback(
       ({ params, size, resolutionRef, scene, isIntersectingRef }) => {
+         // Initialize domRects if the number of children in the scene is different from the number of DOMRect
          if (scene.children.length !== domRects.current!.length) {
             domRects.current = new Array(scene.children.length);
          }
@@ -36,10 +37,11 @@ export const useUpdateDomRect = (): UseUpdateDomRectReturn => {
                throw new Error("DOM is null.");
             }
 
-            if (isIntersectingRef.current[i]) {
-               const rect = domElement.getBoundingClientRect();
-               domRects.current[i] = rect;
+            // DOMRect is updated even outside the intersection
+            const rect = domElement.getBoundingClientRect();
+            domRects.current[i] = rect;
 
+            if (isIntersectingRef.current[i]) {
                mesh.scale.set(rect.width, rect.height, 1.0);
                mesh.position.set(
                   rect.left + rect.width * 0.5 - size.width * 0.5,
