@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {
@@ -28,6 +28,10 @@ const CONFIG: {
 };
 
 export const DomSyncer = ({ state }: { state: number }) => {
+   useEffect(() => {
+      document.documentElement.style.overflow = "auto";
+   });
+
    const mainShaderRef = useRef<FxMaterialProps>();
    const resolutionRef = useRef(new THREE.Vector2(0, 0));
    const textureRef = useRef(new THREE.Texture());
