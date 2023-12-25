@@ -28,6 +28,8 @@ export type DomSyncerObject = {
      * @param once - If set to true, it will continue to return true once crossed.
      */
     isIntersecting: IsIntersecting;
+    /** Returns the target's DOMRect[] */
+    DOMRects: DOMRect[];
 };
 export declare const DOMSYNCER_PARAMS: DomSyncerParams;
 /**

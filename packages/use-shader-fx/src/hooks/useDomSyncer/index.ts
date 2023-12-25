@@ -8,7 +8,7 @@ import { useParams } from "../../utils/useParams";
 import { errorHandler } from "./utils/errorHandler";
 import { createMesh } from "./utils/createMesh";
 import { useIntersectionHandler } from "./utils/useIntersectionHandler";
-import { updateRect } from "./utils/updateRect";
+import { useUpdateDomRect } from "./utils/useUpdateDomRect";
 import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
 
 export type DomSyncerParams = {
@@ -37,6 +37,8 @@ export type DomSyncerObject = {
     * @param once - If set to true, it will continue to return true once crossed.
     */
    isIntersecting: IsIntersecting;
+   /** Returns the target's DOMRect[] */
+   DOMRects: DOMRect[];
 };
 
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
@@ -71,6 +73,8 @@ export const useDomSyncer = (
       isSizeUpdate: true,
    });
    const [params, setParams] = useParams<DomSyncerParams>(DOMSYNCER_PARAMS);
+
+   const [DOMRects, updateDomRects] = useUpdateDomRect();
 
    // Avoid instancing vec2 every frame
    const resolutionRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
@@ -110,7 +114,7 @@ export const useDomSyncer = (
             setRefreshTrigger(false);
          }
 
-         updateRect({
+         updateDomRects({
             params,
             size,
             resolutionRef,
@@ -124,6 +128,7 @@ export const useDomSyncer = (
          updateRenderTarget,
          setParams,
          intersectionHandler,
+         updateDomRects,
          refreshTrigger,
          scene,
          params,
@@ -140,6 +145,7 @@ export const useDomSyncer = (
          camera: camera,
          renderTarget: renderTarget,
          isIntersecting: isIntersecting,
+         DOMRects: DOMRects,
       },
    ];
 };
