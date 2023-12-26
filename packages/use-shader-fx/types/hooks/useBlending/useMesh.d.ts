@@ -19,8 +19,11 @@ export declare class BlendingMaterial extends THREE.ShaderMaterial {
         u_max: {
             value: number;
         };
-        u_color: {
+        u_dodgeColor: {
             value: THREE.Color;
+        };
+        u_isDodgeColor: {
+            value: boolean;
         };
     };
 }

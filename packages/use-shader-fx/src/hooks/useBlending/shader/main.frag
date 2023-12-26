@@ -7,7 +7,8 @@ uniform float u_mapIntensity;
 uniform vec3 u_brightness;
 uniform float u_min;
 uniform float u_max;
-uniform vec3 u_color;
+uniform vec3 u_dodgeColor;
+uniform bool u_isDodgeColor;
 
 void main() {
 	vec2 uv = vUv;
@@ -25,7 +26,9 @@ void main() {
 
 	float blendValue = smoothstep(u_min, u_max, brightness);
 
-	vec3 outputColor = blendValue * u_color + (1.0 - blendValue) * textureMap.rgb;
+	vec3 dodgeColor = u_isDodgeColor ? u_dodgeColor : mapColor;
+
+	vec3 outputColor = blendValue * dodgeColor + (1.0 - blendValue) * textureMap.rgb;
 
 	gl_FragColor = vec4(outputColor, textureMap.a);
 }
