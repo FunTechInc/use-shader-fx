@@ -14,8 +14,8 @@ export type BlendingParams = {
     min?: number;
     /** default:1.0 */
     max?: number;
-    /** dodge color , default: THREE.Color(0xffffff) */
-    color?: THREE.Color;
+    /** If set, this value will apply color dodge , default: false */
+    dodgeColor?: THREE.Color | false;
 };
 export type BlendingObject = {
     scene: THREE.Scene;

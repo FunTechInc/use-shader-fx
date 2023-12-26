@@ -21,8 +21,8 @@ export type BlendingParams = {
    min?: number;
    /** default:1.0 */
    max?: number;
-   /** dodge color , default: THREE.Color(0xffffff) */
-   color?: THREE.Color;
+   /** If set, this value will apply color dodge , default: false */
+   dodgeColor?: THREE.Color | false;
 };
 
 export type BlendingObject = {
@@ -39,7 +39,7 @@ export const BLENDING_PARAMS: BlendingParams = {
    brightness: new THREE.Vector3(0.5, 0.5, 0.5),
    min: 0.0,
    max: 1.0,
-   color: new THREE.Color(0xffffff),
+   dodgeColor: false,
 };
 
 /**
@@ -76,7 +76,12 @@ export const useBlending = ({
          setUniform(material, "u_brightness", params.brightness!);
          setUniform(material, "u_min", params.min!);
          setUniform(material, "u_max", params.max!);
-         setUniform(material, "u_color", params.color!);
+         if (params.dodgeColor) {
+            setUniform(material, "u_dodgeColor", params.dodgeColor);
+            setUniform(material, "u_isDodgeColor", true);
+         } else {
+            setUniform(material, "u_isDodgeColor", false);
+         }
          const bufferTexture = updateRenderTarget(gl);
          return bufferTexture;
       },

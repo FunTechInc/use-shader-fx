@@ -12,7 +12,8 @@ export class BlendingMaterial extends THREE.ShaderMaterial {
       u_brightness: { value: THREE.Vector3 };
       u_min: { value: number };
       u_max: { value: number };
-      u_color: { value: THREE.Color };
+      u_dodgeColor: { value: THREE.Color };
+      u_isDodgeColor: { value: boolean };
    };
 }
 
@@ -28,7 +29,8 @@ export const useMesh = (scene: THREE.Scene) => {
                u_brightness: { value: new THREE.Vector3() },
                u_min: { value: 0.0 },
                u_max: { value: 0.9 },
-               u_color: { value: new THREE.Color(0xffffff) },
+               u_dodgeColor: { value: new THREE.Color(0xffffff) },
+               u_isDodgeColor: { value: false },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

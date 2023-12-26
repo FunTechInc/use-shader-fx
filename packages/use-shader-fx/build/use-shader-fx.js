@@ -1,5 +1,5 @@
 import * as t from "three";
-import { useMemo as m, useEffect as R, useRef as T, useLayoutEffect as j, useCallback as g, useState as oe } from "react";
+import { useMemo as m, useEffect as R, useRef as T, useLayoutEffect as j, useCallback as x, useState as oe } from "react";
 var ae = `varying vec2 vUv;
 
 void main() {
@@ -208,7 +208,7 @@ const O = (r, u = !1) => {
       s == null || s.dispose();
     };
   }, []);
-  const o = g(
+  const o = x(
     (s, f) => {
       const v = l.current;
       return s.setRenderTarget(v), f && f({ read: v.texture }), s.render(r, u), s.setRenderTarget(null), s.clear(), v.texture;
@@ -252,7 +252,7 @@ const O = (r, u = !1) => {
       (v = f.read) == null || v.dispose(), (d = f.write) == null || d.dispose();
     };
   }, []);
-  const s = g(
+  const s = x(
     (f, v) => {
       var p;
       const d = l.current;
@@ -269,7 +269,7 @@ const O = (r, u = !1) => {
   ];
 }, W = () => {
   const r = T(new t.Vector2(0, 0)), u = T(new t.Vector2(0, 0)), n = T(0), e = T(new t.Vector2(0, 0)), a = T(!1);
-  return g((c) => {
+  return x((c) => {
     const o = performance.now(), s = c.clone();
     n.current === 0 && (n.current = o, r.current = s);
     const f = Math.max(1, o - n.current);
@@ -286,7 +286,7 @@ const O = (r, u = !1) => {
 }, V = (r) => {
   const n = T(
     ((a) => Object.values(a).some((l) => typeof l == "function"))(r) ? r : structuredClone(r)
-  ), e = g((a) => {
+  ), e = x((a) => {
     for (const l in a) {
       const c = l;
       c in n.current && a[c] !== void 0 && a[c] !== null ? n.current[c] = a[c] : console.error(
@@ -318,12 +318,12 @@ const O = (r, u = !1) => {
     dpr: u
   }), [s, f] = V(le);
   return [
-    g(
+    x(
       (d, p) => {
-        const { gl: x, pointer: w } = d;
+        const { gl: g, pointer: w } = d;
         p && f(p), i(e, "uTexture", s.texture), i(e, "uRadius", s.radius), i(e, "uSmudge", s.smudge), i(e, "uDissipation", s.dissipation), i(e, "uMotionBlur", s.motionBlur), i(e, "uMotionSample", s.motionSample), i(e, "uColor", s.color);
         const { currentPointer: y, prevPointer: S, velocity: D } = l(w);
-        return i(e, "uMouse", y), i(e, "uPrevMouse", S), i(e, "uVelocity", D), o(x, ({ read: U }) => {
+        return i(e, "uMouse", y), i(e, "uPrevMouse", S), i(e, "uVelocity", D), o(g, ({ read: U }) => {
           i(e, "uMap", U);
         });
       },
@@ -387,7 +387,7 @@ const de = (r) => {
     dpr: u
   }), [o, s] = V(fe);
   return [
-    g(
+    x(
       (v, d) => {
         const { gl: p } = v;
         return d && s(d), i(e, "uTexture", o.texture), i(e, "uColor0", o.color0), i(e, "uColor1", o.color1), c(p);
@@ -417,7 +417,8 @@ uniform float u_mapIntensity;
 uniform vec3 u_brightness;
 uniform float u_min;
 uniform float u_max;
-uniform vec3 u_color;
+uniform vec3 u_dodgeColor;
+uniform bool u_isDodgeColor;
 
 void main() {
 	vec2 uv = vUv;
@@ -435,11 +436,13 @@ void main() {
 
 	float blendValue = smoothstep(u_min, u_max, brightness);
 
-	vec3 outputColor = blendValue * u_color + (1.0 - blendValue) * textureMap.rgb;
+	vec3 dodgeColor = u_isDodgeColor ? u_dodgeColor : mapColor;
+
+	vec3 outputColor = blendValue * dodgeColor + (1.0 - blendValue) * textureMap.rgb;
 
 	gl_FragColor = vec4(outputColor, textureMap.a);
 }`;
-const xe = (r) => {
+const ge = (r) => {
   const u = m(() => new t.PlaneGeometry(2, 2), []), n = m(
     () => new t.ShaderMaterial({
       uniforms: {
@@ -449,7 +452,8 @@ const xe = (r) => {
         u_brightness: { value: new t.Vector3() },
         u_min: { value: 0 },
         u_max: { value: 0.9 },
-        u_color: { value: new t.Color(16777215) }
+        u_dodgeColor: { value: new t.Color(16777215) },
+        u_isDodgeColor: { value: !1 }
       },
       vertexShader: me,
       fragmentShader: pe
@@ -457,29 +461,29 @@ const xe = (r) => {
     []
   );
   return F(r, u, n), n;
-}, ge = {
+}, xe = {
   texture: new t.Texture(),
   map: new t.Texture(),
   mapIntensity: 0.3,
   brightness: new t.Vector3(0.5, 0.5, 0.5),
   min: 0,
   max: 1,
-  color: new t.Color(16777215)
+  dodgeColor: !1
 }, bt = ({
   size: r,
   dpr: u
 }) => {
-  const n = m(() => new t.Scene(), []), e = xe(n), a = P(r), [l, c] = C({
+  const n = m(() => new t.Scene(), []), e = ge(n), a = P(r), [l, c] = C({
     scene: n,
     camera: a,
     size: r,
     dpr: u
-  }), [o, s] = V(ge);
+  }), [o, s] = V(xe);
   return [
-    g(
+    x(
       (v, d) => {
         const { gl: p } = v;
-        return d && s(d), i(e, "u_texture", o.texture), i(e, "u_map", o.map), i(e, "u_mapIntensity", o.mapIntensity), i(e, "u_brightness", o.brightness), i(e, "u_min", o.min), i(e, "u_max", o.max), i(e, "u_color", o.color), c(p);
+        return d && s(d), i(e, "u_texture", o.texture), i(e, "u_map", o.map), i(e, "u_mapIntensity", o.mapIntensity), i(e, "u_brightness", o.brightness), i(e, "u_min", o.min), i(e, "u_max", o.max), o.dodgeColor ? (i(e, "u_dodgeColor", o.dodgeColor), i(e, "u_isDodgeColor", !0)) : i(e, "u_isDodgeColor", !1), c(p);
       },
       [c, e, s, o]
     ),
@@ -776,7 +780,7 @@ const Oe = () => m(
   size: u,
   dpr: n
 }) => {
-  const e = m(() => new t.PlaneGeometry(2, 2), []), a = ye(), l = a.clone(), c = De(), o = Pe(), s = we(), f = _e(), v = be(), d = Ue(), p = Be(), x = Oe(), w = m(
+  const e = m(() => new t.PlaneGeometry(2, 2), []), a = ye(), l = a.clone(), c = De(), o = Pe(), s = we(), f = _e(), v = be(), d = Ue(), p = Be(), g = Oe(), w = m(
     () => ({
       vorticityMaterial: o,
       curlMaterial: c,
@@ -785,7 +789,7 @@ const Oe = () => m(
       pressureMaterial: v,
       clearMaterial: d,
       gradientSubtractMaterial: p,
-      splatMaterial: x
+      splatMaterial: g
     }),
     [
       o,
@@ -795,7 +799,7 @@ const Oe = () => m(
       v,
       d,
       p,
-      x
+      g
     ]
   ), y = O(u, n);
   R(() => {
@@ -818,7 +822,7 @@ const Oe = () => m(
     for (const M of Object.values(w))
       M.dispose();
   }, [w]);
-  const D = g(
+  const D = x(
     (M) => {
       S.material = M, S.material.needsUpdate = !0;
     },
@@ -845,9 +849,9 @@ const Oe = () => m(
       size: r
     }),
     [n, l, r]
-  ), [s, f] = E(o), [v, d] = E(o), [p, x] = C(o), [w, y] = C(o), [S, D] = E(o), M = T(0), U = T(new t.Vector2(0, 0)), L = T(new t.Vector3(0, 0, 0)), [b, h] = V(Ae);
+  ), [s, f] = E(o), [v, d] = E(o), [p, g] = C(o), [w, y] = C(o), [S, D] = E(o), M = T(0), U = T(new t.Vector2(0, 0)), L = T(new t.Vector3(0, 0, 0)), [b, h] = V(Ae);
   return [
-    g(
+    x(
       (q, X) => {
         const { gl: B, pointer: K, clock: G, size: H } = q;
         X && h(X), M.current === 0 && (M.current = G.getElapsedTime());
@@ -888,7 +892,7 @@ const Oe = () => m(
           const A = typeof b.fluid_color == "function" ? b.fluid_color(te) : b.fluid_color;
           i(e.splatMaterial, "color", A);
         }));
-        const ne = x(B, () => {
+        const ne = g(B, () => {
           a(e.curlMaterial), i(e.curlMaterial, "uVelocity", N);
         });
         f(B, ({ read: _ }) => {
@@ -924,7 +928,7 @@ const Oe = () => m(
       [
         e,
         a,
-        x,
+        g,
         d,
         y,
         c,
@@ -995,7 +999,7 @@ const Oe = () => m(
     size: e
   }), [v, d] = V(ze), p = T(0);
   return [
-    g(
+    x(
       (w, y) => {
         const { gl: S, pointer: D, size: M } = w;
         y && d(y);
@@ -1151,7 +1155,7 @@ const Ne = ({
     isSizeUpdate: !0
   }), [o, s] = V(je);
   return [
-    g(
+    x(
       (v, d) => {
         const { gl: p } = v;
         return d && s(d), i(e, "uTexture0", o.texture0), i(e, "uTexture1", o.texture1), i(e, "uTextureResolution", o.textureResolution), i(e, "padding", o.padding), i(e, "uMap", o.map), i(e, "mapIntensity", o.mapIntensity), i(e, "edgeIntensity", o.edgeIntensity), i(e, "epicenter", o.epicenter), i(e, "progress", o.progress), i(e, "dirX", o.dir.x), i(e, "dirY", o.dir.y), c(p);
@@ -1284,10 +1288,10 @@ const He = (r) => {
     dpr: u
   }), [o, s] = V(Ye);
   return [
-    g(
+    x(
       (v, d) => {
-        const { gl: p, clock: x } = v;
-        return d && s(d), i(e, "scale", o.scale), i(e, "timeStrength", o.timeStrength), i(e, "noiseOctaves", o.noiseOctaves), i(e, "fbmOctaves", o.fbmOctaves), i(e, "warpOctaves", o.warpOctaves), i(e, "warpDirection", o.warpDirection), i(e, "warpStrength", o.warpStrength), i(e, "uTime", x.getElapsedTime()), c(p);
+        const { gl: p, clock: g } = v;
+        return d && s(d), i(e, "scale", o.scale), i(e, "timeStrength", o.timeStrength), i(e, "noiseOctaves", o.noiseOctaves), i(e, "fbmOctaves", o.fbmOctaves), i(e, "warpOctaves", o.warpOctaves), i(e, "warpDirection", o.warpDirection), i(e, "warpStrength", o.warpStrength), i(e, "uTime", g.getElapsedTime()), c(p);
       },
       [c, e, s, o]
     ),
@@ -1381,7 +1385,7 @@ const Ze = ({
   });
 }, Je = () => {
   const r = T([]), u = T([]);
-  return g(
+  return x(
     ({
       isIntersectingRef: e,
       isIntersectingOnceRef: a,
@@ -1406,7 +1410,7 @@ const Ze = ({
     []
   );
 }, Qe = () => {
-  const r = T([]), u = g(
+  const r = T([]), u = x(
     ({ params: n, size: e, resolutionRef: a, scene: l, isIntersectingRef: c }) => {
       l.children.length !== r.current.length && (r.current = new Array(l.children.length)), l.children.forEach((o, s) => {
         const f = n.dom[s];
@@ -1439,7 +1443,7 @@ const Ze = ({
   );
   return [r.current, u];
 }, et = () => {
-  const r = T([]), u = T([]), n = g((e, a = !1) => {
+  const r = T([]), u = T([]), n = x((e, a = !1) => {
     r.current.forEach((c, o) => {
       c && (u.current[o] = !0);
     });
@@ -1468,13 +1472,13 @@ const Ze = ({
     size: r,
     dpr: u,
     isSizeUpdate: !0
-  }), [o, s] = V(tt), [f, v] = Qe(), d = T(new t.Vector2(0, 0)), [p, x] = oe(!0);
+  }), [o, s] = V(tt), [f, v] = Qe(), d = T(new t.Vector2(0, 0)), [p, g] = oe(!0);
   R(() => {
-    x(!0);
+    g(!0);
   }, n);
   const w = Je(), { isIntersectingOnceRef: y, isIntersectingRef: S, isIntersecting: D } = et();
   return [
-    g(
+    x(
       (U, L) => {
         const { gl: b, size: h } = U;
         return L && s(L), ke(o), p && (Ze({
@@ -1485,7 +1489,7 @@ const Ze = ({
           isIntersectingRef: S,
           isIntersectingOnceRef: y,
           params: o
-        }), x(!1)), v({
+        }), g(!1)), v({
           params: o,
           size: h,
           resolutionRef: d,
@@ -1580,9 +1584,9 @@ const ot = (r) => {
     [n, a, r, u]
   ), [c, o] = C(l), [s, f] = E(l), [v, d] = V(at);
   return [
-    g(
-      (x, w) => {
-        const { gl: y } = x;
+    x(
+      (g, w) => {
+        const { gl: y } = g;
         w && d(w), i(e, "uTexture", v.texture), i(e, "uResolution", [
           v.texture.source.data.width,
           v.texture.source.data.height
@@ -1698,7 +1702,7 @@ const st = ({
     isSizeUpdate: !0
   }), [o, s] = V(lt);
   return [
-    g(
+    x(
       (v, d) => {
         const { gl: p } = v;
         return d && s(d), i(e, "uEpicenter", o.epicenter), i(e, "uProgress", o.progress), i(e, "uWidth", o.width), i(e, "uStrength", o.strength), i(
@@ -1771,7 +1775,7 @@ const dt = (r) => {
     ft
   );
   return [
-    g(
+    x(
       (v, d) => {
         const { gl: p } = v;
         return d && s(d), i(e, "u_texture", o.texture), i(e, "u_brightness", o.brightness), i(e, "u_min", o.min), i(e, "u_max", o.max), c(p);
@@ -1834,7 +1838,7 @@ void main() {
 	
 	gl_FragColor = vec4(col, alpha);
 }`;
-const xt = (r) => {
+const gt = (r) => {
   const u = m(() => new t.PlaneGeometry(2, 2), []), n = m(
     () => new t.ShaderMaterial({
       uniforms: {
@@ -1858,7 +1862,7 @@ const xt = (r) => {
     []
   );
   return F(r, u, n), n;
-}, gt = {
+}, xt = {
   texture: !1,
   scale: 1,
   laminateLayer: 1,
@@ -1873,17 +1877,17 @@ const xt = (r) => {
   size: r,
   dpr: u
 }) => {
-  const n = m(() => new t.Scene(), []), e = xt(n), a = P(r), [l, c] = C({
+  const n = m(() => new t.Scene(), []), e = gt(n), a = P(r), [l, c] = C({
     scene: n,
     camera: a,
     size: r,
     dpr: u
-  }), [o, s] = V(gt);
+  }), [o, s] = V(xt);
   return [
-    g(
+    x(
       (v, d) => {
-        const { gl: p, clock: x } = v;
-        return d && s(d), o.texture ? (i(e, "uTexture", o.texture), i(e, "isTexture", !0)) : (i(e, "isTexture", !1), i(e, "scale", o.scale)), o.noise ? (i(e, "noise", o.noise), i(e, "isNoise", !0), i(e, "noiseStrength", o.noiseStrength)) : i(e, "isNoise", !1), i(e, "uTime", x.getElapsedTime()), i(e, "laminateLayer", o.laminateLayer), i(e, "laminateInterval", o.laminateInterval), i(e, "laminateDetail", o.laminateDetail), i(e, "distortion", o.distortion), i(e, "colorFactor", o.colorFactor), i(e, "timeStrength", o.timeStrength), c(p);
+        const { gl: p, clock: g } = v;
+        return d && s(d), o.texture ? (i(e, "uTexture", o.texture), i(e, "isTexture", !0)) : (i(e, "isTexture", !1), i(e, "scale", o.scale)), o.noise ? (i(e, "noise", o.noise), i(e, "isNoise", !0), i(e, "noiseStrength", o.noiseStrength)) : i(e, "isNoise", !1), i(e, "uTime", g.getElapsedTime()), i(e, "laminateLayer", o.laminateLayer), i(e, "laminateInterval", o.laminateInterval), i(e, "laminateDetail", o.laminateDetail), i(e, "distortion", o.distortion), i(e, "colorFactor", o.colorFactor), i(e, "timeStrength", o.timeStrength), c(p);
       },
       [c, e, s, o]
     ),
@@ -1949,7 +1953,7 @@ const Tt = (r) => {
     dpr: u
   }), [o, s] = V(wt);
   return [
-    g(
+    x(
       (v, d) => {
         const { gl: p } = v;
         return d && s(d), i(e, "u_texture", o.texture), i(e, "u_map", o.map), i(e, "u_mapIntensity", o.mapIntensity), c(p);
@@ -1979,7 +1983,7 @@ const Tt = (r) => {
       f.forEach((v) => v.dispose());
     };
   }, [l]);
-  const s = g(
+  const s = x(
     (f, v, d) => {
       const p = c.current[v];
       return f.setRenderTarget(p), d && d({ read: p.texture }), f.render(r, u), f.setRenderTarget(null), f.clear(), p.texture;
@@ -1989,10 +1993,10 @@ const Tt = (r) => {
   return [c.current, s];
 };
 export {
-  ge as BLENDING_PARAMS,
+  xe as BLENDING_PARAMS,
   ft as BRIGHTNESSPICKER_PARAMS,
   le as BRUSH_PARAMS,
-  gt as COLORSTRATA_PARAMS,
+  xt as COLORSTRATA_PARAMS,
   tt as DOMSYNCER_PARAMS,
   fe as DUOTONE_PARAMS,
   Ae as FLUID_PARAMS,
