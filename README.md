@@ -293,12 +293,20 @@ useFrame((props) => {
 The boolean will be updated after executing the `onIntersect` function.
 
 ```tsx
-/**
- * @param index - Index of the dom for which you want to return an intersection decision. -1 will return the entire array.
- * @param once - If set to true, it will continue to return true once crossed.
- */
-
-domSyncerObj.isIntersecting(index, isOnce); // return boolean;
+type DomSyncerObject = {
+   scene: THREE.Scene;
+   camera: THREE.Camera;
+   renderTarget: THREE.WebGLRenderTarget;
+   /**
+    * A function that returns a determination whether the DOM intersects or not.
+    * The boolean will be updated after executing the onIntersect function.
+    * @param index - Index of the dom for which you want to return an intersection decision. -1 will return the entire array.
+    * @param once - If set to true, it will continue to return true once crossed.
+    */
+   isIntersecting: IsIntersecting;
+   /** Returns the target's DOMRect[] */
+   DOMRects: DOMRect[];
+};
 ```
 
 `DomSyncerParams` can be passed the `onIntersect` function.
