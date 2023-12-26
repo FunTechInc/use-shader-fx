@@ -1413,11 +1413,11 @@ const Ze = ({
         if (!f)
           throw new Error("DOM is null.");
         const v = f.getBoundingClientRect();
-        if (r.current[s] = v, c.current[s] && (o.scale.set(v.width, v.height, 1), o.position.set(
+        if (r.current[s] = v, o.scale.set(v.width, v.height, 1), o.position.set(
           v.left + v.width * 0.5 - e.width * 0.5,
           -v.top - v.height * 0.5 + e.height * 0.5,
           0
-        ), n.rotation[s] && o.rotation.copy(n.rotation[s]), o instanceof t.Mesh)) {
+        ), c.current[s] && (n.rotation[s] && o.rotation.copy(n.rotation[s]), o instanceof t.Mesh)) {
           const d = o.material;
           i(d, "u_texture", n.texture[s]), i(
             d,

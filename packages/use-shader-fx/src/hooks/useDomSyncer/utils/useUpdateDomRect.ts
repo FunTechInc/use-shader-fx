@@ -41,14 +41,15 @@ export const useUpdateDomRect = (): UseUpdateDomRectReturn => {
             const rect = domElement.getBoundingClientRect();
             domRects.current[i] = rect;
 
-            if (isIntersectingRef.current[i]) {
-               mesh.scale.set(rect.width, rect.height, 1.0);
-               mesh.position.set(
-                  rect.left + rect.width * 0.5 - size.width * 0.5,
-                  -rect.top - rect.height * 0.5 + size.height * 0.5,
-                  0.0
-               );
+            // Intersection cannot be determined accurately depending on the mobile navigation bar, so it seems better to update it constantly
+            mesh.scale.set(rect.width, rect.height, 1.0);
+            mesh.position.set(
+               rect.left + rect.width * 0.5 - size.width * 0.5,
+               -rect.top - rect.height * 0.5 + size.height * 0.5,
+               0.0
+            );
 
+            if (isIntersectingRef.current[i]) {
                if (params.rotation![i]) {
                   mesh.rotation.copy(params.rotation![i]);
                }
