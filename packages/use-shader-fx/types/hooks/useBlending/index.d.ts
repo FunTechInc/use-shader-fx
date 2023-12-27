@@ -8,6 +8,8 @@ export type BlendingParams = {
     map?: THREE.Texture;
     /** map strength , r,g value are affecting , default:0.3 */
     mapIntensity?: number;
+    /** Alpha blending is performed using the alpha of the set texture. , default:false */
+    alphaMap?: THREE.Texture | false;
     /** default:(0.5,0.5,0.5) */
     brightness?: THREE.Vector3;
     /** default:0.0 */

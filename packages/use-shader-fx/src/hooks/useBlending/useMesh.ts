@@ -8,6 +8,8 @@ export class BlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
       u_texture: { value: THREE.Texture };
       u_map: { value: THREE.Texture };
+      u_alphaMap: { value: THREE.Texture };
+      u_isAlphaMap: { value: boolean };
       u_mapIntensity: { value: number };
       u_brightness: { value: THREE.Vector3 };
       u_min: { value: number };
@@ -25,6 +27,8 @@ export const useMesh = (scene: THREE.Scene) => {
             uniforms: {
                u_texture: { value: new THREE.Texture() },
                u_map: { value: new THREE.Texture() },
+               u_alphaMap: { value: new THREE.Texture() },
+               u_isAlphaMap: { value: false },
                u_mapIntensity: { value: 0.0 },
                u_brightness: { value: new THREE.Vector3() },
                u_min: { value: 0.0 },
