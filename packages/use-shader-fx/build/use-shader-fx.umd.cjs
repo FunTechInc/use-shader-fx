@@ -134,6 +134,8 @@ void main() {
 varying vec2 vUv;
 uniform sampler2D u_texture;
 uniform sampler2D u_map;
+uniform bool u_isAlphaMap;
+uniform sampler2D u_alphaMap;
 uniform float u_mapIntensity;
 uniform vec3 u_brightness;
 uniform float u_min;
@@ -144,25 +146,30 @@ uniform bool u_isDodgeColor;
 void main() {
 	vec2 uv = vUv;
 
+	
 	vec3 mapColor = texture2D(u_map, uv).rgb;
 	vec3 normalizedMap = mapColor * 2.0 - 1.0;
 
-	float brightness = dot(mapColor,u_brightness);
-	
 	uv = uv * 2.0 - 1.0;
 	uv *= mix(vec2(1.0), abs(normalizedMap.rg), u_mapIntensity);
 	uv = (uv + 1.0) / 2.0;
 
+	
+	float brightness = dot(mapColor,u_brightness);
 	vec4 textureMap = texture2D(u_texture, uv);
-
 	float blendValue = smoothstep(u_min, u_max, brightness);
 
+	
 	vec3 dodgeColor = u_isDodgeColor ? u_dodgeColor : mapColor;
-
 	vec3 outputColor = blendValue * dodgeColor + (1.0 - blendValue) * textureMap.rgb;
+	
+	
+	float alpha = u_isAlphaMap ? texture2D(u_alphaMap, uv).a : textureMap.a;
+	float mixValue = u_isAlphaMap ? alpha : 0.0;
+	vec3 alphColor = mix(outputColor,mapColor,mixValue);
 
-	gl_FragColor = vec4(outputColor, textureMap.a);
-}`;const he=t=>{const s=u.useMemo(()=>new n.PlaneGeometry(2,2),[]),r=u.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_map:{value:new n.Texture},u_mapIntensity:{value:0},u_brightness:{value:new n.Vector3},u_min:{value:0},u_max:{value:.9},u_dodgeColor:{value:new n.Color(16777215)},u_isDodgeColor:{value:!1}},vertexShader:ge,fragmentShader:xe}),[]);return P(t,s,r),r},W={texture:new n.Texture,map:new n.Texture,mapIntensity:.3,brightness:new n.Vector3(.5,.5,.5),min:0,max:1,dodgeColor:!1},ye=({size:t,dpr:s})=>{const r=u.useMemo(()=>new n.Scene,[]),e=he(r),a=_(t),[c,v]=R({scene:r,camera:a,size:t,dpr:s}),[o,l]=b(W);return[u.useCallback((f,d)=>{const{gl:g}=f;return d&&l(d),i(e,"u_texture",o.texture),i(e,"u_map",o.map),i(e,"u_mapIntensity",o.mapIntensity),i(e,"u_brightness",o.brightness),i(e,"u_min",o.min),i(e,"u_max",o.max),o.dodgeColor?(i(e,"u_dodgeColor",o.dodgeColor),i(e,"u_isDodgeColor",!0)):i(e,"u_isDodgeColor",!1),v(g)},[v,e,l,o]),l,{scene:r,material:e,camera:a,renderTarget:c}]};var A=`varying vec2 vUv;
+	gl_FragColor = vec4(alphColor, alpha);
+}`;const he=t=>{const s=u.useMemo(()=>new n.PlaneGeometry(2,2),[]),r=u.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_map:{value:new n.Texture},u_alphaMap:{value:new n.Texture},u_isAlphaMap:{value:!1},u_mapIntensity:{value:0},u_brightness:{value:new n.Vector3},u_min:{value:0},u_max:{value:.9},u_dodgeColor:{value:new n.Color(16777215)},u_isDodgeColor:{value:!1}},vertexShader:ge,fragmentShader:xe}),[]);return P(t,s,r),r},W={texture:new n.Texture,map:new n.Texture,alphaMap:!1,mapIntensity:.3,brightness:new n.Vector3(.5,.5,.5),min:0,max:1,dodgeColor:!1},ye=({size:t,dpr:s})=>{const r=u.useMemo(()=>new n.Scene,[]),e=he(r),a=_(t),[c,v]=R({scene:r,camera:a,size:t,dpr:s}),[o,l]=b(W);return[u.useCallback((f,d)=>{const{gl:g}=f;return d&&l(d),i(e,"u_texture",o.texture),i(e,"u_map",o.map),i(e,"u_mapIntensity",o.mapIntensity),o.alphaMap?(i(e,"u_alphaMap",o.alphaMap),i(e,"u_isAlphaMap",!0)):i(e,"u_isAlphaMap",!1),i(e,"u_brightness",o.brightness),i(e,"u_min",o.min),i(e,"u_max",o.max),o.dodgeColor?(i(e,"u_dodgeColor",o.dodgeColor),i(e,"u_isDodgeColor",!0)):i(e,"u_isDodgeColor",!1),v(g)},[v,e,l,o]),l,{scene:r,material:e,camera:a,renderTarget:c}]};var A=`varying vec2 vUv;
 varying vec2 vL;
 varying vec2 vR;
 varying vec2 vT;

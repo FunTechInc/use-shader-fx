@@ -15,6 +15,8 @@ export type BlendingParams = {
    map?: THREE.Texture;
    /** map strength , r,g value are affecting , default:0.3 */
    mapIntensity?: number;
+   /** Alpha blending is performed using the alpha of the set texture. , default:false */
+   alphaMap?: THREE.Texture | false;
    /** default:(0.5,0.5,0.5) */
    brightness?: THREE.Vector3;
    /** default:0.0 */
@@ -35,6 +37,7 @@ export type BlendingObject = {
 export const BLENDING_PARAMS: BlendingParams = {
    texture: new THREE.Texture(),
    map: new THREE.Texture(),
+   alphaMap: false,
    mapIntensity: 0.3,
    brightness: new THREE.Vector3(0.5, 0.5, 0.5),
    min: 0.0,
@@ -73,6 +76,14 @@ export const useBlending = ({
          setUniform(material, "u_texture", params.texture!);
          setUniform(material, "u_map", params.map!);
          setUniform(material, "u_mapIntensity", params.mapIntensity!);
+
+         if (params.alphaMap) {
+            setUniform(material, "u_alphaMap", params.alphaMap!);
+            setUniform(material, "u_isAlphaMap", true);
+         } else {
+            setUniform(material, "u_isAlphaMap", false);
+         }
+
          setUniform(material, "u_brightness", params.brightness!);
          setUniform(material, "u_min", params.min!);
          setUniform(material, "u_max", params.max!);

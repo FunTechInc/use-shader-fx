@@ -9,6 +9,7 @@ import {
    useBlending,
    useFxTexture,
    useNoise,
+   useBrightnessPicker,
    useFluid,
 } from "../../packages/use-shader-fx/src";
 import {
@@ -44,6 +45,7 @@ export const UseBlending = (args: BlendingParams) => {
    const [updateNoise] = useNoise({ size, dpr });
    const [updateFluid, setFluid] = useFluid({ size, dpr });
    const [updateBlending, setBlending] = useBlending({ size, dpr });
+   const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
 
    const colorVec = React.useMemo(() => new THREE.Vector3(), []);
 
@@ -55,8 +57,8 @@ export const UseBlending = (args: BlendingParams) => {
       curl_strength: 5.0,
       pressure_iterations: 4,
       fluid_color: (velocity: THREE.Vector2) => {
-         const rCol = Math.max(0.0, velocity.x * 150);
-         const gCol = Math.max(0.0, velocity.y * 150);
+         const rCol = Math.max(0.0, Math.abs(velocity.x) * 150);
+         const gCol = Math.max(0.0, Math.abs(velocity.y) * 150);
          const bCol = Math.max(0.1, (rCol + gCol) / 2);
          return colorVec.set(rCol, gCol, bCol);
       },
@@ -68,12 +70,15 @@ export const UseBlending = (args: BlendingParams) => {
          texture0: bg,
       });
       const fluid = updateFluid(props);
+      const picked = updateBrightnessPicker(props, { texture: fluid });
       const fx = updateBlending(props, {
          ...setConfig(),
          texture: bgTexture,
          map: fluid,
+         alphaMap: false,
       });
       fxRef.current!.u_fx = fx;
+      fxRef.current!.u_alpha = 0.0;
       updateGUI();
    });
 
