@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import {
    useNoise,
@@ -7,13 +7,39 @@ import {
    useFxBlending,
    useColorStrata,
    useBrightnessPicker,
+   useSingleFBO,
 } from "@/packages/use-shader-fx/src";
+
+function Box(props: any) {
+   // This reference will give us direct access to the mesh
+   const meshRef = useRef<THREE.Mesh>();
+   // Set up state for the hovered and active state
+   const [hovered, setHover] = useState(false);
+   const [active, setActive] = useState(false);
+   // Subscribe this component to the render-loop, rotate the mesh every frame
+   useFrame((state, delta) => {
+      meshRef.current!.rotation.x += delta;
+      meshRef.current!.rotation.y -= delta;
+   });
+   // Return view, these are regular three.js elements expressed in JSX
+   return (
+      <mesh
+         {...props}
+         ref={meshRef}
+         scale={active ? 2 : 1.5}
+         onClick={(event) => setActive(!active)}
+         onPointerOver={(event) => setHover(true)}
+         onPointerOut={(event) => setHover(false)}>
+         <boxGeometry args={[1, 1, 1]} />
+         <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
+      </mesh>
+   );
+}
 
 export const Home = () => {
    const ref = useRef<THREE.ShaderMaterial>(null);
-   const { size, dpr } = useThree((state) => {
-      return { size: state.size, dpr: state.viewport.dpr };
-   });
+   const { size, viewport, camera } = useThree();
+   const dpr = viewport.dpr;
    const [updateNoise, setNoise] = useNoise({ size, dpr });
    const [updateFluid, setFluid] = useFluid({ size, dpr });
    const [updateFxBlending, setFxBlending] = useFxBlending({ size, dpr });
@@ -54,6 +80,20 @@ export const Home = () => {
       noiseStrength: new THREE.Vector2(1, 1),
    });
 
+   // This scene is rendered offscreen
+   const offscreenScene = useMemo(() => new THREE.Scene(), []);
+   const offscreenMesh = useRef<THREE.Mesh>(null);
+   // create FBO for offscreen rendering
+   const [_, updateRenderTarget] = useSingleFBO({
+      scene: offscreenScene,
+      camera,
+      size,
+      dpr: viewport.dpr,
+   });
+   useEffect(() => {
+      offscreenScene.add(offscreenMesh.current!);
+   }, [offscreenScene]);
+
    useFrame((props) => {
       const noise = updateNoise(props);
       const fluid = updateFluid(props);
@@ -69,34 +109,184 @@ export const Home = () => {
          noise: noise,
       });
       ref.current!.uniforms.u_fx.value = colorStrata;
+      ref.current!.uniforms.u_texture.value = updateRenderTarget(props.gl);
    });
 
    return (
-      <mesh>
-         <planeGeometry args={[2, 2]} />
-         <shaderMaterial
-            ref={ref}
-            vertexShader={`
+      <>
+         <mesh ref={offscreenMesh}>
+            <ambientLight intensity={Math.PI} />
+            <spotLight
+               position={[10, 10, 10]}
+               angle={0.15}
+               penumbra={1}
+               decay={0}
+               intensity={Math.PI}
+            />
+            <pointLight
+               position={[-10, -10, -10]}
+               decay={0}
+               intensity={Math.PI}
+            />
+            <Box position={[-1.5, 0, 0]} />
+            <Box position={[1.5, 0, 0]} />
+         </mesh>
+         <mesh>
+            <planeGeometry args={[2, 2]} />
+            <shaderMaterial
+               ref={ref}
+               transparent
+               vertexShader={`
 					varying vec2 vUv;
 						void main() {
 							vUv = uv;
 							gl_Position = vec4(position, 1.0);
 						}
 						`}
-            fragmentShader={`
+               fragmentShader={`
 						precision highp float;
 						varying vec2 vUv;
 						uniform sampler2D u_fx;
+						uniform sampler2D u_texture;
 
 						void main() {
 							vec2 uv = vUv;
-							gl_FragColor = texture2D(u_fx, uv);
+							vec3 noiseMap = texture2D(u_fx, uv).rgb;
+							vec3 nNoiseMap = noiseMap * 2.0 - 1.0;
+							uv = uv * 2.0 - 1.0;
+							uv *= mix(vec2(1.0), abs(nNoiseMap.rg), 1.);
+							uv = (uv + 1.0) / 2.0;
+
+							vec3 texColor = texture2D(u_texture, uv).rgb;
+							vec3 color = mix(texColor,noiseMap,0.5);
+
+							float luminance = length(color);
+							
+							float edge0 = 0.0;
+							float edge1 = .2;
+							float alpha = smoothstep(edge0, edge1, luminance);
+
+							gl_FragColor = vec4(color,alpha);
+
 						}
 					`}
-            uniforms={{
-               u_fx: { value: null },
-            }}
-         />
-      </mesh>
+               uniforms={{
+                  u_texture: { value: null },
+                  u_fx: { value: null },
+               }}
+            />
+         </mesh>
+      </>
    );
 };
+
+// import * as THREE from "three";
+// import { useEffect, useMemo, useRef, useState } from "react";
+// import { useFrame, useThree } from "@react-three/fiber";
+// import { useNoise, useSingleFBO } from "@/packages/use-shader-fx/src";
+
+// function Box(props: any) {
+//    // This reference will give us direct access to the mesh
+//    const meshRef = useRef<THREE.Mesh>();
+//    // Set up state for the hovered and active state
+//    const [hovered, setHover] = useState(false);
+//    const [active, setActive] = useState(false);
+//    // Subscribe this component to the render-loop, rotate the mesh every frame
+//    useFrame((state, delta) => (meshRef.current!.rotation.x += delta));
+//    // Return view, these are regular three.js elements expressed in JSX
+//    return (
+//       <mesh
+//          {...props}
+//          ref={meshRef}
+//          scale={active ? 1.5 : 1}
+//          onClick={(event) => setActive(!active)}
+//          onPointerOver={(event) => setHover(true)}
+//          onPointerOut={(event) => setHover(false)}>
+//          <boxGeometry args={[1, 1, 1]} />
+//          <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
+//       </mesh>
+//    );
+// }
+
+// export const Home = () => {
+//    const { size, viewport, camera, gl } = useThree();
+
+//    // This scene is rendered offscreen
+//    const offscreenScene = useMemo(() => new THREE.Scene(), []);
+//    const offscreenMesh = useRef<THREE.Mesh>(null);
+//    // create FBO for offscreen rendering
+//    const [_, updateRenderTarget] = useSingleFBO({
+//       scene: offscreenScene,
+//       camera,
+//       size,
+//       dpr: viewport.dpr,
+//    });
+//    useEffect(() => {
+//       offscreenScene.add(offscreenMesh.current!);
+//    }, [offscreenScene]);
+
+//    // generate noise
+//    const shaderMaterial = useRef<THREE.ShaderMaterial>(null);
+//    const [updateNoise] = useNoise({ size, dpr: viewport.dpr });
+
+//    useFrame((props) => {
+//       shaderMaterial.current!.uniforms.u_fx.value = updateNoise(props);
+//       shaderMaterial.current!.uniforms.u_texture.value = updateRenderTarget(gl);
+//    });
+
+//    return (
+//       <>
+//          <mesh ref={offscreenMesh}>
+//             <ambientLight intensity={Math.PI / 2} />
+//             <spotLight
+//                position={[10, 10, 10]}
+//                angle={0.15}
+//                penumbra={1}
+//                decay={0}
+//                intensity={Math.PI}
+//             />
+//             <pointLight
+//                position={[-10, -10, -10]}
+//                decay={0}
+//                intensity={Math.PI}
+//             />
+//             <Box position={[-1.2, 0, 0]} />
+//             <Box position={[1.2, 0, 0]} />
+//          </mesh>
+//          <mesh>
+//             <planeGeometry args={[2, 2]} />
+//             <shaderMaterial
+//                ref={shaderMaterial}
+//                transparent
+//                vertexShader={`
+// 					varying vec2 vUv;
+// 						void main() {
+// 							vUv = uv;
+// 							gl_Position = vec4(position, 1.0);
+// 						}
+// 						`}
+//                fragmentShader={`
+// 						precision highp float;
+// 						varying vec2 vUv;
+// 						uniform sampler2D u_fx;
+// 						uniform sampler2D u_texture;
+
+// 						void main() {
+// 							vec2 uv = vUv;
+// 							vec3 noiseMap = texture2D(u_fx, uv).rgb;
+// 							vec3 nNoiseMap = noiseMap * 2.0 - 1.0;
+// 							uv = uv * 2.0 - 1.0;
+// 							uv *= mix(vec2(1.0), abs(nNoiseMap.rg), .6);
+// 							uv = (uv + 1.0) / 2.0;
+// 							gl_FragColor = texture2D(u_texture, uv);
+// 						}
+// 					`}
+//                uniforms={{
+//                   u_texture: { value: null },
+//                   u_fx: { value: null },
+//                }}
+//             />
+//          </mesh>
+//       </>
+//    );
+// };
