@@ -6,13 +6,17 @@ import {
    useMemo,
    useRef,
 } from "react";
-import { FBO_OPTION } from "./useSingleFBO";
+import { FBO_OPTION, UseFboProps } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
-import { DoubleRenderTarget, UseFboProps } from "./types";
 
 interface RenderTarget extends DoubleRenderTarget {
    swap: () => void;
 }
+
+export type DoubleRenderTarget = {
+   read: THREE.WebGLRenderTarget | null;
+   write: THREE.WebGLRenderTarget | null;
+};
 
 type FBOUpdateFunction = (
    gl: THREE.WebGLRenderer,
@@ -42,6 +46,8 @@ export const useDoubleFBO = ({
    size,
    dpr = false,
    isSizeUpdate = false,
+   samples = 0,
+   depthBuffer = false,
 }: UseFboProps): UseDoubleFBOReturn => {
    const renderTarget = useRef<RenderTarget>({
       read: null,
@@ -55,16 +61,16 @@ export const useDoubleFBO = ({
 
    const resolution = useResolution(size, dpr);
    const initRenderTargets = useMemo(() => {
-      const read = new THREE.WebGLRenderTarget(
-         resolution.x,
-         resolution.y,
-         FBO_OPTION
-      );
-      const write = new THREE.WebGLRenderTarget(
-         resolution.x,
-         resolution.y,
-         FBO_OPTION
-      );
+      const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
+         ...FBO_OPTION,
+         samples,
+         depthBuffer,
+      });
+      const write = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
+         ...FBO_OPTION,
+         samples,
+         depthBuffer,
+      });
       return { read, write };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);

@@ -1,11 +1,18 @@
 import * as THREE from "three";
-import { UseFboProps } from "./types";
-export declare const FBO_OPTION: {
-    minFilter: 1006;
-    magFilter: 1006;
-    type: 1016;
-    depthBuffer: boolean;
-    stencilBuffer: boolean;
+import { Size } from "@react-three/fiber";
+export declare const FBO_OPTION: THREE.RenderTargetOptions;
+export type UseFboProps = {
+    scene: THREE.Scene;
+    camera: THREE.Camera;
+    size: Size;
+    /** If dpr is set, dpr will be multiplied, default:false */
+    dpr?: number | false;
+    /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
+    isSizeUpdate?: boolean;
+    /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
+    samples?: number;
+    /** Renders to the depth buffer. Default is false. */
+    depthBuffer?: boolean;
 };
 type FBOUpdateFunction = (gl: THREE.WebGLRenderer, 
 /**  call before FBO is rendered */
@@ -18,5 +25,5 @@ type UseSingleFBOReturn = [THREE.WebGLRenderTarget, FBOUpdateFunction];
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
  * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
-export declare const useSingleFBO: ({ scene, camera, size, dpr, isSizeUpdate, }: UseFboProps) => UseSingleFBOReturn;
+export declare const useSingleFBO: ({ scene, camera, size, dpr, isSizeUpdate, samples, depthBuffer, }: UseFboProps) => UseSingleFBOReturn;
 export {};

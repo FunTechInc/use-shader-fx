@@ -7,7 +7,7 @@ import {
    useRef,
 } from "react";
 import { useResolution } from "./useResolution";
-import { UseFboProps } from "./types";
+import { UseFboProps } from "./useSingleFBO";
 import { FBO_OPTION } from "./useSingleFBO";
 
 type UpdateCopyFunction = (
