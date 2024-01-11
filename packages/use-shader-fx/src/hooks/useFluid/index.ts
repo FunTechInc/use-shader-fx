@@ -9,7 +9,8 @@ import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
-import { DoubleRenderTarget, UseFboProps } from "../../utils/types";
+import { UseFboProps } from "../../utils/useSingleFBO";
+import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 
 export type FluidParams = {
    /** density disspation , default:0.98 */

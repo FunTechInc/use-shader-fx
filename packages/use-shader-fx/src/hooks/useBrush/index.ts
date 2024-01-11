@@ -8,7 +8,7 @@ import { usePointer } from "../../utils/usePointer";
 import { setUniform } from "../../utils/setUniforms";
 import { HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
-import { DoubleRenderTarget } from "../../utils/types";
+import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 
 export type BrushParams = {
    /** Texture applied to the brush.Mixed with the value of a , default:THREE.Texture() */

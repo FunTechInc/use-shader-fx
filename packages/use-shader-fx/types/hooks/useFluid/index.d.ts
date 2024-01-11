@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { FluidMaterials } from "./useMesh";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
-import { DoubleRenderTarget } from "../../utils/types";
+import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 export type FluidParams = {
     /** density disspation , default:0.98 */
     density_dissipation?: number;

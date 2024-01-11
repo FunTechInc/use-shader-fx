@@ -7,14 +7,27 @@ import {
    useRef,
 } from "react";
 import { useResolution } from "./useResolution";
-import { UseFboProps } from "./types";
+import { Size } from "@react-three/fiber";
 
-export const FBO_OPTION = {
+export const FBO_OPTION: THREE.RenderTargetOptions = {
    minFilter: THREE.LinearFilter,
    magFilter: THREE.LinearFilter,
    type: THREE.HalfFloatType,
-   depthBuffer: false,
    stencilBuffer: false,
+};
+
+export type UseFboProps = {
+   scene: THREE.Scene;
+   camera: THREE.Camera;
+   size: Size;
+   /** If dpr is set, dpr will be multiplied, default:false */
+   dpr?: number | false;
+   /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
+   isSizeUpdate?: boolean;
+   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
+   samples?: number;
+   /** Renders to the depth buffer. Default is false. */
+   depthBuffer?: boolean;
 };
 
 type FBOUpdateFunction = (
@@ -36,12 +49,19 @@ export const useSingleFBO = ({
    size,
    dpr = false,
    isSizeUpdate = false,
+   samples = 0,
+   depthBuffer = false,
 }: UseFboProps): UseSingleFBOReturn => {
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
 
    const resolution = useResolution(size, dpr);
    renderTarget.current = useMemo(
-      () => new THREE.WebGLRenderTarget(resolution.x, resolution.y, FBO_OPTION),
+      () =>
+         new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
+            ...FBO_OPTION,
+            samples,
+            depthBuffer,
+         }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       []
    );

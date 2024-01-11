@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
 import { HooksReturn } from "../types";
-import { DoubleRenderTarget } from "../../utils/types";
+import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 export type BrushParams = {
     /** Texture applied to the brush.Mixed with the value of a , default:THREE.Texture() */
     texture?: THREE.Texture;

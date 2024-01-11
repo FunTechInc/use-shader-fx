@@ -89,6 +89,7 @@ export const Home = () => {
       camera,
       size,
       dpr: viewport.dpr,
+      samples: 4,
    });
 
    useFrame((props) => {
