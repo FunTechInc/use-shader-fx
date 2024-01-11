@@ -48,6 +48,7 @@ export const useDoubleFBO = ({
    isSizeUpdate = false,
    samples = 0,
    depthBuffer = false,
+   depthTexture = false,
 }: UseFboProps): UseDoubleFBOReturn => {
    const renderTarget = useRef<RenderTarget>({
       read: null,
@@ -60,6 +61,7 @@ export const useDoubleFBO = ({
    });
 
    const resolution = useResolution(size, dpr);
+
    const initRenderTargets = useMemo(() => {
       const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
          ...FBO_OPTION,
@@ -71,9 +73,24 @@ export const useDoubleFBO = ({
          samples,
          depthBuffer,
       });
+
+      if (depthTexture) {
+         read.depthTexture = new THREE.DepthTexture(
+            resolution.x,
+            resolution.y,
+            THREE.FloatType
+         );
+         write.depthTexture = new THREE.DepthTexture(
+            resolution.x,
+            resolution.y,
+            THREE.FloatType
+         );
+      }
+
       return { read, write };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
+
    renderTarget.current.read = initRenderTargets.read;
    renderTarget.current.write = initRenderTargets.write;
 
