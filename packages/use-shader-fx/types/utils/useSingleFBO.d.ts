@@ -11,8 +11,10 @@ export type UseFboProps = {
     isSizeUpdate?: boolean;
     /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
     samples?: number;
-    /** Renders to the depth buffer. Default is false. */
+    /** Renders to the depth buffer. Unlike the three.js,　Default is false. */
     depthBuffer?: boolean;
+    /** If set, the scene depth will be rendered to this texture. Default is false. */
+    depthTexture?: boolean;
 };
 type FBOUpdateFunction = (gl: THREE.WebGLRenderer, 
 /**  call before FBO is rendered */
@@ -25,5 +27,5 @@ type UseSingleFBOReturn = [THREE.WebGLRenderTarget, FBOUpdateFunction];
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
  * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
-export declare const useSingleFBO: ({ scene, camera, size, dpr, isSizeUpdate, samples, depthBuffer, }: UseFboProps) => UseSingleFBOReturn;
+export declare const useSingleFBO: ({ scene, camera, size, dpr, isSizeUpdate, samples, depthBuffer, depthTexture, }: UseFboProps) => UseSingleFBOReturn;
 export {};

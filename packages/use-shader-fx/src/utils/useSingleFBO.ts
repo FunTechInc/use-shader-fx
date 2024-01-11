@@ -26,8 +26,10 @@ export type UseFboProps = {
    isSizeUpdate?: boolean;
    /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
    samples?: number;
-   /** Renders to the depth buffer. Default is false. */
+   /** Renders to the depth buffer. Unlike the three.js,　Default is false. */
    depthBuffer?: boolean;
+   /** If set, the scene depth will be rendered to this texture. Default is false. */
+   depthTexture?: boolean;
 };
 
 type FBOUpdateFunction = (
@@ -51,17 +53,32 @@ export const useSingleFBO = ({
    isSizeUpdate = false,
    samples = 0,
    depthBuffer = false,
+   depthTexture = false,
 }: UseFboProps): UseSingleFBOReturn => {
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
 
    const resolution = useResolution(size, dpr);
+
    renderTarget.current = useMemo(
-      () =>
-         new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
-            ...FBO_OPTION,
-            samples,
-            depthBuffer,
-         }),
+      () => {
+         const target = new THREE.WebGLRenderTarget(
+            resolution.x,
+            resolution.y,
+            {
+               ...FBO_OPTION,
+               samples,
+               depthBuffer,
+            }
+         );
+         if (depthTexture) {
+            target.depthTexture = new THREE.DepthTexture(
+               resolution.x,
+               resolution.y,
+               THREE.FloatType
+            );
+         }
+         return target;
+      },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       []
    );
