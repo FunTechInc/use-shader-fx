@@ -1,6 +1,6 @@
 {
    "name": "use-shader-fx",
-   "description": "wide variety of shader effects for React",
+   "description": "The only difficult part is coding the shaders",
    "version": "0.1.0",
    "private": true,
    "scripts": {
@@ -36,7 +36,6 @@
       "zustand": "^4.4.1"
    },
    "devDependencies": {
-      "@hmng8/use-shader-fx": "^1.0.14",
       "@storybook/addon-essentials": "^7.5.3",
       "@storybook/addon-interactions": "^7.5.3",
       "@storybook/addon-links": "^7.5.3",

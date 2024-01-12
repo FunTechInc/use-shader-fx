@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 import { errorHandler } from "./utils/errorHandler";
 import { createMesh } from "./utils/createMesh";
@@ -54,13 +54,7 @@ export const DOMSYNCER_PARAMS: DomSyncerParams = {
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
 export const useDomSyncer = (
-   {
-      size,
-      dpr,
-   }: {
-      size: Size;
-      dpr: number;
-   },
+   { size, dpr, samples = 0 }: HooksProps,
    dependencies: React.DependencyList = []
 ): HooksReturn<DomSyncerParams, DomSyncerObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -70,6 +64,7 @@ export const useDomSyncer = (
       camera,
       size,
       dpr,
+      samples,
       isSizeUpdate: true,
    });
    const [params, setParams] = useParams<DomSyncerParams>(DOMSYNCER_PARAMS);

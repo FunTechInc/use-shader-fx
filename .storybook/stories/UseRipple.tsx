@@ -58,7 +58,7 @@ export const UseRippleWithTexture = (args: RippleParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateFxTexture] = useFxTexture({ size, dpr });
-   const [updateRipple] = useRipple({ size, texture: ripple });
+   const [updateRipple] = useRipple({ size, dpr, texture: ripple });
 
    useFrame((props) => {
       const fx = updateRipple(props, setConfig());

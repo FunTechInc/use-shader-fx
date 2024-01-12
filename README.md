@@ -11,7 +11,7 @@ npm install @hmng8/use-shader-fx
 
 # Usage
 
-From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. The `config` is an object, which varies for each Hook, containing details such as `size` and `dpr`.
+From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. The `config` is an object, which varies for each Hook, containing details such as `size`,`dpr` and `samples`.
 
 1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
 2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
@@ -45,9 +45,8 @@ import { useFluid } from "@hmng8/use-shader-fx";
 
 export const Demo = () => {
    const ref = useRef<THREE.ShaderMaterial>(null);
-   const size = useThree((state) => state.size);
-   const dpr = useThree((state) => state.viewport.dpr);
-   const [updateFluid] = useFluid({ size, dpr });
+   const { size, viewport } = useThree();
+   const [updateFluid] = useFluid({ size, dpr: viewport.dpr });
    useFrame((props) => {
       ref.current!.uniforms.u_fx.value = updateFluid(props);
    });
@@ -79,6 +78,135 @@ export const Demo = () => {
             }}
          />
       </mesh>
+   );
+};
+```
+
+## Integrate with r3f scenes.
+
+You can use `r3f/createPortal` to make some mesh render off-screen. All that remains is to combine the generated textures with FX!
+
+```tsx
+import * as THREE from "three";
+import { useMemo, useRef, useState } from "react";
+import { useFrame, useThree, createPortal } from "@react-three/fiber";
+import { useNoise, useSingleFBO } from "@hmng8/use-shader-fx";
+
+function Box(props: any) {
+   // This reference will give us direct access to the mesh
+   const meshRef = useRef<THREE.Mesh>();
+   // Set up state for the hovered and active state
+   const [hovered, setHover] = useState(false);
+   const [active, setActive] = useState(false);
+   // Subscribe this component to the render-loop, rotate the mesh every frame
+   useFrame((state, delta) => {
+      meshRef.current!.rotation.x += delta;
+      meshRef.current!.rotation.y -= delta;
+   });
+   // Return view, these are regular three.js elements expressed in JSX
+   return (
+      <mesh
+         {...props}
+         ref={meshRef}
+         scale={active ? 2 : 1.5}
+         onClick={(event) => setActive(!active)}
+         onPointerOver={(event) => setHover(true)}
+         onPointerOut={(event) => setHover(false)}>
+         <boxGeometry args={[1, 1, 1]} />
+         <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
+      </mesh>
+   );
+}
+
+export const Home = () => {
+   const ref = useRef<THREE.ShaderMaterial>(null);
+   const { size, viewport, camera } = useThree();
+   const [updateNoise, setNoise] = useNoise({ size, dpr: viewport.dpr });
+
+   setNoise({
+      scale: 0.01,
+      warpOctaves: 1,
+      noiseOctaves: 1,
+      fbmOctaves: 1,
+      timeStrength: 1.2,
+      warpStrength: 20.0,
+   });
+
+   // This scene is rendered offscreen
+   const offscreenScene = useMemo(() => new THREE.Scene(), []);
+
+   // create FBO for offscreen rendering
+   const [_, updateRenderTarget] = useSingleFBO({
+      scene: offscreenScene,
+      camera,
+      size,
+      dpr: viewport.dpr,
+      samples: 4,
+   });
+
+   useFrame((props) => {
+      const noise = updateNoise(props);
+      ref.current!.uniforms.u_fx.value = noise;
+      ref.current!.uniforms.u_texture.value = updateRenderTarget(props.gl);
+   });
+
+   return (
+      <>
+         {createPortal(
+            <mesh>
+               <ambientLight intensity={Math.PI} />
+               <spotLight
+                  position={[10, 10, 10]}
+                  angle={0.15}
+                  penumbra={1}
+                  decay={0}
+                  intensity={Math.PI}
+               />
+               <pointLight
+                  position={[-10, -10, -10]}
+                  decay={0}
+                  intensity={Math.PI}
+               />
+               <Box position={[-1.5, 0, 0]} />
+               <Box position={[1.5, 0, 0]} />
+            </mesh>,
+            offscreenScene
+         )}
+         <mesh>
+            <planeGeometry args={[2, 2]} />
+            <shaderMaterial
+               ref={ref}
+               transparent
+               vertexShader={`
+					varying vec2 vUv;
+						void main() {
+							vUv = uv;
+							gl_Position = vec4(position, 1.0);
+						}
+						`}
+               fragmentShader={`
+						precision highp float;
+						varying vec2 vUv;
+						uniform sampler2D u_fx;
+						uniform sampler2D u_texture;
+
+						void main() {
+							vec2 uv = vUv;
+							vec3 noiseMap = texture2D(u_fx, uv).rgb;
+							vec3 nNoiseMap = noiseMap * 2.0 - 1.0;
+							uv = uv * 2.0 - 1.0;
+							uv *= mix(vec2(1.0), abs(nNoiseMap.rg), .6);
+							uv = (uv + 1.0) / 2.0;
+							gl_FragColor = texture2D(u_texture, uv);
+						}
+					`}
+               uniforms={{
+                  u_texture: { value: null },
+                  u_fx: { value: null },
+               }}
+            />
+         </mesh>
+      </>
    );
 };
 ```
@@ -146,8 +274,14 @@ type UseFboProps = {
    size: Size;
    /** If dpr is set, dpr will be multiplied, default:false */
    dpr?: number | false;
-   /** Whether to resize on resizes. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
+   /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
    isSizeUpdate?: boolean;
+   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
+   samples?: number;
+   /** Renders to the depth buffer. Unlike the three.js,　Default is false. */
+   depthBuffer?: boolean;
+   /** If set, the scene depth will be rendered to this texture. Default is false. */
+   depthTexture?: boolean;
 };
 
 const [velocityFBO, updateVelocityFBO] = useDoubleFBO(UseFboProps);
@@ -230,10 +364,7 @@ const [params, setParams] = useParams<HooksParams>;
 Generate an FBO array to copy the texture.
 
 ```tsx
-const [renderTargets, copyTexture] = useCopyTexture(
-   { scene, camera, size, dpr },
-   length
-);
+const [renderTargets, copyTexture] = useCopyTexture(UseFboProps, length);
 copyTexture(gl, index); // return texture
 ```
 

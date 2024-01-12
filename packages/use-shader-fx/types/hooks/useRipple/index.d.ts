@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 export type RippleParams = {
     /** How often ripples appear,default:0.01 */
     frequency?: number;
@@ -20,15 +19,16 @@ export type RippleObject = {
     renderTarget: THREE.WebGLRenderTarget;
 };
 export declare const RIPPLE_PARAMS: RippleParams;
-/**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
- */
-export declare const useRipple: ({ texture, scale, max, size, }: {
+interface UseRippleProps extends HooksProps {
     /** texture applied to ripple */
     texture: THREE.Texture;
     /** ripple size, default:64 */
-    scale?: number | undefined;
+    scale?: number;
     /** ripple max length, default:100 */
-    max?: number | undefined;
-    size: Size;
-}) => HooksReturn<RippleParams, RippleObject>;
+    max?: number;
+}
+/**
+ * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ */
+export declare const useRipple: ({ texture, scale, max, size, dpr, samples, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject>;
+export {};

@@ -2,10 +2,10 @@ import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type BrightnessPickerParams = {
@@ -39,10 +39,8 @@ export const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams = {
 export const useBrightnessPicker = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<BrightnessPickerParams, BrightnessPickerObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<BrightnessPickerParams, BrightnessPickerObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -51,6 +49,7 @@ export const useBrightnessPicker = ({
       camera,
       size,
       dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<BrightnessPickerParams>(

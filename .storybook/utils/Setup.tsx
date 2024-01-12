@@ -13,7 +13,7 @@ export const Setup = ({ children }: { children: React.ReactNode }) => {
             factor={1}
             onChange={({ factor }) => {
                console.log(`dpr:${dpr}`);
-               setDpr(Math.round((0.5 + 1.5 * factor) * 10) / 10);
+               setDpr(Math.round((0.5 + 1.0 * factor) * 10) / 10);
             }}>
             {children}
             <Perf position={"bottom-left"} minimal={false} />

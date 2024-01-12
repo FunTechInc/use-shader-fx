@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 export type NoiseParams = {
     /** noise scale , default:0.004 */
     scale?: number;
@@ -29,7 +28,4 @@ export declare const NOISE_PARAMS: NoiseParams;
  *
  * It is a basic value noise with `fbm` and `domain warping`
  */
-export declare const useNoise: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<NoiseParams, NoiseObject>;
+export declare const useNoise: ({ size, dpr, samples, }: HooksProps) => HooksReturn<NoiseParams, NoiseObject>;

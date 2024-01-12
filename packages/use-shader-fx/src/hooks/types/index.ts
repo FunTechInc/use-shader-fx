@@ -1,5 +1,12 @@
 import * as THREE from "three";
-import { RootState } from "@react-three/fiber";
+import { RootState, Size } from "@react-three/fiber";
+
+export type HooksProps = {
+   size: Size;
+   dpr: number;
+   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
+   samples?: number;
+};
 
 /**
  * @returns {HooksReturn<T, O>}

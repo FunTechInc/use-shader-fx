@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import type { HooksReturn } from "../types";
+import type { HooksProps, HooksReturn } from "../types";
 export type SimpleBlurParams = {
     /** Make this texture blur , Default:new THREE.Texture() */
     texture: THREE.Texture;
@@ -16,7 +15,4 @@ export type SimpleBlurObject = {
     renderTarget: THREE.WebGLRenderTarget;
 };
 export declare const SIMPLEBLUR_PARAMS: SimpleBlurParams;
-export declare const useSimpleBlur: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<SimpleBlurParams, SimpleBlurObject>;
+export declare const useSimpleBlur: ({ size, dpr, samples, }: HooksProps) => HooksReturn<SimpleBlurParams, SimpleBlurObject>;

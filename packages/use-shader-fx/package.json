@@ -1,7 +1,7 @@
 {
    "name": "@hmng8/use-shader-fx",
-   "version": "1.0.32",
-   "description": "wide variety of shader effects for React",
+   "version": "1.0.34",
+   "description": "The only difficult part is coding the shaders",
    "main": "./build/use-shader-fx.umd.cjs",
    "module": "./build/use-shader-fx.js",
    "types": "./types/index.d.ts",

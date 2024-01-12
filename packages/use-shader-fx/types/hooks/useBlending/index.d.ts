@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 export type BlendingParams = {
     /** Make this texture Blending , default:THREE.Texture */
     texture?: THREE.Texture;
@@ -31,7 +30,4 @@ export declare const BLENDING_PARAMS: BlendingParams;
 If you don't want to reflect the map's color, you can use useFxBlending instead.
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useBlending: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<BlendingParams, BlendingObject>;
+export declare const useBlending: ({ size, dpr, samples, }: HooksProps) => HooksReturn<BlendingParams, BlendingObject>;

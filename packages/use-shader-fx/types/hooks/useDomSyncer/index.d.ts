@@ -1,7 +1,6 @@
 /// <reference types="react" />
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { IsIntersecting } from "./utils/useIsIntersecting";
 export type DomSyncerParams = {
     /** DOM array you want to synchronize */
@@ -35,7 +34,4 @@ export declare const DOMSYNCER_PARAMS: DomSyncerParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useDomSyncer: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}, dependencies?: import("react").DependencyList) => HooksReturn<DomSyncerParams, DomSyncerObject>;
+export declare const useDomSyncer: ({ size, dpr, samples }: HooksProps, dependencies?: import("react").DependencyList) => HooksReturn<DomSyncerParams, DomSyncerObject>;

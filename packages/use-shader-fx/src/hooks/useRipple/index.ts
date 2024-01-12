@@ -2,10 +2,10 @@ import { useCallback, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { usePointer } from "../../utils/usePointer";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type RippleParams = {
@@ -36,6 +36,15 @@ export const RIPPLE_PARAMS: RippleParams = {
    alpha: 0.6,
 };
 
+interface UseRippleProps extends HooksProps {
+   /** texture applied to ripple */
+   texture: THREE.Texture;
+   /** ripple size, default:64 */
+   scale?: number;
+   /** ripple max length, default:100 */
+   max?: number;
+}
+
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
@@ -44,15 +53,9 @@ export const useRipple = ({
    scale = 64,
    max = 100,
    size,
-}: {
-   /** texture applied to ripple */
-   texture: THREE.Texture;
-   /** ripple size, default:64 */
-   scale?: number;
-   /** ripple max length, default:100 */
-   max?: number;
-   size: Size;
-}): HooksReturn<RippleParams, RippleObject> => {
+   dpr,
+   samples = 0,
+}: UseRippleProps): HooksReturn<RippleParams, RippleObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const meshArr = useMesh({
       scale: scale,
@@ -66,6 +69,8 @@ export const useRipple = ({
       scene,
       camera,
       size,
+      dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<RippleParams>(RIPPLE_PARAMS);

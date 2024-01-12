@@ -162,7 +162,7 @@ export const Home = () => {
 							vec3 color = mix(texColor,noiseMap,0.5);
 
 							float luminance = length(color);
-							
+
 							float edge0 = 0.0;
 							float edge1 = .2;
 							float alpha = smoothstep(edge0, edge1, luminance);
@@ -180,3 +180,69 @@ export const Home = () => {
       </>
    );
 };
+
+// import * as THREE from "three";
+// import { useEffect, useMemo, useRef, useState } from "react";
+// import { useFrame, useThree, createPortal } from "@react-three/fiber";
+// import {
+//    useNoise,
+//    useFluid,
+//    useFxBlending,
+//    useColorStrata,
+//    useBrightnessPicker,
+//    useSingleFBO,
+// } from "@/packages/use-shader-fx/src";
+
+// export const Home = () => {
+//    const ref = useRef<THREE.ShaderMaterial>(null);
+//    const { size, viewport, camera } = useThree();
+//    const dpr = viewport.dpr;
+
+//    const [updateFluid, setFluid] = useFluid({ size, dpr });
+
+//    setFluid({
+//       density_dissipation: 0.96,
+//       velocity_dissipation: 0.99,
+//       curl_strength: 0.0,
+//       splat_radius: 0.0045,
+//       pressure_iterations: 1,
+//    });
+
+//    useFrame((props) => {
+//       const fluid = updateFluid(props);
+
+//       ref.current!.uniforms.u_fx.value = fluid;
+//    });
+
+//    return (
+//       <>
+//          <mesh>
+//             <planeGeometry args={[2, 2]} />
+//             <shaderMaterial
+//                ref={ref}
+//                transparent
+//                vertexShader={`
+// 					varying vec2 vUv;
+// 						void main() {
+// 							vUv = uv;
+// 							gl_Position = vec4(position, 1.0);
+// 						}
+// 						`}
+//                fragmentShader={`
+// 						precision highp float;
+// 						varying vec2 vUv;
+// 						uniform sampler2D u_fx;
+// 						void main() {
+// 							vec2 uv = vUv;
+// 							gl_FragColor = texture2D(u_fx, uv);
+
+// 						}
+// 					`}
+//                uniforms={{
+//                   u_fx: { value: null },
+//                }}
+//             />
+//          </mesh>
+//       </>
+//    );
+// };

@@ -1,14 +1,13 @@
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useCallback, useMemo } from "react";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { usePointer } from "../../utils/usePointer";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
-import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
+import { DoubleRenderTarget, useDoubleFBO } from "../../utils/useDoubleFBO";
 
 export type BrushParams = {
    /** Texture applied to the brush.Mixed with the value of a , default:THREE.Texture() */
@@ -50,10 +49,8 @@ export const BRUSH_PARAMS: BrushParams = {
 export const useBrush = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<BrushParams, BrushObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<BrushParams, BrushObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -63,6 +60,7 @@ export const useBrush = ({
       camera,
       size,
       dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);
