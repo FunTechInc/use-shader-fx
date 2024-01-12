@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import { useCallback, useMemo } from "react";
 import { useMesh } from "./useMesh";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
 import { useParams } from "../../utils/useParams";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 
 export type WaveParams = {
    /** -1.0 ~ 1.0 , default:vec2(0.0,0.0) */
@@ -42,10 +42,8 @@ export const WAVE_PARAMS: WaveParams = {
 export const useWave = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<WaveParams, WaveObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<WaveParams, WaveObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -54,6 +52,7 @@ export const useWave = ({
       camera,
       size,
       dpr,
+      samples,
       isSizeUpdate: true,
    });
 

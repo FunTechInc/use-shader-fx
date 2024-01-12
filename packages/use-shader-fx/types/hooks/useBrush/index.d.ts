@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 export type BrushParams = {
     /** Texture applied to the brush.Mixed with the value of a , default:THREE.Texture() */
@@ -28,7 +27,4 @@ export declare const BRUSH_PARAMS: BrushParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useBrush: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<BrushParams, BrushObject>;
+export declare const useBrush: ({ size, dpr, samples, }: HooksProps) => HooksReturn<BrushParams, BrushObject>;

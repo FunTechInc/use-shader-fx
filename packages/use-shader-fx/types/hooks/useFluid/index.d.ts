@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { FluidMaterials } from "./useMesh";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 export type FluidParams = {
     /** density disspation , default:0.98 */
@@ -37,7 +36,4 @@ export declare const FLUID_PARAMS: FluidParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useFluid: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<FluidParams, FluidObject>;
+export declare const useFluid: ({ size, dpr, samples, }: HooksProps) => HooksReturn<FluidParams, FluidObject>;

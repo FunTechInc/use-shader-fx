@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 export type FxTextureParams = {
     /** 1st texture , default:THREE.Texture() */
     texture0?: THREE.Texture;
@@ -33,7 +32,4 @@ export declare const FXTEXTURE_PARAMS: FxTextureParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useFxTexture: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<FxTextureParams, FxTextureObject>;
+export declare const useFxTexture: ({ size, dpr, samples, }: HooksProps) => HooksReturn<FxTextureParams, FxTextureObject>;

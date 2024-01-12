@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
 import { useParams } from "../../utils/useParams";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 
 export type NoiseParams = {
    /** noise scale , default:0.004 */
@@ -50,10 +50,8 @@ export const NOISE_PARAMS: NoiseParams = {
 export const useNoise = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<NoiseParams, NoiseObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<NoiseParams, NoiseObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -62,6 +60,7 @@ export const useNoise = ({
       camera,
       size,
       dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<NoiseParams>(NOISE_PARAMS);

@@ -102,10 +102,10 @@ export const useDoubleFBO = ({
    }, [resolution, isSizeUpdate]);
 
    useEffect(() => {
-      const currentRenderTarget = renderTarget.current;
+      const temp = renderTarget.current;
       return () => {
-         currentRenderTarget.read?.dispose();
-         currentRenderTarget.write?.dispose();
+         temp.read?.dispose();
+         temp.write?.dispose();
       };
    }, []);
 

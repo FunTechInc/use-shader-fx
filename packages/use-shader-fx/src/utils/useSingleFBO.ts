@@ -90,9 +90,9 @@ export const useSingleFBO = ({
    }, [resolution, isSizeUpdate]);
 
    useEffect(() => {
-      const currentRenderTarget = renderTarget.current;
+      const temp = renderTarget.current;
       return () => {
-         currentRenderTarget?.dispose();
+         temp?.dispose();
       };
    }, []);
 

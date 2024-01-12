@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 export type ColorStrataParams = {
     /** default: null */
     texture?: THREE.Texture | false;
@@ -33,7 +32,4 @@ export declare const COLORSTRATA_PARAMS: ColorStrataParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useColorStrata: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<ColorStrataParams, ColorStrataObject>;
+export declare const useColorStrata: ({ size, dpr, samples, }: HooksProps) => HooksReturn<ColorStrataParams, ColorStrataObject>;

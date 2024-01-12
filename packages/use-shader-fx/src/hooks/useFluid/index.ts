@@ -1,16 +1,15 @@
 import * as THREE from "three";
 import { FluidMaterials, useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useCallback, useMemo, useRef } from "react";
 import { usePointer } from "../../utils/usePointer";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 import { UseFboProps } from "../../utils/useSingleFBO";
-import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
+import { DoubleRenderTarget, useDoubleFBO } from "../../utils/useDoubleFBO";
 
 export type FluidParams = {
    /** density disspation , default:0.98 */
@@ -61,10 +60,8 @@ export const FLUID_PARAMS: FluidParams = {
 export const useFluid = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<FluidParams, FluidObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<FluidParams, FluidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const [materials, setMeshMaterial] = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -75,8 +72,9 @@ export const useFluid = ({
          scene,
          camera,
          size,
+         samples,
       }),
-      [scene, camera, size]
+      [scene, camera, size, samples]
    );
    const [velocityFBO, updateVelocityFBO] = useDoubleFBO(fboProps);
    const [densityFBO, updateDensityFBO] = useDoubleFBO(fboProps);

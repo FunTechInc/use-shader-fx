@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 export type WaveParams = {
     /** -1.0 ~ 1.0 , default:vec2(0.0,0.0) */
     epicenter?: THREE.Vector2;
@@ -23,7 +22,4 @@ export declare const WAVE_PARAMS: WaveParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
-export declare const useWave: ({ size, dpr, }: {
-    size: Size;
-    dpr: number;
-}) => HooksReturn<WaveParams, WaveObject>;
+export declare const useWave: ({ size, dpr, samples, }: HooksProps) => HooksReturn<WaveParams, WaveObject>;

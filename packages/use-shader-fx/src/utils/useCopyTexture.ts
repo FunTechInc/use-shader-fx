@@ -27,39 +27,62 @@ type UseCopyTextureReturn = [THREE.WebGLRenderTarget[], UpdateCopyFunction];
  * @returns [THREE.WebGLRenderTarget[] , updateCopyTexture] -Receives the RenderTarget array as the first argument and the update function as the second argument. updateCopyTexture() receives gl as the first argument and the index of the texture you want to copy as the second argument.
  */
 export const useCopyTexture = (
-   { scene, camera, size, dpr = false, isSizeUpdate = false }: UseFboProps,
+   {
+      scene,
+      camera,
+      size,
+      dpr = false,
+      isSizeUpdate = false,
+      samples = 0,
+      depthBuffer = false,
+      depthTexture = false,
+   }: UseFboProps,
    length: number
 ): UseCopyTextureReturn => {
-   const renderTarget = useRef<THREE.WebGLRenderTarget[]>([]);
+   const renderTargetArr = useRef<THREE.WebGLRenderTarget[]>([]);
    const resolution = useResolution(size, dpr);
 
-   renderTarget.current = useMemo(() => {
-      return Array.from(
-         { length },
-         () =>
-            new THREE.WebGLRenderTarget(resolution.x, resolution.y, FBO_OPTION)
-      );
+   renderTargetArr.current = useMemo(() => {
+      return Array.from({ length }, () => {
+         const target = new THREE.WebGLRenderTarget(
+            resolution.x,
+            resolution.y,
+            {
+               ...FBO_OPTION,
+               samples,
+               depthBuffer,
+            }
+         );
+         if (depthTexture) {
+            target.depthTexture = new THREE.DepthTexture(
+               resolution.x,
+               resolution.y,
+               THREE.FloatType
+            );
+         }
+         return target;
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [length]);
 
    useLayoutEffect(() => {
       if (isSizeUpdate) {
-         renderTarget.current.forEach((fbo) =>
+         renderTargetArr.current.forEach((fbo) =>
             fbo.setSize(resolution.x, resolution.y)
          );
       }
    }, [resolution, isSizeUpdate]);
 
    useEffect(() => {
-      const currentRenderTarget = renderTarget.current;
+      const temp = renderTargetArr.current;
       return () => {
-         currentRenderTarget.forEach((fbo) => fbo.dispose());
+         temp.forEach((fbo) => fbo.dispose());
       };
    }, [length]);
 
    const updateCopyTexture: UpdateCopyFunction = useCallback(
       (gl, index, onBeforeRender) => {
-         const fbo = renderTarget.current[index];
+         const fbo = renderTargetArr.current[index];
          gl.setRenderTarget(fbo);
          onBeforeRender && onBeforeRender({ read: fbo.texture });
          gl.render(scene, camera);
@@ -70,5 +93,5 @@ export const useCopyTexture = (
       [scene, camera]
    );
 
-   return [renderTarget.current, updateCopyTexture];
+   return [renderTargetArr.current, updateCopyTexture];
 };

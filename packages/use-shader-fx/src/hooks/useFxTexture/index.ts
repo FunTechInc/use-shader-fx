@@ -2,10 +2,10 @@ import * as THREE from "three";
 import { useCallback, useMemo } from "react";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type FxTextureParams = {
@@ -57,10 +57,8 @@ export const FXTEXTURE_PARAMS: FxTextureParams = {
 export const useFxTexture = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<FxTextureParams, FxTextureObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<FxTextureParams, FxTextureObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -69,6 +67,7 @@ export const useFxTexture = ({
       camera,
       dpr,
       size,
+      samples,
       isSizeUpdate: true,
    });
 

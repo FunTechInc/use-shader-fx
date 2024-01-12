@@ -2,10 +2,10 @@ import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type BlendingParams = {
@@ -53,10 +53,8 @@ If you don't want to reflect the map's color, you can use useFxBlending instead.
 export const useBlending = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<BlendingParams, BlendingObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<BlendingParams, BlendingObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -65,6 +63,7 @@ export const useBlending = ({
       camera,
       size,
       dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);

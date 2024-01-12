@@ -2,10 +2,10 @@ import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { DuoToneMaterial, useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type DuoToneParams = {
@@ -36,10 +36,8 @@ export const DUOTONE_PARAMS: DuoToneParams = {
 export const useDuoTone = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<DuoToneParams, DuoToneObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<DuoToneParams, DuoToneObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -48,6 +46,7 @@ export const useDuoTone = ({
       camera,
       size,
       dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);

@@ -2,10 +2,10 @@ import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { setUniform } from "../../utils/setUniforms";
-import { HooksReturn } from "../types";
+import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 
 export type ColorStrataParams = {
@@ -57,10 +57,8 @@ export const COLORSTRATA_PARAMS: ColorStrataParams = {
 export const useColorStrata = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<ColorStrataParams, ColorStrataObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<ColorStrataParams, ColorStrataObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -69,6 +67,7 @@ export const useColorStrata = ({
       camera,
       size,
       dpr,
+      samples,
    });
 
    const [params, setParams] = useParams<ColorStrataParams>(COLORSTRATA_PARAMS);

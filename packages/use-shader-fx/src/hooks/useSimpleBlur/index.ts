@@ -1,15 +1,14 @@
 import { useCallback, useMemo } from "react";
 import * as THREE from "three";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import { useMesh } from "./useMesh";
-
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { setUniform } from "../../utils/setUniforms";
 import { useParams } from "../../utils/useParams";
 
-import type { HooksReturn } from "../types";
+import type { HooksProps, HooksReturn } from "../types";
 
 export type SimpleBlurParams = {
    /** Make this texture blur , Default:new THREE.Texture() */
@@ -36,10 +35,8 @@ export const SIMPLEBLUR_PARAMS: SimpleBlurParams = {
 export const useSimpleBlur = ({
    size,
    dpr,
-}: {
-   size: Size;
-   dpr: number;
-}): HooksReturn<SimpleBlurParams, SimpleBlurObject> => {
+   samples = 0,
+}: HooksProps): HooksReturn<SimpleBlurParams, SimpleBlurObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const material = useMesh(scene);
    const camera = useCamera(size);
@@ -50,11 +47,12 @@ export const useSimpleBlur = ({
          camera,
          size,
          dpr,
+         samples,
       }),
-      [scene, camera, size, dpr]
+      [scene, camera, size, dpr, samples]
    );
    const [renderTarget, updateRenderTarget] = useSingleFBO(fboProps);
-   const [tempTexture, updateTempTexture] = useDoubleFBO(fboProps);
+   const [_, updateTempTexture] = useDoubleFBO(fboProps);
    const [params, setParams] = useParams<SimpleBlurParams>(SIMPLEBLUR_PARAMS);
 
    const updateFx = useCallback(
