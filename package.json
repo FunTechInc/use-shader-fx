@@ -13,6 +13,7 @@
       "create-fx": "git clone https://github.com/takuma-hmng8/CreateShaderFx"
    },
    "dependencies": {
+      "@hmng8/use-shader-fx": "^1.0.34",
       "@react-three/drei": "^9.88.7",
       "@react-three/fiber": "^8.13.7",
       "@types/node": "20.5.6",
