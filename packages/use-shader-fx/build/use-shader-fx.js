@@ -260,7 +260,7 @@ const O = (r, u = !1) => {
   const m = y(
     (f, c) => {
       const x = n.current;
-      return f.setRenderTarget(x), c && c({ read: x.texture }), f.render(r, u), f.setRenderTarget(null), f.clear(), x.texture;
+      return f.setRenderTarget(x), c && c({ read: x.texture }), f.clear(), f.render(r, u), f.setRenderTarget(null), f.clear(), x.texture;
     },
     [r, u]
   );
@@ -319,7 +319,7 @@ const O = (r, u = !1) => {
       return c.setRenderTarget(g.write), x && x({
         read: g.read.texture,
         write: g.write.texture
-      }), c.render(r, u), g.swap(), c.setRenderTarget(null), c.clear(), (h = g.read) == null ? void 0 : h.texture;
+      }), c.clear(), c.render(r, u), g.swap(), c.setRenderTarget(null), c.clear(), (h = g.read) == null ? void 0 : h.texture;
     },
     [r, u]
   );
@@ -2069,7 +2069,7 @@ const wt = (r) => {
   const f = y(
     (c, x, g) => {
       const h = l.current[x];
-      return c.setRenderTarget(h), g && g({ read: h.texture }), c.render(r, u), c.setRenderTarget(null), c.clear(), h.texture;
+      return c.setRenderTarget(h), g && g({ read: h.texture }), c.clear(), c.render(r, u), c.setRenderTarget(null), c.clear(), h.texture;
     },
     [r, u]
   );

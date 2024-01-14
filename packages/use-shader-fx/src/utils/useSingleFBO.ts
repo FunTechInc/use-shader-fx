@@ -101,6 +101,7 @@ export const useSingleFBO = ({
          const fbo = renderTarget.current!;
          gl.setRenderTarget(fbo);
          onBeforeRender && onBeforeRender({ read: fbo.texture });
+         gl.clear();
          gl.render(scene, camera);
          gl.setRenderTarget(null);
          gl.clear();

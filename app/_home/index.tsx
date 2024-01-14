@@ -20,6 +20,7 @@ function Box(props: any) {
    useFrame((state, delta) => {
       meshRef.current!.rotation.x += delta;
       meshRef.current!.rotation.y -= delta;
+      meshRef.current!.position.y = Math.sin(state.clock.getElapsedTime());
    });
    // Return view, these are regular three.js elements expressed in JSX
    return (
