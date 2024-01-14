@@ -85,6 +85,7 @@ export const useCopyTexture = (
          const fbo = renderTargetArr.current[index];
          gl.setRenderTarget(fbo);
          onBeforeRender && onBeforeRender({ read: fbo.texture });
+         gl.clear();
          gl.render(scene, camera);
          gl.setRenderTarget(null);
          gl.clear();

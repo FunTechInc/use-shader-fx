@@ -118,6 +118,7 @@ export const useDoubleFBO = ({
                read: fbo.read!.texture,
                write: fbo.write!.texture,
             });
+         gl.clear();
          gl.render(scene, camera);
          fbo.swap();
          gl.setRenderTarget(null);
