@@ -7,8 +7,7 @@ import {
    useRef,
 } from "react";
 import { useResolution } from "./useResolution";
-import { UseFboProps } from "./useSingleFBO";
-import { FBO_OPTION } from "./useSingleFBO";
+import { UseFboProps, renderFBO, FBO_OPTION } from "./useSingleFBO";
 
 type UpdateCopyFunction = (
    gl: THREE.WebGLRenderer,
@@ -83,12 +82,14 @@ export const useCopyTexture = (
    const updateCopyTexture: UpdateCopyFunction = useCallback(
       (gl, index, onBeforeRender) => {
          const fbo = renderTargetArr.current[index];
-         gl.setRenderTarget(fbo);
-         onBeforeRender && onBeforeRender({ read: fbo.texture });
-         gl.clear();
-         gl.render(scene, camera);
-         gl.setRenderTarget(null);
-         gl.clear();
+         renderFBO({
+            gl,
+            scene,
+            camera,
+            fbo,
+            onBeforeRender: () =>
+               onBeforeRender && onBeforeRender({ read: fbo.texture }),
+         });
          return fbo.texture;
       },
       [scene, camera]

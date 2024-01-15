@@ -47,6 +47,7 @@ export const useMesh = (scene: THREE.Scene) => {
          }),
       []
    );
+
    useAddMesh(scene, geometry, material);
    return material as ColorStrataMaterial;
 };

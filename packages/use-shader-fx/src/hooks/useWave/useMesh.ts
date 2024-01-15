@@ -1,9 +1,8 @@
 import * as THREE from "three";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
-import { useResolution } from "../..";
 import { Size } from "@react-three/fiber";
 
 export class WaveMaterial extends THREE.ShaderMaterial {
@@ -12,20 +11,11 @@ export class WaveMaterial extends THREE.ShaderMaterial {
       uProgress: { value: number };
       uStrength: { value: number };
       uWidth: { value: number };
-      uResolution: { value: THREE.Vector2 };
       uMode: { value: number };
    };
 }
 
-export const useMesh = ({
-   scene,
-   size,
-   dpr,
-}: {
-   scene: THREE.Scene;
-   size: Size;
-   dpr: number;
-}) => {
+export const useMesh = (scene: THREE.Scene) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(
       () =>
@@ -35,7 +25,6 @@ export const useMesh = ({
                uProgress: { value: 0.0 },
                uStrength: { value: 0.0 },
                uWidth: { value: 0.0 },
-               uResolution: { value: new THREE.Vector2() },
                uMode: { value: 0 },
             },
             vertexShader: vertexShader,
@@ -43,11 +32,6 @@ export const useMesh = ({
          }),
       []
    );
-
-   const resolution = useResolution(size, dpr);
-   useEffect(() => {
-      material.uniforms.uResolution.value = resolution.clone();
-   }, [resolution, material]);
 
    useAddMesh(scene, geometry, material);
 

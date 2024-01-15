@@ -32,13 +32,37 @@ export type UseFboProps = {
    depthTexture?: boolean;
 };
 
-type FBOUpdateFunction = (
+export const renderFBO = ({
+   gl,
+   fbo,
+   scene,
+   camera,
+   onBeforeRender,
+   onSwap,
+}: {
+   gl: THREE.WebGLRenderer;
+   fbo: THREE.WebGLRenderTarget;
+   scene: THREE.Scene;
+   camera: THREE.Camera;
+   onBeforeRender: () => void;
+   onSwap?: () => void;
+}) => {
+   gl.setRenderTarget(fbo);
+   onBeforeRender();
+   gl.clear();
+   gl.render(scene, camera);
+   onSwap && onSwap();
+   gl.setRenderTarget(null);
+   gl.clear();
+};
+
+type UpdateRenderTarget = (
    gl: THREE.WebGLRenderer,
    /**  call before FBO is rendered */
    onBeforeRender?: ({ read }: { read: THREE.Texture }) => void
 ) => THREE.Texture;
 
-type UseSingleFBOReturn = [THREE.WebGLRenderTarget, FBOUpdateFunction];
+type UseSingleFBOReturn = [THREE.WebGLRenderTarget, UpdateRenderTarget];
 
 /**
  * @param dpr If dpr is set, dpr will be multiplied, default:false
@@ -96,15 +120,17 @@ export const useSingleFBO = ({
       };
    }, []);
 
-   const updateRenderTarget: FBOUpdateFunction = useCallback(
+   const updateRenderTarget: UpdateRenderTarget = useCallback(
       (gl, onBeforeRender) => {
          const fbo = renderTarget.current!;
-         gl.setRenderTarget(fbo);
-         onBeforeRender && onBeforeRender({ read: fbo.texture });
-         gl.clear();
-         gl.render(scene, camera);
-         gl.setRenderTarget(null);
-         gl.clear();
+         renderFBO({
+            gl,
+            fbo,
+            scene,
+            camera,
+            onBeforeRender: () =>
+               onBeforeRender && onBeforeRender({ read: fbo.texture }),
+         });
          return fbo.texture;
       },
       [scene, camera]

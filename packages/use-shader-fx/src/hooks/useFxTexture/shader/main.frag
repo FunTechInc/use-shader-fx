@@ -19,14 +19,13 @@ bool isInPaddingArea(vec2 uv) {
 }
 
 void main() {
-	vec2 bgRatio=vec2(
-		min((uResolution.x/uResolution.y)/(uTextureResolution.x/uTextureResolution.y),1.),
-		min((uResolution.y/uResolution.x)/(uTextureResolution.y/uTextureResolution.x),1.)
+	float screenAspect = uResolution.x / uResolution.y;
+	float textureAspect = uTextureResolution.x / uTextureResolution.y;
+	vec2 aspectRatio = vec2(
+		min(screenAspect / textureAspect, 1.0),
+		min(textureAspect / screenAspect, 1.0)
 	);
-	vec2 uv=vec2(
-		vUv.x*bgRatio.x+(1.-bgRatio.x)*.5,
-		vUv.y*bgRatio.y+(1.-bgRatio.y)*.5
-	);
+	vec2 uv = vUv * aspectRatio + (1.0 - aspectRatio) * .5;
 
 	// fx map
 	vec2 map = texture2D(uMap, uv).rg;

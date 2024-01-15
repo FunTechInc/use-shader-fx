@@ -45,7 +45,7 @@ export const useWave = ({
    samples = 0,
 }: HooksProps): HooksReturn<WaveParams, WaveObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const material = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,

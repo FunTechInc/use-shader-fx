@@ -1,7 +1,6 @@
 precision highp float;
 
 varying vec2 vUv;
-uniform vec2 uResolution;
 uniform float uProgress;
 uniform float uStrength;
 uniform float uWidth;
@@ -11,6 +10,9 @@ uniform int uMode;
 float PI = 3.141592653589;
 
 void main() {
+
+	vec2 uv = vUv;
+
 	float progress = min(uProgress, 1.0);
 	float progressFactor = sin(progress * PI);
 
@@ -21,7 +23,7 @@ void main() {
 	vec2 normalizeCenter = (uEpicenter + 1.0) / 2.0;
 
 	// 0:center 1:horizontal 2:vertical
-	float dist = uMode == 0 ? length(vUv - normalizeCenter) : uMode == 1 ? length(vUv.x - normalizeCenter.x) : length(vUv.y - normalizeCenter.y);
+	float dist = uMode == 0 ? length(uv - normalizeCenter) : uMode == 1 ? length(uv.x - normalizeCenter.x) : length(uv.y - normalizeCenter.y);
 
 	// Calculate the maximum distance to the four corners of the screen
 	float maxDistance = max(
