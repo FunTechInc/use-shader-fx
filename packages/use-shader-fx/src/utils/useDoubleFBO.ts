@@ -6,17 +6,17 @@ import {
    useMemo,
    useRef,
 } from "react";
-import { FBO_OPTION, UseFboProps } from "./useSingleFBO";
+import { FBO_OPTION, UseFboProps, renderFBO } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
-
-interface RenderTarget extends DoubleRenderTarget {
-   swap: () => void;
-}
 
 export type DoubleRenderTarget = {
    read: THREE.WebGLRenderTarget | null;
    write: THREE.WebGLRenderTarget | null;
 };
+
+interface WebGLDoubleRenderTarget extends DoubleRenderTarget {
+   swap: () => void;
+}
 
 type FBOUpdateFunction = (
    gl: THREE.WebGLRenderer,
@@ -50,7 +50,7 @@ export const useDoubleFBO = ({
    depthBuffer = false,
    depthTexture = false,
 }: UseFboProps): UseDoubleFBOReturn => {
-   const renderTarget = useRef<RenderTarget>({
+   const renderTarget = useRef<WebGLDoubleRenderTarget>({
       read: null,
       write: null,
       swap: function () {
@@ -112,17 +112,19 @@ export const useDoubleFBO = ({
    const updateRenderTarget: FBOUpdateFunction = useCallback(
       (gl, onBeforeRender) => {
          const fbo = renderTarget.current;
-         gl.setRenderTarget(fbo.write);
-         onBeforeRender &&
-            onBeforeRender({
-               read: fbo.read!.texture,
-               write: fbo.write!.texture,
-            });
-         gl.clear();
-         gl.render(scene, camera);
-         fbo.swap();
-         gl.setRenderTarget(null);
-         gl.clear();
+         renderFBO({
+            gl,
+            scene,
+            camera,
+            fbo: fbo.write!,
+            onBeforeRender: () =>
+               onBeforeRender &&
+               onBeforeRender({
+                  read: fbo.read!.texture,
+                  write: fbo.write!.texture,
+               }),
+            onSwap: () => fbo.swap(),
+         });
          return fbo.read?.texture as THREE.Texture;
       },
       [scene, camera]

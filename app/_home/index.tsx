@@ -201,17 +201,16 @@ export const Home = () => {
 
 //    const [updateFluid, setFluid] = useFluid({ size, dpr });
 
-//    setFluid({
-//       density_dissipation: 0.96,
-//       velocity_dissipation: 0.99,
-//       curl_strength: 0.0,
-//       splat_radius: 0.0045,
-//       pressure_iterations: 1,
-//    });
+//    // setFluid({
+//    //    density_dissipation: 0.96,
+//    //    velocity_dissipation: 0.99,
+//    //    curl_strength: 0.0,
+//    //    splat_radius: 0.0045,
+//    //    pressure_iterations: 1,
+//    // });
 
 //    useFrame((props) => {
 //       const fluid = updateFluid(props);
-
 //       ref.current!.uniforms.u_fx.value = fluid;
 //    });
 

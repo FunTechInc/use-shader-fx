@@ -16,12 +16,20 @@ export type UseFboProps = {
     /** If set, the scene depth will be rendered to this texture. Default is false. */
     depthTexture?: boolean;
 };
-type FBOUpdateFunction = (gl: THREE.WebGLRenderer, 
+export declare const renderFBO: ({ gl, fbo, scene, camera, onBeforeRender, onSwap, }: {
+    gl: THREE.WebGLRenderer;
+    fbo: THREE.WebGLRenderTarget;
+    scene: THREE.Scene;
+    camera: THREE.Camera;
+    onBeforeRender: () => void;
+    onSwap?: (() => void) | undefined;
+}) => void;
+type UpdateRenderTarget = (gl: THREE.WebGLRenderer, 
 /**  call before FBO is rendered */
 onBeforeRender?: ({ read }: {
     read: THREE.Texture;
 }) => void) => THREE.Texture;
-type UseSingleFBOReturn = [THREE.WebGLRenderTarget, FBOUpdateFunction];
+type UseSingleFBOReturn = [THREE.WebGLRenderTarget, UpdateRenderTarget];
 /**
  * @param dpr If dpr is set, dpr will be multiplied, default:false
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
