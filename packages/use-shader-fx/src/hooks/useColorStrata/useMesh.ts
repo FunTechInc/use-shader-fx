@@ -3,7 +3,6 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddMesh } from "../../utils/useAddMesh";
-import { Size } from "@react-three/fiber";
 
 export class ColorStrataMaterial extends THREE.ShaderMaterial {
    uniforms!: {
