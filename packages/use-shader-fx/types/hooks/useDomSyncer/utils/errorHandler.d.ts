@@ -1,2 +1,2 @@
 import { DomSyncerParams } from "..";
-export declare const errorHandler: (params: DomSyncerParams) => void;
+export declare const errorHandler: (params: DomSyncerParams) => boolean;

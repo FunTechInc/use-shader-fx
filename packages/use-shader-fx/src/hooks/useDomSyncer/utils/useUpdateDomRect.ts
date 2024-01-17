@@ -4,6 +4,7 @@ import { Size } from "@react-three/fiber";
 import { setUniform } from "../../../utils/setUniforms";
 import { DomSyncerMaterial } from "./createMesh";
 import { useCallback, useRef } from "react";
+import { ISDEV } from "../../../libs/constants";
 
 type UpdateDomRect = ({
    params,
@@ -34,7 +35,8 @@ export const useUpdateDomRect = (): UseUpdateDomRectReturn => {
          scene.children.forEach((mesh, i) => {
             const domElement = params.dom![i];
             if (!domElement) {
-               throw new Error("DOM is null.");
+               ISDEV && console.warn("DOM is null.");
+               return;
             }
 
             // DOMRect is updated even outside the intersection

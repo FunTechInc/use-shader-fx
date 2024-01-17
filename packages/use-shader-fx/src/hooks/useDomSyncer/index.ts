@@ -91,31 +91,31 @@ export const useDomSyncer = (
 
          updateParams && setParams(updateParams);
 
-         errorHandler(params);
+         if (errorHandler(params)) {
+            if (refreshTrigger) {
+               createMesh({
+                  params,
+                  size,
+                  scene,
+               });
 
-         if (refreshTrigger) {
-            createMesh({
+               intersectionHandler({
+                  isIntersectingRef,
+                  isIntersectingOnceRef,
+                  params,
+               });
+
+               setRefreshTrigger(false);
+            }
+
+            updateDomRects({
                params,
                size,
+               resolutionRef,
                scene,
-            });
-
-            intersectionHandler({
                isIntersectingRef,
-               isIntersectingOnceRef,
-               params,
             });
-
-            setRefreshTrigger(false);
          }
-
-         updateDomRects({
-            params,
-            size,
-            resolutionRef,
-            scene,
-            isIntersectingRef,
-         });
 
          return updateRenderTarget(gl);
       },
