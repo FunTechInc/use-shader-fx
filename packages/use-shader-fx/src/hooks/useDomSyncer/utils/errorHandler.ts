@@ -1,4 +1,5 @@
 import { DomSyncerParams } from "..";
+import { ISDEV } from "../../../libs/constants";
 
 export const errorHandler = (params: DomSyncerParams) => {
    const domLength = params.dom?.length;
@@ -6,10 +7,14 @@ export const errorHandler = (params: DomSyncerParams) => {
    const resolutionLength = params.resolution?.length;
 
    if (!domLength || !textureLength || !resolutionLength) {
-      throw new Error("No dom or texture or resolution is set");
+      ISDEV && console.warn("No dom or texture or resolution is set");
+      return false;
    }
 
    if (domLength !== textureLength || domLength !== resolutionLength) {
-      throw new Error("Match dom, texture and resolution length");
+      ISDEV && console.warn("not Match dom , texture and resolution length");
+      return false;
    }
+
+   return true;
 };
