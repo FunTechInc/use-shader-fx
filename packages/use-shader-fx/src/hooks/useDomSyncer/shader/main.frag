@@ -8,10 +8,13 @@ uniform float u_borderRadius;
 
 void main() {
 	// texuture color
+	float screenAspect = u_resolution.x / u_resolution.y;
+	float textureAspect = u_textureResolution.x / u_textureResolution.y;
 	vec2 ratio = vec2(
-		min((u_resolution.x / u_resolution.y) / (u_textureResolution.x / u_textureResolution.y), 1.0),
-		min((u_resolution.y / u_resolution.x) / (u_textureResolution.y / u_textureResolution.x), 1.0)
+		min(screenAspect / textureAspect, 1.0),
+		min(textureAspect / screenAspect, 1.0)
 	);
+
 	vec2 adjustedUv = vUv * ratio + (1.0 - ratio) * 0.5;
 	vec3 textureColor = texture2D(u_texture, adjustedUv).rgb;
 	float textureAlpha = texture2D(u_texture, adjustedUv).a;
