@@ -26,6 +26,7 @@ export type RippleObject = {
    meshArr: THREE.Mesh[];
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const RIPPLE_PARAMS: RippleParams = {
@@ -108,8 +109,7 @@ export const useRipple = ({
             }
          });
 
-         const bufferTexture = updateRenderTarget(gl);
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, meshArr, updatePointer, max, params, setParams]
    );
@@ -121,6 +121,7 @@ export const useRipple = ({
          camera: camera,
          meshArr: meshArr,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

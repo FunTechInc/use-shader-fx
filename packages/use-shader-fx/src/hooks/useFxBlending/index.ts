@@ -22,6 +22,7 @@ export type FxBlendingObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const FXBLENDING_PARAMS: FxBlendingParams = {
@@ -73,6 +74,7 @@ export const useFxBlending = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

@@ -41,6 +41,7 @@ export type FluidObject = {
       divergence: THREE.WebGLRenderTarget;
       pressure: DoubleRenderTarget;
    };
+   output: THREE.Texture;
 };
 
 export const FLUID_PARAMS: FluidParams = {
@@ -249,6 +250,7 @@ export const useFluid = ({
             divergence: divergenceFBO,
             pressure: pressureFBO,
          },
+         output: densityFBO.read.texture,
       },
    ];
 };

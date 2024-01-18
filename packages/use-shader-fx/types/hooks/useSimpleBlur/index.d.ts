@@ -13,6 +13,7 @@ export type SimpleBlurObject = {
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const SIMPLEBLUR_PARAMS: SimpleBlurParams;
 export declare const useSimpleBlur: ({ size, dpr, samples, }: HooksProps) => HooksReturn<SimpleBlurParams, SimpleBlurObject>;

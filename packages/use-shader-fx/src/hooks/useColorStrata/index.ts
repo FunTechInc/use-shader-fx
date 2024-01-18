@@ -36,6 +36,7 @@ export type ColorStrataObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const COLORSTRATA_PARAMS: ColorStrataParams = {
@@ -102,8 +103,7 @@ export const useColorStrata = ({
          setUniform(material, "colorFactor", params.colorFactor!);
          setUniform(material, "timeStrength", params.timeStrength!);
 
-         const bufferTexture = updateRenderTarget(gl);
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, material, setParams, params]
    );
@@ -116,6 +116,7 @@ export const useColorStrata = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

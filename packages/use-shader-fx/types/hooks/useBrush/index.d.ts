@@ -22,6 +22,7 @@ export type BrushObject = {
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: DoubleRenderTarget;
+    output: THREE.Texture;
 };
 export declare const BRUSH_PARAMS: BrushParams;
 /**

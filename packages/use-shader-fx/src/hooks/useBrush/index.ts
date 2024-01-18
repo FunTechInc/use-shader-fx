@@ -31,6 +31,7 @@ export type BrushObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: DoubleRenderTarget;
+   output: THREE.Texture;
 };
 
 export const BRUSH_PARAMS: BrushParams = {
@@ -85,11 +86,9 @@ export const useBrush = ({
          setUniform(material, "uPrevMouse", prevPointer);
          setUniform(material, "uVelocity", velocity);
 
-         const bufferTexture = updateRenderTarget(gl, ({ read }) => {
+         return updateRenderTarget(gl, ({ read }) => {
             setUniform(material, "uMap", read);
          });
-
-         return bufferTexture;
       },
       [material, updatePointer, updateRenderTarget, params, setParams]
    );
@@ -102,6 +101,7 @@ export const useBrush = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.read.texture,
       },
    ];
 };

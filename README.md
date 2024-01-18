@@ -15,7 +15,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 
 1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
 2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
-3. `fxObject` - An object that holds various FX components, such as scene, camera, material, and renderTarget.
+3. `fxObject` - An object that holds various FX components, such as scene, camera, material,renderTarget, and `output`(final rendered texture).
 
 ```js
 const [updateFx, setParams, fxObject] = useSomeFx(config);
@@ -43,13 +43,11 @@ import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useFluid } from "@hmng8/use-shader-fx";
 
-export const Demo = () => {
+export const Home = () => {
    const ref = useRef<THREE.ShaderMaterial>(null);
    const { size, viewport } = useThree();
-   const [updateFluid] = useFluid({ size, dpr: viewport.dpr });
-   useFrame((props) => {
-      ref.current!.uniforms.u_fx.value = updateFluid(props);
-   });
+   const [updateFluid, , { output }] = useFluid({ size, dpr: viewport.dpr });
+   useFrame((props) => updateFluid(props));
 
    return (
       <mesh>
@@ -74,7 +72,7 @@ export const Demo = () => {
 						}
 					`}
             uniforms={{
-               u_fx: { value: null },
+               u_fx: { value: output },
             }}
          />
       </mesh>
@@ -121,22 +119,16 @@ function Box(props: any) {
 export const Home = () => {
    const ref = useRef<THREE.ShaderMaterial>(null);
    const { size, viewport, camera } = useThree();
-   const [updateNoise, setNoise] = useNoise({ size, dpr: viewport.dpr });
-
-   setNoise({
-      scale: 0.01,
-      warpOctaves: 1,
-      noiseOctaves: 1,
-      fbmOctaves: 1,
-      timeStrength: 1.2,
-      warpStrength: 20.0,
+   const [updateNoise, , { output }] = useNoise({
+      size,
+      dpr: viewport.dpr,
    });
 
    // This scene is rendered offscreen
    const offscreenScene = useMemo(() => new THREE.Scene(), []);
 
    // create FBO for offscreen rendering
-   const [_, updateRenderTarget] = useSingleFBO({
+   const [boxView, updateRenderTarget] = useSingleFBO({
       scene: offscreenScene,
       camera,
       size,
@@ -145,9 +137,8 @@ export const Home = () => {
    });
 
    useFrame((props) => {
-      const noise = updateNoise(props);
-      ref.current!.uniforms.u_fx.value = noise;
-      ref.current!.uniforms.u_texture.value = updateRenderTarget(props.gl);
+      updateNoise(props);
+      updateRenderTarget(props.gl);
    });
 
    return (
@@ -201,8 +192,8 @@ export const Home = () => {
 						}
 					`}
                uniforms={{
-                  u_texture: { value: null },
-                  u_fx: { value: null },
+                  u_texture: { value: boxView.texture },
+                  u_fx: { value: output },
                }}
             />
          </mesh>

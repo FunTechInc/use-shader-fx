@@ -24,6 +24,7 @@ export type BrightnessPickerObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams = {
@@ -64,8 +65,7 @@ export const useBrightnessPicker = ({
          setUniform(material, "u_brightness", params.brightness!);
          setUniform(material, "u_min", params.min!);
          setUniform(material, "u_max", params.max!);
-         const bufferTexture = updateRenderTarget(gl);
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, material, setParams, params]
    );
@@ -78,6 +78,7 @@ export const useBrightnessPicker = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

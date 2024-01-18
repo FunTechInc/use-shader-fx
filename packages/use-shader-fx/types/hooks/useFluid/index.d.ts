@@ -31,6 +31,7 @@ export type FluidObject = {
         divergence: THREE.WebGLRenderTarget;
         pressure: DoubleRenderTarget;
     };
+    output: THREE.Texture;
 };
 export declare const FLUID_PARAMS: FluidParams;
 /**
