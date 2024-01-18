@@ -21,6 +21,7 @@ export type NoiseObject = {
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const NOISE_PARAMS: NoiseParams;
 /**

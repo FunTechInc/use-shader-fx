@@ -26,6 +26,7 @@ export type WaveObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const WAVE_PARAMS: WaveParams = {
@@ -91,6 +92,7 @@ export const useWave = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

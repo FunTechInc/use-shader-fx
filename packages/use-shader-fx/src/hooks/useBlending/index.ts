@@ -32,6 +32,7 @@ export type BlendingObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const BLENDING_PARAMS: BlendingParams = {
@@ -92,8 +93,7 @@ export const useBlending = ({
          } else {
             setUniform(material, "u_isDodgeColor", false);
          }
-         const bufferTexture = updateRenderTarget(gl);
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, material, setParams, params]
    );
@@ -106,6 +106,7 @@ export const useBlending = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

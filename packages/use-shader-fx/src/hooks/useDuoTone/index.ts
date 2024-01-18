@@ -22,6 +22,7 @@ export type DuoToneObject = {
    material: DuoToneMaterial;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const DUOTONE_PARAMS: DuoToneParams = {
@@ -61,9 +62,7 @@ export const useDuoTone = ({
          setUniform(material, "uColor0", params.color0!);
          setUniform(material, "uColor1", params.color1!);
 
-         const bufferTexture = updateRenderTarget(gl);
-
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, material, setParams, params]
    );
@@ -76,6 +75,7 @@ export const useDuoTone = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

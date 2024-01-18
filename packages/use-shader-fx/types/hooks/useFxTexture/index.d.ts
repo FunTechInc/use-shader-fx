@@ -27,6 +27,7 @@ export type FxTextureObject = {
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const FXTEXTURE_PARAMS: FxTextureParams;
 /**

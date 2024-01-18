@@ -23,6 +23,7 @@ export type BlendingObject = {
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const BLENDING_PARAMS: BlendingParams;
 /**

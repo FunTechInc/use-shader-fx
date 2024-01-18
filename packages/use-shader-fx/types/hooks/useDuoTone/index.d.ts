@@ -14,6 +14,7 @@ export type DuoToneObject = {
     material: DuoToneMaterial;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const DUOTONE_PARAMS: DuoToneParams;
 /**

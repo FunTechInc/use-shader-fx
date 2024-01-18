@@ -24,6 +24,7 @@ export type SimpleBlurObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const SIMPLEBLUR_PARAMS: SimpleBlurParams = {
@@ -76,9 +77,7 @@ export const useSimpleBlur = ({
             _tempTexture = updateTempTexture(gl);
          }
 
-         const outPutTexture = updateRenderTarget(gl);
-
-         return outPutTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, updateTempTexture, material, setParams, params]
    );
@@ -91,6 +90,7 @@ export const useSimpleBlur = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

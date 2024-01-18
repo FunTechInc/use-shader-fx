@@ -85,7 +85,7 @@ export const Home = () => {
    const offscreenScene = useMemo(() => new THREE.Scene(), []);
 
    // create FBO for offscreen rendering
-   const [_, updateRenderTarget] = useSingleFBO({
+   const [boxView, updateRenderTarget] = useSingleFBO({
       scene: offscreenScene,
       camera,
       size,
@@ -95,9 +95,8 @@ export const Home = () => {
 
    useFrame((props) => {
       const noise = updateNoise(props);
-      const fluid = updateFluid(props);
       const blending = updateFxBlending(props, {
-         texture: fluid,
+         texture: updateFluid(props),
          map: noise,
       });
       const picked = updateBrightnessPicker(props, {
@@ -107,8 +106,8 @@ export const Home = () => {
          texture: picked,
          noise: noise,
       });
+      updateRenderTarget(props.gl);
       ref.current!.uniforms.u_fx.value = colorStrata;
-      ref.current!.uniforms.u_texture.value = updateRenderTarget(props.gl);
    });
 
    return (
@@ -173,7 +172,7 @@ export const Home = () => {
 						}
 					`}
                uniforms={{
-                  u_texture: { value: null },
+                  u_texture: { value: boxView.texture },
                   u_fx: { value: null },
                }}
             />

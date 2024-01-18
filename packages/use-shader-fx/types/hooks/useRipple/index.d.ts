@@ -17,6 +17,7 @@ export type RippleObject = {
     meshArr: THREE.Mesh[];
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const RIPPLE_PARAMS: RippleParams;
 interface UseRippleProps extends HooksProps {

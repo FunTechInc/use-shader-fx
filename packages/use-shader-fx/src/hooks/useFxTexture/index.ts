@@ -36,6 +36,7 @@ export type FxTextureObject = {
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
 };
 
 export const FXTEXTURE_PARAMS: FxTextureParams = {
@@ -91,8 +92,7 @@ export const useFxTexture = ({
          setUniform(material, "dirX", params.dir!.x);
          setUniform(material, "dirY", params.dir!.y);
 
-         const bufferTexture = updateRenderTarget(gl);
-         return bufferTexture;
+         return updateRenderTarget(gl);
       },
       [updateRenderTarget, material, params, setParams]
    );
@@ -104,6 +104,7 @@ export const useFxTexture = ({
          material: material,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
       },
    ];
 };

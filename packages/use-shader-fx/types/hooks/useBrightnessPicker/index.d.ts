@@ -15,6 +15,7 @@ export type BrightnessPickerObject = {
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;
+    output: THREE.Texture;
 };
 export declare const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams;
 /**

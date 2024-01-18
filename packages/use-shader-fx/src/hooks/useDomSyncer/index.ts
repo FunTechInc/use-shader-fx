@@ -30,6 +30,7 @@ export type DomSyncerObject = {
    scene: THREE.Scene;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
    /**
     * A function that returns a determination whether the DOM intersects or not.
     * The boolean will be updated after executing the onIntersect function.
@@ -139,6 +140,7 @@ export const useDomSyncer = (
          scene: scene,
          camera: camera,
          renderTarget: renderTarget,
+         output: renderTarget.texture,
          isIntersecting: isIntersecting,
          DOMRects: DOMRects,
       },
