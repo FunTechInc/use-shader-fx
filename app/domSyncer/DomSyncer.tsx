@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "@/utils/fxMaterial";
 import {
@@ -49,6 +49,34 @@ export const DomSyncer = ({ state }: { state: number }) => {
       { size, dpr },
       [state]
    );
+
+   const { setFrameloop } = useThree();
+   const isPlaying = useRef<boolean>(true);
+
+   useEffect(() => {
+      let id: number;
+      const filterIntersection = () => {
+         if (domSyncerObj.intersections.some((item) => item)) {
+            // どっかには交差してる
+            if (!isPlaying.current) {
+               setFrameloop("always");
+               isPlaying.current = true;
+            }
+         } else {
+            // どこにも交差してない
+            if (isPlaying.current) {
+               setFrameloop("never");
+               isPlaying.current = false;
+            }
+         }
+
+         id = requestAnimationFrame(filterIntersection);
+      };
+      id = requestAnimationFrame(filterIntersection);
+      return () => {
+         cancelAnimationFrame(id);
+      };
+   }, [domSyncerObj.intersections, setFrameloop]);
 
    const domArr = useRef<(HTMLElement | Element)[]>([]);
    const contentArr = useRef<HTMLElement[]>([]);
