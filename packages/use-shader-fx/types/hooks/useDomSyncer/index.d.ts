@@ -2,6 +2,7 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../types";
 import { IsIntersecting } from "./utils/useIsIntersecting";
+import { UseDomView } from "./utils/createUseDomView";
 export type DomSyncerParams = {
     /** DOM array you want to synchronize */
     dom?: (HTMLElement | Element | null)[];
@@ -32,6 +33,8 @@ export type DomSyncerObject = {
     DOMRects: DOMRect[];
     /** target's intersetions boolean[] */
     intersections: boolean[];
+    /** You can set callbacks for when at least one DOM is visible and when it is completely hidden. */
+    useDomView: UseDomView;
 };
 export declare const DOMSYNCER_PARAMS: DomSyncerParams;
 /**

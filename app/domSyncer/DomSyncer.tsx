@@ -51,32 +51,16 @@ export const DomSyncer = ({ state }: { state: number }) => {
    );
 
    const { setFrameloop } = useThree();
-   const isPlaying = useRef<boolean>(true);
-
-   useEffect(() => {
-      let id: number;
-      const filterIntersection = () => {
-         if (domSyncerObj.intersections.some((item) => item)) {
-            // どっかには交差してる
-            if (!isPlaying.current) {
-               setFrameloop("always");
-               isPlaying.current = true;
-            }
-         } else {
-            // どこにも交差してない
-            if (isPlaying.current) {
-               setFrameloop("never");
-               isPlaying.current = false;
-            }
-         }
-
-         id = requestAnimationFrame(filterIntersection);
-      };
-      id = requestAnimationFrame(filterIntersection);
-      return () => {
-         cancelAnimationFrame(id);
-      };
-   }, [domSyncerObj.intersections, setFrameloop]);
+   domSyncerObj.useDomView({
+      onView: () => {
+         console.log("play");
+         setFrameloop("always");
+      },
+      onHidden: () => {
+         console.log("stop");
+         setFrameloop("never");
+      },
+   });
 
    const domArr = useRef<(HTMLElement | Element)[]>([]);
    const contentArr = useRef<HTMLElement[]>([]);
