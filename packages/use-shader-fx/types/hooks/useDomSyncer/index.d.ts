@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../types";
 import { IsIntersecting } from "./utils/useIsIntersecting";
-import { UseDomView } from "./utils/useAllDomIntersectionTest";
+import { UseDomView } from "./utils/createUseDomView";
 export type DomSyncerParams = {
     /** DOM array you want to synchronize */
     dom?: (HTMLElement | Element | null)[];

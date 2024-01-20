@@ -10,10 +10,7 @@ import { createMesh } from "./utils/createMesh";
 import { useIntersectionHandler } from "./utils/useIntersectionHandler";
 import { useUpdateDomRect } from "./utils/useUpdateDomRect";
 import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
-import {
-   UseDomView,
-   createUseDomView,
-} from "./utils/useAllDomIntersectionTest";
+import { UseDomView, createUseDomView } from "./utils/createUseDomView";
 
 export type DomSyncerParams = {
    /** DOM array you want to synchronize */
