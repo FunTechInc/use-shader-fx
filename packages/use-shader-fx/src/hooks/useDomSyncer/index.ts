@@ -10,6 +10,10 @@ import { createMesh } from "./utils/createMesh";
 import { useIntersectionHandler } from "./utils/useIntersectionHandler";
 import { useUpdateDomRect } from "./utils/useUpdateDomRect";
 import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
+import {
+   UseDomView,
+   createUseDomView,
+} from "./utils/useAllDomIntersectionTest";
 
 export type DomSyncerParams = {
    /** DOM array you want to synchronize */
@@ -42,6 +46,8 @@ export type DomSyncerObject = {
    DOMRects: DOMRect[];
    /** target's intersetions boolean[] */
    intersections: boolean[];
+   /** You can set callbacks for when at least one DOM is visible and when it is completely hidden. */
+   useDomView: UseDomView;
 };
 
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
@@ -87,6 +93,9 @@ export const useDomSyncer = (
    const intersectionHandler = useIntersectionHandler();
    const { isIntersectingOnceRef, isIntersectingRef, isIntersecting } =
       useIsIntersecting();
+
+   // create useDomView
+   const useDomView = createUseDomView(isIntersectingRef);
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: DomSyncerParams) => {
@@ -139,13 +148,14 @@ export const useDomSyncer = (
       updateFx,
       setParams,
       {
-         scene: scene,
-         camera: camera,
-         renderTarget: renderTarget,
+         scene,
+         camera,
+         renderTarget,
          output: renderTarget.texture,
-         isIntersecting: isIntersecting,
-         DOMRects: DOMRects,
+         isIntersecting,
+         DOMRects,
          intersections: isIntersectingRef.current,
+         useDomView,
       },
    ];
 };
