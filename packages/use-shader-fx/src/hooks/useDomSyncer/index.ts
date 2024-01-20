@@ -38,8 +38,10 @@ export type DomSyncerObject = {
     * @param once - If set to true, it will continue to return true once crossed.
     */
    isIntersecting: IsIntersecting;
-   /** Returns the target's DOMRect[] */
+   /** target's DOMRect[] */
    DOMRects: DOMRect[];
+   /** target's intersetions boolean[] */
+   intersections: boolean[];
 };
 
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
@@ -143,6 +145,7 @@ export const useDomSyncer = (
          output: renderTarget.texture,
          isIntersecting: isIntersecting,
          DOMRects: DOMRects,
+         intersections: isIntersectingRef.current,
       },
    ];
 };

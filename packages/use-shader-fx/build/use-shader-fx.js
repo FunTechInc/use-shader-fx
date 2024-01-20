@@ -1598,7 +1598,8 @@ const et = ({
       renderTarget: v,
       output: v.texture,
       isIntersecting: _,
-      DOMRects: m
+      DOMRects: m,
+      intersections: D.current
     }
   ];
 };
