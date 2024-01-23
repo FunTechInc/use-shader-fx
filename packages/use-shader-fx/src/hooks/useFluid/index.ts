@@ -62,7 +62,8 @@ export const useFluid = ({
    size,
    dpr,
    samples = 0,
-}: HooksProps): HooksReturn<FluidParams, FluidObject> => {
+   pointer: _pointer,
+}: HooksProps & {pointer?: THREE.Vector2}): HooksReturn<FluidParams, FluidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const [materials, setMeshMaterial] = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -129,9 +130,11 @@ export const useFluid = ({
             );
          });
 
+         // use default viewport pointer if _pointer is not provided
+         const pointerValue = _pointer ?? pointer;
          // update splatting
          const { currentPointer, diffPointer, isVelocityUpdate, velocity } =
-            updatePointer(pointer);
+            updatePointer(pointerValue);
          if (isVelocityUpdate) {
             updateVelocityFBO(gl, ({ read }) => {
                setMeshMaterial(materials.splatMaterial);
