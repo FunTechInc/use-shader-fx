@@ -113,39 +113,41 @@ export const useDomSyncer = (
 
          updateParams && setParams(updateParams);
 
-         if (errorHandler(params)) {
-            if (refreshTrigger) {
-               if (updateKey.current === params.updateKey) {
-                  return emptyTexture;
-               } else {
-                  updateKey.current = params.updateKey!;
-               }
+         if (!errorHandler(params)) {
+            return emptyTexture;
+         }
+
+         if (refreshTrigger) {
+            if (updateKey.current === params.updateKey) {
+               return emptyTexture;
+            } else {
+               updateKey.current = params.updateKey!;
             }
+         }
 
-            if (refreshTrigger) {
-               createMesh({
-                  params,
-                  size,
-                  scene,
-               });
-
-               intersectionHandler({
-                  isIntersectingRef,
-                  isIntersectingOnceRef,
-                  params,
-               });
-
-               setRefreshTrigger(false);
-            }
-
-            updateDomRects({
+         if (refreshTrigger) {
+            createMesh({
                params,
                size,
-               resolutionRef,
                scene,
-               isIntersectingRef,
             });
+
+            intersectionHandler({
+               isIntersectingRef,
+               isIntersectingOnceRef,
+               params,
+            });
+
+            setRefreshTrigger(false);
          }
+
+         updateDomRects({
+            params,
+            size,
+            resolutionRef,
+            scene,
+            isIntersectingRef,
+         });
 
          return updateRenderTarget(gl);
       },

@@ -374,8 +374,8 @@ const O = (n, s = !1) => {
       (d, g) => {
         const { gl: x, pointer: h } = d;
         g && f(g), i(e, "uTexture", l.texture), i(e, "uRadius", l.radius), i(e, "uSmudge", l.smudge), i(e, "uDissipation", l.dissipation), i(e, "uMotionBlur", l.motionBlur), i(e, "uMotionSample", l.motionSample), i(e, "uColor", l.color);
-        const { currentPointer: T, prevPointer: b, velocity: _ } = c(h);
-        return i(e, "uMouse", T), i(e, "uPrevMouse", b), i(e, "uVelocity", _), r(x, ({ read: C }) => {
+        const { currentPointer: T, prevPointer: D, velocity: _ } = c(h);
+        return i(e, "uMouse", T), i(e, "uPrevMouse", D), i(e, "uVelocity", _), r(x, ({ read: C }) => {
           i(e, "uMap", C);
         });
       },
@@ -891,13 +891,13 @@ const ze = () => p(
     for (const _ of Object.values(x))
       _.dispose();
   }, [x]);
-  const b = w(
+  const D = w(
     (_) => {
       T.material = _, T.material.needsUpdate = !0;
     },
     [T]
   );
-  return [x, b];
+  return [x, D];
 }, $e = {
   density_dissipation: 0.98,
   velocity_dissipation: 0.99,
@@ -920,7 +920,7 @@ const ze = () => p(
       samples: o
     }),
     [a, c, n, o]
-  ), [l, f] = $(r), [m, d] = $(r), [g, x] = P(r), [h, T] = P(r), [b, _] = $(r), C = y(0), B = y(new t.Vector2(0, 0)), L = y(new t.Vector3(0, 0, 0)), [D, S] = F($e);
+  ), [l, f] = $(r), [m, d] = $(r), [g, x] = P(r), [h, T] = P(r), [D, _] = $(r), C = y(0), B = y(new t.Vector2(0, 0)), L = y(new t.Vector3(0, 0, 0)), [b, S] = F($e);
   return [
     w(
       (N, G) => {
@@ -935,19 +935,19 @@ const ze = () => p(
           u(e.advectionMaterial), i(e.advectionMaterial, "uVelocity", M), i(e.advectionMaterial, "uSource", M), i(e.advectionMaterial, "dt", Z), i(
             e.advectionMaterial,
             "dissipation",
-            D.velocity_dissipation
+            b.velocity_dissipation
           );
         }), ee = d(V, ({ read: M }) => {
           u(e.advectionMaterial), i(e.advectionMaterial, "uVelocity", X), i(e.advectionMaterial, "uSource", M), i(
             e.advectionMaterial,
             "dissipation",
-            D.density_dissipation
+            b.density_dissipation
           );
         }), { currentPointer: te, diffPointer: ne, isVelocityUpdate: re, velocity: oe } = v(Q);
         re && (f(V, ({ read: M }) => {
           u(e.splatMaterial), i(e.splatMaterial, "uTarget", M), i(e.splatMaterial, "point", te);
           const z = ne.multiply(
-            B.current.set(K.width, K.height).multiplyScalar(D.velocity_acceleration)
+            B.current.set(K.width, K.height).multiplyScalar(b.velocity_acceleration)
           );
           i(
             e.splatMaterial,
@@ -956,11 +956,11 @@ const ze = () => p(
           ), i(
             e.splatMaterial,
             "radius",
-            D.splat_radius
+            b.splat_radius
           );
         }), d(V, ({ read: M }) => {
           u(e.splatMaterial), i(e.splatMaterial, "uTarget", M);
-          const z = typeof D.fluid_color == "function" ? D.fluid_color(oe) : D.fluid_color;
+          const z = typeof b.fluid_color == "function" ? b.fluid_color(oe) : b.fluid_color;
           i(e.splatMaterial, "color", z);
         }));
         const ae = x(V, () => {
@@ -970,7 +970,7 @@ const ze = () => p(
           u(e.vorticityMaterial), i(e.vorticityMaterial, "uVelocity", M), i(e.vorticityMaterial, "uCurl", ae), i(
             e.vorticityMaterial,
             "curl",
-            D.curl_strength
+            b.curl_strength
           ), i(e.vorticityMaterial, "dt", Z);
         });
         const ie = T(V, () => {
@@ -980,11 +980,11 @@ const ze = () => p(
           u(e.clearMaterial), i(e.clearMaterial, "uTexture", M), i(
             e.clearMaterial,
             "value",
-            D.pressure_dissipation
+            b.pressure_dissipation
           );
         }), u(e.pressureMaterial), i(e.pressureMaterial, "uDivergence", ie);
         let J;
-        for (let M = 0; M < D.pressure_iterations; M++)
+        for (let M = 0; M < b.pressure_iterations; M++)
           J = _(V, ({ read: z }) => {
             i(e.pressureMaterial, "uPressure", z);
           });
@@ -1006,7 +1006,7 @@ const ze = () => p(
         _,
         f,
         S,
-        D
+        b
       ]
     ),
     S,
@@ -1019,7 +1019,7 @@ const ze = () => p(
         density: m,
         curl: g,
         divergence: h,
-        pressure: b
+        pressure: D
       },
       output: m.read.texture
     }
@@ -1076,11 +1076,11 @@ const ze = () => p(
   }), [d, g] = F(Ge), x = y(0);
   return [
     w(
-      (T, b) => {
+      (T, D) => {
         const { gl: _, pointer: C, size: B } = T;
-        b && g(b);
-        const { currentPointer: L, diffPointer: D } = l(C);
-        if (d.frequency < D.length()) {
+        D && g(D);
+        const { currentPointer: L, diffPointer: b } = l(C);
+        if (d.frequency < b.length()) {
           const S = v[x.current];
           S.visible = !0, S.position.set(
             L.x * (B.width / 2),
@@ -1572,34 +1572,33 @@ const et = ({
   R(() => {
     h(!0);
   }, a);
-  const T = y(null), b = p(() => new t.Texture(), []), _ = tt(), { isIntersectingOnceRef: C, isIntersectingRef: B, isIntersecting: L } = rt(), D = ot(B);
+  const T = y(null), D = p(() => new t.Texture(), []), _ = tt(), { isIntersectingOnceRef: C, isIntersectingRef: B, isIntersecting: L } = rt(), b = ot(B);
   return [
     w(
       (E, N) => {
         const { gl: G, size: V } = E;
-        if (N && f(N), Ze(l)) {
-          if (x) {
-            if (T.current === l.updateKey)
-              return b;
-            T.current = l.updateKey;
-          }
-          x && (et({
-            params: l,
-            size: V,
-            scene: u
-          }), _({
-            isIntersectingRef: B,
-            isIntersectingOnceRef: C,
-            params: l
-          }), h(!1)), d({
-            params: l,
-            size: V,
-            resolutionRef: g,
-            scene: u,
-            isIntersectingRef: B
-          });
+        if (N && f(N), !Ze(l))
+          return D;
+        if (x) {
+          if (T.current === l.updateKey)
+            return D;
+          T.current = l.updateKey;
         }
-        return r(G);
+        return x && (et({
+          params: l,
+          size: V,
+          scene: u
+        }), _({
+          isIntersectingRef: B,
+          isIntersectingOnceRef: C,
+          params: l
+        }), h(!1)), d({
+          params: l,
+          size: V,
+          resolutionRef: g,
+          scene: u,
+          isIntersectingRef: B
+        }), r(G);
       },
       [
         r,
@@ -1611,7 +1610,7 @@ const et = ({
         l,
         C,
         B,
-        b
+        D
       ]
     ),
     f,
@@ -1623,7 +1622,7 @@ const et = ({
       isIntersecting: L,
       DOMRects: m,
       intersections: B.current,
-      useDomView: D
+      useDomView: b
     }
   ];
 };
@@ -1701,10 +1700,10 @@ const st = (n) => {
           m.texture.source.data.width,
           m.texture.source.data.height
         ]), i(e, "uBlurSize", m.blurSize);
-        let b = f(T);
+        let D = f(T);
         const _ = m.blurPower;
         for (let C = 0; C < _; C++)
-          i(e, "uTexture", b), b = f(T);
+          i(e, "uTexture", D), D = f(T);
         return r(T);
       },
       [r, f, e, d, m]
