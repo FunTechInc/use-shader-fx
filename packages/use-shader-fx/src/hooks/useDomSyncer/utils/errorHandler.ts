@@ -8,13 +8,13 @@ export const errorHandler = (params: DomSyncerParams) => {
 
    if (!domLength || !textureLength || !resolutionLength) {
       ISDEV && console.warn("No dom or texture or resolution is set");
-      return false;
+      return true;
    }
 
    if (domLength !== textureLength || domLength !== resolutionLength) {
       ISDEV && console.warn("not Match dom , texture and resolution length");
-      return false;
+      return true;
    }
 
-   return true;
+   return false;
 };
