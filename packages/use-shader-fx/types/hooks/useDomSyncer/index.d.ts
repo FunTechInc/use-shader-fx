@@ -1,5 +1,5 @@
-/// <reference types="react" />
 import * as THREE from "three";
+import { Key } from "react";
 import { HooksProps, HooksReturn } from "../types";
 import { IsIntersecting } from "./utils/useIsIntersecting";
 import { UseDomView } from "./utils/createUseDomView";
@@ -16,6 +16,8 @@ export type DomSyncerParams = {
     rotation?: THREE.Euler[];
     /** Array of callback functions when crossed */
     onIntersect?: ((entry: IntersectionObserverEntry) => void)[];
+    /** Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates. */
+    updateKey?: Key;
 };
 export type DomSyncerObject = {
     scene: THREE.Scene;
@@ -39,5 +41,7 @@ export type DomSyncerObject = {
 export declare const DOMSYNCER_PARAMS: DomSyncerParams;
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @param dependencies - When this dependency array is changed, the mesh and intersection judgment will be updated according to the passed DOM array.
+ * @param defaultKey - Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.
  */
-export declare const useDomSyncer: ({ size, dpr, samples }: HooksProps, dependencies?: import("react").DependencyList) => HooksReturn<DomSyncerParams, DomSyncerObject>;
+export declare const useDomSyncer: ({ size, dpr, samples }: HooksProps, dependencies: import("react").DependencyList | undefined, defaultKey: Key) => HooksReturn<DomSyncerParams, DomSyncerObject>;
