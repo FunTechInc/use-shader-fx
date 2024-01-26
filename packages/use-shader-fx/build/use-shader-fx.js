@@ -1388,7 +1388,7 @@ const ke = (n) => {
 }, Y = process.env.NODE_ENV === "development", Ze = (n) => {
   var e, u, c;
   const s = (e = n.dom) == null ? void 0 : e.length, o = (u = n.texture) == null ? void 0 : u.length, a = (c = n.resolution) == null ? void 0 : c.length;
-  return !s || !o || !a ? (Y && console.warn("No dom or texture or resolution is set"), !1) : s !== o || s !== a ? (Y && console.warn("not Match dom , texture and resolution length"), !1) : !0;
+  return !s || !o || !a ? (Y && console.warn("No dom or texture or resolution is set"), !0) : s !== o || s !== a ? (Y && console.warn("not Match dom , texture and resolution length"), !0) : !1;
 };
 var Je = `varying vec2 vUv;
 
@@ -1577,7 +1577,7 @@ const et = ({
     w(
       (E, N) => {
         const { gl: G, size: V } = E;
-        if (N && f(N), !Ze(l))
+        if (N && f(N), Ze(l))
           return D;
         if (x) {
           if (T.current === l.updateKey)

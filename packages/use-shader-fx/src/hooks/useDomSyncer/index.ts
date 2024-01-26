@@ -113,7 +113,7 @@ export const useDomSyncer = (
 
          updateParams && setParams(updateParams);
 
-         if (!errorHandler(params)) {
+         if (errorHandler(params)) {
             return emptyTexture;
          }
 
