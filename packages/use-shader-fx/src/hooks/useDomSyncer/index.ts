@@ -113,15 +113,15 @@ export const useDomSyncer = (
 
          updateParams && setParams(updateParams);
 
-         if (refreshTrigger) {
-            if (updateKey.current === params.updateKey) {
-               return emptyTexture;
-            } else {
-               updateKey.current = params.updateKey!;
-            }
-         }
-
          if (errorHandler(params)) {
+            if (refreshTrigger) {
+               if (updateKey.current === params.updateKey) {
+                  return emptyTexture;
+               } else {
+                  updateKey.current = params.updateKey!;
+               }
+            }
+
             if (refreshTrigger) {
                createMesh({
                   params,
