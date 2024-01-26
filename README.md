@@ -368,7 +368,8 @@ The second argument contains the dependency array that updates the DOM. For exam
 ```tsx
 const [updateDomSyncer, setDomSyncer, domSyncerObj] = useDomSyncer(
    { size, dpr },
-   [state]
+   [state],
+   state
 );
 
 useLayoutEffect(() => {
@@ -378,6 +379,8 @@ useLayoutEffect(() => {
       domArr.current = [...document.querySelectorAll(".item2")!];
    }
    setDomSyncer({
+      // Since DOM rendering and React updates are asynchronous, the DOM may not be retrieved correctly when the state is updated. In that case, use another logic to get the DOM perfectly before updating updateKey.
+      updateKey: state,
       dom: domArr.current,
       boderRadius: [...Array(domArr.current.length)].map((_, i) => i * 50.0),
       onIntersect: [...Array(domArr.current.length)].map((_, i) => (entry) => {
@@ -419,6 +422,7 @@ type DomSyncerObject = {
    scene: THREE.Scene;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
+   output: THREE.Texture;
    /**
     * A function that returns a determination whether the DOM intersects or not.
     * The boolean will be updated after executing the onIntersect function.
@@ -426,8 +430,12 @@ type DomSyncerObject = {
     * @param once - If set to true, it will continue to return true once crossed.
     */
    isIntersecting: IsIntersecting;
-   /** Returns the target's DOMRect[] */
+   /** target's DOMRect[] */
    DOMRects: DOMRect[];
+   /** target's intersetions boolean[] */
+   intersections: boolean[];
+   /** You can set callbacks for when at least one DOM is visible and when it is completely hidden. */
+   useDomView: UseDomView;
 };
 ```
 
@@ -443,7 +451,13 @@ type DomSyncerParams = {
    resolution?: THREE.Vector2[];
    /** default:0.0[] */
    boderRadius?: number[];
+   /** the angle you want to rotate */
+   rotation?: THREE.Euler[];
    /** Array of callback functions when crossed */
    onIntersect?: ((entry: IntersectionObserverEntry) => void)[];
+   /** Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates. */
+   updateKey?: Key;
 };
 ```
+
+`updateKey` : Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.
