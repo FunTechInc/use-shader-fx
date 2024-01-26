@@ -1577,26 +1577,29 @@ const et = ({
     w(
       (E, N) => {
         const { gl: G, size: V } = E;
-        if (N && f(N), x) {
-          if (T.current === l.updateKey)
-            return b;
-          T.current = l.updateKey;
+        if (N && f(N), Ze(l)) {
+          if (x) {
+            if (T.current === l.updateKey)
+              return b;
+            T.current = l.updateKey;
+          }
+          x && (et({
+            params: l,
+            size: V,
+            scene: u
+          }), _({
+            isIntersectingRef: B,
+            isIntersectingOnceRef: C,
+            params: l
+          }), h(!1)), d({
+            params: l,
+            size: V,
+            resolutionRef: g,
+            scene: u,
+            isIntersectingRef: B
+          });
         }
-        return Ze(l) && (x && (et({
-          params: l,
-          size: V,
-          scene: u
-        }), _({
-          isIntersectingRef: B,
-          isIntersectingOnceRef: C,
-          params: l
-        }), h(!1)), d({
-          params: l,
-          size: V,
-          resolutionRef: g,
-          scene: u,
-          isIntersectingRef: B
-        })), r(G);
+        return r(G);
       },
       [
         r,
