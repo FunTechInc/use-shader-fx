@@ -368,8 +368,7 @@ The second argument contains the dependency array that updates the DOM. For exam
 ```tsx
 const [updateDomSyncer, setDomSyncer, domSyncerObj] = useDomSyncer(
    { size, dpr },
-   [state],
-   state
+   [state]
 );
 
 useLayoutEffect(() => {
@@ -379,8 +378,8 @@ useLayoutEffect(() => {
       domArr.current = [...document.querySelectorAll(".item2")!];
    }
    setDomSyncer({
-      // Since DOM rendering and React updates are asynchronous, the DOM may not be retrieved correctly when the state is updated. In that case, use another logic to get the DOM perfectly before updating updateKey.
-      updateKey: state,
+      // Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.updateKey must be a unique value for each update, for example `performance.now()
+      updateKey: performance.now(),
       dom: domArr.current,
       boderRadius: [...Array(domArr.current.length)].map((_, i) => i * 50.0),
       onIntersect: [...Array(domArr.current.length)].map((_, i) => (entry) => {

@@ -25,7 +25,7 @@ export type DomSyncerParams = {
    rotation?: THREE.Euler[];
    /** Array of callback functions when crossed */
    onIntersect?: ((entry: IntersectionObserverEntry) => void)[];
-   /** Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates. */
+   /** Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.updateKey must be a unique value for each update, for example `performance.now()`.*/
    updateKey?: Key;
 };
 
@@ -61,12 +61,10 @@ export const DOMSYNCER_PARAMS: DomSyncerParams = {
 /**
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  * @param dependencies - When this dependency array is changed, the mesh and intersection judgment will be updated according to the passed DOM array.
- * @param defaultKey - Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.
  */
 export const useDomSyncer = (
    { size, dpr, samples = 0 }: HooksProps,
-   dependencies: React.DependencyList = [],
-   defaultKey: Key
+   dependencies: React.DependencyList = []
 ): HooksReturn<DomSyncerParams, DomSyncerObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const camera = useCamera(size);
@@ -80,7 +78,7 @@ export const useDomSyncer = (
    });
    const [params, setParams] = useParams<DomSyncerParams>({
       ...DOMSYNCER_PARAMS,
-      updateKey: defaultKey,
+      updateKey: performance.now(),
    });
 
    const [DOMRects, updateDomRects] = useUpdateDomRect();
