@@ -62,8 +62,7 @@ export const useFluid = ({
    size,
    dpr,
    samples = 0,
-   pointer: _pointer,
-}: HooksProps & {pointer?: THREE.Vector2}): HooksReturn<FluidParams, FluidObject> => {
+}: HooksProps): HooksReturn<FluidParams, FluidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
    const [materials, setMeshMaterial] = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
@@ -91,7 +90,7 @@ export const useFluid = ({
    const [params, setParams] = useParams<FluidParams>(FLUID_PARAMS);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: FluidParams) => {
+      (props: RootState, updateParams?: FluidParams, customPointer?:THREE.Vector2) => {
          const { gl, pointer, clock, size } = props;
 
          updateParams && setParams(updateParams);
@@ -130,8 +129,14 @@ export const useFluid = ({
             );
          });
 
-         // use default viewport pointer if _pointer is not provided
-         const pointerValue = _pointer ?? pointer;
+         //Transform custom pointer from mesh [0,1] to [-1,1]
+         const transformedCustomPointer = customPointer ? customPointer
+				.clone()
+				.multiplyScalar(2)
+				.subScalar(1) : undefined;
+         // use default viewport pointer if customPointer is not provided
+         const pointerValue = transformedCustomPointer ?? pointer;
+
          // update splatting
          const { currentPointer, diffPointer, isVelocityUpdate, velocity } =
             updatePointer(pointerValue);
