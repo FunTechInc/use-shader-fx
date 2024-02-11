@@ -13,18 +13,14 @@ declare global {
 export type FxMaterialProps = {
    u_time: number;
    u_resolution: THREE.Vector2;
-   u_textureResolution: THREE.Vector2;
-   u_texture: THREE.Texture;
-   u_keyColor: THREE.Color;
+   u_fx: THREE.Texture;
 };
 
 export const FxMaterial = shaderMaterial(
    {
       u_time: 0,
       u_resolution: new THREE.Vector2(0, 0),
-      u_textureResolution: new THREE.Vector2(0, 0),
-      u_texture: null,
-      u_keyColor: new THREE.Color(0x00ff00),
+      u_fx: new THREE.Texture(),
    },
 
    `

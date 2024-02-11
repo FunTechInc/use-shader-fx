@@ -15,6 +15,7 @@ export {
 } from "./hooks/useBrightnessPicker";
 export { useColorStrata, COLORSTRATA_PARAMS } from "./hooks/useColorStrata";
 export { useFxBlending, FXBLENDING_PARAMS } from "./hooks/useFxBlending";
+export { useChromaKey, CHROMAKEY_PARAMS } from "./hooks/useChromaKey";
 
 // utils
 export { setUniform } from "./utils/setUniforms";
