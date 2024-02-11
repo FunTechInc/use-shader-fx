@@ -29,7 +29,7 @@ extend({ FxMaterial });
 export const Playground = () => {
    const ref = useRef<FxMaterialProps>();
 
-   const video = useVideoTexture("/tv.mov");
+   const video = useVideoTexture("/glitch.mov");
    const sample = useTexture("/test.jpg");
 
    const { size, viewport } = useThree();
@@ -42,10 +42,10 @@ export const Playground = () => {
    set({
       texture: video,
       textureResolution: new THREE.Vector2(1920, 1080),
-      keyColor: new THREE.Color(0x00ff00),
-      similarity: 0.5,
-      spill: 0.2,
-      smoothness: 0.0,
+      keyColor: new THREE.Color(0x000000),
+      similarity: 0.01,
+      spill: 0.1,
+      smoothness: 0.1,
       contrast: 1.8,
       gamma: 0.7,
       brightness: 0.0,
