@@ -10,6 +10,8 @@ import {
    useColorStrata,
    useBrightnessPicker,
    useChromaKey,
+   useBeat,
+   useFxTexture,
 } from "@/packages/use-shader-fx/src";
 import {
    NoiseParams,
@@ -23,41 +25,38 @@ import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
 import { useTexture, useVideoTexture } from "@react-three/drei";
+import { Console } from "console";
 
 extend({ FxMaterial });
 
 export const Playground = () => {
    const ref = useRef<FxMaterialProps>();
 
-   const video = useVideoTexture("/gorilla.mov");
-
    const { size, viewport } = useThree();
+   const video = useVideoTexture("/gorilla.mov");
+   const glitch = useVideoTexture("/glitch.mov");
 
-   const [updateChromakey, set, { output }] = useChromaKey({
+   const [updateNoise, set, { output: noise }] = useNoise({
       size,
       dpr: viewport.dpr,
    });
 
-   set({
-      texture: video,
-      textureResolution: new THREE.Vector2(1920, 1080),
-      keyColor: new THREE.Color(0x71f998),
-      similarity: 0.2,
-      spill: 0.2,
-      smoothness: 0.1,
-      contrast: 1,
-      gamma: 1,
-      brightness: 0.0,
-   });
+   const updateBeat = useBeat(157);
 
    useFrame((props) => {
-      updateChromakey(props);
+      const { beat, fract, hash } = updateBeat(props.clock);
+      updateNoise(props, {
+         beat: beat,
+      });
+      ref.current!.u_noiseIntensity =
+         hash > 0.5 ? hash * fract : hash * fract * -1;
+      ref.current!.u_fx = hash > 0.5 ? glitch : video;
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterial key={FxMaterial.key} u_fx={output} ref={ref} />
+         <fxMaterial key={FxMaterial.key} u_noise={noise} ref={ref} />
       </mesh>
    );
 };

@@ -15,11 +15,11 @@ export type ChromaKeyParams = {
    textureResolution?: THREE.Vector2;
    /** key color for chromakey processing , default: THREE.Color(0x00ff00) */
    keyColor?: THREE.Color;
-   /** If the similarity with the key color exceeds this value, it becomes transparent. , default: 0.01 */
+   /** If the similarity with the key color exceeds this value, it becomes transparent. , default: 0.2 */
    similarity?: number;
-   /** smoothness , default : 0.01 */
+   /** smoothness , default : 0.1 */
    smoothness?: number;
-   /** spill , default : 0.01 */
+   /** spill , default : 0.2 */
    spill?: number;
    /** tone correction , default : THREE.Vector4(1.0, 1.0, 1.0, 1.0) */
    color?: THREE.Vector4;
@@ -43,9 +43,9 @@ export const CHROMAKEY_PARAMS: ChromaKeyParams = {
    texture: new THREE.Texture(),
    textureResolution: new THREE.Vector2(0, 0),
    keyColor: new THREE.Color(0x00ff00),
-   similarity: 0.01,
-   smoothness: 0.01,
-   spill: 0.01,
+   similarity: 0.2,
+   smoothness: 0.1,
+   spill: 0.2,
    color: new THREE.Vector4(1.0, 1.0, 1.0, 1.0),
    contrast: 1.0,
    brightness: 0.0,

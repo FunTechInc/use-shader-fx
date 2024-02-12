@@ -29,7 +29,7 @@ float getChromeDist(vec3 texColor){
 
 float getBoxFilteredChromaDist(vec3 rgb, vec2 uv)
 {
-	vec2 pixel_size = vec2(1.,1.);
+	vec2 pixel_size = vec2(1.) / u_textureResolution;
 	vec2 h_pixel_size = pixel_size / 2.0;
 	vec2 point_0 = vec2(pixel_size.x, h_pixel_size.y);
 	vec2 point_1 = vec2(h_pixel_size.x, -pixel_size.y);
