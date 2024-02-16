@@ -12,8 +12,8 @@ export const ShaderFx = ({ children }: { children: React.ReactNode }) => {
          <PerformanceMonitor
             factor={1}
             onChange={({ factor }) => {
-               // console.log(`dpr:${dpr}`);
-               setDpr(Math.round((0.5 + 1.0 * factor) * 10) / 10);
+               console.log(`dpr:${dpr}`);
+               // setDpr(Math.round((0.5 + 1.0 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>{children}</Suspense>
             <Perf position={"bottom-left"} minimal={false} />

@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+   // basePath: "/takuma/out",
+   // output: "export",
    webpack: (config, { isServer }) => {
       // GLSLファイル用のルールを追加
       config.module.rules.push({

@@ -16,6 +16,9 @@ export type FxMaterialProps = {
    u_fx: THREE.Texture;
    u_noise: THREE.Texture;
    u_noiseIntensity: number;
+   u_hash: number;
+   u_fract: number;
+   u_bbbb: THREE.Texture;
 };
 
 export const FxMaterial = shaderMaterial(
@@ -24,6 +27,9 @@ export const FxMaterial = shaderMaterial(
       u_resolution: new THREE.Vector2(0, 0),
       u_fx: new THREE.Texture(),
       u_noise: new THREE.Texture(),
+      u_bbbb: new THREE.Texture(),
+      u_hash: 0,
+      u_fract: 0,
       u_noiseIntensity: 0,
    },
 

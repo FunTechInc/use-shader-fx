@@ -39,7 +39,7 @@ export const RIPPLE_PARAMS: RippleParams = {
 
 interface UseRippleProps extends HooksProps {
    /** texture applied to ripple */
-   texture: THREE.Texture;
+   texture?: THREE.Texture;
    /** ripple size, default:64 */
    scale?: number;
    /** ripple max length, default:100 */
@@ -50,7 +50,7 @@ interface UseRippleProps extends HooksProps {
  * @link https://github.com/takuma-hmng8/use-shader-fx#usage
  */
 export const useRipple = ({
-   texture,
+   texture = new THREE.Texture(),
    scale = 64,
    max = 100,
    size,

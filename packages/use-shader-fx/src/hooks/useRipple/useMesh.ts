@@ -17,7 +17,7 @@ export const useMesh = ({ scale, max, texture, scene }: UseMeshProps) => {
    const material = useMemo(
       () =>
          new THREE.MeshBasicMaterial({
-            map: texture ?? null,
+            map: texture,
             transparent: true,
             blending: THREE.AdditiveBlending,
             depthTest: false,

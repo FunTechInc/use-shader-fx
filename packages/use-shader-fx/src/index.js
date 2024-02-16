@@ -1,4 +1,4 @@
-// fxHooks
+// FXs
 export { useBrush, BRUSH_PARAMS } from "./hooks/useBrush";
 export { useDuoTone, DUOTONE_PARAMS } from "./hooks/useDuoTone";
 export { useBlending, BLENDING_PARAMS } from "./hooks/useBlending";
@@ -6,7 +6,6 @@ export { useFluid, FLUID_PARAMS } from "./hooks/useFluid";
 export { useRipple, RIPPLE_PARAMS } from "./hooks/useRipple";
 export { useFxTexture, FXTEXTURE_PARAMS } from "./hooks/useFxTexture";
 export { useNoise, NOISE_PARAMS } from "./hooks/useNoise";
-export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
 export { useSimpleBlur, SIMPLEBLUR_PARAMS } from "./hooks/useSimpleBlur";
 export { useWave, WAVE_PARAMS } from "./hooks/useWave";
 export {
@@ -16,6 +15,8 @@ export {
 export { useColorStrata, COLORSTRATA_PARAMS } from "./hooks/useColorStrata";
 export { useFxBlending, FXBLENDING_PARAMS } from "./hooks/useFxBlending";
 export { useChromaKey, CHROMAKEY_PARAMS } from "./hooks/useChromaKey";
+export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
+export { useMarble, MARBLE_PARAMS } from "./hooks/useMarble";
 
 // utils
 export { setUniform } from "./utils/setUniforms";
