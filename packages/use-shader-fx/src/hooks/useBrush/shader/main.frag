@@ -44,6 +44,8 @@ float isOnLine(vec2 point, vec2 start, vec2 end, float width, float aspect) {
 	return float(withinLine);
 }
 
+// IDEA : マルチサンプリングしてるんだけど、もっといい方法ありそうだけどな〜
+// IDEA ; 普通にマウスからの距離でいけないかな〜
 vec4 createSmudge(){
 	vec2 offsets[9];
 	offsets[0] = vec2(-1, -1); offsets[1] = vec2( 0, -1); offsets[2] = vec2( 1, -1);
@@ -60,6 +62,7 @@ vec4 createSmudge(){
 	return smudgedColor / 9.0;
 }
 
+//IDEA : 速度からサンプリングして擬似的なモーションブラーしてるんだけど、ここで速度による拡散作れないかな〜
 vec4 createMotionBlur(vec4 baseColor, vec2 velocity, float motion, int samples) {
 	vec4 motionBlurredColor = baseColor;
 	vec2 scaledVelocity = velocity * motion;
@@ -71,9 +74,7 @@ vec4 createMotionBlur(vec4 baseColor, vec2 velocity, float motion, int samples) 
 	return motionBlurredColor / float(samples);
 }
 
-
 void main() {
-	// Convert UV coordinates to range [-1, 1]
 	vec2 st = vUv * 2.0 - 1.0;
 	
 	// velocity vector
@@ -94,11 +95,19 @@ void main() {
 	vec3 color = uColor;
 
 	// map texture to color
+	// TODO：ここのミックスもよう使い勝手わるい
 	vec4 textureColor = texture2D(uTexture, vUv);
 	vec3 finalColor = mix(color, textureColor.rgb, textureColor.a);
 
-	float onLine = isOnLine(st, uPrevMouse, uMouse, modifiedRadius, uAspect);
-	bufferColor.rgb = mix(bufferColor.rgb, finalColor, onLine);
+	// ここ0 || 1で かえって来る
+	float onLine = length(uVelocity) > 0. ? isOnLine(st, uPrevMouse, uMouse, modifiedRadius, uAspect) : .0;
 	
-	gl_FragColor = vec4(bufferColor.rgb,1.0);
+	// ここで、onlineの値に乗算するのが良さそう　falloff
+	// float falloff = smoothstep(.9, 0.0, onLine);
+	
+	bufferColor.rgb = mix(bufferColor.rgb, finalColor, onLine);
+
+	gl_FragColor = vec4(bufferColor.rgb,1.);
+
+
 }

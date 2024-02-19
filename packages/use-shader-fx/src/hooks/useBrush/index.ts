@@ -41,7 +41,7 @@ export const BRUSH_PARAMS: BrushParams = {
    dissipation: 1.0,
    motionBlur: 0.0,
    motionSample: 5,
-   color: new THREE.Color(0xffffff),
+   color: new THREE.Color(0xff0000),
 };
 
 /**
