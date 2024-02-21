@@ -9,10 +9,14 @@ import { Size } from "@react-three/fiber";
 
 export class BrushMaterial extends THREE.ShaderMaterial {
    uniforms!: {
+      uBuffer: { value: THREE.Texture };
+      uTexture: { value: THREE.Texture };
+      uIsTexture: { value: boolean };
       uMap: { value: THREE.Texture };
+      uIsMap: { value: boolean };
+      uMapIntensity: { value: number };
       uResolution: { value: THREE.Texture };
       uAspect: { value: number };
-      uTexture: { value: THREE.Texture };
       uRadius: { value: number };
       uSmudge: { value: number };
       uDissipation: { value: number };
@@ -21,7 +25,9 @@ export class BrushMaterial extends THREE.ShaderMaterial {
       uMouse: { value: number };
       uPrevMouse: { value: number };
       uVelocity: { value: number };
-      uColor: { value: THREE.Color };
+      uColor: { value: THREE.Vector3 };
+      uIsCursor: { value: boolean };
+      uPressure: { value: number };
    };
 }
 
@@ -39,19 +45,25 @@ export const useMesh = ({
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               uMap: { value: new THREE.Texture() },
+               uBuffer: { value: new THREE.Texture() },
                uResolution: { value: new THREE.Vector2(0, 0) },
                uAspect: { value: 0.0 },
                uTexture: { value: new THREE.Texture() },
+               uIsTexture: { value: false },
+               uMap: { value: new THREE.Texture() },
+               uIsMap: { value: false },
+               uMapIntensity: { value: 0.0 },
                uRadius: { value: 0.0 },
                uSmudge: { value: 0.0 },
                uDissipation: { value: 0.0 },
                uMotionBlur: { value: 0.0 },
                uMotionSample: { value: 0 },
-               uMouse: { value: new THREE.Vector2(0, 0) },
-               uPrevMouse: { value: new THREE.Vector2(0, 0) },
+               uMouse: { value: new THREE.Vector2(-10, -10) },
+               uPrevMouse: { value: new THREE.Vector2(-10, -10) },
                uVelocity: { value: new THREE.Vector2(0, 0) },
-               uColor: { value: new THREE.Color(0xffffff) },
+               uColor: { value: new THREE.Vector3(1, 0, 0) },
+               uIsCursor: { value: false },
+               uPressure: { value: 1.0 },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,

@@ -3,15 +3,19 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../utils/useCamera";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
-import { usePointer } from "../../utils/usePointer";
+import { PointerValues, usePointer } from "../../utils/usePointer";
 import { setUniform } from "../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../types";
 import { useParams } from "../../utils/useParams";
 import { DoubleRenderTarget, useDoubleFBO } from "../../utils/useDoubleFBO";
 
 export type BrushParams = {
-   /** Texture applied to the brush.Mixed with the value of a , default:THREE.Texture() */
-   texture?: THREE.Texture;
+   /** Texture applied to the brush, textureがtrueの場合はcolorよりも優先するよ , default:false */
+   texture?: THREE.Texture | false;
+   /** fxマップをつけられるよ , default:false */
+   map?: THREE.Texture | false;
+   /**  default:0.1 */
+   mapIntensity?: number;
    /** size of the stamp, percentage of the size ,default:0.05 */
    radius?: number;
    /** Strength of smudge effect , default:0.0*/
@@ -22,8 +26,14 @@ export type BrushParams = {
    motionBlur?: number;
    /** Number of motion blur samples. Affects performance default: 5 */
    motionSample?: number;
-   /** brush color , default:THREE.Color(0xffffff) */
-   color?: THREE.Color;
+   /** brush color , it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
+   color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
+   /** 速度が失ってもカーソルに追従する */
+   isCursor?: boolean;
+   /** 筆圧 , default : 1.0 */
+   pressure?: number;
+   /** usePointerをframeで呼び出す場合、この値にPointerValuesをセットすることで、2重の呼び出しを防ぎます , default:false */
+   pointerValues?: PointerValues | false;
 };
 
 export type BrushObject = {
@@ -35,13 +45,18 @@ export type BrushObject = {
 };
 
 export const BRUSH_PARAMS: BrushParams = {
-   texture: new THREE.Texture(),
+   texture: false,
+   map: false,
+   mapIntensity: 0.1,
    radius: 0.05,
    smudge: 0.0,
    dissipation: 1.0,
    motionBlur: 0.0,
    motionSample: 5,
-   color: new THREE.Color(0xff0000),
+   color: new THREE.Vector3(1.0, 0.0, 0.0),
+   isCursor: false,
+   pressure: 1.0,
+   pointerValues: false,
 };
 
 /**
@@ -72,22 +87,51 @@ export const useBrush = ({
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture!);
+         if (params.texture!) {
+            setUniform(material, "uIsTexture", true);
+            setUniform(material, "uTexture", params.texture!);
+         } else {
+            setUniform(material, "uIsTexture", false);
+         }
+
+         if (params.map!) {
+            setUniform(material, "uIsMap", true);
+            setUniform(material, "uMap", params.map!);
+            setUniform(material, "uMapIntensity", params.mapIntensity!);
+         } else {
+            setUniform(material, "uIsMap", false);
+         }
+
          setUniform(material, "uRadius", params.radius!);
          setUniform(material, "uSmudge", params.smudge!);
          setUniform(material, "uDissipation", params.dissipation!);
          setUniform(material, "uMotionBlur", params.motionBlur!);
          setUniform(material, "uMotionSample", params.motionSample!);
-         setUniform(material, "uColor", params.color!);
 
-         const { currentPointer, prevPointer, velocity } =
-            updatePointer(pointer);
-         setUniform(material, "uMouse", currentPointer);
-         setUniform(material, "uPrevMouse", prevPointer);
-         setUniform(material, "uVelocity", velocity);
+         let pointerValues: PointerValues;
+         if (params.pointerValues!) {
+            pointerValues = params.pointerValues;
+         } else {
+            pointerValues = updatePointer(pointer);
+         }
+
+         if (pointerValues.isVelocityUpdate) {
+            setUniform(material, "uMouse", pointerValues.currentPointer);
+            setUniform(material, "uPrevMouse", pointerValues.prevPointer);
+         }
+         setUniform(material, "uVelocity", pointerValues.velocity);
+
+         const color: THREE.Vector3 =
+            typeof params.color === "function"
+               ? params.color(pointerValues.velocity)
+               : params.color!;
+         setUniform(material, "uColor", color);
+
+         setUniform(material, "uIsCursor", params.isCursor!);
+         setUniform(material, "uPressure", params.pressure!);
 
          return updateRenderTarget(gl, ({ read }) => {
-            setUniform(material, "uMap", read);
+            setUniform(material, "uBuffer", read);
          });
       },
       [material, updatePointer, updateRenderTarget, params, setParams]

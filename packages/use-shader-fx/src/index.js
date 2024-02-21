@@ -17,6 +17,10 @@ export { useFxBlending, FXBLENDING_PARAMS } from "./hooks/useFxBlending";
 export { useChromaKey, CHROMAKEY_PARAMS } from "./hooks/useChromaKey";
 export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
 export { useMarble, MARBLE_PARAMS } from "./hooks/useMarble";
+export {
+   useAlphaBlending,
+   ALPHABLENDING_PARAMS,
+} from "./hooks/useAlphaBlending";
 
 // utils
 export { setUniform } from "./utils/setUniforms";
@@ -29,3 +33,7 @@ export { useResolution } from "./utils/useResolution";
 export { useSingleFBO } from "./utils/useSingleFBO";
 export { useCopyTexture } from "./utils/useCopyTexture";
 export { useBeat } from "./utils/useBeat";
+export { useFPSLimiter } from "./utils/useFPSLimiter";
+
+// EASING
+export { EASING } from "./libs/easing";

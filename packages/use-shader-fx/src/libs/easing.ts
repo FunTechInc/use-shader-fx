@@ -1,4 +1,3 @@
-// from https://github.com/ai/easings.net
 export type Easing =
    | "easeInSine"
    | "easeOutSine"
@@ -35,6 +34,9 @@ type EasingFunctions = {
    [K in Easing]: (x: number) => number;
 };
 
+/**
+ * from https://github.com/ai/easings.net
+ */
 export const EASING: EasingFunctions = {
    easeInSine(x: number): number {
       return 1 - Math.cos((x * Math.PI) / 2);

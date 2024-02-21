@@ -1,13 +1,15 @@
 import * as THREE from "three";
 import { useCallback, useRef } from "react";
 
-type UpdatePointer = (currentPointer: THREE.Vector2) => {
+export type PointerValues = {
    currentPointer: THREE.Vector2;
    prevPointer: THREE.Vector2;
    diffPointer: THREE.Vector2;
    velocity: THREE.Vector2;
    isVelocityUpdate: boolean;
 };
+
+type UpdatePointer = (currentPointer: THREE.Vector2) => PointerValues;
 
 /** When given the pointer vector2 from r3f's RootState, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}. */
 export const usePointer = (): UpdatePointer => {

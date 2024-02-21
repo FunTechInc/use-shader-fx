@@ -15,68 +15,88 @@ import {
    useMarble,
    useFxTexture,
    useBrush,
+   useFPSLimiter,
+   EASING,
+   usePointer,
+   useAlphaBlending,
 } from "@/packages/use-shader-fx/src";
-import {
-   NoiseParams,
-   NOISE_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useNoise";
-import {
-   ColorStrataParams,
-   COLORSTRATA_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useColorStrata";
-import GUI from "lil-gui";
-import { useGUI } from "@/utils/useGUI";
+
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
 import { useTexture, useVideoTexture } from "@react-three/drei";
-import { Console } from "console";
 
 extend({ FxMaterial });
-
-/*===============================================
-TODO:
-~~ 初期状態で真ん中に来ないようにする ~~
-
-- falloffつける:速度に応じて小さくなって消滅する係数
-	- disipaccionと関係sる値
-- uniform名、変数名を満足いくものにする
-
-- colorをfluidみたく関数しましょっか
-
-- パフォーマンス
-
-- あんまうまくいかなかったら、useFlowmapを別途つくる？
-	- パクリすぎるかも？
-===============================================*/
 
 export const Playground = () => {
    const ref = useRef<FxMaterialProps>();
 
    const { size, viewport } = useThree();
-   // const bbbb = useVideoTexture("/bbbb.mov");
-   // const glitch = useVideoTexture("/glitch.mov");
-   const [updateBrush, setBrush, { output }] = useBrush({
+   const bbbb = useVideoTexture("/bbbb.mov");
+   const glitch = useVideoTexture("/glitch.mov");
+   const [updateBrush, setBrush, { output: brush }] = useBrush({
+      size,
+      dpr: viewport.dpr,
+   });
+   const [updateMarble, setMarble, { output: marble }] = useMarble({
       size,
       dpr: viewport.dpr,
    });
 
+   const [updateFluid, setFluid, { output: fluid }] = useFluid({
+      size,
+      dpr: viewport.dpr,
+   });
+
+   const [updateAlphaBlending, setAlphaBlending, { output: alphaBlending }] =
+      useAlphaBlending({ size, dpr: viewport.dpr });
+
+   setMarble({
+      scale: 0.01,
+   });
+
+   setAlphaBlending({
+      texture: bbbb,
+      map: brush,
+   });
+
+   const colorVec = useRef(new THREE.Vector3());
    setBrush({
-      radius: 0.4,
-      smudge: 4,
-      motionBlur: 3,
-      motionSample: 8,
-      dissipation: 0.93,
+      texture: marble,
+      // map: marble,
+      // mapIntensity: 0.15,
+      radius: 0.1,
+      // smudge: 4,
+      motionBlur: 0,
+      dissipation: 0.9,
+   });
+
+   setFluid({
+      fluid_color: (velocity: THREE.Vector2) => {
+         const rCol = Math.max(0.0, Math.abs(velocity.x) * 200);
+         const gCol = Math.max(0.0, Math.abs(velocity.y) * 200);
+         const bCol = Math.max(0.0, (rCol + gCol) / 2);
+         return colorVec.current.set(rCol, gCol, bCol);
+      },
    });
 
    // const updateBeat = useBeat(157);
 
+   const limiter = useFPSLimiter();
+   const updatePointer = usePointer();
+
    useFrame((props) => {
-      updateBrush(props);
+      // const pointerValues = updatePointer(props.pointer);
+      updateBrush(props, {
+         // pointerValues,
+         // pressure: EASING.easeOutCirc(pointerValues.velocity.length()) * 10,
+      });
+      updateMarble(props);
+      updateAlphaBlending(props);
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterial key={FxMaterial.key} u_fx={output} ref={ref} />
+         <fxMaterial key={FxMaterial.key} u_fx={alphaBlending} ref={ref} />
       </mesh>
    );
 };
