@@ -8,7 +8,7 @@ import {
    useFxTexture,
    useCopyTexture,
 } from "@/packages/use-shader-fx/src";
-import { WaveParams } from "@/packages/use-shader-fx/src/hooks/useWave";
+import { WaveParams } from "@/packages/use-shader-fx/src/fxs/utils/useWave";
 import gsap from "gsap";
 
 extend({ FxMaterial });

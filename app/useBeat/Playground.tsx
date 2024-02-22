@@ -15,14 +15,7 @@ import {
    useMarble,
    useFxTexture,
 } from "@/packages/use-shader-fx/src";
-import {
-   NoiseParams,
-   NOISE_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useNoise";
-import {
-   ColorStrataParams,
-   COLORSTRATA_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useColorStrata";
+
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";

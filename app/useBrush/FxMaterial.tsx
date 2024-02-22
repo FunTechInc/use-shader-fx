@@ -11,12 +11,12 @@ declare global {
 }
 
 export type FxMaterialProps = {
-   u_fx: THREE.Texture;
+   u_tex: THREE.Texture;
 };
 
 export const FxMaterial = shaderMaterial(
    {
-      u_fx: new THREE.Texture(),
+      u_tex: new THREE.Texture(),
    },
 
    `

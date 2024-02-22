@@ -16,7 +16,7 @@ import {
    useFxTexture,
    useBrush,
    useFPSLimiter,
-   EASING,
+   Easing,
    usePointer,
    useAlphaBlending,
 } from "@/packages/use-shader-fx/src";
@@ -28,10 +28,8 @@ extend({ FxMaterial });
 
 export const Playground = () => {
    const ref = useRef<FxMaterialProps>();
-
    const { size, viewport } = useThree();
    const bbbb = useVideoTexture("/bbbb.mov");
-   const glitch = useVideoTexture("/glitch.mov");
    const [updateBrush, setBrush, { output: brush }] = useBrush({
       size,
       dpr: viewport.dpr,
@@ -41,62 +39,70 @@ export const Playground = () => {
       dpr: viewport.dpr,
    });
 
-   const [updateFluid, setFluid, { output: fluid }] = useFluid({
+   const [updateAlphaBlending, setAlphaBlending, { output: alphaBlending }] =
+      useAlphaBlending({ size, dpr: viewport.dpr });
+
+   const [updateCS, setCS, { output: cs }] = useColorStrata({
       size,
       dpr: viewport.dpr,
    });
 
-   const [updateAlphaBlending, setAlphaBlending, { output: alphaBlending }] =
-      useAlphaBlending({ size, dpr: viewport.dpr });
+   setCS({
+      laminateLayer: 20,
+      scale: 0.48,
+      laminateDetail: new THREE.Vector2(5.1, 5),
+      distortion: new THREE.Vector2(2.87, 2.75),
+      timeStrength: new THREE.Vector2(5.1, 2.1),
+   });
 
    setMarble({
-      scale: 0.01,
+      scale: 0.002,
+      timeStrength: 0.1,
+   });
+
+   setBrush({
+      map: cs,
+      texture: cs,
+      mapIntensity: 0.2,
+      radius: 0.05,
+      smudge: 4,
+      // motionBlur: 5,
+      dissipation: 0.8,
+      isCursor: false,
    });
 
    setAlphaBlending({
-      texture: bbbb,
+      texture: marble,
       map: brush,
    });
 
-   const colorVec = useRef(new THREE.Vector3());
-   setBrush({
-      texture: marble,
-      // map: marble,
-      // mapIntensity: 0.15,
-      radius: 0.1,
-      // smudge: 4,
-      motionBlur: 0,
-      dissipation: 0.9,
-   });
-
-   setFluid({
-      fluid_color: (velocity: THREE.Vector2) => {
-         const rCol = Math.max(0.0, Math.abs(velocity.x) * 200);
-         const gCol = Math.max(0.0, Math.abs(velocity.y) * 200);
-         const bCol = Math.max(0.0, (rCol + gCol) / 2);
-         return colorVec.current.set(rCol, gCol, bCol);
-      },
-   });
-
-   // const updateBeat = useBeat(157);
-
-   const limiter = useFPSLimiter();
    const updatePointer = usePointer();
+   const updateBeat = useBeat(157);
 
    useFrame((props) => {
-      // const pointerValues = updatePointer(props.pointer);
+      // ref.current!.u_tex = updateAlphaBlending(props, {
+      //    texture: marble,
+      //    map: updateBrush(props, {
+      //       texture: updateMarble(props),
+      //    }),
+      // });
+      const pointerValues = updatePointer(props.pointer);
       updateBrush(props, {
-         // pointerValues,
-         // pressure: EASING.easeOutCirc(pointerValues.velocity.length()) * 10,
+         // pressure: Easing.easeOutCirc(pointerValues.velocity.length() * 10) * 2,
+         pointerValues: pointerValues,
       });
-      updateMarble(props);
-      updateAlphaBlending(props);
+      // updateMarble(props);
+      // updateAlphaBlending(props);
+      const { beat, fract, floor, hash } = updateBeat(props.clock);
+      updateCS(props, {
+         beat: beat,
+      });
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterial key={FxMaterial.key} u_fx={alphaBlending} ref={ref} />
+         <fxMaterial key={FxMaterial.key} u_tex={cs} ref={ref} />
       </mesh>
    );
 };

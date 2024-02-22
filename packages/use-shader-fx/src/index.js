@@ -1,28 +1,47 @@
-// FXs
-export { useBrush, BRUSH_PARAMS } from "./hooks/useBrush";
-export { useDuoTone, DUOTONE_PARAMS } from "./hooks/useDuoTone";
-export { useBlending, BLENDING_PARAMS } from "./hooks/useBlending";
-export { useFluid, FLUID_PARAMS } from "./hooks/useFluid";
-export { useRipple, RIPPLE_PARAMS } from "./hooks/useRipple";
-export { useFxTexture, FXTEXTURE_PARAMS } from "./hooks/useFxTexture";
-export { useNoise, NOISE_PARAMS } from "./hooks/useNoise";
-export { useSimpleBlur, SIMPLEBLUR_PARAMS } from "./hooks/useSimpleBlur";
-export { useWave, WAVE_PARAMS } from "./hooks/useWave";
+/*===============================================
+FXs
+===============================================*/
+/********************
+interactions
+********************/
+export { useBrush, BRUSH_PARAMS } from "./fxs/interactions/useBrush";
+export { useFluid, FLUID_PARAMS } from "./fxs/interactions/useFluid";
+export { useRipple, RIPPLE_PARAMS } from "./fxs/interactions/useRipple";
+export {
+   useDomSyncer,
+   DOMSYNCER_PARAMS,
+} from "./fxs/interactions/useDomSyncer";
+/********************
+noises
+********************/
+export { useNoise, NOISE_PARAMS } from "./fxs/noises/useNoise";
+export {
+   useColorStrata,
+   COLORSTRATA_PARAMS,
+} from "./fxs/noises/useColorStrata";
+export { useMarble, MARBLE_PARAMS } from "./fxs/noises/useMarble";
+/********************
+utils
+********************/
+export { useDuoTone, DUOTONE_PARAMS } from "./fxs/utils/useDuoTone";
+export { useBlending, BLENDING_PARAMS } from "./fxs/utils/useBlending";
+export { useFxTexture, FXTEXTURE_PARAMS } from "./fxs/utils/useFxTexture";
+export { useSimpleBlur, SIMPLEBLUR_PARAMS } from "./fxs/utils/useSimpleBlur";
+export { useWave, WAVE_PARAMS } from "./fxs/utils/useWave";
 export {
    useBrightnessPicker,
    BRIGHTNESSPICKER_PARAMS,
-} from "./hooks/useBrightnessPicker";
-export { useColorStrata, COLORSTRATA_PARAMS } from "./hooks/useColorStrata";
-export { useFxBlending, FXBLENDING_PARAMS } from "./hooks/useFxBlending";
-export { useChromaKey, CHROMAKEY_PARAMS } from "./hooks/useChromaKey";
-export { useDomSyncer, DOMSYNCER_PARAMS } from "./hooks/useDomSyncer";
-export { useMarble, MARBLE_PARAMS } from "./hooks/useMarble";
+} from "./fxs/utils/useBrightnessPicker";
+export { useFxBlending, FXBLENDING_PARAMS } from "./fxs/utils/useFxBlending";
+export { useChromaKey, CHROMAKEY_PARAMS } from "./fxs/utils/useChromaKey";
 export {
    useAlphaBlending,
    ALPHABLENDING_PARAMS,
-} from "./hooks/useAlphaBlending";
+} from "./fxs/utils/useAlphaBlending";
 
-// utils
+/*===============================================
+utils
+===============================================*/
 export { setUniform } from "./utils/setUniforms";
 export { useAddMesh } from "./utils/useAddMesh";
 export { useCamera } from "./utils/useCamera";
@@ -32,8 +51,14 @@ export { usePointer } from "./utils/usePointer";
 export { useResolution } from "./utils/useResolution";
 export { useSingleFBO } from "./utils/useSingleFBO";
 export { useCopyTexture } from "./utils/useCopyTexture";
-export { useBeat } from "./utils/useBeat";
-export { useFPSLimiter } from "./utils/useFPSLimiter";
 
-// EASING
-export { EASING } from "./libs/easing";
+/*===============================================
+misc
+===============================================*/
+export { useBeat } from "./misc/useBeat";
+export { useFPSLimiter } from "./misc/useFPSLimiter";
+
+/*===============================================
+Easing
+===============================================*/
+export { Easing } from "./libs/easing";

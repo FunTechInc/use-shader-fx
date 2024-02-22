@@ -1,4 +1,4 @@
-export type Easing =
+export type EasingTypes =
    | "easeInSine"
    | "easeOutSine"
    | "easeInOutSine"
@@ -31,13 +31,13 @@ export type Easing =
    | "easeInOutBounce";
 
 type EasingFunctions = {
-   [K in Easing]: (x: number) => number;
+   [K in EasingTypes]: (x: number) => number;
 };
 
 /**
  * from https://github.com/ai/easings.net
  */
-export const EASING: EasingFunctions = {
+export const Easing: EasingFunctions = Object.freeze({
    easeInSine(x: number): number {
       return 1 - Math.cos((x * Math.PI) / 2);
    },
@@ -160,7 +160,7 @@ export const EASING: EasingFunctions = {
            1;
    },
    easeInBounce(x: number): number {
-      return 1 - EASING.easeOutBounce(1 - x);
+      return 1 - Easing.easeOutBounce(1 - x);
    },
    easeOutBounce(x: number): number {
       const n1 = 7.5625;
@@ -178,7 +178,7 @@ export const EASING: EasingFunctions = {
    },
    easeInOutBounce(x: number): number {
       return x < 0.5
-         ? (1 - EASING.easeOutBounce(1 - 2 * x)) / 2
-         : (1 + EASING.easeOutBounce(2 * x - 1)) / 2;
+         ? (1 - Easing.easeOutBounce(1 - 2 * x)) / 2
+         : (1 + Easing.easeOutBounce(2 * x - 1)) / 2;
    },
-};
+});
