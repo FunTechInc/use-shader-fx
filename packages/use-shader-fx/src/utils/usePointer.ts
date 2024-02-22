@@ -19,9 +19,21 @@ export const usePointer = (): UpdatePointer => {
    const velocity = useRef(new THREE.Vector2(0, 0));
    const isMoved = useRef(false);
 
+   // TODO : lerp
+   const lerpPointer = useRef(new THREE.Vector2(0, 0));
+
    const updatePointer = useCallback((currentPointer: THREE.Vector2) => {
       const now = performance.now();
-      const current = currentPointer.clone();
+
+      // TODO : ラープの処理もっと洗練させる
+      let current: THREE.Vector2;
+      if (!isMoved.current) {
+         current = currentPointer.clone();
+         lerpPointer.current = current;
+      } else {
+         lerpPointer.current = lerpPointer.current.lerp(currentPointer, 0.1);
+         current = lerpPointer.current.clone();
+      }
 
       // first frame
       if (lastUpdateTime.current === 0) {

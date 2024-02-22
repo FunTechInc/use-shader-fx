@@ -42,6 +42,11 @@ export const Playground = () => {
    const [updateAlphaBlending, setAlphaBlending, { output: alphaBlending }] =
       useAlphaBlending({ size, dpr: viewport.dpr });
 
+   const [updateFluid, setFluid, { output: fluid }] = useFluid({
+      size,
+      dpr: viewport.dpr,
+   });
+
    const [updateCS, setCS, { output: cs }] = useColorStrata({
       size,
       dpr: viewport.dpr,
@@ -61,13 +66,13 @@ export const Playground = () => {
    });
 
    setBrush({
-      map: cs,
-      texture: cs,
-      mapIntensity: 0.2,
-      radius: 0.05,
-      smudge: 4,
+      // map: cs,
+      // texture: cs,
+      // mapIntensity: 0.2,
+      radius: 0.2,
+      // smudge: 4,
       // motionBlur: 5,
-      dissipation: 0.8,
+      dissipation: 0.9,
       isCursor: false,
    });
 
@@ -88,21 +93,23 @@ export const Playground = () => {
       // });
       const pointerValues = updatePointer(props.pointer);
       updateBrush(props, {
-         // pressure: Easing.easeOutCirc(pointerValues.velocity.length() * 10) * 2,
          pointerValues: pointerValues,
       });
       // updateMarble(props);
       // updateAlphaBlending(props);
-      const { beat, fract, floor, hash } = updateBeat(props.clock);
-      updateCS(props, {
-         beat: beat,
-      });
+      // const { beat, fract, floor, hash } = updateBeat(props.clock);
+      // updateCS(props, {
+      //    beat: beat,
+      // });
+      // updateFluid(props, {
+      //    pointerValues: pointerValues,
+      // });
    });
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterial key={FxMaterial.key} u_tex={cs} ref={ref} />
+         <fxMaterial key={FxMaterial.key} u_tex={brush} ref={ref} />
       </mesh>
    );
 };
