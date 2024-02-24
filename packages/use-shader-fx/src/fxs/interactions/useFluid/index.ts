@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { FluidMaterials, useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { useCallback, useMemo, useRef } from "react";
-import { PointerValues, usePointer } from "../../../utils/usePointer";
+import { PointerValues, usePointer } from "../../../misc/usePointer";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";

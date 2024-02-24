@@ -9,11 +9,17 @@ import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 
 export type MarbleParams = {
+   /** 0 */
    pattern?: number;
+   /** 2 */
    complexity?: number;
+   /** .2 */
    complexityAttenuation?: number;
+   /** 8 */
    iterations?: number;
+   /** .2 */
    timeStrength?: number;
+   /** 0.002 */
    scale?: number;
    /** you can get into the rhythm ♪ , default:null */
    beat?: number | null;

@@ -3,7 +3,7 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { useCallback, useMemo, useRef } from "react";
 import { RootState } from "@react-three/fiber";
-import { PointerValues, usePointer } from "../../../utils/usePointer";
+import { PointerValues, usePointer } from "../../../misc/usePointer";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";

@@ -81,7 +81,7 @@ export const Playground = () => {
       map: brush,
    });
 
-   const updatePointer = usePointer();
+   const updatePointer = usePointer(0);
    const updateBeat = useBeat(157);
 
    useFrame((props) => {
