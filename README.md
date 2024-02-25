@@ -1,4 +1,4 @@
-![use-shader-fx](public/opengraph-image.jpg)
+![use-shader-fx](public/app-head.jpg)
 
 `use-shader-fx` is a library designed to easily implement shader effects such as fluid simulations and noise. It relies on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) and has been designed with performance control in mind, especially when combined with [drei](https://github.com/pmndrs/drei).
 
