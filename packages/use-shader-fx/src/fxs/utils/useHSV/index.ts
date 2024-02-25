@@ -9,11 +9,11 @@ import { useParams } from "../../../utils/useParams";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
 
 export type HSVParams = {
-   /**  , default: */
+   /** default:THREE.Texture() */
    texture?: THREE.Texture;
-   /**  , default: */
+   /** default:1 */
    brightness?: number;
-   /**  , default: */
+   /** default:1 */
    saturation?: number;
 };
 

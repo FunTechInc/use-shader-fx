@@ -12,11 +12,11 @@ import type { HooksProps, HooksReturn } from "../../types";
 
 export type SimpleBlurParams = {
    /** Make this texture blur , Default:new THREE.Texture() */
-   texture: THREE.Texture;
+   texture?: THREE.Texture;
    /** blurSize, default:3 */
-   blurSize: number;
+   blurSize?: number;
    /** blurPower, affects performance default:5 */
-   blurPower: number;
+   blurPower?: number;
 };
 
 export type SimpleBlurObject = {
@@ -62,16 +62,16 @@ export const useSimpleBlur = ({
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture);
+         setUniform(material, "uTexture", params.texture!);
          setUniform(material, "uResolution", [
-            params.texture.source.data.width,
-            params.texture.source.data.height,
+            params.texture!.source.data.width,
+            params.texture!.source.data.height,
          ]);
-         setUniform(material, "uBlurSize", params.blurSize);
+         setUniform(material, "uBlurSize", params.blurSize!);
 
          let _tempTexture: THREE.Texture = updateTempTexture(gl);
 
-         const iterations = params.blurPower;
+         const iterations = params.blurPower!;
          for (let i = 0; i < iterations; i++) {
             setUniform(material, "uTexture", _tempTexture);
             _tempTexture = updateTempTexture(gl);

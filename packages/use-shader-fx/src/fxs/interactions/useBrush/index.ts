@@ -10,11 +10,11 @@ import { useParams } from "../../../utils/useParams";
 import { DoubleRenderTarget, useDoubleFBO } from "../../../utils/useDoubleFBO";
 
 export type BrushParams = {
-   /** Texture applied to the brush, textureがtrueの場合はcolorよりも優先するよ , default:false */
+   /** Texture applied to the brush, If texture is true, it will take precedence over color , default:false */
    texture?: THREE.Texture | false;
-   /** fxマップをつけられるよ , default:false */
+   /** You can attach an fx map , default:false */
    map?: THREE.Texture | false;
-   /**  default:0.1 */
+   /** map intensity , default:0.1 */
    mapIntensity?: number;
    /** size of the stamp, percentage of the size ,default:0.05 */
    radius?: number;
@@ -28,9 +28,9 @@ export type BrushParams = {
    motionSample?: number;
    /** brush color , it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
    color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
-   /** 速度が失ってもカーソルに追従する */
+   /** Follows the cursor even if it loses speed , default:false */
    isCursor?: boolean;
-   /** 筆圧 , default : 1.0 */
+   /** brush pressure (0 to 1) , default : 1.0 */
    pressure?: number;
    /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:null */
    pointerValues?: PointerValues | null;

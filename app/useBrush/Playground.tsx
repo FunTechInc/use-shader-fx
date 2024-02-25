@@ -19,6 +19,7 @@ import {
    Easing,
    usePointer,
    useAlphaBlending,
+   useCoverTexture,
 } from "@/packages/use-shader-fx/src";
 
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
@@ -50,6 +51,16 @@ export const Playground = () => {
    const [updateCS, setCS, { output: cs }] = useColorStrata({
       size,
       dpr: viewport.dpr,
+   });
+
+   const [updateCover, setCover, { output: cover }] = useCoverTexture({
+      size,
+      dpr: viewport.dpr,
+   });
+
+   setCover({
+      texture: bbbb,
+      textureResolution: new THREE.Vector2(2952, 1510),
    });
 
    setCS({
@@ -95,6 +106,7 @@ export const Playground = () => {
       updateBrush(props, {
          pointerValues: pointerValues,
       });
+      // updateCover(props);
       // updateMarble(props);
       // updateAlphaBlending(props);
       // const { beat, fract, floor, hash } = updateBeat(props.clock);

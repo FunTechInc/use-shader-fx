@@ -1,69 +1,54 @@
 /*===============================================
 FXs
 ===============================================*/
-/********************
-interactions
-********************/
-export { useBrush, BRUSH_PARAMS } from "./fxs/interactions/useBrush";
-export { useFluid, FLUID_PARAMS } from "./fxs/interactions/useFluid";
-export { useRipple, RIPPLE_PARAMS } from "./fxs/interactions/useRipple";
+// interactions
+export * from "./fxs/interactions/useBrush";
+export * from "./fxs/interactions/useFluid";
+export * from "./fxs/interactions/useRipple";
 
-/********************
-noises
-********************/
-export { useNoise, NOISE_PARAMS } from "./fxs/noises/useNoise";
-export {
-   useColorStrata,
-   COLORSTRATA_PARAMS,
-} from "./fxs/noises/useColorStrata";
-export { useMarble, MARBLE_PARAMS } from "./fxs/noises/useMarble";
-/********************
-utils
-********************/
-export { useDuoTone, DUOTONE_PARAMS } from "./fxs/utils/useDuoTone";
-export { useBlending, BLENDING_PARAMS } from "./fxs/utils/useBlending";
-export { useFxTexture, FXTEXTURE_PARAMS } from "./fxs/utils/useFxTexture";
-export {
-   useBrightnessPicker,
-   BRIGHTNESSPICKER_PARAMS,
-} from "./fxs/utils/useBrightnessPicker";
-export { useFxBlending, FXBLENDING_PARAMS } from "./fxs/utils/useFxBlending";
-export {
-   useAlphaBlending,
-   ALPHABLENDING_PARAMS,
-} from "./fxs/utils/useAlphaBlending";
-export { useHSV, HSV_PARAMS } from "./fxs/utils/useHSV";
-/********************
- effects
-********************/
-export { useSimpleBlur, SIMPLEBLUR_PARAMS } from "./fxs/effects/useSimpleBlur";
-export { useWave, WAVE_PARAMS } from "./fxs/effects/useWave";
-/********************
- misc
-********************/
-export { useChromaKey, CHROMAKEY_PARAMS } from "./fxs/misc/useChromaKey";
-export { useDomSyncer, DOMSYNCER_PARAMS } from "./fxs/misc/useDomSyncer";
+// noises
+export * from "./fxs/noises/useNoise";
+export * from "./fxs/noises/useColorStrata";
+export * from "./fxs/noises/useMarble";
+
+// utils
+export * from "./fxs/utils/useDuoTone";
+export * from "./fxs/utils/useBlending";
+export * from "./fxs/utils/useFxTexture";
+export * from "./fxs/utils/useBrightnessPicker";
+export * from "./fxs/utils/useFxBlending";
+export * from "./fxs/utils/useAlphaBlending";
+export * from "./fxs/utils/useHSV";
+export * from "./fxs/utils/useCoverTexture";
+
+// effects
+export * from "./fxs/effects/useSimpleBlur";
+export * from "./fxs/effects/useWave";
+
+// misc
+export * from "./fxs/misc/useChromaKey";
+export * from "./fxs/misc/useDomSyncer";
 
 /*===============================================
 utils
 ===============================================*/
-export { setUniform } from "./utils/setUniforms";
-export { useAddMesh } from "./utils/useAddMesh";
-export { useCamera } from "./utils/useCamera";
-export { useDoubleFBO } from "./utils/useDoubleFBO";
-export { useParams } from "./utils/useParams";
-export { useResolution } from "./utils/useResolution";
-export { useSingleFBO } from "./utils/useSingleFBO";
-export { useCopyTexture } from "./utils/useCopyTexture";
+export * from "./utils/setUniforms";
+export * from "./utils/useAddMesh";
+export * from "./utils/useCamera";
+export * from "./utils/useDoubleFBO";
+export * from "./utils/useParams";
+export * from "./utils/useResolution";
+export * from "./utils/useSingleFBO";
+export * from "./utils/useCopyTexture";
 
 /*===============================================
 misc
 ===============================================*/
-export { usePointer } from "./misc/usePointer";
-export { useBeat } from "./misc/useBeat";
-export { useFPSLimiter } from "./misc/useFPSLimiter";
+export * from "./misc/usePointer";
+export * from "./misc/useBeat";
+export * from "./misc/useFPSLimiter";
 
 /*===============================================
 Easing
 ===============================================*/
-export { Easing } from "./libs/easing";
+export * from "./libs/easing";

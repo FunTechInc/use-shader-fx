@@ -9,9 +9,9 @@ import { useParams } from "../../../utils/useParams";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
 
 export type AlphaBlendingParams = {
-   /**  , default: */
+   /** default:THREE.Texture()*/
    texture?: THREE.Texture;
-   /**  , default: */
+   /** alpha map , default:THREE.Texture() */
    map?: THREE.Texture;
 };
 
