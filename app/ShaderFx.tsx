@@ -22,7 +22,7 @@ export const ShaderFx = ({
                   return;
                }
                console.log(`dpr:${dpr}`);
-               setDpr(Math.round((0.5 + 1.0 * factor) * 10) / 10);
+               setDpr(Math.round((1.0 + 1.0 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>{children}</Suspense>
             {/* <Perf position={"bottom-left"} minimal={false} /> */}

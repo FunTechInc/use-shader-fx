@@ -1,7 +1,7 @@
 {
    "name": "@hmng8/use-shader-fx",
    "version": "1.0.50",
-   "description": "More FXs, Less GLSL",
+   "description": "⚡️ More FXs, Less GLSL",
    "main": "./build/use-shader-fx.umd.cjs",
    "module": "./build/use-shader-fx.js",
    "types": "./types/index.d.ts",

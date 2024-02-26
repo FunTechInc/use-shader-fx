@@ -6,8 +6,53 @@ For details on each FX, please refer to Storybook
 👉 [Storybook](https://use-shader-fx-stories.vercel.app/) 👈
 
 ```bash
-npm install @hmng8/use-shader-fx
+npm install @funtech-inc/use-shader-fx
 ```
+
+# Hooks Index
+
+### FXs
+
+<table>
+<tr>
+<th><strong>effects</strong></th>
+<td><a href="">useSimpleBlur</a>, <a href="">useWave</a></td>
+</tr>
+
+<tr>
+<th><strong>interactions</strong></th>
+<td><a href="">useBrush</a>, <a href="">useFluid</a>, <a href="">useRipple</a></td>
+</tr>
+
+<tr>
+<th><strong>misc</strong></th>
+<td><a href="">useChromaKey</a></td>
+</tr>
+
+<tr>
+<th><strong>noises</strong></th>
+<td><a href="">useColorStrata</a>, <a href="">useMarble</a>, <a href="">useNoise</a></td>
+</tr>
+
+<tr>
+<th><strong>utils</strong></th>
+<td><a href="">useAlphaBlending</a>, <a href="">useBlending</a>, <a href="">useBrightnessPicker</a>, <a href="">useCoverTexture</a>, <a href="">useDuoTone</a>, <a href="">useFxBlending</a>, <a href="">useFxTexture</a>, <a href="">useHSV</a></td>
+</tr>
+
+<tr>
+<th><strong>misc</strong></th>
+<td><a href="">useBeat</a>, <a href="">useFPSLimiter</a>, <a href="">usePointer</a>, <a href="">useDomSyncer</a></td>
+</tr>
+</table>
+
+### Misc
+
+<table>
+<tr>
+<th><strong>misc</strong></th>
+<td><a href="#usebeat">useBeat</a>, <a href="#usefpslimiter">useFPSLimiter</a>, <a href="#usepointer">usePointer</a>, <a href="#usedomsyncer">useDomSyncer</a></td>
+</tr>
+</table>
 
 # Usage
 
@@ -304,17 +349,6 @@ Generates and returns a `THREE.OrthographicCamera`.
 const camera = useCamera(size);
 ```
 
-## usePointer
-
-When given the `pointer` vector2 from r3f's `RootState`, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}.
-
-```js
-const updatePointer = usePointer();
-
-const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
-   updatePointer(pointer);
-```
-
 ## useResolution
 
 This hook returns `resolution`. If `dpr` isn't set (or set to false), dpr won't be multiplied.
@@ -359,7 +393,7 @@ const [renderTargets, copyTexture] = useCopyTexture(UseFboProps, length);
 copyTexture(gl, index); // return texture
 ```
 
-# Other Hooks
+# Misc
 
 ## useDomSyncer
 
@@ -460,3 +494,65 @@ type DomSyncerParams = {
 ```
 
 `updateKey` : Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.
+
+## usePointer
+
+When given the `pointer` vector2 from r3f's `RootState`, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}.
+You can also add `lerp` (0~1, lerp intensity (0 to less than 1) , default: 0)
+
+```js
+const updatePointer = usePointer(lerp);
+
+const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
+   updatePointer(pointer);
+```
+
+You can override the pointer process by passing `pointerValues` to `updateFx` in the `useFrame`.
+
+```ts
+useFrame((props) => {
+   const pointerValues = updatePointer(props.pointer);
+   updateBrush(props, {
+      pointerValues: pointerValues,
+   });
+});
+```
+
+## useBeat
+
+Time-sensitive hooks such as `useNoise` and `useMarble` accept `beat`.
+The second argument can be `easing`.
+easing functions are referenced from https://github.com/ai/easings.net , default : "easeOutQuart"
+
+```ts
+const beting = useBeat(bpm, "easeOutQuad");
+useFrame((props) => {
+   const { beat, hash } = beting(props.clock);
+   updateMarble(props, {
+      beat: beat,
+   });
+});
+```
+
+```ts
+type BeatValues = {
+   beat: number;
+   floor: number;
+   fract: number;
+   /** unique hash specific to the beat */
+   hash: number;
+};
+```
+
+## useFPSLimiter
+
+Allows you to skip FX that do not need to be processed at 60 FPS.
+
+```ts
+const limiter = useFPSLimiter(30);
+useFrame((props) => {
+   if (!limiter(props.clock)) {
+      return;
+   }
+});
+```

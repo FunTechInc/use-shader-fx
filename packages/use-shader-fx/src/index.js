@@ -27,7 +27,6 @@ export * from "./fxs/effects/useWave";
 
 // misc
 export * from "./fxs/misc/useChromaKey";
-export * from "./fxs/misc/useDomSyncer";
 
 /*===============================================
 utils
@@ -47,6 +46,7 @@ misc
 export * from "./misc/usePointer";
 export * from "./misc/useBeat";
 export * from "./misc/useFPSLimiter";
+export * from "./misc/useDomSyncer";
 
 /*===============================================
 Easing

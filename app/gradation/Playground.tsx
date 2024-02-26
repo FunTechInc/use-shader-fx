@@ -31,8 +31,8 @@ const CONFIG = {
       colorFactor: new THREE.Vector3(0.6, 0.1, 0),
    },
    hsv: {
-      brightness: 1.5,
-      saturation: 0.4,
+      brightness: 0.8,
+      saturation: 0.8,
    },
    noiseIntensity: 2,
    random: () => {
@@ -40,15 +40,19 @@ const CONFIG = {
       CONFIG.marble.complexity = Math.random() * 10;
       CONFIG.marble.complexityAttenuation = Math.random();
       CONFIG.marble.scale = Math.random() * 0.001;
-      CONFIG.colorStrata.laminateLayer = Math.random() * 100;
+      CONFIG.colorStrata.laminateLayer = Math.max(
+         Math.floor(Math.random() * 100),
+         1
+      );
+      console.log(Math.max(Math.floor(Math.random() * 60), 1));
       CONFIG.colorStrata.scale = Math.max(Math.random(), 0.1);
       CONFIG.colorStrata.laminateInterval = new THREE.Vector2(
-         Math.random(),
-         Math.random()
+         Math.max(Math.random(), 0.2),
+         Math.max(Math.random(), 0.2)
       );
       CONFIG.colorStrata.laminateDetail = new THREE.Vector2(
-         Math.random(),
-         Math.random()
+         Math.random() * 8,
+         Math.random() * 8
       );
       CONFIG.colorStrata.distortion = new THREE.Vector2(
          Math.random() * 10,
@@ -59,9 +63,9 @@ const CONFIG = {
          Math.random(),
          Math.random()
       );
-      CONFIG.hsv.brightness = Math.max(Math.random() * 3, 0.1);
-      CONFIG.hsv.saturation = Math.random() * 3;
       CONFIG.noiseIntensity = Math.random() * 10;
+      CONFIG.hsv.brightness = Math.random() * 2;
+      CONFIG.hsv.saturation = Math.random() * 2;
    },
    save: () => {},
 };
