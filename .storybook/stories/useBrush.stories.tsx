@@ -7,10 +7,10 @@ import { UseBrush, UseBrushWithTexture } from "./UseBrush";
 import {
    BRUSH_PARAMS,
    BrushParams,
-} from "../../packages/use-shader-fx/src/hooks/useBrush";
+} from "../../packages/use-shader-fx/src/fxs/interactions/useBrush";
 
 const meta = {
-   title: "useBrush",
+   title: "interactions/useBrush",
    component: UseBrush,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

@@ -7,10 +7,10 @@ import { UseRipple, UseRippleWithTexture } from "./UseRipple";
 import {
    RIPPLE_PARAMS,
    RippleParams,
-} from "../../packages/use-shader-fx/src/hooks/useRipple";
+} from "../../packages/use-shader-fx/src/fxs/interactions/useRipple";
 
 const meta = {
-   title: "useRipple",
+   title: "interactions/useRipple",
    component: UseRipple,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

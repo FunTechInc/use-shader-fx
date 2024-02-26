@@ -11,7 +11,6 @@ export class ChromaKeyMaterial extends THREE.ShaderMaterial {
    uniforms!: {
       u_texture: { value: THREE.Texture };
       u_resolution: { value: THREE.Vector2 };
-      u_textureResolution: { value: THREE.Vector2 };
       u_keyColor: { value: THREE.Color };
       u_similarity: { value: number };
       u_smoothness: { value: number };
@@ -39,7 +38,6 @@ export const useMesh = ({
             uniforms: {
                u_texture: { value: new THREE.Texture() },
                u_resolution: { value: new THREE.Vector2() },
-               u_textureResolution: { value: new THREE.Vector2() },
                u_keyColor: { value: new THREE.Color() },
                u_similarity: { value: 0 },
                u_smoothness: { value: 0 },

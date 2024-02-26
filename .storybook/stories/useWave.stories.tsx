@@ -6,11 +6,11 @@ import type { Meta } from "@storybook/react";
 import {
    WAVE_PARAMS,
    WaveParams,
-} from "../../packages/use-shader-fx/src/hooks/useWave";
+} from "../../packages/use-shader-fx/src/fxs/effects/useWave";
 import { UseWave, UseWaveWithTexture } from "./UseWave";
 
 const meta = {
-   title: "useWave",
+   title: "effects/useWave",
    component: UseWave,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

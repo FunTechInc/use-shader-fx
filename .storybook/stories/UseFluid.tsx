@@ -2,14 +2,13 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { useFluid, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    FLUID_PARAMS,
    FluidParams,
-} from "../../packages/use-shader-fx/src/hooks/useFluid";
+} from "../../packages/use-shader-fx/src/fxs/interactions/useFluid";
 
 extend({ FxMaterial });
 
@@ -71,7 +70,6 @@ export const UseFluidWithTexture = (args: FluidParams) => {
          padding: 0.1,
          mapIntensity: 0.3,
          edgeIntensity: 0.3,
-         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
 

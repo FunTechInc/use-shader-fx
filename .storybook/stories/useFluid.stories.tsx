@@ -6,11 +6,11 @@ import type { Meta } from "@storybook/react";
 import {
    FLUID_PARAMS,
    FluidParams,
-} from "../../packages/use-shader-fx/src/hooks/useFluid";
+} from "../../packages/use-shader-fx/src/fxs/interactions/useFluid";
 import { UseFluid, UseFluidWithTexture } from "./UseFluid";
 
 const meta = {
-   title: "useFluid",
+   title: "interactions/useFluid",
    component: UseFluid,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

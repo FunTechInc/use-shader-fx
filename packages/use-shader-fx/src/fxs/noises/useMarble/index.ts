@@ -21,8 +21,8 @@ export type MarbleParams = {
    timeStrength?: number;
    /** default:0.002 */
    scale?: number;
-   /** you can get into the rhythm ♪ , default:null */
-   beat?: number | null;
+   /** you can get into the rhythm ♪ , default:false */
+   beat?: number | false;
 };
 
 export type MarbleObject = {
@@ -40,7 +40,7 @@ export const MARBLE_PARAMS: MarbleParams = {
    iterations: 8,
    timeStrength: 0.2,
    scale: 0.002,
-   beat: null,
+   beat: false,
 };
 
 /**
@@ -80,7 +80,7 @@ export const useMarble = ({
          setUniform(material, "u_timeStrength", params.timeStrength!);
          setUniform(material, "u_scale", params.scale!);
 
-         setUniform(material, "u_time", params.beat ?? clock.getElapsedTime());
+         setUniform(material, "u_time", params.beat || clock.getElapsedTime());
 
          return updateRenderTarget(gl);
       },

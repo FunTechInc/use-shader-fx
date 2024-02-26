@@ -11,8 +11,6 @@ import { useParams } from "../../../utils/useParams";
 export type CoverTextureParams = {
    /** Textures that you want to display exactly on the screen , default:THREE.Texture()  */
    texture?: THREE.Texture;
-   /** background texture resolution , default:THREE.Vector2(0, 0) */
-   textureResolution?: THREE.Vector2;
 };
 
 export type CoverTextureObject = {
@@ -25,7 +23,6 @@ export type CoverTextureObject = {
 
 export const COVERTEXTURE_PARAMS: CoverTextureParams = {
    texture: new THREE.Texture(),
-   textureResolution: new THREE.Vector2(0, 0),
 };
 
 /**
@@ -58,7 +55,10 @@ export const useCoverTexture = ({
          updateParams && setParams(updateParams);
 
          setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uTextureResolution", params.textureResolution!);
+         setUniform(material, "uTextureResolution", [
+            params.texture!.source.data.width,
+            params.texture!.source.data.height,
+         ]);
 
          return updateRenderTarget(gl);
       },

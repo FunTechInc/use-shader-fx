@@ -3,22 +3,22 @@ import type { StoryObj } from "@storybook/react";
 import { setArgTypes } from "../utils/setArgTypes";
 import { Setup } from "../utils/Setup";
 import type { Meta } from "@storybook/react";
-import { UseBrightnessPicker } from "./UseBrightnessPicker";
+import { UseChromaKey } from "./UseChromaKey";
 import {
-   BrightnessPickerParams,
-   BRIGHTNESSPICKER_PARAMS,
-} from "../../packages/use-shader-fx/src/fxs/utils/useBrightnessPicker";
+   CHROMAKEY_PARAMS,
+   ChromaKeyParams,
+} from "../../packages/use-shader-fx/src/fxs/misc/useChromaKey";
 
 const meta = {
-   title: "utils/useBrightnessPicker",
-   component: UseBrightnessPicker,
+   title: "misc/useChromaKey",
+   component: UseChromaKey,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],
-} satisfies Meta<typeof UseBrightnessPicker>;
+} satisfies Meta<typeof UseChromaKey>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-   args: BRIGHTNESSPICKER_PARAMS,
-   argTypes: setArgTypes<BrightnessPickerParams>(BRIGHTNESSPICKER_PARAMS),
+   args: CHROMAKEY_PARAMS,
+   argTypes: setArgTypes<ChromaKeyParams>(CHROMAKEY_PARAMS),
 };

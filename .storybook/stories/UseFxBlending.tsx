@@ -2,7 +2,6 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
@@ -13,7 +12,7 @@ import {
 import {
    FxBlendingParams,
    FXBLENDING_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useFxBlending";
+} from "../../packages/use-shader-fx/src/fxs/utils/useFxBlending";
 
 extend({ FxMaterial });
 

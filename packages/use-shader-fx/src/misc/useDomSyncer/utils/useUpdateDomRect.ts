@@ -57,11 +57,10 @@ export const useUpdateDomRect = (): UseUpdateDomRectReturn => {
                if (mesh instanceof THREE.Mesh) {
                   const material: DomSyncerMaterial = mesh.material;
                   setUniform(material, "u_texture", params.texture![i]);
-                  setUniform(
-                     material,
-                     "u_textureResolution",
-                     params.resolution![i]
-                  );
+                  setUniform(material, "u_textureResolution", [
+                     params.texture![i].source.data.width,
+                     params.texture![i].source.data.height,
+                  ]);
                   setUniform(
                      material,
                      "u_resolution",

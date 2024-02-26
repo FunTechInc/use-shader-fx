@@ -41,7 +41,9 @@ export const createMesh = ({
             transparent: true,
             uniforms: {
                u_texture: { value: texture },
-               u_textureResolution: { value: new THREE.Vector2(0, 0) },
+               u_textureResolution: {
+                  value: new THREE.Vector2(0, 0),
+               },
                u_resolution: { value: new THREE.Vector2(0, 0) },
                u_borderRadius: {
                   value: params.boderRadius![i] ? params.boderRadius![i] : 0.0,

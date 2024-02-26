@@ -3,8 +3,6 @@ varying vec2 vUv;
 
 uniform sampler2D u_texture;
 uniform vec2 u_resolution;
-uniform vec2 u_textureResolution;
-
 uniform vec3 u_keyColor;
 uniform float u_similarity;
 uniform float u_smoothness;
@@ -29,7 +27,7 @@ float getChromeDist(vec3 texColor){
 
 float getBoxFilteredChromaDist(vec3 rgb, vec2 uv)
 {
-	vec2 pixel_size = vec2(1.) / u_textureResolution;
+	vec2 pixel_size = vec2(1.) / u_resolution;
 	vec2 h_pixel_size = pixel_size / 2.0;
 	vec2 point_0 = vec2(pixel_size.x, h_pixel_size.y);
 	vec2 point_1 = vec2(h_pixel_size.x, -pixel_size.y);
@@ -48,13 +46,8 @@ vec4 CalcColor(vec4 rgba)
 }
 
 void main() {
-	float screenAspect = u_resolution.x / u_resolution.y;
-	float textureAspect = u_textureResolution.x / u_textureResolution.y;
-	vec2 aspectRatio = vec2(
-		min(screenAspect / textureAspect, 1.0),
-		min(textureAspect / screenAspect, 1.0)
-	);
-	vec2 uv = vUv * aspectRatio + (1.0 - aspectRatio) * .5;
+
+	vec2 uv = vUv;
 
 	vec4 texColor = texture2D(u_texture, uv);
 	texColor.rgb *= (texColor.a > 0.) ? (1. / texColor.a) : 0.;

@@ -23,8 +23,8 @@ export type NoiseParams = {
    warpDirection?: THREE.Vector2;
    /** strength of domain warping , default:8.0 */
    warpStrength?: number;
-   /** you can get into the rhythm ♪ , default:null */
-   beat?: number | null;
+   /** you can get into the rhythm ♪ , default:false */
+   beat?: number | false;
 };
 
 export type NoiseObject = {
@@ -43,7 +43,7 @@ export const NOISE_PARAMS: NoiseParams = {
    warpOctaves: 2,
    warpDirection: new THREE.Vector2(2.0, 2.0),
    warpStrength: 8.0,
-   beat: null,
+   beat: false,
 };
 
 /**
@@ -83,7 +83,7 @@ export const useNoise = ({
          setUniform(material, "warpDirection", params.warpDirection!);
          setUniform(material, "warpStrength", params.warpStrength!);
 
-         setUniform(material, "uTime", params.beat ?? clock.getElapsedTime());
+         setUniform(material, "uTime", params.beat || clock.getElapsedTime());
 
          return updateRenderTarget(gl);
       },

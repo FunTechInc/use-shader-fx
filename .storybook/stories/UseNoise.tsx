@@ -7,7 +7,7 @@ import { useNoise } from "../../packages/use-shader-fx/src";
 import {
    NoiseParams,
    NOISE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useNoise";
+} from "../../packages/use-shader-fx/src/fxs/noises/useNoise";
 
 extend({ FxMaterial });
 

@@ -39,11 +39,8 @@ npm install @funtech-inc/use-shader-fx
 <td><a href="">useAlphaBlending</a>, <a href="">useBlending</a>, <a href="">useBrightnessPicker</a>, <a href="">useCoverTexture</a>, <a href="">useDuoTone</a>, <a href="">useFxBlending</a>, <a href="">useFxTexture</a>, <a href="">useHSV</a></td>
 </tr>
 
-<tr>
-<th><strong>misc</strong></th>
-<td><a href="">useBeat</a>, <a href="">useFPSLimiter</a>, <a href="">usePointer</a>, <a href="">useDomSyncer</a></td>
-</tr>
 </table>
+※ The hook with `~~Texutre` calculates the texture resolution and canvas resolution and covers the texture.
 
 ### Misc
 
@@ -440,9 +437,6 @@ useFrame((props) => {
             return copyTexture(props.gl, i);
          }
       }),
-      resolution: [...Array(domArr.current.length)].map(() =>
-         resolutionRef.current.set(props.size.width, props.size.height)
-      ),
    });
 });
 ```
@@ -480,8 +474,6 @@ type DomSyncerParams = {
    dom?: (HTMLElement | Element | null)[];
    /** Texture array that you want to synchronize with the DOM rectangle */
    texture?: THREE.Texture[];
-   /** Texture resolution array to pass */
-   resolution?: THREE.Vector2[];
    /** default:0.0[] */
    boderRadius?: number[];
    /** the angle you want to rotate */

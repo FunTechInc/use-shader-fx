@@ -11,7 +11,7 @@ import {
 import {
    BrightnessPickerParams,
    BRIGHTNESSPICKER_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useBrightnessPicker";
+} from "../../packages/use-shader-fx/src/fxs/utils/useBrightnessPicker";
 
 extend({ FxMaterial });
 

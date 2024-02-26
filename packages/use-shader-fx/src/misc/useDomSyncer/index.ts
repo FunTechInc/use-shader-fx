@@ -17,8 +17,6 @@ export type DomSyncerParams = {
    dom?: (HTMLElement | Element | null)[];
    /** Texture array that you want to synchronize with the DOM rectangle */
    texture?: THREE.Texture[];
-   /** Texture resolution array to pass */
-   resolution?: THREE.Vector2[];
    /** default:0.0[] */
    boderRadius?: number[];
    /** the angle you want to rotate */
@@ -52,7 +50,7 @@ export type DomSyncerObject = {
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
    texture: [],
    dom: [],
-   resolution: [],
+   // resolution: [],
    boderRadius: [],
    rotation: [],
    onIntersect: [],

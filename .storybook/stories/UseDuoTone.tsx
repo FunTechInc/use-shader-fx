@@ -2,12 +2,11 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import { useDuoTone, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    DuoToneParams,
    DUOTONE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useDuoTone";
+} from "../../packages/use-shader-fx/src/fxs/utils/useDuoTone";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 
@@ -36,7 +35,6 @@ export const UseDuoTone = (args: DuoToneParams) => {
 
    useFrame((props) => {
       const bgTexture = updateFxTexture(props, {
-         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
       const fx = updateDuoTone(props, {

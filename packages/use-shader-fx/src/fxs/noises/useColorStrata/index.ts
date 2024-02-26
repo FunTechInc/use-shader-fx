@@ -25,12 +25,12 @@ export type ColorStrataParams = {
    colorFactor?: THREE.Vector3;
    /** default: (0.0, 0.0) */
    timeStrength?: THREE.Vector2;
-   /** default:null */
+   /** default:false */
    noise?: THREE.Texture | false;
    /** default : (0.0,0.0) */
    noiseStrength?: THREE.Vector2;
-   /** you can get into the rhythm ♪ , default:null */
-   beat?: number | null;
+   /** you can get into the rhythm ♪ , default:false */
+   beat?: number | false;
 };
 
 export type ColorStrataObject = {
@@ -52,7 +52,7 @@ export const COLORSTRATA_PARAMS: ColorStrataParams = {
    timeStrength: new THREE.Vector2(0, 0),
    noise: false,
    noiseStrength: new THREE.Vector2(0, 0),
-   beat: null,
+   beat: false,
 };
 
 /**
@@ -97,7 +97,7 @@ export const useColorStrata = ({
             setUniform(material, "isNoise", false);
          }
 
-         setUniform(material, "uTime", params.beat ?? clock.getElapsedTime());
+         setUniform(material, "uTime", params.beat || clock.getElapsedTime());
 
          setUniform(material, "laminateLayer", params.laminateLayer!);
          setUniform(material, "laminateInterval", params.laminateInterval!);

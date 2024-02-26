@@ -4,12 +4,11 @@ import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { CONSTANT } from "../constant";
 import { useRipple, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    RippleParams,
    RIPPLE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useRipple";
+} from "../../packages/use-shader-fx/src/fxs/interactions/useRipple";
 
 extend({ FxMaterial });
 
@@ -31,8 +30,12 @@ export const UseRipple = (args: RippleParams) => {
    const [ripple] = useLoader(THREE.TextureLoader, ["smoke.png"]);
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxMaterialProps>();
-   const size = useThree((state) => state.size);
-   const [updateRipple] = useRipple({ size, texture: ripple });
+   const { size, viewport } = useThree();
+   const [updateRipple] = useRipple({
+      size,
+      texture: ripple,
+      dpr: viewport.dpr,
+   });
    useFrame((props) => {
       const fx = updateRipple(props, setConfig());
       fxRef.current!.u_fx = fx;
@@ -64,7 +67,6 @@ export const UseRippleWithTexture = (args: RippleParams) => {
       const fx = updateRipple(props, setConfig());
 
       const bgTexture = updateFxTexture(props, {
-         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
          map: fx,
          mapIntensity: 1.3,

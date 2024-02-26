@@ -19,8 +19,8 @@ export type RippleParams = {
    scale?: number;
    /** alpha,default:0.6 */
    alpha?: number;
-   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:null */
-   pointerValues?: PointerValues | null;
+   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:false */
+   pointerValues?: PointerValues | false;
 };
 
 export type RippleObject = {
@@ -37,7 +37,7 @@ export const RIPPLE_PARAMS: RippleParams = {
    fadeout_speed: 0.9,
    scale: 0.3,
    alpha: 0.6,
-   pointerValues: null,
+   pointerValues: false,
 };
 
 interface UseRippleProps extends HooksProps {
@@ -87,7 +87,7 @@ export const useRipple = ({
 
          updateParams && setParams(updateParams);
 
-         const pointerValues = params.pointerValues! ?? updatePointer(pointer);
+         const pointerValues = params.pointerValues! || updatePointer(pointer);
 
          if (params.frequency! < pointerValues.diffPointer.length()) {
             const mesh = meshArr[currentWave.current];

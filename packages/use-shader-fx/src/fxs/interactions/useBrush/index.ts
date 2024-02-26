@@ -32,8 +32,8 @@ export type BrushParams = {
    isCursor?: boolean;
    /** brush pressure (0 to 1) , default : 1.0 */
    pressure?: number;
-   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:null */
-   pointerValues?: PointerValues | null;
+   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:false */
+   pointerValues?: PointerValues | false;
 };
 
 export type BrushObject = {
@@ -56,7 +56,7 @@ export const BRUSH_PARAMS: BrushParams = {
    color: new THREE.Vector3(1.0, 0.0, 0.0),
    isCursor: false,
    pressure: 1.0,
-   pointerValues: null,
+   pointerValues: false,
 };
 
 /**
@@ -110,7 +110,7 @@ export const useBrush = ({
          setUniform(material, "uMotionBlur", params.motionBlur!);
          setUniform(material, "uMotionSample", params.motionSample!);
 
-         const pointerValues = params.pointerValues! ?? updatePointer(pointer);
+         const pointerValues = params.pointerValues! || updatePointer(pointer);
 
          if (pointerValues.isVelocityUpdate) {
             setUniform(material, "uMouse", pointerValues.currentPointer);

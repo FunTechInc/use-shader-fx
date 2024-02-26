@@ -11,8 +11,6 @@ import { useParams } from "../../../utils/useParams";
 export type ChromaKeyParams = {
    /** Process this texture with chroma key , default:THREE.Texture */
    texture?: THREE.Texture;
-   /** texture resolution , default:THREE.Vector2(0, 0) */
-   textureResolution?: THREE.Vector2;
    /** key color for chromakey processing , default: THREE.Color(0x00ff00) */
    keyColor?: THREE.Color;
    /** If the similarity with the key color exceeds this value, it becomes transparent. , default: 0.2 */
@@ -41,7 +39,6 @@ export type ChromaKeyObject = {
 
 export const CHROMAKEY_PARAMS: ChromaKeyParams = {
    texture: new THREE.Texture(),
-   textureResolution: new THREE.Vector2(0, 0),
    keyColor: new THREE.Color(0x00ff00),
    similarity: 0.2,
    smoothness: 0.1,
@@ -79,7 +76,6 @@ export const useChromaKey = ({
          updateParams && setParams(updateParams);
 
          setUniform(material, "u_texture", params.texture!);
-         setUniform(material, "u_textureResolution", params.textureResolution!);
          setUniform(material, "u_keyColor", params.keyColor!);
          setUniform(material, "u_similarity", params.similarity!);
          setUniform(material, "u_smoothness", params.smoothness!);
