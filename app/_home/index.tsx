@@ -7,9 +7,27 @@ import { EasingTypes } from "@/packages/use-shader-fx/src";
 import Image from "next/image";
 import s from "./index.module.scss";
 
+const Install = () => {
+   const [copied, setIsCopied] = useState(false);
+   return (
+      <button
+         onClick={(e) => {
+            const target = e.target as HTMLButtonElement;
+            navigator?.clipboard?.writeText(target.innerText).then(() => {
+               setIsCopied(true);
+            });
+         }}
+         className={`${s.install} ${copied ? s.copied : ""}`}>
+         npm install @funtech-inc/use-shader-fx
+         <Image src="copy.svg" alt="Copy" width={12} height={12} />
+      </button>
+   );
+};
+
 export default function Page() {
    const [bpm, setBpm] = useState(120);
    const [easing, setEasing] = useState<EasingTypes>("easeOutQuad");
+
    const easingTypes: EasingTypes[] = [
       "easeInSine",
       "easeOutSine",
@@ -42,6 +60,7 @@ export default function Page() {
       "easeOutBounce",
       "easeInOutBounce",
    ];
+
    return (
       <div className={s.wrapper}>
          <div className={s.canvas}>
@@ -51,9 +70,9 @@ export default function Page() {
          </div>
          <div className={s.content}>
             <h1 className={s.title}>⚡️ More FXs, Less GLSL</h1>
-            <p className={s.install}>npm install @funtech-inc/use-shader-fx</p>
+            <Install />
             <p className={s.link}>
-               Oh, right, u can download the background gradient from
+               Oh, right, u can download the gradient from
                <a href="/gradation" target="_blank">
                   here 👉
                </a>
