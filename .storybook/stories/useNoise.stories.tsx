@@ -6,11 +6,11 @@ import type { Meta } from "@storybook/react";
 import {
    NOISE_PARAMS,
    NoiseParams,
-} from "../../packages/use-shader-fx/src/hooks/useNoise";
+} from "../../packages/use-shader-fx/src/fxs/noises/useNoise";
 import { UseNoise } from "./UseNoise";
 
 const meta = {
-   title: "useNoise",
+   title: "noises/useNoise",
    component: UseNoise,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

@@ -7,10 +7,10 @@ import { UseBrightnessPicker } from "./UseBrightnessPicker";
 import {
    BrightnessPickerParams,
    BRIGHTNESSPICKER_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useBrightnessPicker";
+} from "../../packages/use-shader-fx/src/fxs/utils/useBrightnessPicker";
 
 const meta = {
-   title: "useBrightnessPicker",
+   title: "utils/useBrightnessPicker",
    component: UseBrightnessPicker,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

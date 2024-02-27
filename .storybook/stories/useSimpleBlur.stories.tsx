@@ -7,10 +7,10 @@ import { UseSimpleBlur } from "./UseSimpleBlur";
 import {
    SIMPLEBLUR_PARAMS,
    SimpleBlurParams,
-} from "../../packages/use-shader-fx/src/hooks/useSimpleBlur";
+} from "../../packages/use-shader-fx/src/fxs/effects/useSimpleBlur";
 
 const meta = {
-   title: "useSimpleBlur",
+   title: "effects/useSimpleBlur",
    component: UseSimpleBlur,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

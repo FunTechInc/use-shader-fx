@@ -7,10 +7,10 @@ import { UseFxTexture } from "./UseFxTexture";
 import {
    FxTextureParams,
    FXTEXTURE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useFxTexture";
+} from "../../packages/use-shader-fx/src/fxs/utils/useFxTexture";
 
 const meta = {
-   title: "useFxTexture",
+   title: "utils/useFxTexture",
    component: UseFxTexture,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

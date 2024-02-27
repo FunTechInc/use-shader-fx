@@ -7,10 +7,10 @@ import { UseBlending } from "./UseBlending";
 import {
    BlendingParams,
    BLENDING_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useBlending";
+} from "../../packages/use-shader-fx/src/fxs/utils/useBlending";
 
 const meta = {
-   title: "useBlending",
+   title: "utils/useBlending",
    component: UseBlending,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

@@ -1,10 +1,11 @@
 {
-   "name": "@hmng8/use-shader-fx",
-   "version": "1.0.50",
-   "description": "The only difficult part is coding the shaders",
+   "name": "@funtech-inc/use-shader-fx",
+   "version": "1.1.1",
+   "description": "⚡️ More FXs, Less GLSL",
    "main": "./build/use-shader-fx.umd.cjs",
    "module": "./build/use-shader-fx.js",
    "types": "./types/index.d.ts",
+   "sideEffects": false,
    "exports": {
       ".": {
          "types": "./types/index.d.ts",
@@ -20,13 +21,13 @@
    },
    "repository": {
       "type": "git",
-      "url": "https://github.com/takuma-hmng8/use-shader-fx"
+      "url": "https://github.com/FunTechInc/use-shader-fx"
    },
    "keywords": [
       "react",
       "next"
    ],
-   "author": "HASHIMOTO Takuma",
+   "author": "HASHIMOTO Takuma (https://github.com/takuma-hmng8) from FunTech (https://github.com/FunTechInc)",
    "license": "MIT",
    "files": [
       "build",

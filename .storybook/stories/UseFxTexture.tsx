@@ -2,14 +2,13 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { useFxTexture, useNoise } from "../../packages/use-shader-fx/src";
 import {
    FxTextureParams,
    FXTEXTURE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useFxTexture";
+} from "../../packages/use-shader-fx/src/fxs/utils/useFxTexture";
 
 extend({ FxMaterial });
 
@@ -34,12 +33,14 @@ const setConfig = () => {
 };
 
 /**
- * Textures can be affected by a map; it is also possible to transition between two textures.
+ * Textures can be affected by a map; it is also possible to transition between two textures. If the resolution of texture0 and texture1 is different, it is linearly interpolated according to the value of progress
+ *
+ * ※ The hook with `~~Texutre` calculates the texture resolution and canvas resolution and covers the texture.
  */
 export const UseFxTexture = (args: FxTextureParams) => {
    const updateGUI = useGUI(setGUI);
    const [bg, momo] = useLoader(THREE.TextureLoader, [
-      "thumbnail.jpg",
+      "app-head.jpg",
       "momo.jpg",
    ]);
    const fxRef = React.useRef<FxMaterialProps>();
@@ -54,7 +55,6 @@ export const UseFxTexture = (args: FxTextureParams) => {
       const fx = updateFxTexture(props, {
          ...setConfig(),
          map: noise,
-         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
          texture1: momo,
       });

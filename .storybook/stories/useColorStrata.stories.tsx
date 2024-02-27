@@ -6,11 +6,11 @@ import type { Meta } from "@storybook/react";
 import {
    COLORSTRATA_PARAMS,
    ColorStrataParams,
-} from "../../packages/use-shader-fx/src/hooks/useColorStrata";
+} from "../../packages/use-shader-fx/src/fxs/noises/useColorStrata";
 import { UseColorStrata, UseColorStrataWithNoise } from "./UseColorStrata";
 
 const meta = {
-   title: "useColorStrata",
+   title: "noises/useColorStrata",
    component: UseColorStrata,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

@@ -4,12 +4,11 @@ import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { CONSTANT } from "../constant";
 import { useBrush, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    BrushParams,
    BRUSH_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useBrush";
+} from "../../packages/use-shader-fx/src/fxs/interactions/useBrush";
 
 extend({ FxMaterial });
 
@@ -57,16 +56,15 @@ export const UseBrushWithTexture = (args: BrushParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateFxTexture] = useFxTexture({ size, dpr });
-   const [updateBrush] = useBrush({ size, dpr });
+   const [updateBrush, setBrush] = useBrush({ size, dpr });
 
    useFrame((props) => {
       const bgTexture = updateFxTexture(props, {
-         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
       const fx = updateBrush(props, {
-         texture: bgTexture,
          ...setConfig(),
+         texture: bgTexture,
       });
       fxRef.current!.u_fx = fx;
       updateGUI();

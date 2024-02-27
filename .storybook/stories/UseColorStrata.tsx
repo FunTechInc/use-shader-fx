@@ -8,7 +8,7 @@ import { useColorStrata, useNoise } from "../../packages/use-shader-fx/src";
 import {
    COLORSTRATA_PARAMS,
    ColorStrataParams,
-} from "../../packages/use-shader-fx/src/hooks/useColorStrata";
+} from "../../packages/use-shader-fx/src/fxs/noises/useColorStrata";
 
 extend({ FxMaterial });
 

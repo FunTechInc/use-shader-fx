@@ -1,4 +1,4 @@
-![use-shader-fx](public/app.jpg)
+![use-shader-fx](public/app-head.jpg)
 
 `use-shader-fx` is a library designed to easily implement shader effects such as fluid simulations and noise. It relies on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) and has been designed with performance control in mind, especially when combined with [drei](https://github.com/pmndrs/drei).
 
@@ -6,8 +6,50 @@ For details on each FX, please refer to Storybook
 👉 [Storybook](https://use-shader-fx-stories.vercel.app/) 👈
 
 ```bash
-npm install @hmng8/use-shader-fx
+npm install @funtech-inc/use-shader-fx
 ```
+
+# Hooks Index
+
+### FXs
+
+<table>
+<tr>
+<th><strong>effects</strong></th>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usesimpleblur--docs">useSimpleBlur</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usewave--docs">useWave</a></td>
+</tr>
+
+<tr>
+<th><strong>interactions</strong></th>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/interactions-usebrush--docs">useBrush</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/interactions-usefluid--docs">useFluid</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/interactions-useripple--docs">useRipple</a></td>
+</tr>
+
+<tr>
+<th><strong>misc</strong></th>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/misc-usechromakey--docs">useChromaKey</a></td>
+</tr>
+
+<tr>
+<th><strong>noises</strong></th>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/noises-usecolorstrata--docs">useColorStrata</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/noises-usemarble--docs">useMarble</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/noises-usenoise--docs">useNoise</a></td>
+</tr>
+
+<tr>
+<th><strong>utils</strong></th>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usealphablending--docs">useAlphaBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-useblending--docs">useBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usebrightnesspicker--docs">useBrightnessPicker</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usecovertexture--docs">useCoverTexture</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-useduotone--docs">useDuoTone</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usefxblending--docs">useFxBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usefxtexture--docs">useFxTexture</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usehsv--docs">useHSV</a></td>
+</tr>
+
+</table>
+※ The hook with `~~Texutre` calculates the texture resolution and canvas resolution and covers the texture.
+
+### Misc
+
+<table>
+<tr>
+<th><strong>misc</strong></th>
+<td><a href="#usebeat">useBeat</a>, <a href="#usefpslimiter">useFPSLimiter</a>, <a href="#usepointer">usePointer</a>, <a href="#usedomsyncer">useDomSyncer</a></td>
+</tr>
+</table>
 
 # Usage
 
@@ -304,17 +346,6 @@ Generates and returns a `THREE.OrthographicCamera`.
 const camera = useCamera(size);
 ```
 
-## usePointer
-
-When given the `pointer` vector2 from r3f's `RootState`, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}.
-
-```js
-const updatePointer = usePointer();
-
-const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
-   updatePointer(pointer);
-```
-
 ## useResolution
 
 This hook returns `resolution`. If `dpr` isn't set (or set to false), dpr won't be multiplied.
@@ -359,7 +390,7 @@ const [renderTargets, copyTexture] = useCopyTexture(UseFboProps, length);
 copyTexture(gl, index); // return texture
 ```
 
-# Other Hooks
+# Misc
 
 ## useDomSyncer
 
@@ -406,9 +437,6 @@ useFrame((props) => {
             return copyTexture(props.gl, i);
          }
       }),
-      resolution: [...Array(domArr.current.length)].map(() =>
-         resolutionRef.current.set(props.size.width, props.size.height)
-      ),
    });
 });
 ```
@@ -446,8 +474,6 @@ type DomSyncerParams = {
    dom?: (HTMLElement | Element | null)[];
    /** Texture array that you want to synchronize with the DOM rectangle */
    texture?: THREE.Texture[];
-   /** Texture resolution array to pass */
-   resolution?: THREE.Vector2[];
    /** default:0.0[] */
    boderRadius?: number[];
    /** the angle you want to rotate */
@@ -460,3 +486,65 @@ type DomSyncerParams = {
 ```
 
 `updateKey` : Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.
+
+## usePointer
+
+When given the `pointer` vector2 from r3f's `RootState`, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}.
+You can also add `lerp` (0~1, lerp intensity (0 to less than 1) , default: 0)
+
+```js
+const updatePointer = usePointer(lerp);
+
+const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
+   updatePointer(pointer);
+```
+
+You can override the pointer process by passing `pointerValues` to `updateFx` in the `useFrame`.
+
+```ts
+useFrame((props) => {
+   const pointerValues = updatePointer(props.pointer);
+   updateBrush(props, {
+      pointerValues: pointerValues,
+   });
+});
+```
+
+## useBeat
+
+Time-sensitive hooks such as `useNoise` and `useMarble` accept `beat`.
+The second argument can be `easing`.
+easing functions are referenced from https://github.com/ai/easings.net , default : "easeOutQuart"
+
+```ts
+const beting = useBeat(bpm, "easeOutQuad");
+useFrame((props) => {
+   const { beat, hash } = beting(props.clock);
+   updateMarble(props, {
+      beat: beat,
+   });
+});
+```
+
+```ts
+type BeatValues = {
+   beat: number;
+   floor: number;
+   fract: number;
+   /** unique hash specific to the beat */
+   hash: number;
+};
+```
+
+## useFPSLimiter
+
+Allows you to skip FX that do not need to be processed at 60 FPS.
+
+```ts
+const limiter = useFPSLimiter(30);
+useFrame((props) => {
+   if (!limiter(props.clock)) {
+      return;
+   }
+});
+```

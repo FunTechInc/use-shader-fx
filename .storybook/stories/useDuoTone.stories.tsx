@@ -7,10 +7,10 @@ import { UseDuoTone } from "./UseDuoTone";
 import {
    DUOTONE_PARAMS,
    DuoToneParams,
-} from "../../packages/use-shader-fx/src/hooks/useDuoTone";
+} from "../../packages/use-shader-fx/src/fxs/utils/useDuoTone";
 
 const meta = {
-   title: "useDuoTone",
+   title: "utils/useDuoTone",
    component: UseDuoTone,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

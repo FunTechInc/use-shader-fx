@@ -2,20 +2,19 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, extend, useThree } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
    useBlending,
-   useFxTexture,
    useNoise,
    useBrightnessPicker,
    useFluid,
+   useCoverTexture,
 } from "../../packages/use-shader-fx/src";
 import {
    BlendingParams,
    BLENDING_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useBlending";
+} from "../../packages/use-shader-fx/src/fxs/utils/useBlending";
 
 extend({ FxMaterial });
 
@@ -36,14 +35,13 @@ const setConfig = () => {
  */
 export const UseBlending = (args: BlendingParams) => {
    const updateGUI = useGUI(setGUI);
-   const [bg] = useLoader(THREE.TextureLoader, ["thumbnail.jpg"]);
+   const [bg] = useLoader(THREE.TextureLoader, ["momo.jpg"]);
    const fxRef = React.useRef<FxMaterialProps>();
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
-   const [updateFxTexture] = useFxTexture({ size, dpr });
-   const [updateNoise] = useNoise({ size, dpr });
-   const [updateFluid, setFluid] = useFluid({ size, dpr });
+   const [updateCover] = useCoverTexture({ size, dpr });
+   const [updateFluid, setFluid, { output: fluid }] = useFluid({ size, dpr });
    const [updateBlending, setBlending] = useBlending({ size, dpr });
    const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
 
@@ -65,9 +63,8 @@ export const UseBlending = (args: BlendingParams) => {
    });
 
    useFrame((props) => {
-      const bgTexture = updateFxTexture(props, {
-         textureResolution: CONSTANT.textureResolution,
-         texture0: bg,
+      const bgTexture = updateCover(props, {
+         texture: bg,
       });
       const fluid = updateFluid(props);
       const picked = updateBrightnessPicker(props, { texture: fluid });

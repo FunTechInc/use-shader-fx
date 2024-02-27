@@ -8,7 +8,7 @@ import {
    useFxTexture,
    useCopyTexture,
 } from "@/packages/use-shader-fx/src";
-import { WaveParams } from "@/packages/use-shader-fx/src/hooks/useWave";
+import { WaveParams } from "@/packages/use-shader-fx/src/fxs/effects/useWave";
 import gsap from "gsap";
 
 extend({ FxMaterial });
@@ -33,7 +33,6 @@ export const DomSyncer = ({ state }: { state: number }) => {
    });
 
    const mainShaderRef = useRef<FxMaterialProps>();
-   const resolutionRef = useRef(new THREE.Vector2(0, 0));
    const textureRef = useRef(new THREE.Texture());
 
    const [momo] = useLoader(THREE.TextureLoader, ["momo.jpg"]);
@@ -131,7 +130,6 @@ export const DomSyncer = ({ state }: { state: number }) => {
                   }),
                   mapIntensity: 0.4,
                   edgeIntensity: 0.0,
-                  textureResolution: CONFIG.textureResolution,
                   texture0: momo,
                });
 
@@ -139,9 +137,6 @@ export const DomSyncer = ({ state }: { state: number }) => {
             }
             return textureRef.current;
          }),
-         resolution: [...Array(domArr.current.length)].map(() =>
-            resolutionRef.current.set(props.size.width, props.size.height)
-         ),
       });
 
       contentArr.current.forEach((content, i) => {

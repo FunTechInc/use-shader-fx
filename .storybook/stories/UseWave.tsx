@@ -2,14 +2,13 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import { useWave, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    WAVE_PARAMS,
    WaveParams,
-} from "../../packages/use-shader-fx/src/hooks/useWave";
+} from "../../packages/use-shader-fx/src/fxs/effects/useWave";
 
 extend({ FxMaterial });
 
@@ -72,7 +71,6 @@ export const UseWaveWithTexture = (args: WaveParams) => {
          padding: 0.2,
          mapIntensity: 0.5,
          edgeIntensity: 0.5,
-         textureResolution: CONSTANT.textureResolution,
          texture0: bg,
       });
 

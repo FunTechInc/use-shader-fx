@@ -1,6 +1,6 @@
 {
    "name": "use-shader-fx",
-   "description": "The only difficult part is coding the shaders",
+   "description": "⚡️ More FXs, Less GLSL",
    "version": "0.1.0",
    "private": true,
    "scripts": {
