@@ -10,6 +10,7 @@ export * from "./fxs/interactions/useRipple";
 export * from "./fxs/noises/useNoise";
 export * from "./fxs/noises/useColorStrata";
 export * from "./fxs/noises/useMarble";
+export * from "./fxs/noises/useCosPalette";
 
 // utils
 export * from "./fxs/utils/useDuoTone";

@@ -50,7 +50,7 @@ interface UseRippleProps extends HooksProps {
 }
 
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export const useRipple = ({
    texture = new THREE.Texture(),

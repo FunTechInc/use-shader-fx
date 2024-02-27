@@ -29,6 +29,6 @@ export type ChromaKeyObject = {
 };
 export declare const CHROMAKEY_PARAMS: ChromaKeyParams;
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export declare const useChromaKey: ({ size, dpr, samples, }: HooksProps) => HooksReturn<ChromaKeyParams, ChromaKeyObject>;

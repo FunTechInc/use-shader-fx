@@ -38,7 +38,7 @@ export const WAVE_PARAMS: WaveParams = {
 };
 
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx
  */
 export const useWave = ({
    size,

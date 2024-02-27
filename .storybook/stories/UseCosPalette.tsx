@@ -2,14 +2,16 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
-import { CONSTANT } from "../constant";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { useCosPalette, useFxTexture } from "../../packages/use-shader-fx/src";
+import {
+   useCosPalette,
+   useCoverTexture,
+} from "../../packages/use-shader-fx/src";
 import {
    CosPaletteParams,
    COSPALETTE_PARAMS,
-} from "../../packages/use-shader-fx/src/hooks/useCosPalette";
+} from "../../packages/use-shader-fx/src/fxs/noises/useCosPalette";
 
 extend({ FxMaterial });
 
@@ -29,7 +31,6 @@ const setConfig = () => {
    } as CosPaletteParams;
 };
 
-
 export const UseCosPalette = (args: CosPaletteParams) => {
    const updateGUI = useGUI(setGUI);
    const [bg] = useLoader(THREE.TextureLoader, ["momo.jpg"]);
@@ -39,15 +40,14 @@ export const UseCosPalette = (args: CosPaletteParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateCosPalette] = useCosPalette({ size, dpr });
-   const [updateFxTexture, setFxTexture] = useFxTexture({ size, dpr });
+   const [updateCover, setCover] = useCoverTexture({ size, dpr });
 
-   setFxTexture({ 
-      textureResolution: CONSTANT.textureResolution,
-      texture0: bg,
+   setCover({
+      texture: bg,
    });
 
    useFrame((props) => {
-      const tex = updateFxTexture(props);
+      const tex = updateCover(props);
       const fx = updateCosPalette(props, {
          ...setConfig(),
          texture: tex,

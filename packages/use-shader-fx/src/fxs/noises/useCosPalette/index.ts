@@ -2,11 +2,11 @@ import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { useMesh } from "./useMesh";
 import { RootState } from "@react-three/fiber";
-import { useCamera } from "../../utils/useCamera";
-import { useSingleFBO } from "../../utils/useSingleFBO";
-import { setUniform } from "../../utils/setUniforms";
-import { useParams } from "../../utils/useParams";
-import { HooksProps, HooksReturn } from "../types";
+import { useCamera } from "../../../utils/useCamera";
+import { useSingleFBO } from "../../../utils/useSingleFBO";
+import { setUniform } from "../../../utils/setUniforms";
+import { useParams } from "../../../utils/useParams";
+import { HooksProps, HooksReturn } from "../../types";
 
 export type CosPaletteParams = {
    /** color1, default:rgb(50%, 50%, 50%) */
@@ -32,16 +32,16 @@ export type ColorPaletteObject = {
 };
 
 export const COSPALETTE_PARAMS: CosPaletteParams = {
-   texture: new THREE.Texture(),   
-   color1: new THREE.Color().set(0.5,0.5,0.5),
-   color2: new THREE.Color().set(0.5,0.5,0.5),
-   color3: new THREE.Color().set(1,1,1),
-   color4: new THREE.Color().set(0,0.1,0.2),
-   rgbWeight: new THREE.Vector3(0.299,0.587,0.114),
+   texture: new THREE.Texture(),
+   color1: new THREE.Color().set(0.5, 0.5, 0.5),
+   color2: new THREE.Color().set(0.5, 0.5, 0.5),
+   color3: new THREE.Color().set(1, 1, 1),
+   color4: new THREE.Color().set(0, 0.1, 0.2),
+   rgbWeight: new THREE.Vector3(0.299, 0.587, 0.114),
 };
 
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage  
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export const useCosPalette = ({
    size,

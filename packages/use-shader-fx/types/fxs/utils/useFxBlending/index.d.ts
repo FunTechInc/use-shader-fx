@@ -18,6 +18,6 @@ export type FxBlendingObject = {
 export declare const FXBLENDING_PARAMS: FxBlendingParams;
 /**
  * Blend map to texture. You can change the intensity of fx applied by the rg value of map. Unlike "useBlending", the map color is not reflected.
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export declare const useFxBlending: ({ size, dpr, samples, }: HooksProps) => HooksReturn<FxBlendingParams, FxBlendingObject>;

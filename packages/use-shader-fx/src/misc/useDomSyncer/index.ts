@@ -50,14 +50,13 @@ export type DomSyncerObject = {
 export const DOMSYNCER_PARAMS: DomSyncerParams = {
    texture: [],
    dom: [],
-   // resolution: [],
    boderRadius: [],
    rotation: [],
    onIntersect: [],
 };
 
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usedomsyncer
  * @param dependencies - When this dependency array is changed, the mesh and intersection judgment will be updated according to the passed DOM array.
  */
 export const useDomSyncer = (
