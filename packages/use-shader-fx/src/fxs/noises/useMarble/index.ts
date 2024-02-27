@@ -13,11 +13,11 @@ export type MarbleParams = {
    pattern?: number;
    /** default:2 */
    complexity?: number;
-   /** default:.2 */
+   /** default:0.2 */
    complexityAttenuation?: number;
    /** default:8 */
    iterations?: number;
-   /** default:.2 */
+   /** default:0.2 */
    timeStrength?: number;
    /** default:0.002 */
    scale?: number;

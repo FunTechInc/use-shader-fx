@@ -5,11 +5,6 @@ import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
-   useBlending,
-   useFxTexture,
-   useNoise,
-   useBrightnessPicker,
-   useFluid,
    useChromaKey,
    useCoverTexture,
 } from "../../packages/use-shader-fx/src";

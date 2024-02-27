@@ -8,65 +8,19 @@ import {
    useColorStrata,
    useMarble,
    useHSV,
+   ColorStrataParams,
+   HSVParams,
+   MarbleParams,
 } from "@/packages/use-shader-fx/src";
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
+import { CONFIG as HomeConfig } from "../_home/Playground";
 
 extend({ FxMaterial });
 
 const CONFIG = {
-   marble: {
-      pattern: 10,
-      complexity: 1.5,
-      complexityAttenuation: 0.2,
-      scale: 0.002,
-   },
-   colorStrata: {
-      laminateLayer: 6,
-      scale: 0.2,
-      laminateInterval: new THREE.Vector2(0.55, 0.23),
-      laminateDetail: new THREE.Vector2(0, 3.5),
-      distortion: new THREE.Vector2(1.64, 4.22),
-      colorFactor: new THREE.Vector3(0.6, 0.1, 0),
-   },
-   hsv: {
-      brightness: 0.8,
-      saturation: 0.8,
-   },
-   noiseIntensity: 2,
-   random: () => {
-      CONFIG.marble.pattern = Math.random() * 1000;
-      CONFIG.marble.complexity = Math.random() * 10;
-      CONFIG.marble.complexityAttenuation = Math.random();
-      CONFIG.marble.scale = Math.random() * 0.001;
-      CONFIG.colorStrata.laminateLayer = Math.max(
-         Math.floor(Math.random() * 100),
-         1
-      );
-      console.log(Math.max(Math.floor(Math.random() * 60), 1));
-      CONFIG.colorStrata.scale = Math.max(Math.random(), 0.1);
-      CONFIG.colorStrata.laminateInterval = new THREE.Vector2(
-         Math.max(Math.random(), 0.2),
-         Math.max(Math.random(), 0.2)
-      );
-      CONFIG.colorStrata.laminateDetail = new THREE.Vector2(
-         Math.random() * 8,
-         Math.random() * 8
-      );
-      CONFIG.colorStrata.distortion = new THREE.Vector2(
-         Math.random() * 10,
-         Math.random() * 10
-      );
-      CONFIG.colorStrata.colorFactor = new THREE.Vector3(
-         Math.random(),
-         Math.random(),
-         Math.random()
-      );
-      CONFIG.noiseIntensity = Math.random() * 10;
-      CONFIG.hsv.brightness = Math.random() * 2;
-      CONFIG.hsv.saturation = Math.random() * 2;
-   },
+   ...HomeConfig,
    save: () => {},
 };
 const setGUI = (gui: GUI) => {
@@ -145,13 +99,13 @@ export const Playground = () => {
    useFrame((props) => {
       updateNoise(props);
       updateColorStrata(props, {
-         ...(setConfig("colorStrata") as any),
+         ...(setConfig("colorStrata") as ColorStrataParams),
       });
       updateHSV(props, {
-         ...(setConfig("hsv") as any),
+         ...(setConfig("hsv") as HSVParams),
       });
       updateMarble(props, {
-         ...(setConfig("marble") as any),
+         ...(setConfig("marble") as MarbleParams),
       });
       ref.current!.u_noiseIntensity = CONFIG.noiseIntensity;
    });

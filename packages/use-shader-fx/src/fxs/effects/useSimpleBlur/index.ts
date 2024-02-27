@@ -64,8 +64,8 @@ export const useSimpleBlur = ({
 
          setUniform(material, "uTexture", params.texture!);
          setUniform(material, "uResolution", [
-            params.texture!.source.data.width,
-            params.texture!.source.data.height,
+            params.texture!?.source?.data?.width || 0,
+            params.texture!?.source?.data?.height || 0,
          ]);
          setUniform(material, "uBlurSize", params.blurSize!);
 

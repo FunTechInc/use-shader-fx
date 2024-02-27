@@ -23,6 +23,7 @@
    justify-content: center;
    mix-blend-mode: difference;
    pointer-events: none;
+   gap: 12px;
 }
 
 .title {
@@ -39,7 +40,7 @@
 }
 
 .link {
-   margin: 24px 0;
+   margin-top: 16px;
    font-size: 16px;
    a {
       pointer-events: auto;
@@ -51,19 +52,25 @@
    }
 }
 
-.bpmSelector {
+.input {
    display: flex;
    flex-direction: row;
    align-items: center;
    justify-content: center;
+   font-size: 16px;
    p {
-      font-size: 16px;
-      margin-right: 24px;
+      width: 64px;
    }
-   input {
+   input,
+   select {
       border-bottom: 1px solid white;
-      text-align: center;
-      font-size: 18px;
       pointer-events: auto;
+      cursor: pointer;
+      width: 160px;
+      text-align: center;
+      @media (max-width: 560px) {
+         text-align: left;
+         padding: 0 16px;
+      }
    }
 }

@@ -16,27 +16,27 @@ npm install @funtech-inc/use-shader-fx
 <table>
 <tr>
 <th><strong>effects</strong></th>
-<td><a href="">useSimpleBlur</a>, <a href="">useWave</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usesimpleblur--docs">useSimpleBlur</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usewave--docs">useWave</a></td>
 </tr>
 
 <tr>
 <th><strong>interactions</strong></th>
-<td><a href="">useBrush</a>, <a href="">useFluid</a>, <a href="">useRipple</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/interactions-usebrush--docs">useBrush</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/interactions-usefluid--docs">useFluid</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/interactions-useripple--docs">useRipple</a></td>
 </tr>
 
 <tr>
 <th><strong>misc</strong></th>
-<td><a href="">useChromaKey</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/misc-usechromakey--docs">useChromaKey</a></td>
 </tr>
 
 <tr>
 <th><strong>noises</strong></th>
-<td><a href="">useColorStrata</a>, <a href="">useMarble</a>, <a href="">useNoise</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/noises-usecolorstrata--docs">useColorStrata</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/noises-usemarble--docs">useMarble</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/noises-usenoise--docs">useNoise</a></td>
 </tr>
 
 <tr>
 <th><strong>utils</strong></th>
-<td><a href="">useAlphaBlending</a>, <a href="">useBlending</a>, <a href="">useBrightnessPicker</a>, <a href="">useCoverTexture</a>, <a href="">useDuoTone</a>, <a href="">useFxBlending</a>, <a href="">useFxTexture</a>, <a href="">useHSV</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usealphablending--docs">useAlphaBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-useblending--docs">useBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usebrightnesspicker--docs">useBrightnessPicker</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usecovertexture--docs">useCoverTexture</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-useduotone--docs">useDuoTone</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usefxblending--docs">useFxBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usefxtexture--docs">useFxTexture</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usehsv--docs">useHSV</a></td>
 </tr>
 
 </table>

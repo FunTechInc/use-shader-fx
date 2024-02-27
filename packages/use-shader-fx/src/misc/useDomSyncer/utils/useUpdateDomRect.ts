@@ -58,8 +58,8 @@ export const useUpdateDomRect = (): UseUpdateDomRectReturn => {
                   const material: DomSyncerMaterial = mesh.material;
                   setUniform(material, "u_texture", params.texture![i]);
                   setUniform(material, "u_textureResolution", [
-                     params.texture![i].source.data.width,
-                     params.texture![i].source.data.height,
+                     params.texture![i]?.source?.data?.width || 0,
+                     params.texture![i]?.source?.data?.height || 0,
                   ]);
                   setUniform(
                      material,

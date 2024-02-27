@@ -11,6 +11,10 @@ import {
    useCoverTexture,
    usePointer,
    useFPSLimiter,
+   EasingTypes,
+   ColorStrataParams,
+   HSVParams,
+   MarbleParams,
 } from "@/packages/use-shader-fx/src";
 
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
@@ -18,12 +22,13 @@ import { useVideoTexture } from "@react-three/drei";
 
 extend({ FxMaterial });
 
-const CONFIG = {
+export const CONFIG = {
    marble: {
       pattern: 10,
       complexity: 1.5,
       complexityAttenuation: 0.2,
       scale: 0.002,
+      iterations: 3,
    },
    colorStrata: {
       laminateLayer: 6,
@@ -43,8 +48,9 @@ const CONFIG = {
       CONFIG.marble.complexity = Math.random() * 10;
       CONFIG.marble.complexityAttenuation = Math.random();
       CONFIG.marble.scale = Math.random() * 0.001;
+      CONFIG.marble.iterations = Math.floor(Math.random() * 4) + 1;
       CONFIG.colorStrata.laminateLayer = Math.max(
-         Math.floor(Math.random() * 5),
+         Math.floor(Math.random() * 6),
          1
       );
       CONFIG.colorStrata.scale = Math.max(Math.random(), 0.1);
@@ -75,7 +81,13 @@ const setConfig = (key: "marble" | "colorStrata" | "hsv") => {
    };
 };
 
-export const Playground = ({ bpm }: { bpm: number }) => {
+export const Playground = ({
+   bpm,
+   easing,
+}: {
+   bpm: number;
+   easing: EasingTypes;
+}) => {
    const ref = useRef<FxMaterialProps>();
    const { size, viewport } = useThree();
    const funkun = useVideoTexture("/FT_Ch02.mp4");
@@ -116,7 +128,6 @@ export const Playground = ({ bpm }: { bpm: number }) => {
       setMarble({
          ...setConfig("marble"),
          timeStrength: 0.5,
-         iterations: 3,
       });
 
       setColorStrata({
@@ -131,13 +142,12 @@ export const Playground = ({ bpm }: { bpm: number }) => {
 
       setCover({
          texture: funkun,
-         textureResolution: new THREE.Vector2(1280, 720),
       });
 
       setBrush({
          map: noise,
          texture: cover,
-         mapIntensity: 0.3,
+         mapIntensity: 0.35,
          radius: 0.2,
          dissipation: 0.9,
          isCursor: true,
@@ -145,7 +155,7 @@ export const Playground = ({ bpm }: { bpm: number }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
-   const beting = useBeat(bpm, "easeOutQuad");
+   const beting = useBeat(bpm, easing);
    const updatePointer = usePointer(0.8);
    const limiter = useFPSLimiter(40);
    const hashMemo = useRef(0);
@@ -161,13 +171,13 @@ export const Playground = ({ bpm }: { bpm: number }) => {
       }
       updateNoise(props);
       updateColorStrata(props, {
-         ...(setConfig("colorStrata") as any),
+         ...(setConfig("colorStrata") as ColorStrataParams),
       });
       updateHSV(props, {
-         ...(setConfig("hsv") as any),
+         ...(setConfig("hsv") as HSVParams),
       });
       updateMarble(props, {
-         ...(setConfig("marble") as any),
+         ...(setConfig("marble") as MarbleParams),
          beat: beat,
       });
       updateCover(props);

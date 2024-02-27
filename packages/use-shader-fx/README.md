@@ -1,1 +1,1 @@
-👉 [use-shader-fx](https://github.com/takuma-hmng8/use-shader-fx) 👈
+👉 [use-shader-fx](https://github.com/FunTechInc/use-shader-fx) 👈

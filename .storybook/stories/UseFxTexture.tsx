@@ -33,8 +33,9 @@ const setConfig = () => {
 };
 
 /**
- * Textures can be affected by a map; it is also possible to transition between two textures.
- * If the resolution of texture0 and texture1 is different, it is linearly interpolated according to the value of progress
+ * Textures can be affected by a map; it is also possible to transition between two textures. If the resolution of texture0 and texture1 is different, it is linearly interpolated according to the value of progress
+ *
+ * ※ The hook with `~~Texutre` calculates the texture resolution and canvas resolution and covers the texture.
  */
 export const UseFxTexture = (args: FxTextureParams) => {
    const updateGUI = useGUI(setGUI);

@@ -3,16 +3,50 @@
 import { ShaderFx } from "../ShaderFx";
 import { Playground } from "./Playground";
 import { useState } from "react";
+import { EasingTypes } from "@/packages/use-shader-fx/src";
 import Image from "next/image";
 import s from "./index.module.scss";
 
 export default function Page() {
    const [bpm, setBpm] = useState(120);
+   const [easing, setEasing] = useState<EasingTypes>("easeOutQuad");
+   const easingTypes: EasingTypes[] = [
+      "easeInSine",
+      "easeOutSine",
+      "easeInOutSine",
+      "easeInQuad",
+      "easeOutQuad",
+      "easeInOutQuad",
+      "easeInCubic",
+      "easeOutCubic",
+      "easeInOutCubic",
+      "easeInQuart",
+      "easeOutQuart",
+      "easeInOutQuart",
+      "easeInQuint",
+      "easeOutQuint",
+      "easeInOutQuint",
+      "easeInExpo",
+      "easeOutExpo",
+      "easeInOutExpo",
+      "easeInCirc",
+      "easeOutCirc",
+      "easeInOutCirc",
+      "easeInBack",
+      "easeOutBack",
+      "easeInOutBack",
+      "easeInElastic",
+      "easeOutElastic",
+      "easeInOutElastic",
+      "easeInBounce",
+      "easeOutBounce",
+      "easeInOutBounce",
+   ];
    return (
       <div className={s.wrapper}>
          <div className={s.canvas}>
             <ShaderFx>
-               <Playground bpm={bpm} />
+               <Playground bpm={bpm} easing={easing} />
             </ShaderFx>
          </div>
          <div className={s.content}>
@@ -24,7 +58,7 @@ export default function Page() {
                   here 👉
                </a>
             </p>
-            <div className={s.bpmSelector}>
+            <div className={s.input}>
                <p>BPM:</p>
                <input
                   type="number"
@@ -33,6 +67,20 @@ export default function Page() {
                      setBpm(+e.target.value);
                   }}
                />
+            </div>
+            <div className={s.input}>
+               <p>Easing:</p>
+               <select
+                  value={easing}
+                  onChange={(e) => {
+                     setEasing(e.target.value as EasingTypes);
+                  }}>
+                  {easingTypes.map((type) => (
+                     <option key={type} value={type}>
+                        {type}
+                     </option>
+                  ))}
+               </select>
             </div>
          </div>
          <ul

@@ -6,7 +6,6 @@ import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
 import {
    useBlending,
-   useFxTexture,
    useNoise,
    useBrightnessPicker,
    useFluid,
@@ -42,7 +41,6 @@ export const UseBlending = (args: BlendingParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateCover] = useCoverTexture({ size, dpr });
-   const [updateNoise] = useNoise({ size, dpr });
    const [updateFluid, setFluid, { output: fluid }] = useFluid({ size, dpr });
    const [updateBlending, setBlending] = useBlending({ size, dpr });
    const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });

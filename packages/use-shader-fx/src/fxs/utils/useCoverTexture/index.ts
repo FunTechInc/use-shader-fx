@@ -56,8 +56,8 @@ export const useCoverTexture = ({
 
          setUniform(material, "uTexture", params.texture!);
          setUniform(material, "uTextureResolution", [
-            params.texture!.source.data.width,
-            params.texture!.source.data.height,
+            params.texture!?.source?.data?.width || 0,
+            params.texture!?.source?.data?.height || 0,
          ]);
 
          return updateRenderTarget(gl);
