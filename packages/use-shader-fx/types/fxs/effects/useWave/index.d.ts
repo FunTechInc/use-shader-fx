@@ -21,6 +21,6 @@ export type WaveObject = {
 };
 export declare const WAVE_PARAMS: WaveParams;
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx
  */
 export declare const useWave: ({ size, dpr, samples, }: HooksProps) => HooksReturn<WaveParams, WaveObject>;

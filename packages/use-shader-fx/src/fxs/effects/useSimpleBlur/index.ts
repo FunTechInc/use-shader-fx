@@ -33,6 +33,9 @@ export const SIMPLEBLUR_PARAMS: SimpleBlurParams = {
    blurPower: 5,
 };
 
+/**
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
+ */
 export const useSimpleBlur = ({
    size,
    dpr,

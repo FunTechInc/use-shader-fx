@@ -59,7 +59,7 @@ export const FLUID_PARAMS: FluidParams = {
 };
 
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export const useFluid = ({
    size,

@@ -47,7 +47,7 @@ export const NOISE_PARAMS: NoiseParams = {
 };
 
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  *
  * It is a basic value noise with `fbm` and `domain warping`
  */

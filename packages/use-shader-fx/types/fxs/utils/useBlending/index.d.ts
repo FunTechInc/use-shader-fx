@@ -29,6 +29,6 @@ export declare const BLENDING_PARAMS: BlendingParams;
 /**
  * Blend map to texture. You can set the threshold for blending with brightness. You can set the dodge color by setting color.
 If you don't want to reflect the map's color, you can use useFxBlending instead.
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export declare const useBlending: ({ size, dpr, samples, }: HooksProps) => HooksReturn<BlendingParams, BlendingObject>;

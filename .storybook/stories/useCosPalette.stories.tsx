@@ -5,12 +5,12 @@ import { Setup } from "../utils/Setup";
 import type { Meta } from "@storybook/react";
 import { UseCosPalette } from "./UseCosPalette";
 import {
-   COSPALETTE_PARAMS,
    CosPaletteParams,
-} from "../../packages/use-shader-fx/src/hooks/useCosPalette";
+   COSPALETTE_PARAMS,
+} from "../../packages/use-shader-fx/src/fxs/noises/useCosPalette";
 
 const meta = {
-   title: "useCosPalette",
+   title: "noises/useCosPalette",
    component: UseCosPalette,
    tags: ["autodocs"],
    decorators: [(storyFn: any) => <Setup>{storyFn()}</Setup>],

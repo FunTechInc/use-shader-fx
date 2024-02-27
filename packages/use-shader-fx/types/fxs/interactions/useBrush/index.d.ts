@@ -37,6 +37,6 @@ export type BrushObject = {
 };
 export declare const BRUSH_PARAMS: BrushParams;
 /**
- * @link https://github.com/takuma-hmng8/use-shader-fx#usage
+ * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export declare const useBrush: ({ size, dpr, samples, }: HooksProps) => HooksReturn<BrushParams, BrushObject>;
