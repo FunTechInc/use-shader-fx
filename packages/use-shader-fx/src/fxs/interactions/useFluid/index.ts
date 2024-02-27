@@ -27,7 +27,10 @@ export type FluidParams = {
    /** splat radius , default:0.002 */
    splat_radius?: number;
    /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
-   fluid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
+   fluid_color?:
+      | ((velocity: THREE.Vector2) => THREE.Vector3)
+      | THREE.Vector3
+      | THREE.Color;
    /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:false */
    pointerValues?: PointerValues | false;
 };
@@ -163,7 +166,7 @@ export const useFluid = ({
             updateDensityFBO(gl, ({ read }) => {
                setMeshMaterial(materials.splatMaterial);
                setUniform(materials.splatMaterial, "uTarget", read);
-               const color: THREE.Vector3 =
+               const color: THREE.Vector3 | THREE.Color =
                   typeof params.fluid_color === "function"
                      ? params.fluid_color(pointerValues.velocity)
                      : params.fluid_color!;

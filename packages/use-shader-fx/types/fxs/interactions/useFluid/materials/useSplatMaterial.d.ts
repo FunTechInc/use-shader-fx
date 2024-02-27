@@ -8,7 +8,7 @@ export declare class SplatMaterial extends THREE.ShaderMaterial {
             value: number;
         };
         color: {
-            value: THREE.Vector3;
+            value: THREE.Vector3 | THREE.Color;
         };
         point: {
             value: THREE.Vector2;

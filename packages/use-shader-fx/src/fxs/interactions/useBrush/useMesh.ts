@@ -24,7 +24,7 @@ export class BrushMaterial extends THREE.ShaderMaterial {
       uMouse: { value: number };
       uPrevMouse: { value: number };
       uVelocity: { value: number };
-      uColor: { value: THREE.Vector3 };
+      uColor: { value: THREE.Vector3 | THREE.Color };
       uIsCursor: { value: boolean };
       uPressureStart: { value: number };
       uPressureEnd: { value: number };
