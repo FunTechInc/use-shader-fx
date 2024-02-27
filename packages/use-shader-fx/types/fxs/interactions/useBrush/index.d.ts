@@ -20,7 +20,7 @@ export type BrushParams = {
     /** Number of motion blur samples. Affects performance default: 5 */
     motionSample?: number;
     /** brush color , it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
-    color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3;
+    color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3 | THREE.Color;
     /** Follows the cursor even if it loses speed , default:false */
     isCursor?: boolean;
     /** brush pressure (0 to 1) , default : 1.0 */

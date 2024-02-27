@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    useNoise,
@@ -36,14 +36,17 @@ const setConfig = (key: "marble" | "colorStrata" | "hsv") => {
 
 function useDownloadCanvas() {
    const { gl } = useThree();
-   const downloadImage = (filename = "image.png") => {
-      const image = gl.domElement.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = filename;
-      link.href = image;
-      link.click();
-      link.remove();
-   };
+   const downloadImage = useCallback(
+      (filename = "image.png") => {
+         const image = gl.domElement.toDataURL("image/png");
+         const link = document.createElement("a");
+         link.download = filename;
+         link.href = image;
+         link.click();
+         link.remove();
+      },
+      [gl]
+   );
    return downloadImage;
 }
 

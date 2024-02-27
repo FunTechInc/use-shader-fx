@@ -48,7 +48,7 @@ export declare class BrushMaterial extends THREE.ShaderMaterial {
             value: number;
         };
         uColor: {
-            value: THREE.Vector3;
+            value: THREE.Vector3 | THREE.Color;
         };
         uIsCursor: {
             value: boolean;
