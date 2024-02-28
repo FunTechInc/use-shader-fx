@@ -83,7 +83,7 @@ This is the simplest example!
 import * as THREE from "three";
 import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useFluid } from "@hmng8/use-shader-fx";
+import { useFluid } from "@funtech-inc/use-shader-fx";
 
 export const Home = () => {
    const ref = useRef<THREE.ShaderMaterial>(null);
