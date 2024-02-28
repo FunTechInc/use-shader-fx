@@ -90,7 +90,7 @@ export const Playground = ({
 }) => {
    const ref = useRef<FxMaterialProps>();
    const { size, viewport } = useThree();
-   const funkun = useVideoTexture("/FT_Ch02.mp4");
+   const funkun = useVideoTexture("/FT_Ch02-comp.mp4");
 
    const [updateNoise, setNoise, { output: noise }] = useNoise({
       size,
