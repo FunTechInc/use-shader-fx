@@ -16,6 +16,7 @@ export {
 export { useColorStrata, COLORSTRATA_PARAMS } from "./hooks/useColorStrata";
 export { useFxBlending, FXBLENDING_PARAMS } from "./hooks/useFxBlending";
 export { useCosPalette, COSPALETTE_PARAMS } from "./hooks/useCosPalette";
+export { useParticle, PARTICLE_PARAMS } from "./hooks/useParticle";
 
 // utils
 export { setUniform } from "./utils/setUniforms";

@@ -1,113 +1,128 @@
 "use client";
 
 import * as THREE from "three";
-import { useRef } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import {
-   useNoise,
-   useFluid,
-   useFxBlending,
-   useColorStrata,
-   useBrightnessPicker,
+import { useFrame, useThree  ,createPortal, Size} from "@react-three/fiber";
+import {   
+   useParticle,
 } from "@/packages/use-shader-fx/src";
-import {
-   NoiseParams,
-   NOISE_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useNoise";
-import {
-   ColorStrataParams,
-   COLORSTRATA_PARAMS,
-} from "@/packages/use-shader-fx/src/hooks/useColorStrata";
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
 
-const CONFIG = {
-   colorStrata: {
-      ...structuredClone(COLORSTRATA_PARAMS),
-      laminateLayer: 10,
-      laminateInterval: new THREE.Vector2(0.1, 0.1),
-      laminateDetail: new THREE.Vector2(0.7, 0.7),
-      distortion: new THREE.Vector2(10.0, 10.0),
-      colorFactor: new THREE.Vector3(1, 1, 1),
-      timeStrength: new THREE.Vector2(1, 1),
-      noiseStrength: new THREE.Vector2(1, 1),
-   } as ColorStrataParams,
-   color: {
-      color0: new THREE.Color(0xff0000),
-      color1: new THREE.Color(0x0000ff),
-      color2: new THREE.Color(0x00ff00),
-      color3: new THREE.Color(0xffff00),
-   },
-};
-
 const setGUI = (gui: GUI) => {
-   //color strata
-   const colorStrata = gui.addFolder("colorStrata");
-   colorStrata.add(CONFIG.colorStrata, "laminateLayer", 0, 20, 1);
-   colorStrata.add(CONFIG.colorStrata, "scale", 0, 1, 0.01);
-   const laminateInterval = colorStrata.addFolder("laminateInterval");
-   laminateInterval.add(CONFIG.colorStrata.laminateInterval!, "x", 0, 2, 0.01);
-   laminateInterval.add(CONFIG.colorStrata.laminateInterval!, "y", 0, 2, 0.01);
-   const laminateDetail = colorStrata.addFolder("laminateDetail");
-   laminateDetail.add(CONFIG.colorStrata.laminateDetail!, "x", 0, 10, 0.1);
-   laminateDetail.add(CONFIG.colorStrata.laminateDetail!, "y", 0, 10, 0.1);
-   const distortion = colorStrata.addFolder("distortion");
-   distortion.add(CONFIG.colorStrata.distortion!, "x", 0, 10, 0.01);
-   distortion.add(CONFIG.colorStrata.distortion!, "y", 0, 10, 0.01);
-   const colorFactor = colorStrata.addFolder("colorFactor");
-   colorFactor.add(CONFIG.colorStrata.colorFactor!, "x", 0, 10, 0.01);
-   colorFactor.add(CONFIG.colorStrata.colorFactor!, "y", 0, 10, 0.01);
-   colorFactor.add(CONFIG.colorStrata.colorFactor!, "z", 0, 10, 0.01);
-   const timeStrength = colorStrata.addFolder("timeStrength");
-   timeStrength.add(CONFIG.colorStrata.timeStrength!, "x", 0, 2, 0.01);
-   timeStrength.add(CONFIG.colorStrata.timeStrength!, "y", 0, 2, 0.01);
-   const noiseStrength = colorStrata.addFolder("noiseStrength");
-   noiseStrength.add(CONFIG.colorStrata.noiseStrength!, "x", 0, 5, 0.01);
-   noiseStrength.add(CONFIG.colorStrata.noiseStrength!, "y", 0, 5, 0.01);
-   // color
-   const color = gui.addFolder("color");
-   color.addColor(CONFIG.color, "color0");
-   color.addColor(CONFIG.color, "color1");
-   color.addColor(CONFIG.color, "color2");
-   color.addColor(CONFIG.color, "color3");
 };
 
-const setConfig = () => {
-   return {
-      colorStrata: { ...CONFIG.colorStrata },
-      color: { ...CONFIG.color },
-   };
-};
+
+const initParticleBufferGeo = (texSize:Size):THREE.BufferGeometry => {
+    // Fibonacci球面配置
+      const points = 4000; // 配置するパーティクルの数
+      const size = .2; // pc
+    // const size = 200; // sp
+      const goldenRatio = (1 + Math.sqrt(5)) / 2;
+      const angleIncrement = Math.PI * 2 * goldenRatio;
+   
+    // BufferGeometryとFloat32Arrayを使用して頂点データを保持    
+    const positions = new Float32Array(points * 3); // 各頂点にはx, y, zの3つの値があるため
+   
+   for (let i = 0; i < points; i++) {
+      const t = i / points;
+      const inclination = Math.acos(1 - 2 * t);
+      const azimuth = angleIncrement * i;
+
+      const x = Math.sin(inclination) * Math.cos(azimuth);
+      const y = Math.sin(inclination) * Math.sin(azimuth) * (texSize.width / texSize.height);
+      const z = Math.cos(inclination);
+   
+      // positions配列に頂点の位置データをセット
+      positions[i * 3] = x * size;
+      positions[i * 3 + 1] = y  * size;
+      positions[i * 3 + 2] = z * size;
+   }   
+
+   const geometry = new THREE.BufferGeometry();
+   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+   
+   return geometry;
+}
+
+
+const morphPattern1Buffer = (texSize:Size):Float32Array => {
+   const count = 100;
+   const arr = [];
+   for (let i = 0; i < count; i++) {
+      for (let j = 0; j < count; j++) {         
+         arr.push(
+            Math.random() * 2 - 1,
+            Math.random() * 2 - 1,
+            Math.random() * 2 - 1            
+         );
+      }
+   }
+   const positions = new Float32Array(arr);   
+   return positions;
+}
+
+const morphPattern2Buffer = (texSize:Size):Float32Array => {
+   const count = 200;
+   const arr = [];
+   
+   // 円筒状にランダムに配置
+   for (let i = 0; i < count; i++) {
+      for (let j = 0; j < count; j++) {
+         const r = 0.5;
+         const theta = Math.random() * Math.PI * 2;
+         const phi = Math.random() * Math.PI * 2;
+         const x = r * Math.cos(theta);
+         const y = r * Math.sin(theta);
+         const z = r * Math.sin(phi);
+         arr.push(x, y, z);
+      }
+   }
+
+   const positions = new Float32Array(arr);   
+   return positions;
+}
 
 export const Playground = () => {
-   const updateGUI = useGUI(setGUI);
+   const updateGUI = useGUI(setGUI);   
 
-   const ref = useRef<THREE.ShaderMaterial>(null);
-   const { size, dpr } = useThree((state) => {
-      return { size: state.size, dpr: state.viewport.dpr };
+
+   const { size, dpr,camera } = useThree((state) => { 
+      return { size: state.size, dpr: state.viewport.dpr,camera:state.camera };
    });
 
-   const [updateColorStrata] = useColorStrata({ size, dpr });
 
-   useFrame((props) => {
-      const colorStrata = updateColorStrata(props, {
-         ...setConfig().colorStrata,
-         texture: false,
-         noise: false,
+   const [updateParticle,setParticle,{points,scene:particleScene,output,camera:pCam}] = useParticle({size,dpr});
+
+
+   const morphList = [morphPattern1Buffer(size), morphPattern2Buffer(size)];    
+   
+   setParticle({
+      initGeometry: initParticleBufferGeo(size),
+      morphTargets: morphList,
+   })
+
+   useFrame((props) => {         
+      updateParticle(props, {
+         morphProgress: (props.mouse.x + 1.0)  / 2.0 *  (morphList.length)
       });
-      ref.current!.uniforms.u_fx.value = colorStrata;
-      ref.current!.uniforms.u_color0.value = setConfig().color.color0;
-      ref.current!.uniforms.u_color1.value = setConfig().color.color1;
-      ref.current!.uniforms.u_color2.value = setConfig().color.color2;
-      ref.current!.uniforms.u_color3.value = setConfig().color.color3;
+      
       updateGUI();
    });
 
    return (
-      <mesh>
+      <>         
+      {/* 
+         {createPortal(
+            <mesh>
+               <sphereGeometry args={[10, 10, 10]} />
+               <meshBasicMaterial color={"hotpink"} />
+            </mesh>,
+            particleScene
+         )} */}
+         
+         <mesh>
          <planeGeometry args={[2, 2]} />
-         <shaderMaterial
-            ref={ref}
+         <shaderMaterial            
             vertexShader={`
 					varying vec2 vUv;
 						void main() {
@@ -119,34 +134,18 @@ export const Playground = () => {
 						precision highp float;
 						varying vec2 vUv;
 						uniform sampler2D u_fx;
-						uniform vec3 u_color0;
-						uniform vec3 u_color1;
-						uniform vec3 u_color2;
-						uniform vec3 u_color3;
 						
 						void main() {
 							vec2 uv = vUv;
-							
-							vec2 map = texture2D(u_fx, uv).rg;
-							vec2 normalizedMap = map * 2.0 - 1.0;
-							
-							uv = uv * 2.0 - 1.0;
-							uv *= mix(vec2(1.0), abs(normalizedMap), 3.0);
-							uv = (uv + 1.0) / 2.0;
 
-							vec3 col = mix(mix(u_color0, u_color1, uv.x), mix(u_color2, u_color3, uv.x), uv.y);
-							
-							gl_FragColor = vec4(col, 1.0);
+							gl_FragColor = texture2D(u_fx, uv);
 						}
 					`}
             uniforms={{
-               u_fx: { value: null },
-               u_color0: { value: null },
-               u_color1: { value: null },
-               u_color2: { value: null },
-               u_color3: { value: null },
+               u_fx: { value: output },
             }}
          />
       </mesh>
-   );
+      </>
+   ) 
 };

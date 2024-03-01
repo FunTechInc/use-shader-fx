@@ -22,7 +22,7 @@
       "eslint": "8.47.0",
       "eslint-config-next": "13.4.19",
       "glslify-loader": "^2.0.0",
-      "gsap": "^3.12.2",
+      "gsap": "^3.12.5",
       "meshline": "^3.1.6",
       "next": "^14.0.1",
       "raw-loader": "^4.0.2",
