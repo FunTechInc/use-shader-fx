@@ -41,6 +41,24 @@ export const PARTICLE_PARAMS: ParticleParams = {
 };
 
 
+// maxLengthに合わせて配列を埋める関数
+const fillPositiionArray = (arr: Float32Array, maxLength: number):Float32Array => {
+   const diff = (maxLength - arr.length) / 3;
+   const positionNum = Math.floor(arr.length / 3);
+   const addArray = [];   
+   for (let i = 0; i < diff; i++) {
+      const index = i % positionNum;
+      addArray.push(
+         arr[index * 3],
+         arr[index * 3 + 1],
+         arr[index * 3 + 2]
+      );
+   }
+   const oldArray = Array.from(arr);
+   return new Float32Array([...oldArray, ...addArray]);
+};
+
+
 export const useParticle = ({
    size,
    dpr,
@@ -72,32 +90,20 @@ export const useParticle = ({
       
       if(targetsList && targetsList.length > 0) {
 
-         const all = [...targetsList,params.initGeometry!.attributes.position.array];         
-
-         // 配列の中身が一番多いものの長さを取得して、それに合わせて他の配列を伸ばす
-         const maxLength = Math.max(...all.map((arr) => arr.length));                  
-         all.forEach((arr,i) => {
-            if (arr.length < maxLength) {
-               const diff = (maxLength - arr.length) / 3 ;
-               const addArray = [];
-               for (let i = 0; i < diff; i++) {
-                  addArray.push(
-                     arr[0],
-                     arr[1],
-                     arr[2]
-                  )
-               }
-               const oldArray =  Array.from(arr);
-               all[i] = new Float32Array([...oldArray, ...addArray]);
-            }
-         })         
          
-
-         // pointsのgeometryにattibuteとしてmorphTargetsを追加
+         // 配列の中身が一番多いものの長さを取得         
+         const maxLength = Math.max(...[...targetsList,params.initGeometry!.attributes.position.array].map((arr) => arr.length));
+         
+         // positionの長さを揃える         
+         const arr = fillPositiionArray(params.initGeometry!.attributes.position.array as Float32Array, maxLength);         
+         points.geometry.setAttribute("position", new THREE.BufferAttribute(arr, 3));      
          
          let stringToAddToMorphAttibutes = '';
          let stringToAddToMortAttibutesList = '';         
-         targetsList.forEach((target, index) => {
+         targetsList.forEach((arr, index) => {
+            // 長さを揃える
+            const target = fillPositiionArray(arr, maxLength);
+            // morphTargetをgeometryに追加
             points.geometry.setAttribute(`morphTarget${index}`, new THREE.BufferAttribute(target, 3));            
             // vertexShaderに書き込むattributeを追加
             stringToAddToMorphAttibutes += `attribute vec3 morphTarget${index};\n`;     
@@ -114,7 +120,7 @@ export const useParticle = ({
          );
          baseVertexShader = baseVertexShader.replace(
             `// #include <morphAttibutesList>`,
-            `vec3 attibutesList[${all.length}] = vec3[](position${stringToAddToMortAttibutesList});`
+            `vec3 attibutesList[${targetsList.length + 1}] = vec3[](position${stringToAddToMortAttibutesList});`
          );
                   
       } else {         
