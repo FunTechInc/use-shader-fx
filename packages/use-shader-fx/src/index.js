@@ -29,6 +29,10 @@ export * from "./fxs/effects/useWave";
 // misc
 export * from "./fxs/misc/useChromaKey";
 
+// particles
+export * from "./fxs/particles/useParticles";
+export * from "./fxs/particles/useMorph3D";
+
 /*===============================================
 utils
 ===============================================*/
@@ -39,7 +43,6 @@ export * from "./utils/useDoubleFBO";
 export * from "./utils/useParams";
 export * from "./utils/useResolution";
 export * from "./utils/useSingleFBO";
-export * from "./utils/useCopyTexture";
 
 /*===============================================
 misc
@@ -48,6 +51,7 @@ export * from "./misc/usePointer";
 export * from "./misc/useBeat";
 export * from "./misc/useFPSLimiter";
 export * from "./misc/useDomSyncer";
+export * from "./misc/useCopyTexture";
 
 /*===============================================
 Easing

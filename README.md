@@ -283,113 +283,6 @@ usePerformanceMonitor({
 });
 ```
 
-# How to make "custom fxHooks"
-
-With some functions provided by `use-shader-fx`, creating a custom hook is straightforward (the challenging part is only the shader!). Please refer to existing `fxHooks` for details.
-
-In addition, we have prepared a template in the repository below that is useful for creating custom hooks, so please clone and use it in the location where you created your custom hook.
-
-```bash
-git clone https://github.com/takuma-hmng8/CreateShaderFx
-```
-
-If you can create a cool FX, please contribute!
-👉 [CONTRIBUTING](CONTRIBUTING.md)! 👈
-
-## useDoubleFBO
-
-Generates FBO and returns a double-buffered buffer texture after swapping. The `useFBO` of `drei` by default performs `setSize` for `THREE.WebGLRenderTarget` upon changes in `dpr` and `size`, making it challenging to handle buffer textures during changes like dpr adjustments. Therefore, a non-reactive hook against updates of dpr and size was created. It's possible to make them reactive individually through options. If you want to `setSize` at a custom timing, the `fxObject` that the fxHook receives as the third argument also stores `renderTarget`.
-
-```ts
-type UseFboProps = {
-   scene: THREE.Scene;
-   camera: THREE.Camera;
-   size: Size;
-   /** If dpr is set, dpr will be multiplied, default:false */
-   dpr?: number | false;
-   /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
-   isSizeUpdate?: boolean;
-   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
-   samples?: number;
-   /** Renders to the depth buffer. Unlike the three.js,　Default is false. */
-   depthBuffer?: boolean;
-   /** If set, the scene depth will be rendered to this texture. Default is false. */
-   depthTexture?: boolean;
-};
-
-const [velocityFBO, updateVelocityFBO] = useDoubleFBO(UseFboProps);
-```
-
-When you call the update function, it returns a double-buffered texture. The second argument gets a function called before `gl.render()`, allowing for operations like swapping materials or setting uniforms.
-
-```js
-const texture = updateVelocityFBO(gl, ({ read, write }) => {
-   // callback before gl.render()
-   setMeshMaterial(materials.advectionMaterial);
-   setUniform(materials.advectionMaterial, "uVelocity", read);
-});
-```
-
-## useSingleFBO
-
-This is a version without double buffering.
-
-```js
-const [renderTarget, updateRenderTarget] = useSingleFBO(UseFboProps);
-```
-
-## useCamera
-
-Generates and returns a `THREE.OrthographicCamera`.
-
-```js
-const camera = useCamera(size);
-```
-
-## useResolution
-
-This hook returns `resolution`. If `dpr` isn't set (or set to false), dpr won't be multiplied.
-
-```ts
-const resolution = useResolution(size: Size, dpr: number | false = false);
-```
-
-## useAddMesh
-
-Creates a mesh and adds it to scene, geometry, and material. Returns the mesh.
-
-```js
-useAddMesh(scene, geometry, material);
-```
-
-## setUniform
-
-A function to set values in the uniforms of the shader material.
-
-```js
-setUniform(material, "key", someValue);
-```
-
-## useParams
-
-Returns the refObject of params and its update function.
-
-```ts
-const [params, setParams] = useParams<HooksParams>;
-{
-   // HookPrams
-}
-```
-
-## useCopyTexture
-
-Generate an FBO array to copy the texture.
-
-```tsx
-const [renderTargets, copyTexture] = useCopyTexture(UseFboProps, length);
-copyTexture(gl, index); // return texture
-```
-
 # Misc
 
 ## useDomSyncer
@@ -547,4 +440,13 @@ useFrame((props) => {
       return;
    }
 });
+```
+
+## useCopyTexture
+
+Generate an FBO array to copy the texture.
+
+```tsx
+const [renderTargets, copyTexture] = useCopyTexture(UseFboProps, length);
+copyTexture(gl, index); // return texture
 ```
