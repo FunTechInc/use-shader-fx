@@ -9,6 +9,22 @@ import { useParams } from "../../../utils/useParams";
 import { HooksProps, HooksReturn } from "../../types";
 import { useCreateObject } from "./useCreateObject";
 
+/*===============================================
+TODO : 
+- onbeforeConopileを使って、meshPhusycalMaterialのuniforomsを更新する。
+	- デフォルトで
+	- 気が向いたらtoonShaderも追加する？
+- sceneを渡すと、r3fのrootsceneに追加できる
+	- Lightとかがあるから、primitiveで使う方がユースケース的にはあるよな
+	- まあLightもuseEffectとかで追加できるから、isPrimitiveは例外的な使い方としよう。
+- r3fはprimitiveをanmount時にsceneから削除するのかな？ 追加されてるobjectは自分でdisposeしないといけないのはわかる。
+- あと、primitiveの場合は、useFrameとかも使えないのかな？
+
+- 内部的にraycaster使ってonPointerMoveも更新関数に追加するとかありかもね。
+
+- geometryは引数化
+===============================================*/
+
 export type Morph3DParams = {
    morphProgress?: number;
 };

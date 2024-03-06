@@ -29,9 +29,10 @@ export * from "./fxs/effects/useWave";
 // misc
 export * from "./fxs/misc/useChromaKey";
 
-// particles
-export * from "./fxs/particles/useParticles";
-export * from "./fxs/particles/useMorph3D";
+// 3D
+export * from "./fxs/3D/useWobble3D";
+export * from "./fxs/3D/useMorphParticles";
+export * from "./fxs/3D/useMorphParticles/useCreateMorphParticles";
 
 /*===============================================
 utils

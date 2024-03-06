@@ -26,15 +26,29 @@ const uniforms = {
    uTime: new THREE.Uniform(0),
    uPositionFrequency: new THREE.Uniform(0.5),
    uTimeFrequency: new THREE.Uniform(0.2),
-   uStrength: new THREE.Uniform(0.9),
+   uStrength: new THREE.Uniform(0.1),
    uWarpPositionFrequency: new THREE.Uniform(0.2),
    uWarpTimeFrequency: new THREE.Uniform(0.2),
    uWarpStrength: new THREE.Uniform(0.2),
    uColorA: new THREE.Uniform(new THREE.Color("white")),
-   uColorB: new THREE.Uniform(new THREE.Color("black")),
+   uColorB: new THREE.Uniform(new THREE.Color("orange")),
    uBaloon: new THREE.Uniform(0),
    uFx: new THREE.Uniform(new THREE.Texture()),
 };
+
+/*===============================================
+TODO : 
+- onbeforeConopileを使って、meshPhusycalMaterialのuniforomsを更新する。
+	- デフォルトで
+	- 気が向いたらtoonShaderも追加する？
+- isPrimitiveみたいな感じで、Object3Dをsceneに追加しないパターンもつくる。
+	- Lightとかがあるから、primitiveで使う方がユースケース的にはあるよな
+	- まあLightもuseEffectとかで追加できるから、isPrimitiveは例外的な使い方としよう。
+- r3fはprimitiveをanmount時にsceneから削除するのかな？ 追加されてるobjectは自分でdisposeしないといけないのはわかる。
+- あと、primitiveの場合は、useFrameとかも使えないのかな？
+
+- 内部的にraycaster使ってonPointerMoveも更新関数に追加するとかありかもね。
+===============================================*/
 
 export const Playground = () => {
    const { size, viewport, scene: rootScene, camera } = useThree();
@@ -95,26 +109,17 @@ export const Playground = () => {
    const beat = useBeat(140);
    const updatePointer = usePointer();
 
-   const raycaster = useMemo(() => new THREE.Raycaster(), []);
-   const rayCursor = useRef<THREE.Vector2 | null>(null);
+   const refPointer = useRef(new THREE.Vector2(0, 0));
+   const handlePointerMove = (e: any) =>
+      (refPointer.current = e.uv.multiplyScalar(2).subScalar(1));
 
    useFrame((props) => {
       const b = beat(props.clock);
       updateFluid(props);
       mesh.material.uniforms.uTime.value = b.beat;
-
-      raycaster.setFromCamera(props.pointer, camera);
-      const intersects = raycaster.intersectObject(mesh);
-      if (intersects.length > 0) {
-         const uv = intersects[0]?.uv as THREE.Vector2;
-         if (!uv) return;
-         rayCursor.current = uv.multiplyScalar(2).subScalar(1);
-      }
-      if (rayCursor.current) {
-         mesh.material.uniforms.uFx.value = updateFluid(props, {
-            pointerValues: updatePointer(rayCursor.current),
-         });
-      }
+      mesh.material.uniforms.uFx.value = updateFluid(props, {
+         pointerValues: updatePointer(refPointer.current),
+      });
    });
 
    return (
@@ -122,7 +127,11 @@ export const Playground = () => {
          <ambientLight />
          <directionalLight />
          <OrbitControls />
-         <primitive object={mesh} position={[0, 0, 0]} />
+         <primitive
+            onPointerMove={handlePointerMove}
+            object={mesh}
+            position={[0, 0, 0]}
+         />
       </mesh>
    );
 };
