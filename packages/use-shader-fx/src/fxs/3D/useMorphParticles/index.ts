@@ -34,16 +34,22 @@ export type MorphParticlesParams = {
    warpStrength?: number;
    warpPositionFrequency?: number;
    warpTimeFrequency?: number;
+   /** 変位させる。カラーチャンネルを利用して頂点を操作しますよ. 変位の強さはこのtextureのg channelによって変化します */
+   displacement?: THREE.Texture | false;
+   /** displacement textureのcolor chを反映させる強度 */
+   displacementColorIntensity?: number;
 };
 
 export type MorphParticlesObject = {
    scene: THREE.Scene;
    points: THREE.Points;
+   interactiveMesh: THREE.Mesh;
    material: MorphParticlesMaterial;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
    positions: Float32Array[];
+   uvs: Float32Array[];
 };
 
 export const MORPHPARTICLES_PARAMS: MorphParticlesParams = {
@@ -66,11 +72,15 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = {
    warpStrength: 0.5,
    warpPositionFrequency: 0.5,
    warpTimeFrequency: 0.5,
+   // displacement
+   displacement: false,
+   displacementColorIntensity: 0,
 };
 
 interface UseMorphParticlesProps extends HooksProps {
    geometry?: THREE.BufferGeometry;
    positions?: Float32Array[];
+   uvs?: Float32Array[];
 }
 
 const DEFAULT_GEOMETRY = new THREE.SphereGeometry(1, 32, 32);
@@ -84,6 +94,7 @@ export const useMorphParticles = ({
    samples = 0,
    geometry = DEFAULT_GEOMETRY,
    positions,
+   uvs,
 }: UseMorphParticlesProps): HooksReturn<
    MorphParticlesParams,
    MorphParticlesObject
@@ -91,8 +102,16 @@ export const useMorphParticles = ({
    const scene = useMemo(() => new THREE.Scene(), []);
    const camera = useCamera(size, "PerspectiveCamera");
 
-   const [updateUniform, { points, material, positions: generatedPositions }] =
-      useCreateMorphParticles({ scene, size, dpr, geometry, positions });
+   const [
+      updateUniform,
+      {
+         points,
+         interactiveMesh,
+         material,
+         positions: generatedPositions,
+         uvs: generatedUvs,
+      },
+   ] = useCreateMorphParticles({ scene, size, dpr, geometry, positions, uvs });
 
    const [params, setParams] = useParams<MorphParticlesParams>(
       MORPHPARTICLES_PARAMS
@@ -122,12 +141,14 @@ export const useMorphParticles = ({
       setParams,
       {
          scene,
-         points: points as THREE.Points,
+         points,
+         interactiveMesh,
          material,
          camera,
          renderTarget,
          output: renderTarget.texture,
          positions: generatedPositions,
+         uvs: generatedUvs,
       },
    ];
 };

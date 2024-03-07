@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { useEffect, useMemo } from "react";
 import { useAddObject } from "../../../../utils/useAddObject";
+import { ISDEV } from "../../../../libs/constants";
 import getWobble from "../../../../libs/shaders//getWobble.glsl";
 
 type UseCreateObjectProps = {
@@ -8,19 +9,131 @@ type UseCreateObjectProps = {
    geometry: THREE.BufferGeometry;
    material: THREE.ShaderMaterial;
    positions?: Float32Array[];
+   uvs?: Float32Array[];
 };
 
-const createMorphTransitionFunction = (length: number) => {
-   if (length) {
-      return `
-			float scaledProgress = uMorphProgress * ${length}.;
-			int baseIndex = int(floor(scaledProgress));		
-			baseIndex = clamp(baseIndex, 0, ${length});		
-			float progress = fract(scaledProgress);
-			int nextIndex = baseIndex + 1;
-			newPosition = mix(attibutesList[baseIndex], attibutesList[nextIndex], progress);
-		`;
+/** attibute(positionとuv)の最大の長さを算出して、全てのリストの長さを合わせる。最大の長さに合わせる際、足りないattributeはランダムにマッピングする */
+const modifyAttributes = (
+   attribute: Float32Array[] | undefined,
+   targetGeometry: THREE.BufferGeometry,
+   targetAttibute: "position" | "uv",
+   itemSize: number
+) => {
+   let modifiedAttribute: Float32Array[] = [];
+   if (attribute && attribute.length > 0) {
+      if (targetGeometry?.attributes[targetAttibute]?.array) {
+         modifiedAttribute = [
+            targetGeometry.attributes[targetAttibute].array as Float32Array,
+            ...attribute,
+         ];
+      } else {
+         modifiedAttribute = attribute;
+      }
+
+      const maxLength = Math.max(...modifiedAttribute.map((arr) => arr.length));
+
+      modifiedAttribute.forEach((arr, i) => {
+         if (arr.length < maxLength) {
+            const diff = (maxLength - arr.length) / itemSize;
+            const addArray = [];
+            const oldArray = Array.from(arr);
+            for (let i = 0; i < diff; i++) {
+               const randomIndex =
+                  Math.floor((arr.length / itemSize) * Math.random()) *
+                  itemSize;
+               for (let j = 0; j < itemSize; j++) {
+                  addArray.push(oldArray[randomIndex + j]);
+               }
+            }
+            modifiedAttribute[i] = new Float32Array([...oldArray, ...addArray]);
+         }
+      });
    }
+   return modifiedAttribute;
+};
+
+/** vertexShaderの書き換え */
+const rewriteVertexShader = (
+   modifeidAttributes: Float32Array[],
+   targetGeometry: THREE.BufferGeometry,
+   targetAttibute: "position" | "uv",
+   vertexShader: string,
+   itemSize: number
+) => {
+   //ここで書き換えの文字列の操作
+   const vTargetName =
+      targetAttibute === "position" ? "positionTarget" : "uvTarget";
+   const vAttributeRewriteKey =
+      targetAttibute === "position"
+         ? "// #usf <morphPositions>"
+         : "// #usf <morphUvs>";
+   const vTransitionRewriteKey =
+      targetAttibute === "position"
+         ? "// #usf <morphPositionTransition>"
+         : "// #usf <morphUvTransition>";
+   const vListName =
+      targetAttibute === "position" ? "positionsList" : "uvsList";
+   const vMorphTransition =
+      targetAttibute === "position"
+         ? `
+				float scaledProgress = uMorphProgress * ${modifeidAttributes.length - 1}.;
+				int baseIndex = int(floor(scaledProgress));		
+				baseIndex = clamp(baseIndex, 0, ${modifeidAttributes.length - 1});		
+				float progress = fract(scaledProgress);
+				int nextIndex = baseIndex + 1;
+				newPosition = mix(positionsList[baseIndex], positionsList[nextIndex], progress);
+			`
+         : "newUv = mix(uvsList[baseIndex], uvsList[nextIndex], progress);";
+
+   if (modifeidAttributes.length > 0) {
+      // 初期化時のpositionを削除して正規化後のpositionを追加
+      targetGeometry.deleteAttribute(targetAttibute);
+      targetGeometry.setAttribute(
+         targetAttibute,
+         new THREE.BufferAttribute(modifeidAttributes[0], itemSize)
+      );
+
+      // pointsのgeometryにattibuteとしてmorphTargetsを追加
+      let stringToAddToMorphAttibutes = "";
+      let stringToAddToMorphAttibutesList = "";
+
+      modifeidAttributes.forEach((target, index) => {
+         targetGeometry.setAttribute(
+            `${vTargetName}${index}`,
+            new THREE.BufferAttribute(target, itemSize)
+         );
+         // vertexShaderに書き込むattributeを追加
+         stringToAddToMorphAttibutes += `attribute vec${itemSize} ${vTargetName}${index};\n`;
+         if (index === 0) {
+            stringToAddToMorphAttibutesList += `${vTargetName}${index}`;
+         } else {
+            stringToAddToMorphAttibutesList += `,${vTargetName}${index}`;
+         }
+      });
+
+      // vertexShaderに追加するattributeを追加
+      vertexShader = vertexShader.replace(
+         `${vAttributeRewriteKey}`,
+         stringToAddToMorphAttibutes
+      );
+      vertexShader = vertexShader.replace(
+         `${vTransitionRewriteKey}`,
+         `vec${itemSize} ${vListName}[${modifeidAttributes.length}] = vec${itemSize}[](${stringToAddToMorphAttibutesList});
+				${vMorphTransition}
+			`
+      );
+   } else {
+      vertexShader = vertexShader.replace(`${vAttributeRewriteKey}`, "");
+      vertexShader = vertexShader.replace(`${vTransitionRewriteKey}`, "");
+      if (!targetGeometry?.attributes[targetAttibute]?.array) {
+         ISDEV &&
+            console.error(
+               `use-shader-fx:geometry.attributes.${targetAttibute}.array is not found`
+            );
+      }
+   }
+
+   return vertexShader;
 };
 
 export const useCreateObject = ({
@@ -28,47 +141,17 @@ export const useCreateObject = ({
    geometry,
    material,
    positions,
+   uvs,
 }: UseCreateObjectProps) => {
-   const modifiedPositions = useMemo(() => {
-      let mergedPositions: Float32Array[] = [];
-      if (positions && positions.length > 0) {
-         if (geometry?.attributes?.position?.array) {
-            mergedPositions = [
-               geometry.attributes.position.array as Float32Array,
-               ...positions,
-            ];
-         } else {
-            mergedPositions = positions;
-         }
+   const modifiedPositions = useMemo(
+      () => modifyAttributes(positions, geometry, "position", 3),
+      [positions, geometry]
+   );
 
-         // 配列の中身が一番多いものの長さを取得して、それに合わせて他の配列を伸ばす
-         const maxLength = Math.max(
-            ...mergedPositions.map((arr) => arr.length)
-         );
-
-         mergedPositions.forEach((arr, i) => {
-            if (arr.length < maxLength) {
-               const diff = (maxLength - arr.length) / 3;
-               const addArray = [];
-               const oldArray = Array.from(arr);
-               for (let i = 0; i < diff; i++) {
-                  const randomIndex =
-                     Math.floor((arr.length / 3) * Math.random()) * 3;
-                  addArray.push(
-                     oldArray[randomIndex + 0],
-                     oldArray[randomIndex + 1],
-                     oldArray[randomIndex + 2]
-                  );
-               }
-               mergedPositions[i] = new Float32Array([
-                  ...oldArray,
-                  ...addArray,
-               ]);
-            }
-         });
-      }
-      return mergedPositions;
-   }, [positions, geometry]);
+   const modifiedUvs = useMemo(
+      () => modifyAttributes(uvs, geometry, "uv", 2),
+      [uvs, geometry]
+   );
 
    useEffect(() => {
       if (!geometry || !material) {
@@ -76,71 +159,52 @@ export const useCreateObject = ({
       }
 
       geometry.setIndex(null);
-      // particleにはnormalはいらない
+      // particleなので、normalは不要
       geometry.deleteAttribute("normal");
+
+      if (modifiedPositions.length !== modifiedUvs.length) {
+         ISDEV &&
+            console.log("use-shader-fx:positions and uvs are not matched");
+      }
 
       // シェーダーの書き換え
       let vertexShader = material.vertexShader;
       if (!vertexShader) {
-         console.log("baseVertexShader is not found");
+         ISDEV && console.error("use-shader-fx:baseVertexShader is not found");
          return;
       }
 
-      if (positions && positions.length > 0) {
-         // 初期化時のpositionを削除して正規化後のpositionを追加
-         geometry.deleteAttribute("position");
-         geometry.setAttribute(
+      const rewritedShader = rewriteVertexShader(
+         modifiedUvs,
+         geometry,
+         "uv",
+         rewriteVertexShader(
+            modifiedPositions,
+            geometry,
             "position",
-            new THREE.BufferAttribute(modifiedPositions[0], 3)
-         );
+            vertexShader,
+            3
+         ),
+         2
+      ).replace(`// #usf <getWobble>`, `${getWobble}`);
 
-         // pointsのgeometryにattibuteとしてmorphTargetsを追加
-         let stringToAddToMorphAttibutes = "";
-         let stringToAddToMortAttibutesList = "";
-
-         modifiedPositions.forEach((target, index) => {
-            geometry.setAttribute(
-               `morphTarget${index}`,
-               new THREE.BufferAttribute(target, 3)
-            );
-            // vertexShaderに書き込むattributeを追加
-            stringToAddToMorphAttibutes += `attribute vec3 morphTarget${index};\n`;
-            if (index === 0) {
-               stringToAddToMortAttibutesList += `morphTarget${index}`;
-            } else {
-               stringToAddToMortAttibutesList += `,morphTarget${index}`;
-            }
-         });
-
-         // vertexShaderに追加するattributeを追加
-         vertexShader = vertexShader.replace(
-            `// #usf <morphPositions>`,
-            stringToAddToMorphAttibutes
-         );
-         vertexShader = vertexShader.replace(
-            `// #usf <morphTransition>`,
-            `vec3 attibutesList[${
-               modifiedPositions.length
-            }] = vec3[](${stringToAddToMortAttibutesList});
-				${createMorphTransitionFunction(modifiedPositions.length - 1)}
-				`
-         );
-      } else {
-         vertexShader = vertexShader.replace(`// #usf <morphPositions>`, "");
-         vertexShader = vertexShader.replace(`// #usf <morphTransition>`, "");
-         if (!geometry?.attributes?.position?.array) {
-            console.error("geometry.attributes.position.array is not found");
-         }
-      }
-      // wobble
-      vertexShader = vertexShader.replace(
-         `// #usf <getWobble>`,
-         `${getWobble}`
-      );
-      material.vertexShader = vertexShader;
-   }, [positions, geometry, material, modifiedPositions]);
+      material.vertexShader = rewritedShader;
+   }, [positions, geometry, material, modifiedPositions, modifiedUvs, uvs]);
 
    const object = useAddObject(scene, geometry, material, THREE.Points);
 
-   return { object, positions: modifiedPositions };
+   const interactiveMesh = useAddObject(
+      scene,
+      useMemo(() => geometry.clone(), [geometry]),
+      useMemo(() => material.clone(), [material]),
+      THREE.Mesh
+   );
+   interactiveMesh.visible = false;
+
+   return {
+      object,
+      interactiveMesh,
+      positions: modifiedPositions,
+      uvs: modifiedUvs,
+   };
 };

@@ -15,14 +15,17 @@ type UseCreateMorphParticlesProps = {
    scene?: THREE.Scene | false;
    geometry?: THREE.BufferGeometry;
    positions?: Float32Array[];
+   uvs?: Float32Array[];
 };
 
 type UseCreateMorphParticlesReturn = [
    (props: RootState | null, params: MorphParticlesParams) => void,
    {
       points: THREE.Points;
+      interactiveMesh: THREE.Mesh;
       material: MorphParticlesMaterial;
       positions: Float32Array[];
+      uvs: Float32Array[];
    }
 ];
 
@@ -32,13 +35,20 @@ export const useCreateMorphParticles = ({
    scene = false,
    geometry = DEFAULT_GEOMETRY,
    positions,
+   uvs,
 }: UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
    const material = useMaterial({ size, dpr });
-   const { object: points, positions: generatedPositions } = useCreateObject({
+   const {
+      object: points,
+      interactiveMesh,
+      positions: generatedPositions,
+      uvs: generatedUvs,
+   } = useCreateObject({
       scene,
       geometry,
       material,
       positions,
+      uvs,
    });
 
    const updateUniform = useCallback(
@@ -115,19 +125,34 @@ export const useCreateMorphParticles = ({
                "uWarpTimeFrequency",
                params.warpTimeFrequency
             );
+         // displacement
+         if (params.displacement) {
+            setUniform(material, "uDisplacement", params.displacement);
+            setUniform(material, "uIsDisplacement", true);
+         } else {
+            setUniform(material, "uIsDisplacement", false);
+         }
+         params.displacementColorIntensity &&
+            setUniform(
+               material,
+               "uDisplacementColorIntensity",
+               params.displacementColorIntensity
+            );
       },
       [material]
    );
 
-   //初期化時に デフォルト値への更新を保証したいので、 `MORPHPARTICLES_PARAMS`で更新する
+   //初期化時に デフォルト値への更新を保証したいので、`MORPHPARTICLES_PARAMS`で更新する
    useEffect(() => updateUniform(null, MORPHPARTICLES_PARAMS), [updateUniform]);
 
    return [
       updateUniform,
       {
          points: points as THREE.Points,
+         interactiveMesh: interactiveMesh as THREE.Mesh,
          material,
          positions: generatedPositions,
+         uvs: generatedUvs,
       },
    ];
 };
