@@ -128,6 +128,7 @@ float getWobble(vec3 position)
 
 void main()
 {
+	
 	vec3 biTangent = cross(normal, tangent.xyz);
 
 	// Neighbours positions    
@@ -141,9 +142,9 @@ void main()
 	positionA    += getWobble(positionA) * normal;
 	positionB    += getWobble(positionB) * normal;
 
-	 // fx
-	vec4 fx = texture(uFx, uv);
-	vFxColor = fx.rgb;
+	// fx
+	// vec4 fx = texture(uFx, uv);
+	// vFxColor = fx.rgb;
 
 	// Compute normal
 	vec3 toA = normalize(positionA - csm_Position);

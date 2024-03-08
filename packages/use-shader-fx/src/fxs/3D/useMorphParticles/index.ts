@@ -36,6 +36,8 @@ export type MorphParticlesParams = {
    warpTimeFrequency?: number;
    /** 変位させる。カラーチャンネルを利用して頂点を操作しますよ. 変位の強さはこのtextureのg channelによって変化します */
    displacement?: THREE.Texture | false;
+   /** 変位させる強度 . 変位の強さはg chに依存しますが、それに乗算する値です */
+   displacementIntensity?: number;
    /** displacement textureのcolor chを反映させる強度 */
    displacementColorIntensity?: number;
 };
@@ -44,7 +46,6 @@ export type MorphParticlesObject = {
    scene: THREE.Scene;
    points: THREE.Points;
    interactiveMesh: THREE.Mesh;
-   material: MorphParticlesMaterial;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
@@ -52,7 +53,7 @@ export type MorphParticlesObject = {
    uvs: Float32Array[];
 };
 
-export const MORPHPARTICLES_PARAMS: MorphParticlesParams = {
+export const MORPHPARTICLES_PARAMS: MorphParticlesParams = Object.freeze({
    morphProgress: 0,
    blurAlpha: 0.9,
    blurRadius: 0.05,
@@ -74,16 +75,16 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = {
    warpTimeFrequency: 0.5,
    // displacement
    displacement: false,
+   displacementIntensity: 1,
    displacementColorIntensity: 0,
-};
+});
 
 interface UseMorphParticlesProps extends HooksProps {
+   /** default : THREE.SphereGeometry(1, 32, 32) */
    geometry?: THREE.BufferGeometry;
    positions?: Float32Array[];
    uvs?: Float32Array[];
 }
-
-const DEFAULT_GEOMETRY = new THREE.SphereGeometry(1, 32, 32);
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
@@ -92,7 +93,7 @@ export const useMorphParticles = ({
    size,
    dpr,
    samples = 0,
-   geometry = DEFAULT_GEOMETRY,
+   geometry,
    positions,
    uvs,
 }: UseMorphParticlesProps): HooksReturn<
@@ -107,7 +108,6 @@ export const useMorphParticles = ({
       {
          points,
          interactiveMesh,
-         material,
          positions: generatedPositions,
          uvs: generatedUvs,
       },
@@ -143,7 +143,6 @@ export const useMorphParticles = ({
          scene,
          points,
          interactiveMesh,
-         material,
          camera,
          renderTarget,
          output: renderTarget.texture,

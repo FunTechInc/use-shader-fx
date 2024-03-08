@@ -39,6 +39,7 @@ const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "warpStrength", 0, 10, 0.01);
    gui.add(CONFIG, "warpPositionFrequency", 0, 10, 0.01);
    gui.add(CONFIG, "warpTimeFrequency", 0, 10, 0.01);
+   gui.add(CONFIG, "displacementIntensity", 0, 10, 0.01);
    gui.add(CONFIG, "displacementColorIntensity", 0, 40, 0.01);
 };
 const setConfig = () => {
@@ -114,7 +115,7 @@ export const Playground = () => {
          // map: funkun,
          // alphaMap: funkunAlpha,
          beat: b.beat,
-         morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
+         // morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
          // morphProgress: 0.5,
       });
       updateGUI();

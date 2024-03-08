@@ -34,6 +34,7 @@ export class MorphParticlesMaterial extends THREE.ShaderMaterial {
       uWarpStrength: { value: number };
       uDisplacement: { value: THREE.Texture };
       uIsDisplacement: { value: boolean };
+      uDisplacementIntensity: { value: number };
       uDisplacementColorIntensity: { value: number };
    };
 }
@@ -75,6 +76,7 @@ export const useMaterial = ({ size, dpr }: { size: Size; dpr: number }) => {
                uWarpStrength: { value: 0 },
                uDisplacement: { value: new THREE.Texture() },
                uIsDisplacement: { value: false },
+               uDisplacementIntensity: { value: 0 },
                uDisplacementColorIntensity: { value: 0 },
             },
          }),

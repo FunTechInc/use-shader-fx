@@ -23,6 +23,7 @@ uniform float uWarpStrength;
 
 uniform sampler2D uDisplacement;
 uniform bool uIsDisplacement;
+uniform float uDisplacementIntensity;
 
 varying vec3 vColor;
 varying float vPictureAlpha;
@@ -47,7 +48,7 @@ void main() {
 
 	//この時点でdisplacementは0 ~ 1なので、それを-1~1にする
 	displacement = displacement * 2.-1.;
-	displacement *= displacementIntensity;
+	displacement *= displacementIntensity * uDisplacementIntensity;
 	newPosition += displacement;
 
 	// Final position
