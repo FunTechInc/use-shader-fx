@@ -49,7 +49,7 @@ export type FluidObject = {
    output: THREE.Texture;
 };
 
-export const FLUID_PARAMS: FluidParams = {
+export const FLUID_PARAMS: FluidParams = Object.freeze({
    density_dissipation: 0.98,
    velocity_dissipation: 0.99,
    velocity_acceleration: 10.0,
@@ -59,7 +59,7 @@ export const FLUID_PARAMS: FluidParams = {
    splat_radius: 0.002,
    fluid_color: new THREE.Vector3(1.0, 1.0, 1.0),
    pointerValues: false,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

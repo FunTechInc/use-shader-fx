@@ -29,13 +29,13 @@ export type WaveObject = {
    output: THREE.Texture;
 };
 
-export const WAVE_PARAMS: WaveParams = {
+export const WAVE_PARAMS: WaveParams = Object.freeze({
    epicenter: new THREE.Vector2(0.0, 0.0),
    progress: 0.0,
    width: 0.0,
    strength: 0.0,
    mode: "center",
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx

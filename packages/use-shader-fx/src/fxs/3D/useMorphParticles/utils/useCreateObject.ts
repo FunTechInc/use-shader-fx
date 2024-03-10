@@ -12,7 +12,9 @@ type UseCreateObjectProps = {
    uvs?: Float32Array[];
 };
 
-/** attibute(positionとuv)の最大の長さを算出して、全てのリストの長さを合わせる。最大の長さに合わせる際、足りないattributeはランダムにマッピングする */
+/**
+ * Calculate the maximum length of attribute (position and uv) to match the length of all lists. Randomly map missing attributes when matching to maximum length
+ * */
 const modifyAttributes = (
    attribute: Float32Array[] | undefined,
    targetGeometry: THREE.BufferGeometry,
@@ -52,7 +54,6 @@ const modifyAttributes = (
    return modifiedAttribute;
 };
 
-/** vertexShaderの書き換え */
 const rewriteVertexShader = (
    modifeidAttributes: Float32Array[],
    targetGeometry: THREE.BufferGeometry,
@@ -60,7 +61,6 @@ const rewriteVertexShader = (
    vertexShader: string,
    itemSize: number
 ) => {
-   //ここで書き換えの文字列の操作
    const vTargetName =
       targetAttibute === "position" ? "positionTarget" : "uvTarget";
    const vAttributeRewriteKey =
@@ -86,14 +86,13 @@ const rewriteVertexShader = (
          : "newUv = mix(uvsList[baseIndex], uvsList[nextIndex], progress);";
 
    if (modifeidAttributes.length > 0) {
-      // 初期化時のpositionを削除して正規化後のpositionを追加
+      // Delete the position at initialization and add the position after normalization
       targetGeometry.deleteAttribute(targetAttibute);
       targetGeometry.setAttribute(
          targetAttibute,
          new THREE.BufferAttribute(modifeidAttributes[0], itemSize)
       );
 
-      // pointsのgeometryにattibuteとしてmorphTargetsを追加
       let stringToAddToMorphAttibutes = "";
       let stringToAddToMorphAttibutesList = "";
 
@@ -102,7 +101,6 @@ const rewriteVertexShader = (
             `${vTargetName}${index}`,
             new THREE.BufferAttribute(target, itemSize)
          );
-         // vertexShaderに書き込むattributeを追加
          stringToAddToMorphAttibutes += `attribute vec${itemSize} ${vTargetName}${index};\n`;
          if (index === 0) {
             stringToAddToMorphAttibutesList += `${vTargetName}${index}`;
@@ -111,7 +109,6 @@ const rewriteVertexShader = (
          }
       });
 
-      // vertexShaderに追加するattributeを追加
       vertexShader = vertexShader.replace(
          `${vAttributeRewriteKey}`,
          stringToAddToMorphAttibutes
@@ -159,7 +156,7 @@ export const useCreateObject = ({
       }
 
       geometry.setIndex(null);
-      // particleなので、normalは不要
+      // Since it is a particle, normal is not necessary
       geometry.deleteAttribute("normal");
 
       if (modifiedPositions.length !== modifiedUvs.length) {
@@ -167,7 +164,6 @@ export const useCreateObject = ({
             console.log("use-shader-fx:positions and uvs are not matched");
       }
 
-      // シェーダーの書き換え
       let vertexShader = material.vertexShader;
       if (!vertexShader) {
          ISDEV && console.error("use-shader-fx:baseVertexShader is not found");
@@ -193,6 +189,7 @@ export const useCreateObject = ({
 
    const object = useAddObject(scene, geometry, material, THREE.Points);
 
+   // Generate a mesh for pointer
    const interactiveMesh = useAddObject(
       scene,
       useMemo(() => geometry.clone(), [geometry]),

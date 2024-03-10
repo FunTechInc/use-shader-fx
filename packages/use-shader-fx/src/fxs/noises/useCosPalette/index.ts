@@ -31,14 +31,14 @@ export type ColorPaletteObject = {
    output: THREE.Texture;
 };
 
-export const COSPALETTE_PARAMS: CosPaletteParams = {
+export const COSPALETTE_PARAMS: CosPaletteParams = Object.freeze({
    texture: new THREE.Texture(),
    color1: new THREE.Color().set(0.5, 0.5, 0.5),
    color2: new THREE.Color().set(0.5, 0.5, 0.5),
    color3: new THREE.Color().set(1, 1, 1),
    color4: new THREE.Color().set(0, 0.1, 0.2),
    rgbWeight: new THREE.Vector3(0.299, 0.587, 0.114),
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

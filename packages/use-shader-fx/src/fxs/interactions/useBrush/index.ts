@@ -47,7 +47,7 @@ export type BrushObject = {
    output: THREE.Texture;
 };
 
-export const BRUSH_PARAMS: BrushParams = {
+export const BRUSH_PARAMS: BrushParams = Object.freeze({
    texture: false,
    map: false,
    mapIntensity: 0.1,
@@ -60,7 +60,7 @@ export const BRUSH_PARAMS: BrushParams = {
    isCursor: false,
    pressure: 1.0,
    pointerValues: false,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

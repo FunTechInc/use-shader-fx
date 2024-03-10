@@ -1,4 +1,4 @@
-// 	<www.shadertoy.com/view/XsX3zB>
+// <www.shadertoy.com/view/XsX3zB>
 //	by Nikita Miropolskiy
 
 /* discontinuous pseudorandom uniformly distributed in [-0.5, +0.5]^3 */
@@ -19,11 +19,11 @@ float snoise(vec3 p) {
 
 	vec3 s = floor(p + dot(p, vec3(F3)));
 	vec3 x = p - s + dot(s, vec3(G3));
-	 
+	
 	vec3 e = step(vec3(0.0), x - x.yzx);
 	vec3 i1 = e*(1.0 - e.zxy);
 	vec3 i2 = 1.0 - e.zxy*(1.0 - e);
-	 	
+ 	
 	vec3 x1 = x - i1 + G3;
 	vec3 x2 = x - i2 + 2.0*G3;
 	vec3 x3 = x - 1.0 + 3.0*G3;

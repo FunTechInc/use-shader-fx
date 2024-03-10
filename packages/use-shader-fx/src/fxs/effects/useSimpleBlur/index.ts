@@ -27,11 +27,11 @@ export type SimpleBlurObject = {
    output: THREE.Texture;
 };
 
-export const SIMPLEBLUR_PARAMS: SimpleBlurParams = {
+export const SIMPLEBLUR_PARAMS: SimpleBlurParams = Object.freeze({
    texture: new THREE.Texture(),
    blurSize: 3,
    blurPower: 5,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

@@ -1,18 +1,15 @@
 import * as THREE from "three";
 import { Size, RootState } from "@react-three/fiber";
 import { useCreateObject } from "./utils/useCreateObject";
-import { useMaterial, MorphParticlesMaterial } from "./utils/useMaterial";
+import { useMaterial } from "./utils/useMaterial";
 import { MorphParticlesParams, MORPHPARTICLES_PARAMS } from ".";
 import { setUniform } from "../../../utils/setUniforms";
-import { useCallback, useEffect } from "react";
+import { useCallback, useMemo } from "react";
+import { Create3DHooksProps } from "../types";
 
-const DEFAULT_GEOMETRY = new THREE.SphereGeometry(1, 32, 32);
-
-type UseCreateMorphParticlesProps = {
+export type UseCreateMorphParticlesProps = {
    size: Size;
    dpr: number;
-   /** r3fのシーンを入れてもいいし、どのシーンにもaddしたくない場合は何も渡さないとシーンに入れずにオブジェクトだけ返すよ , default : false*/
-   scene?: THREE.Scene | false;
    /** default : THREE.SphereGeometry(1, 32, 32) */
    geometry?: THREE.BufferGeometry;
    positions?: Float32Array[];
@@ -33,10 +30,16 @@ export const useCreateMorphParticles = ({
    size,
    dpr,
    scene = false,
-   geometry = DEFAULT_GEOMETRY,
+   geometry,
    positions,
    uvs,
-}: UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
+}: Create3DHooksProps &
+   UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
+   const morphGeometry = useMemo(
+      () => geometry || new THREE.SphereGeometry(1, 32, 32),
+      [geometry]
+   );
+
    const material = useMaterial({ size, dpr });
    const {
       object: points,
@@ -45,7 +48,7 @@ export const useCreateMorphParticles = ({
       uvs: generatedUvs,
    } = useCreateObject({
       scene,
-      geometry,
+      geometry: morphGeometry,
       material,
       positions,
       uvs,
@@ -94,7 +97,6 @@ export const useCreateMorphParticles = ({
                newParams.beat || props.clock.getElapsedTime()
             );
          }
-         // wobble & warp
          setUniform(material, "uWobbleStrength", newParams.wobbleStrength!);
          setUniform(
             material,
@@ -117,7 +119,6 @@ export const useCreateMorphParticles = ({
             "uWarpTimeFrequency",
             newParams.warpTimeFrequency!
          );
-         // displacement
          if (newParams.displacement) {
             setUniform(material, "uDisplacement", newParams.displacement);
             setUniform(material, "uIsDisplacement", true);

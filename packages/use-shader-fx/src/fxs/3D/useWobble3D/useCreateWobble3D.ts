@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { RootState } from "@react-three/fiber";
+import { mergeVertices } from "three-stdlib";
 import {
    useMaterial,
    Wobble3DMaterial,
@@ -10,10 +11,9 @@ import { Wobble3DParams, WOBBLE3D_PARAMS } from ".";
 import { setUniform } from "../../../utils/setUniforms";
 import { useCallback, useEffect, useMemo } from "react";
 import { useAddObject } from "../../../utils/useAddObject";
+import { Create3DHooksProps } from "../types";
 
-type UseCreateWobble3DProps = {
-   /** r3fのシーンを入れてもいいし、どのシーンにもaddしたくない場合は何も渡さないとシーンに入れずにオブジェクトだけ返すよ , default : false*/
-   scene?: THREE.Scene | false;
+export type UseCreateWobble3DProps = {
    /** default : THREE.IcosahedronGeometry(2,50) */
    geometry?: THREE.BufferGeometry;
 };
@@ -22,6 +22,7 @@ type UseCreateWobble3DReturn = [
    (props: RootState | null, params: Wobble3DParams) => void,
    {
       mesh: THREE.Mesh;
+      depthMaterial: THREE.MeshDepthMaterial;
    }
 ];
 
@@ -31,15 +32,19 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    baseMaterial,
    materialParameters,
 }: UseCreateWobble3DProps &
+   Create3DHooksProps &
    WobbleMaterialProps<T>): UseCreateWobble3DReturn => {
-   const wobbleGeometry = useMemo(
-      () => geometry || new THREE.IcosahedronGeometry(2, 50),
-      [geometry]
-   );
-   const material = useMaterial({
+   const wobbleGeometry = useMemo(() => {
+      let geo = geometry || new THREE.IcosahedronGeometry(2, 50);
+      geo = mergeVertices(geo);
+      geo.computeTangents();
+      return geo;
+   }, [geometry]);
+   const { material, depthMaterial } = useMaterial({
       baseMaterial,
       materialParameters,
    });
+
    const object = useAddObject(
       scene,
       wobbleGeometry,
@@ -59,7 +64,6 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
                newParams.beat || props.clock.getElapsedTime()
             );
          }
-         // wobble & warp
          setUniform(userData, "uWobbleStrength", newParams.wobbleStrength!);
          setUniform(
             userData,
@@ -82,13 +86,13 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
             "uWarpTimeFrequency",
             newParams.warpTimeFrequency!
          );
-         // color
+         setUniform(userData, "uWobbleShine", newParams.wobbleShine!);
+         setUniform(userData, "uSamples", newParams.samples!);
          setUniform(userData, "uColor0", newParams.color0!);
          setUniform(userData, "uColor1", newParams.color1!);
          setUniform(userData, "uColor2", newParams.color2!);
          setUniform(userData, "uColor3", newParams.color3!);
          setUniform(userData, "uColorMix", newParams.colorMix!);
-         // transimission
          setUniform(
             userData,
             "uChromaticAberration",
@@ -110,6 +114,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
       updateUniform,
       {
          mesh: object,
+         depthMaterial,
       },
    ];
 };

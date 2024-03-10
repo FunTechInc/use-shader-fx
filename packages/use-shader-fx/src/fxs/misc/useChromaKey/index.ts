@@ -37,7 +37,7 @@ export type ChromaKeyObject = {
    output: THREE.Texture;
 };
 
-export const CHROMAKEY_PARAMS: ChromaKeyParams = {
+export const CHROMAKEY_PARAMS: ChromaKeyParams = Object.freeze({
    texture: new THREE.Texture(),
    keyColor: new THREE.Color(0x00ff00),
    similarity: 0.2,
@@ -47,7 +47,7 @@ export const CHROMAKEY_PARAMS: ChromaKeyParams = {
    contrast: 1.0,
    brightness: 0.0,
    gamma: 1.0,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

@@ -17,19 +17,19 @@ uniform float uDisplacementColorIntensity;
 void main() {    
 	vec2 uv = gl_PointCoord;
 	uv.y = 1.0 - uv.y;
-    
-	// 円にする
+   
+	// make it a circle
 	float distanceToCenter = length(uv - .5);
 	float alpha = clamp(uBlurRadius / distanceToCenter - (1.-uBlurAlpha) , 0. , 1.);
 
-	// mapがある場合はmapする
+	// Map if there is a map
 	vec3 finalColor = uIsMap ? texture2D(uMap,uv).rgb : vColor;
 
-	// displacementがtrueの場合はfinalCOlorとmixする
+	// Mix with finalColor if displacement is true
 	float mixIntensity = clamp(uDisplacementColorIntensity * vDisplacementIntensity,0.,1.);
 	finalColor = vDisplacementIntensity > 0. ? mix(finalColor,vDisplacementColor,mixIntensity) : finalColor;
 
-	// alpha mapを取得する
+	// get alpha map
 	float alphaMap = uIsAlphaMap ? texture2D(uAlphaMap,uv).g : 1.;
 
 	gl_FragColor = vec4(finalColor,alpha * vPictureAlpha * alphaMap);

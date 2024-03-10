@@ -30,7 +30,6 @@ export * from "./fxs/effects/useWave";
 export * from "./fxs/misc/useChromaKey";
 
 // 3D
-// export * from "./fxs/3D/useWobble3D";
 export * from "./fxs/3D/useMorphParticles";
 export * from "./fxs/3D/useMorphParticles/useCreateMorphParticles";
 export * from "./fxs/3D/useWobble3D";

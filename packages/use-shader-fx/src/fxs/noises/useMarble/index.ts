@@ -33,7 +33,7 @@ export type MarbleObject = {
    output: THREE.Texture;
 };
 
-export const MARBLE_PARAMS: MarbleParams = {
+export const MARBLE_PARAMS: MarbleParams = Object.freeze({
    pattern: 0,
    complexity: 2,
    complexityAttenuation: 0.2,
@@ -41,7 +41,7 @@ export const MARBLE_PARAMS: MarbleParams = {
    timeStrength: 0.2,
    scale: 0.002,
    beat: false,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

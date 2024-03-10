@@ -41,7 +41,7 @@ export type ColorStrataObject = {
    output: THREE.Texture;
 };
 
-export const COLORSTRATA_PARAMS: ColorStrataParams = {
+export const COLORSTRATA_PARAMS: ColorStrataParams = Object.freeze({
    texture: false,
    scale: 1.0,
    laminateLayer: 1.0,
@@ -53,7 +53,7 @@ export const COLORSTRATA_PARAMS: ColorStrataParams = {
    noise: false,
    noiseStrength: new THREE.Vector2(0, 0),
    beat: false,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

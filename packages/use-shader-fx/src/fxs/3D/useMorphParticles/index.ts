@@ -1,19 +1,22 @@
 import * as THREE from "three";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
-import { useCamera } from "../../../utils/useCamera";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { useParams } from "../../../utils/useParams";
-import { HooksProps, HooksReturn } from "../../types";
-import { useCreateMorphParticles } from "./useCreateMorphParticles";
-import { MorphParticlesMaterial } from "./utils/useMaterial";
+import { HooksReturn } from "../../types";
+import {
+   useCreateMorphParticles,
+   UseCreateMorphParticlesProps,
+} from "./useCreateMorphParticles";
+import { HooksProps3D } from "../types";
 
 export type MorphParticlesParams = {
+   /** progress value to morph vertices,0~1 */
    morphProgress?: number;
    blurAlpha?: number;
    blurRadius?: number;
    pointSize?: number;
-   /** attributeの`uv`を基準にカラーを抽出するので、attributeにuvがないと意図した挙動にならない */
+   /** Since the color is extracted based on the attribute `uv`, the intended behavior will not occur if there is no uv in the attribute. */
    picture?: THREE.Texture | false;
    /** The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). use the green channel when sampling this texture. It also affects the size of the point. Default is false. */
    alphaPicture?: THREE.Texture | false;
@@ -21,32 +24,31 @@ export type MorphParticlesParams = {
    color1?: THREE.Color;
    color2?: THREE.Color;
    color3?: THREE.Color;
-   /** これはpointにマップする,texture */
+   /** This maps to point,texture */
    map?: THREE.Texture | false;
    /** The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). use the green channel when sampling this texture. Default is false. */
    alphaMap?: THREE.Texture | false;
-   /** you can get into the rhythm ♪ , default:false */
-   beat?: number | false;
-   /** `wobbleStrengthを0にすると、wobbleがstopします. noiseの計算にも影響します` */
+   /** `If ​​wobbleStrength is set to 0, wobble will stop. It will also affect noise calculation` */
    wobbleStrength?: number;
    wobblePositionFrequency?: number;
    wobbleTimeFrequency?: number;
    warpStrength?: number;
    warpPositionFrequency?: number;
    warpTimeFrequency?: number;
-   /** 変位させる。カラーチャンネルを利用して頂点を操作しますよ. 変位の強さはこのtextureのg channelによって変化します */
+   /** Manipulate the vertices using the color channels of this texture. The strength of the displacement changes depending on the g channel of this texture */
    displacement?: THREE.Texture | false;
-   /** 変位させる強度 . 変位の強さはg chに依存しますが、それに乗算する値です */
+   /** Strength of displacement. The strength of displacement depends on g ch, but is the value multiplied by it , default:1 */
    displacementIntensity?: number;
-   /** displacement textureのcolor chを反映させる強度 */
+   /** Strength to reflect color ch of displacement texture */
    displacementColorIntensity?: number;
+   /** you can get into the rhythm ♪ , default:false */
+   beat?: number | false;
 };
 
 export type MorphParticlesObject = {
    scene: THREE.Scene;
    points: THREE.Points;
    interactiveMesh: THREE.Mesh;
-   camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
    positions: Float32Array[];
@@ -65,26 +67,17 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = Object.freeze({
    color2: new THREE.Color(0x0000ff),
    color3: new THREE.Color(0xffff00),
    map: false,
-   beat: false,
-   //wobble
    wobbleStrength: 0.0,
    wobblePositionFrequency: 0.5,
    wobbleTimeFrequency: 0.5,
    warpStrength: 0.5,
    warpPositionFrequency: 0.5,
    warpTimeFrequency: 0.5,
-   // displacement
    displacement: false,
    displacementIntensity: 1,
    displacementColorIntensity: 0,
+   beat: false,
 });
-
-interface UseMorphParticlesProps extends HooksProps {
-   /** default : THREE.SphereGeometry(1, 32, 32) */
-   geometry?: THREE.BufferGeometry;
-   positions?: Float32Array[];
-   uvs?: Float32Array[];
-}
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
@@ -93,15 +86,15 @@ export const useMorphParticles = ({
    size,
    dpr,
    samples = 0,
+   camera,
    geometry,
    positions,
    uvs,
-}: UseMorphParticlesProps): HooksReturn<
+}: HooksProps3D & UseCreateMorphParticlesProps): HooksReturn<
    MorphParticlesParams,
    MorphParticlesObject
 > => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const camera = useCamera(size, "PerspectiveCamera");
 
    const [
       updateUniform,
@@ -143,7 +136,6 @@ export const useMorphParticles = ({
          scene,
          points,
          interactiveMesh,
-         camera,
          renderTarget,
          output: renderTarget.texture,
          positions: generatedPositions,

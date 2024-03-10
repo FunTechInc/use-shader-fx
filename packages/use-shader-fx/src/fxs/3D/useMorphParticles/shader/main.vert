@@ -40,13 +40,13 @@ void main() {
 	// #usf <morphPositionTransition>
 	// #usf <morphUvTransition>
 
-	// ここで`newPosition`に対してdisplacement
+	// displacement for `newPosition`
 	vec3 displacement = uIsDisplacement ? texture2D(uDisplacement, newUv).rgb : vec3(0.0);
 	float displacementIntensity = smoothstep(0., 1., displacement.g);
 	vDisplacementColor = displacement;
 	vDisplacementIntensity = displacementIntensity;
 
-	//この時点でdisplacementは0 ~ 1なので、それを-1~1にする
+	// At this point displacement is 0 ~ 1, so normalize it to -1 ~ 1
 	displacement = displacement * 2.-1.;
 	displacement *= displacementIntensity * uDisplacementIntensity;
 	newPosition += displacement;
@@ -56,17 +56,17 @@ void main() {
 	vec4 viewPosition = viewMatrix * modelPosition;
 	vec4 projectedPosition = projectionMatrix * viewPosition;
 
-	// wobble // uWobbleStrengthが0の場合はnoiseを計算しない
+	// wobble ※Do not calculate noise if uWobbleStrength is 0
 	float wobble = uWobbleStrength > 0. ? getWobble(projectedPosition.xyz) : 0.0;
 	gl_Position = projectedPosition += wobble;
 	
-	// カラー　pictureがtrueの場合 はpictureをそうでない場合は、4色の線形保管
+	// If picture is true then display picture, otherwise 4 color linear interpolation
 	vColor = uIsPicture ? texture2D(uPicture, newUv).rgb : mix(mix(uColor0, uColor1, newPosition.x), mix(uColor2, uColor3, newPosition.y), newPosition.z);
 
-	// pictureのgチャンネルでAlphaを設定する
+	// Set Alpha on picture's g channel
 	vPictureAlpha = uIsAlphaPicture ? texture2D(uAlphaPicture, newUv).g : 1.;
 
-	// point sizeにpicturealphaもかける。aplhamapによってサイズも調整可能に
+	// Multiply the point size by picturAalpha. The size can also be adjusted with alphaMap.
 	gl_PointSize = uPointSize * vPictureAlpha *  uResolution.y;
 	gl_PointSize *= (1.0 / - viewPosition.z);
 }

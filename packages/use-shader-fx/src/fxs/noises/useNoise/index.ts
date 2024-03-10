@@ -35,7 +35,7 @@ export type NoiseObject = {
    output: THREE.Texture;
 };
 
-export const NOISE_PARAMS: NoiseParams = {
+export const NOISE_PARAMS: NoiseParams = Object.freeze({
    scale: 0.004,
    timeStrength: 0.3,
    noiseOctaves: 2,
@@ -44,7 +44,7 @@ export const NOISE_PARAMS: NoiseParams = {
    warpDirection: new THREE.Vector2(2.0, 2.0),
    warpStrength: 8.0,
    beat: false,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { shaderMaterial } from "@react-three/drei";
-// import fragment from "./main.frag";
 
 declare global {
    namespace JSX {
@@ -33,6 +32,7 @@ export const FxMaterial = shaderMaterial(
 
 		void main() {
 			gl_FragColor = texture2D(u_fx,vUv);
+			// gl_FragColor = vec4(1.,1.,0.,1.);
 		}
 	`
 );
