@@ -17,7 +17,7 @@ import { OrbitControls, Environment } from "@react-three/drei";
 
 extend({ FxMaterial });
 
-const CONFIG: any = {
+const CONFIG: Wobble3DParams = {
    ...structuredClone(WOBBLE3D_PARAMS),
    color0: new THREE.Color(0x1adb91),
    color1: new THREE.Color(0xdbff57),
