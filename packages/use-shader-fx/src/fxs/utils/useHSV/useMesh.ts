@@ -2,8 +2,8 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useMemo } from "react";
-import { useAddMesh } from "../../../utils/useAddMesh";
 import { Size } from "@react-three/fiber";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class HSVMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -36,7 +36,6 @@ export const useMesh = ({
          }),
       []
    ) as HSVMaterial;
-
-   useAddMesh(scene, geometry, material);
-   return material;
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+   return { material, mesh };
 };

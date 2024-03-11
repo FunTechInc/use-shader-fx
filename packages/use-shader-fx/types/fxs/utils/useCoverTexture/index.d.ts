@@ -6,6 +6,7 @@ export type CoverTextureParams = {
 };
 export type CoverTextureObject = {
     scene: THREE.Scene;
+    mesh: THREE.Mesh;
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;

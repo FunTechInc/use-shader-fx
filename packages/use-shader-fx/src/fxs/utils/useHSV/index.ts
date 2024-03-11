@@ -19,6 +19,7 @@ export type HSVParams = {
 
 export type HSVObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -40,7 +41,7 @@ export const useHSV = ({
    samples = 0,
 }: HooksProps): HooksReturn<HSVParams, HSVObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
@@ -73,6 +74,7 @@ export const useHSV = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

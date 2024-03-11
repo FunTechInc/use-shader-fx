@@ -27,4 +27,7 @@ export declare class NoiseMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => NoiseMaterial;
+export declare const useMesh: (scene: THREE.Scene) => {
+    material: NoiseMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

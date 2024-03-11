@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../../../utils/useAddMesh";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class FxBlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -26,7 +26,8 @@ export const useMesh = (scene: THREE.Scene) => {
             fragmentShader: fragmentShader,
          }),
       []
-   );
-   useAddMesh(scene, geometry, material);
-   return material as FxBlendingMaterial;
+   ) as FxBlendingMaterial;
+
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+   return { material, mesh };
 };

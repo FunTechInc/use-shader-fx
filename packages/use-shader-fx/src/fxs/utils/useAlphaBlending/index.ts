@@ -17,6 +17,7 @@ export type AlphaBlendingParams = {
 
 export type AlphaBlendingObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -37,7 +38,7 @@ export const useAlphaBlending = ({
    samples = 0,
 }: HooksProps): HooksReturn<AlphaBlendingParams, AlphaBlendingObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
@@ -70,6 +71,7 @@ export const useAlphaBlending = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

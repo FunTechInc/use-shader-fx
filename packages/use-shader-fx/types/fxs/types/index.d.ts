@@ -23,7 +23,7 @@ export type HooksReturn<T, O> = [
      */
     (props: RootState, updateParams?: T) => THREE.Texture,
     /**
-     * Function to update params. It can be used for performance control, etc.
+     * Function to update params. No FBO rendering occurs.
      * @param params params of hooks
      */
     (params: T) => void,

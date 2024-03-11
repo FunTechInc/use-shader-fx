@@ -25,20 +25,21 @@ export type CosPaletteParams = {
 
 export type ColorPaletteObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
 };
 
-export const COSPALETTE_PARAMS: CosPaletteParams = {
+export const COSPALETTE_PARAMS: CosPaletteParams = Object.freeze({
    texture: new THREE.Texture(),
    color1: new THREE.Color().set(0.5, 0.5, 0.5),
    color2: new THREE.Color().set(0.5, 0.5, 0.5),
    color3: new THREE.Color().set(1, 1, 1),
    color4: new THREE.Color().set(0, 0.1, 0.2),
    rgbWeight: new THREE.Vector3(0.299, 0.587, 0.114),
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
@@ -49,7 +50,7 @@ export const useCosPalette = ({
    samples = 0,
 }: HooksProps): HooksReturn<CosPaletteParams, ColorPaletteObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh(scene);
+   const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -84,6 +85,7 @@ export const useCosPalette = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

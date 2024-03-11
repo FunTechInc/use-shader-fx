@@ -41,13 +41,14 @@ export type BrushParams = {
 
 export type BrushObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: DoubleRenderTarget;
    output: THREE.Texture;
 };
 
-export const BRUSH_PARAMS: BrushParams = {
+export const BRUSH_PARAMS: BrushParams = Object.freeze({
    texture: false,
    map: false,
    mapIntensity: 0.1,
@@ -60,7 +61,7 @@ export const BRUSH_PARAMS: BrushParams = {
    isCursor: false,
    pressure: 1.0,
    pointerValues: false,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
@@ -71,7 +72,7 @@ export const useBrush = ({
    samples = 0,
 }: HooksProps): HooksReturn<BrushParams, BrushObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const updatePointer = usePointer();
    const [renderTarget, updateRenderTarget] = useDoubleFBO({
@@ -149,6 +150,7 @@ export const useBrush = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

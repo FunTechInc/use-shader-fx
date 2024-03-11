@@ -3,9 +3,9 @@ import * as THREE from "three";
 import { Size } from "@react-three/fiber";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../../../utils/useAddMesh";
 import { setUniform } from "../../../utils/setUniforms";
 import { useResolution } from "../../../utils/useResolution";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class ChromaKeyMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -58,6 +58,7 @@ export const useMesh = ({
       setUniform(material, "u_resolution", resolution.clone());
    }, [resolution, material]);
 
-   useAddMesh(scene, geometry, material);
-   return material;
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+
+   return { material, mesh };
 };

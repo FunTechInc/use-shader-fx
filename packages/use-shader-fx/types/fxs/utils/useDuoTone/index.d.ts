@@ -11,6 +11,7 @@ export type DuoToneParams = {
 };
 export type DuoToneObject = {
     scene: THREE.Scene;
+    mesh: THREE.Mesh;
     material: DuoToneMaterial;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;

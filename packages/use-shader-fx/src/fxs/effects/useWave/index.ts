@@ -23,19 +23,20 @@ export type WaveParams = {
 
 export type WaveObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
 };
 
-export const WAVE_PARAMS: WaveParams = {
+export const WAVE_PARAMS: WaveParams = Object.freeze({
    epicenter: new THREE.Vector2(0.0, 0.0),
    progress: 0.0,
    width: 0.0,
    strength: 0.0,
    mode: "center",
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
@@ -46,7 +47,7 @@ export const useWave = ({
    samples = 0,
 }: HooksProps): HooksReturn<WaveParams, WaveObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh(scene);
+   const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -89,6 +90,7 @@ export const useWave = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

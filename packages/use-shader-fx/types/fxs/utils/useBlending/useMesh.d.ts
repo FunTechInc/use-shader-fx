@@ -33,4 +33,7 @@ export declare class BlendingMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => BlendingMaterial;
+export declare const useMesh: (scene: THREE.Scene) => {
+    material: BlendingMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

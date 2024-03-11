@@ -31,14 +31,14 @@ export type RippleObject = {
    output: THREE.Texture;
 };
 
-export const RIPPLE_PARAMS: RippleParams = {
+export const RIPPLE_PARAMS: RippleParams = Object.freeze({
    frequency: 0.01,
    rotation: 0.05,
    fadeout_speed: 0.9,
    scale: 0.3,
    alpha: 0.6,
    pointerValues: false,
-};
+});
 
 interface UseRippleProps extends HooksProps {
    /** texture applied to ripple */

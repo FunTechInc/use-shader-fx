@@ -25,6 +25,7 @@ export type FluidParams = {
 };
 export type FluidObject = {
     scene: THREE.Scene;
+    mesh: THREE.Mesh;
     materials: FluidMaterials;
     camera: THREE.Camera;
     renderTarget: {

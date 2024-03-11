@@ -2,8 +2,8 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useMemo } from "react";
-import { useAddMesh } from "../../../utils/useAddMesh";
 import { Size } from "@react-three/fiber";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class AlphaBlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -35,6 +35,7 @@ export const useMesh = ({
       []
    ) as AlphaBlendingMaterial;
 
-   useAddMesh(scene, geometry, material);
-   return material;
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+
+   return { material, mesh };
 };

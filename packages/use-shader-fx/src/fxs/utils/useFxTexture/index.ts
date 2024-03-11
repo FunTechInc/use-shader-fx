@@ -31,6 +31,7 @@ export type FxTextureParams = {
 
 export type FxTextureObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -58,7 +59,7 @@ export const useFxTexture = ({
    samples = 0,
 }: HooksProps): HooksReturn<FxTextureParams, FxTextureObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -113,6 +114,7 @@ export const useFxTexture = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

@@ -31,13 +31,14 @@ export type ChromaKeyParams = {
 
 export type ChromaKeyObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
 };
 
-export const CHROMAKEY_PARAMS: ChromaKeyParams = {
+export const CHROMAKEY_PARAMS: ChromaKeyParams = Object.freeze({
    texture: new THREE.Texture(),
    keyColor: new THREE.Color(0x00ff00),
    similarity: 0.2,
@@ -47,7 +48,7 @@ export const CHROMAKEY_PARAMS: ChromaKeyParams = {
    contrast: 1.0,
    brightness: 0.0,
    gamma: 1.0,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
@@ -58,7 +59,7 @@ export const useChromaKey = ({
    samples = 0,
 }: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -95,6 +96,7 @@ export const useChromaKey = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

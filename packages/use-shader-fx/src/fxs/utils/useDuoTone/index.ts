@@ -19,6 +19,7 @@ export type DuoToneParams = {
 
 export type DuoToneObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: DuoToneMaterial;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -40,7 +41,7 @@ export const useDuoTone = ({
    samples = 0,
 }: HooksProps): HooksReturn<DuoToneParams, DuoToneObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh(scene);
+   const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -72,6 +73,7 @@ export const useDuoTone = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

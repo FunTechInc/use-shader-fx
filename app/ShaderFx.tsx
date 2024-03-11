@@ -14,7 +14,10 @@ export const ShaderFx = ({
 }) => {
    const [dpr, setDpr] = useState(1.5);
    return (
-      <Canvas dpr={dpr} gl={{ preserveDrawingBuffer: preserveDrawingBuffer }}>
+      <Canvas
+         dpr={dpr}
+         gl={{ preserveDrawingBuffer: preserveDrawingBuffer }}
+         shadows>
          <PerformanceMonitor
             factor={1}
             onChange={({ factor }) => {

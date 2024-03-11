@@ -38,4 +38,7 @@ export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number;
-}) => ChromaKeyMaterial;
+}) => {
+    material: ChromaKeyMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

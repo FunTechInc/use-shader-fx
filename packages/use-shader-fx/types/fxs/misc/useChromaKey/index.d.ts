@@ -22,6 +22,7 @@ export type ChromaKeyParams = {
 };
 export type ChromaKeyObject = {
     scene: THREE.Scene;
+    mesh: THREE.Mesh;
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;

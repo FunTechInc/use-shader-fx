@@ -3,9 +3,9 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useEffect, useMemo } from "react";
 import { useResolution } from "../../../utils/useResolution";
-import { useAddMesh } from "../../../utils/useAddMesh";
 import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class BrushMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -76,7 +76,7 @@ export const useMesh = ({
       setUniform(material, "uResolution", resolution.clone());
    }, [resolution, material]);
 
-   useAddMesh(scene, geometry, material);
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 
-   return material;
+   return { material, mesh };
 };

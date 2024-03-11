@@ -8,6 +8,11 @@ declare module "*.frag" {
    export default content;
 }
 
+declare module "*.glsl" {
+   const content: string;
+   export default content;
+}
+
 // custom.d.ts
 declare module "*.png" {
    const value: any;

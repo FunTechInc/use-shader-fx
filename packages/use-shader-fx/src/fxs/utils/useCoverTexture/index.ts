@@ -15,6 +15,7 @@ export type CoverTextureParams = {
 
 export type CoverTextureObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -34,7 +35,7 @@ export const useCoverTexture = ({
    samples = 0,
 }: HooksProps): HooksReturn<CoverTextureParams, CoverTextureObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -69,6 +70,7 @@ export const useCoverTexture = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,
