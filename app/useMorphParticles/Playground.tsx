@@ -10,6 +10,7 @@ import {
    Size,
 } from "@react-three/fiber";
 import {
+   useMorphParticles,
    useCreateMorphParticles,
    MORPHPARTICLES_PARAMS,
    MorphParticlesParams,
@@ -29,10 +30,10 @@ const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "blurAlpha", 0, 1, 0.01);
    gui.add(CONFIG, "blurRadius", 0, 2, 0.01);
    gui.add(CONFIG, "pointSize", 0.01, 2, 0.01);
-   gui.addColor(CONFIG, "color0");
-   gui.addColor(CONFIG, "color1");
-   gui.addColor(CONFIG, "color2");
-   gui.addColor(CONFIG, "color3");
+   // gui.addColor(CONFIG, "color0");
+   // gui.addColor(CONFIG, "color1");
+   // gui.addColor(CONFIG, "color2");
+   // gui.addColor(CONFIG, "color3");
    gui.add(CONFIG, "wobbleStrength", 0, 10, 0.01);
    gui.add(CONFIG, "wobblePositionFrequency", 0, 10, 0.01);
    gui.add(CONFIG, "wobbleTimeFrequency", 0, 10, 0.01);
@@ -85,7 +86,7 @@ export const Playground = () => {
       scene: false,
       size,
       dpr: viewport.dpr,
-      geometry: new THREE.IcosahedronGeometry(2.5, 50),
+      geometry: useMemo(() => new THREE.IcosahedronGeometry(2.5, 50), []),
       positions: morphList,
       uvs: uvList,
       // geometry: new THREE.PlaneGeometry(5, 5, 100, 100),
@@ -106,7 +107,6 @@ export const Playground = () => {
       updateFluid(props, {
          pointerValues: updatePointer(refPointer.current),
       });
-      // updateFluid(props);
       updatePoints(props, {
          ...setConfig(),
          displacement: fluid,
@@ -115,7 +115,7 @@ export const Playground = () => {
          // map: funkun,
          // alphaMap: funkunAlpha,
          beat: b.beat,
-         // morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
+         morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
          // morphProgress: 0.5,
       });
       updateGUI();
@@ -132,3 +132,49 @@ export const Playground = () => {
       </mesh>
    );
 };
+
+/*===============================================
+you can also use useMorphParticles (FBO)
+===============================================*/
+// export const Playground = () => {
+//    const { size, viewport, scene, camera } = useThree();
+
+//    const [updatePoints, setPoints, { output }] = useMorphParticles({
+//       camera,
+//       size,
+//       dpr: viewport.dpr,
+//       geometry: new THREE.IcosahedronGeometry(2.5, 50),
+//       positions: morphList,
+//       uvs: uvList,
+//       // geometry: new THREE.PlaneGeometry(5, 5, 100, 100),
+//    });
+
+//    const beat = useBeat(140, "easeOutCubic");
+//    const updatePointer = usePointer();
+//    const refPointer = useRef(new THREE.Vector2(0, 0));
+//    const handlePointerMove = (e: any) => {
+//       if (!e?.pointer) {
+//          return;
+//       }
+//       refPointer.current = e.pointer;
+//    };
+
+//    useFrame((props) => {
+//       const b = beat(props.clock);
+//       updatePoints(props, {
+//          ...setConfig(),
+//          // map: funkun,
+//          // alphaMap: funkunAlpha,
+//          beat: b.beat,
+//          morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
+//          // morphProgress: 0.5,
+//       });
+//    });
+
+//    return (
+//       <mesh>
+//          <planeGeometry args={[2, 2]} />
+//          <fxMaterial key={FxMaterial.key} u_fx={output} />
+//       </mesh>
+//    );
+// };

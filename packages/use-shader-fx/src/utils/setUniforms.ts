@@ -13,7 +13,8 @@ type UniformValue =
    | number
    | boolean
    | Array<any>
-   | null;
+   | null
+   | undefined;
 type UniformObject = { [key: string]: { value: UniformValue } };
 
 export const setUniform = <T extends UniformObject>(
@@ -21,20 +22,11 @@ export const setUniform = <T extends UniformObject>(
    key: keyof T,
    value: UniformValue
 ) => {
-   if (
-      material.uniforms &&
-      material.uniforms[key] &&
-      value !== undefined &&
-      value !== null
-   ) {
+   if (value === undefined) {
+      return;
+   }
+   // By design, I don't want to pass null to uniform
+   if (material.uniforms && material.uniforms[key] && value !== null) {
       material.uniforms[key].value = value;
-   } else {
-      console.error(
-         `Uniform key "${String(
-            key
-         )}" does not exist in the material. or "${String(
-            key
-         )}" is null | undefined`
-      );
    }
 };

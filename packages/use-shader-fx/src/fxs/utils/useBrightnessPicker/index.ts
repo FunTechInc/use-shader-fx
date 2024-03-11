@@ -21,6 +21,7 @@ export type BrightnessPickerParams = {
 
 export type BrightnessPickerObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -43,7 +44,7 @@ export const useBrightnessPicker = ({
    samples = 0,
 }: HooksProps): HooksReturn<BrightnessPickerParams, BrightnessPickerObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh(scene);
+   const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -75,6 +76,7 @@ export const useBrightnessPicker = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

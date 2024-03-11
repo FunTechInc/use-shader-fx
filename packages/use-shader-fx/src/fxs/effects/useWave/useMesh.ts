@@ -2,7 +2,8 @@ import * as THREE from "three";
 import { useMemo } from "react";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../../../utils/useAddMesh";
+import { WAVE_PARAMS } from ".";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class WaveMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -20,19 +21,19 @@ export const useMesh = (scene: THREE.Scene) => {
       () =>
          new THREE.ShaderMaterial({
             uniforms: {
-               uEpicenter: { value: new THREE.Vector2(0.0, 0.0) },
-               uProgress: { value: 0.0 },
-               uStrength: { value: 0.0 },
-               uWidth: { value: 0.0 },
+               uEpicenter: { value: WAVE_PARAMS.epicenter },
+               uProgress: { value: WAVE_PARAMS.progress },
+               uStrength: { value: WAVE_PARAMS.strength },
+               uWidth: { value: WAVE_PARAMS.width },
                uMode: { value: 0 },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
          }),
       []
-   );
+   ) as WaveMaterial;
 
-   useAddMesh(scene, geometry, material);
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 
-   return material as WaveMaterial;
+   return { material, mesh };
 };

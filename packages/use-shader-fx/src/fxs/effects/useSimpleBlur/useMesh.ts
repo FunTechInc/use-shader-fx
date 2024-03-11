@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-
-import { useAddMesh } from "../../../utils/useAddMesh";
+import { useAddObject } from "../../../utils/useAddObject";
+import { SIMPLEBLUR_PARAMS } from ".";
 
 export class SampleMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -21,13 +21,15 @@ export const useMesh = (scene: THREE.Scene) => {
             uniforms: {
                uTexture: { value: new THREE.Texture() },
                uResolution: { value: new THREE.Vector2(0, 0) },
-               uBlurSize: { value: 1 },
+               uBlurSize: { value: SIMPLEBLUR_PARAMS.blurSize },
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
          }),
       []
-   );
-   useAddMesh(scene, geometry, material);
-   return material as SampleMaterial;
+   ) as SampleMaterial;
+
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+
+   return { material, mesh };
 };

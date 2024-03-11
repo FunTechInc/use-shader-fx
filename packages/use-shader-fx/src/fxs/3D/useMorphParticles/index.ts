@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { useParams } from "../../../utils/useParams";
 import { HooksReturn } from "../../types";
 import {
    useCreateMorphParticles,
@@ -67,6 +66,7 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = Object.freeze({
    color2: new THREE.Color(0x0000ff),
    color3: new THREE.Color(0xffff00),
    map: false,
+   alphaMap: false,
    wobbleStrength: 0.0,
    wobblePositionFrequency: 0.5,
    wobbleTimeFrequency: 0.5,
@@ -106,10 +106,6 @@ export const useMorphParticles = ({
       },
    ] = useCreateMorphParticles({ scene, size, dpr, geometry, positions, uvs });
 
-   const [params, setParams] = useParams<MorphParticlesParams>(
-      MORPHPARTICLES_PARAMS
-   );
-
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
@@ -121,12 +117,17 @@ export const useMorphParticles = ({
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: MorphParticlesParams) => {
-         const { gl } = props;
-         updateParams && setParams(updateParams);
-         updateUniform(props, params);
-         return updateRenderTarget(gl);
+         updateUniform(props, updateParams);
+         return updateRenderTarget(props.gl);
       },
-      [updateRenderTarget, updateUniform, params, setParams]
+      [updateRenderTarget, updateUniform]
+   );
+
+   const setParams = useCallback(
+      (updateParams: MorphParticlesParams) => {
+         updateUniform(null, updateParams);
+      },
+      [updateUniform]
    );
 
    return [

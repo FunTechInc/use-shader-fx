@@ -30,6 +30,7 @@ export type BrushParams = {
 };
 export type BrushObject = {
     scene: THREE.Scene;
+    mesh: THREE.Mesh;
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: DoubleRenderTarget;

@@ -5,6 +5,7 @@ import { setUniform } from "../../../../utils/setUniforms";
 import vertexShader from "../shader/main.vert";
 import fragmentShader from "../shader/main.frag";
 import { Size } from "@react-three/fiber";
+import { MORPHPARTICLES_PARAMS } from "..";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -51,33 +52,45 @@ export const useMaterial = ({ size, dpr }: { size: Size; dpr: number }) => {
             blending: THREE.AdditiveBlending,
             uniforms: {
                uResolution: { value: new THREE.Vector2(0, 0) },
-               uMorphProgress: { value: 0 },
-               uBlurAlpha: { value: 0 },
-               uBlurRadius: { value: 0 },
-               uPointSize: { value: 0 },
+               uMorphProgress: { value: MORPHPARTICLES_PARAMS.morphProgress },
+               uBlurAlpha: { value: MORPHPARTICLES_PARAMS.blurAlpha },
+               uBlurRadius: { value: MORPHPARTICLES_PARAMS.blurRadius },
+               uPointSize: { value: MORPHPARTICLES_PARAMS.pointSize },
                uPicture: { value: new THREE.Texture() },
                uIsPicture: { value: false },
                uAlphaPicture: { value: new THREE.Texture() },
                uIsAlphaPicture: { value: false },
-               uColor0: { value: new THREE.Color() },
-               uColor1: { value: new THREE.Color() },
-               uColor2: { value: new THREE.Color() },
-               uColor3: { value: new THREE.Color() },
+               uColor0: { value: MORPHPARTICLES_PARAMS.color0 },
+               uColor1: { value: MORPHPARTICLES_PARAMS.color1 },
+               uColor2: { value: MORPHPARTICLES_PARAMS.color2 },
+               uColor3: { value: MORPHPARTICLES_PARAMS.color3 },
                uMap: { value: new THREE.Texture() },
                uIsMap: { value: false },
                uAlphaMap: { value: new THREE.Texture() },
                uIsAlphaMap: { value: false },
                uTime: { value: 0 },
-               uWobblePositionFrequency: { value: 0 },
-               uWobbleTimeFrequency: { value: 0 },
-               uWobbleStrength: { value: 0 },
-               uWarpPositionFrequency: { value: 0 },
-               uWarpTimeFrequency: { value: 0 },
-               uWarpStrength: { value: 0 },
+               uWobblePositionFrequency: {
+                  value: MORPHPARTICLES_PARAMS.wobblePositionFrequency,
+               },
+               uWobbleTimeFrequency: {
+                  value: MORPHPARTICLES_PARAMS.wobbleTimeFrequency,
+               },
+               uWobbleStrength: { value: MORPHPARTICLES_PARAMS.wobbleStrength },
+               uWarpPositionFrequency: {
+                  value: MORPHPARTICLES_PARAMS.warpPositionFrequency,
+               },
+               uWarpTimeFrequency: {
+                  value: MORPHPARTICLES_PARAMS.warpTimeFrequency,
+               },
+               uWarpStrength: { value: MORPHPARTICLES_PARAMS.warpStrength },
                uDisplacement: { value: new THREE.Texture() },
                uIsDisplacement: { value: false },
-               uDisplacementIntensity: { value: 0 },
-               uDisplacementColorIntensity: { value: 0 },
+               uDisplacementIntensity: {
+                  value: MORPHPARTICLES_PARAMS.displacementIntensity,
+               },
+               uDisplacementColorIntensity: {
+                  value: MORPHPARTICLES_PARAMS.displacementColorIntensity,
+               },
             },
          }),
       []

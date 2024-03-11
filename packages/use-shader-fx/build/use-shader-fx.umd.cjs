@@ -1,9 +1,9 @@
-(function(x,k){typeof exports=="object"&&typeof module<"u"?k(exports,require("three"),require("react")):typeof define=="function"&&define.amd?define(["exports","three","react"],k):(x=typeof globalThis<"u"?globalThis:x||self,k(x["use-shader-fx"]={},x.THREE,x.React))})(this,function(x,k,s){"use strict";function xe(e){const u=Object.create(null,{[Symbol.toStringTag]:{value:"Module"}});if(e){for(const o in e)if(o!=="default"){const a=Object.getOwnPropertyDescriptor(e,o);Object.defineProperty(u,o,a.get?a:{enumerable:!0,get:()=>e[o]})}}return u.default=e,Object.freeze(u)}const n=xe(k);var he=`varying vec2 vUv;
+(function(x,k){typeof exports=="object"&&typeof module<"u"?k(exports,require("three"),require("react")):typeof define=="function"&&define.amd?define(["exports","three","react"],k):(x=typeof globalThis<"u"?globalThis:x||self,k(x["use-shader-fx"]={},x.THREE,x.React))})(this,function(x,k,s){"use strict";function De(e){const r=Object.create(null,{[Symbol.toStringTag]:{value:"Module"}});if(e){for(const i in e)if(i!=="default"){const o=Object.getOwnPropertyDescriptor(e,i);Object.defineProperty(r,i,o.get?o:{enumerable:!0,get:()=>e[i]})}}return r.default=e,Object.freeze(r)}const t=De(k);var Re=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,ye=`precision highp float;
+}`,Ae=`precision highp float;
 
 uniform sampler2D uBuffer;
 uniform sampler2D uTexture;
@@ -112,7 +112,7 @@ void main() {
 	vec4 finalColor = mix(bufferColor, brushColor, isOnLine);
 
 	gl_FragColor = finalColor;
-}`;const F=(e,u=!1)=>{const o=u?e.width*u:e.width,a=u?e.height*u:e.height;return s.useMemo(()=>new n.Vector2(o,a),[o,a])},D=(e,u,o)=>{const a=s.useMemo(()=>new n.Mesh(u,o),[u,o]);return s.useEffect(()=>{e.add(a)},[e,a]),s.useEffect(()=>()=>{e.remove(a),u.dispose(),o.dispose()},[e,u,o,a]),a},i=(e,u,o)=>{e.uniforms&&e.uniforms[u]&&o!==void 0&&o!==null?e.uniforms[u].value=o:console.error(`Uniform key "${String(u)}" does not exist in the material. or "${String(u)}" is null | undefined`)},Me=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uBuffer:{value:new n.Texture},uResolution:{value:new n.Vector2(0,0)},uTexture:{value:new n.Texture},uIsTexture:{value:!1},uMap:{value:new n.Texture},uIsMap:{value:!1},uMapIntensity:{value:0},uRadius:{value:0},uSmudge:{value:0},uDissipation:{value:0},uMotionBlur:{value:0},uMotionSample:{value:0},uMouse:{value:new n.Vector2(-10,-10)},uPrevMouse:{value:new n.Vector2(-10,-10)},uVelocity:{value:new n.Vector2(0,0)},uColor:{value:new n.Vector3(1,0,0)},uIsCursor:{value:!1},uPressureStart:{value:1},uPressureEnd:{value:1}},vertexShader:he,fragmentShader:ye}),[]),l=F(u,o);return s.useEffect(()=>{i(t,"uResolution",l.clone())},[l,t]),D(e,a,t),t},_e=(e,u)=>{const o=u,a=e/u,[t,l]=[o*a/2,o/2];return{width:t,height:l,near:-1e3,far:1e3}},C=e=>{const u=F(e),{width:o,height:a,near:t,far:l}=_e(u.x,u.y);return s.useMemo(()=>new n.OrthographicCamera(-o,o,a,-a,t,l),[o,a,t,l])},j=(e=0)=>{const u=s.useRef(new n.Vector2(0,0)),o=s.useRef(new n.Vector2(0,0)),a=s.useRef(new n.Vector2(0,0)),t=s.useRef(0),l=s.useRef(new n.Vector2(0,0)),v=s.useRef(!1);return s.useCallback(r=>{const c=performance.now();let p;v.current&&e?(a.current=a.current.lerp(r,1-e),p=a.current.clone()):(p=r.clone(),a.current=p),t.current===0&&(t.current=c,u.current=p);const d=Math.max(1,c-t.current);t.current=c,l.current.copy(p).sub(u.current).divideScalar(d);const m=l.current.length()>0,g=v.current?u.current.clone():p;return!v.current&&m&&(v.current=!0),u.current=p,{currentPointer:p,prevPointer:g,diffPointer:o.current.subVectors(p,g),velocity:l.current,isVelocityUpdate:m}},[e])},b=e=>{const u=t=>Object.values(t).some(l=>typeof l=="function"),o=s.useRef(u(e)?e:structuredClone(e)),a=s.useCallback(t=>{for(const l in t){const v=l;v in o.current&&t[v]!==void 0&&t[v]!==null?o.current[v]=t[v]:console.error(`"${String(v)}" does not exist in the params. or "${String(v)}" is null | undefined`)}},[]);return[o.current,a]},G={minFilter:n.LinearFilter,magFilter:n.LinearFilter,type:n.HalfFloatType,stencilBuffer:!1},q=({gl:e,fbo:u,scene:o,camera:a,onBeforeRender:t,onSwap:l})=>{e.setRenderTarget(u),t(),e.clear(),e.render(o,a),l&&l(),e.setRenderTarget(null),e.clear()},R=({scene:e,camera:u,size:o,dpr:a=!1,isSizeUpdate:t=!1,samples:l=0,depthBuffer:v=!1,depthTexture:f=!1})=>{const r=s.useRef(),c=F(o,a);r.current=s.useMemo(()=>{const d=new n.WebGLRenderTarget(c.x,c.y,{...G,samples:l,depthBuffer:v});return f&&(d.depthTexture=new n.DepthTexture(c.x,c.y,n.FloatType)),d},[]),s.useLayoutEffect(()=>{var d;t&&((d=r.current)==null||d.setSize(c.x,c.y))},[c,t]),s.useEffect(()=>{const d=r.current;return()=>{d==null||d.dispose()}},[]);const p=s.useCallback((d,m)=>{const g=r.current;return q({gl:d,fbo:g,scene:e,camera:u,onBeforeRender:()=>m&&m({read:g.texture})}),g.texture},[e,u]);return[r.current,p]},z=({scene:e,camera:u,size:o,dpr:a=!1,isSizeUpdate:t=!1,samples:l=0,depthBuffer:v=!1,depthTexture:f=!1})=>{const r=s.useRef({read:null,write:null,swap:function(){let m=this.read;this.read=this.write,this.write=m}}),c=F(o,a),p=s.useMemo(()=>{const m=new n.WebGLRenderTarget(c.x,c.y,{...G,samples:l,depthBuffer:v}),g=new n.WebGLRenderTarget(c.x,c.y,{...G,samples:l,depthBuffer:v});return f&&(m.depthTexture=new n.DepthTexture(c.x,c.y,n.FloatType),g.depthTexture=new n.DepthTexture(c.x,c.y,n.FloatType)),{read:m,write:g}},[]);r.current.read=p.read,r.current.write=p.write,s.useLayoutEffect(()=>{var m,g;t&&((m=r.current.read)==null||m.setSize(c.x,c.y),(g=r.current.write)==null||g.setSize(c.x,c.y))},[c,t]),s.useEffect(()=>{const m=r.current;return()=>{var g,h;(g=m.read)==null||g.dispose(),(h=m.write)==null||h.dispose()}},[]);const d=s.useCallback((m,g)=>{var M;const h=r.current;return q({gl:m,scene:e,camera:u,fbo:h.write,onBeforeRender:()=>g&&g({read:h.read.texture,write:h.write.texture}),onSwap:()=>h.swap()}),(M=h.read)==null?void 0:M.texture},[e,u]);return[{read:r.current.read,write:r.current.write},d]},X={texture:!1,map:!1,mapIntensity:.1,radius:.05,smudge:0,dissipation:1,motionBlur:0,motionSample:5,color:new n.Vector3(1,0,0),isCursor:!1,pressure:1,pointerValues:!1},we=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Me({scene:a,size:e,dpr:u}),l=C(e),v=j(),[f,r]=z({scene:a,camera:l,size:e,dpr:u,samples:o}),[c,p]=b(X),d=s.useRef(null);return[s.useCallback((g,h)=>{const{gl:M,pointer:w}=g;h&&p(h),c.texture?(i(t,"uIsTexture",!0),i(t,"uTexture",c.texture)):i(t,"uIsTexture",!1),c.map?(i(t,"uIsMap",!0),i(t,"uMap",c.map),i(t,"uMapIntensity",c.mapIntensity)):i(t,"uIsMap",!1),i(t,"uRadius",c.radius),i(t,"uSmudge",c.smudge),i(t,"uDissipation",c.dissipation),i(t,"uMotionBlur",c.motionBlur),i(t,"uMotionSample",c.motionSample);const _=c.pointerValues||v(w);_.isVelocityUpdate&&(i(t,"uMouse",_.currentPointer),i(t,"uPrevMouse",_.prevPointer)),i(t,"uVelocity",_.velocity);const S=typeof c.color=="function"?c.color(_.velocity):c.color;return i(t,"uColor",S),i(t,"uIsCursor",c.isCursor),i(t,"uPressureEnd",c.pressure),d.current===null&&(d.current=c.pressure),i(t,"uPressureStart",d.current),d.current=c.pressure,r(M,({read:T})=>{i(t,"uBuffer",T)})},[t,v,r,c,p]),p,{scene:a,material:t,camera:l,renderTarget:f,output:f.read.texture}]};var O=`varying vec2 vUv;
+}`;const E=(e,r=!1)=>{const i=r?e.width*r:e.width,o=r?e.height*r:e.height;return s.useMemo(()=>new t.Vector2(i,o),[i,o])},u=(e,r,i)=>{i!==void 0&&e.uniforms&&e.uniforms[r]&&i!==null&&(e.uniforms[r].value=i)},R=(e,r,i,o)=>{const n=s.useMemo(()=>new o(r,i),[r,i,o]);return s.useEffect(()=>{e&&e.add(n)},[e,n]),s.useEffect(()=>()=>{e&&e.remove(n),r.dispose(),i.dispose()},[e,r,i,n]),n},Ie=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uBuffer:{value:new t.Texture},uResolution:{value:new t.Vector2(0,0)},uTexture:{value:new t.Texture},uIsTexture:{value:!1},uMap:{value:new t.Texture},uIsMap:{value:!1},uMapIntensity:{value:0},uRadius:{value:0},uSmudge:{value:0},uDissipation:{value:0},uMotionBlur:{value:0},uMotionSample:{value:0},uMouse:{value:new t.Vector2(-10,-10)},uPrevMouse:{value:new t.Vector2(-10,-10)},uVelocity:{value:new t.Vector2(0,0)},uColor:{value:new t.Vector3(1,0,0)},uIsCursor:{value:!1},uPressureStart:{value:1},uPressureEnd:{value:1}},vertexShader:Re,fragmentShader:Ae}),[]),m=E(r,i);s.useEffect(()=>{u(n,"uResolution",m.clone())},[m,n]);const f=R(e,o,n,t.Mesh);return{material:n,mesh:f}},Fe=(e,r)=>{const i=r,o=e/r,[n,m]=[i*o/2,i/2];return{width:n,height:m,near:-1e3,far:1e3}},A=(e,r="OrthographicCamera")=>{const i=E(e),{width:o,height:n,near:m,far:f}=Fe(i.x,i.y);return s.useMemo(()=>r==="OrthographicCamera"?new t.OrthographicCamera(-o,o,n,-n,m,f):new t.PerspectiveCamera(50,o/n),[o,n,m,f,r])},X=(e=0)=>{const r=s.useRef(new t.Vector2(0,0)),i=s.useRef(new t.Vector2(0,0)),o=s.useRef(new t.Vector2(0,0)),n=s.useRef(0),m=s.useRef(new t.Vector2(0,0)),f=s.useRef(!1);return s.useCallback(v=>{const a=performance.now();let c;f.current&&e?(o.current=o.current.lerp(v,1-e),c=o.current.clone()):(c=v.clone(),o.current=c),n.current===0&&(n.current=a,r.current=c);const h=Math.max(1,a-n.current);n.current=a,m.current.copy(c).sub(r.current).divideScalar(h);const d=m.current.length()>0,g=f.current?r.current.clone():c;return!f.current&&d&&(f.current=!0),r.current=c,{currentPointer:c,prevPointer:g,diffPointer:i.current.subVectors(c,g),velocity:m.current,isVelocityUpdate:d}},[e])},I=e=>{const r=n=>Object.values(n).some(m=>typeof m=="function"),i=s.useRef(r(e)?e:structuredClone(e)),o=s.useCallback(n=>{for(const m in n){const f=m;f in i.current&&n[f]!==void 0&&n[f]!==null?i.current[f]=n[f]:console.error(`"${String(f)}" does not exist in the params. or "${String(f)}" is null | undefined`)}},[]);return[i.current,o]},G={minFilter:t.LinearFilter,magFilter:t.LinearFilter,type:t.HalfFloatType,stencilBuffer:!1},H=({gl:e,fbo:r,scene:i,camera:o,onBeforeRender:n,onSwap:m})=>{e.setRenderTarget(r),n(),e.clear(),e.render(i,o),m&&m(),e.setRenderTarget(null),e.clear()},D=({scene:e,camera:r,size:i,dpr:o=!1,isSizeUpdate:n=!1,samples:m=0,depthBuffer:f=!1,depthTexture:l=!1})=>{const v=s.useRef(),a=E(i,o);v.current=s.useMemo(()=>{const h=new t.WebGLRenderTarget(a.x,a.y,{...G,samples:m,depthBuffer:f});return l&&(h.depthTexture=new t.DepthTexture(a.x,a.y,t.FloatType)),h},[]),s.useLayoutEffect(()=>{var h;n&&((h=v.current)==null||h.setSize(a.x,a.y))},[a,n]),s.useEffect(()=>{const h=v.current;return()=>{h==null||h.dispose()}},[]);const c=s.useCallback((h,d)=>{const g=v.current;return H({gl:h,fbo:g,scene:e,camera:r,onBeforeRender:()=>d&&d({read:g.texture})}),g.texture},[e,r]);return[v.current,c]},j=({scene:e,camera:r,size:i,dpr:o=!1,isSizeUpdate:n=!1,samples:m=0,depthBuffer:f=!1,depthTexture:l=!1})=>{const v=s.useRef({read:null,write:null,swap:function(){let d=this.read;this.read=this.write,this.write=d}}),a=E(i,o),c=s.useMemo(()=>{const d=new t.WebGLRenderTarget(a.x,a.y,{...G,samples:m,depthBuffer:f}),g=new t.WebGLRenderTarget(a.x,a.y,{...G,samples:m,depthBuffer:f});return l&&(d.depthTexture=new t.DepthTexture(a.x,a.y,t.FloatType),g.depthTexture=new t.DepthTexture(a.x,a.y,t.FloatType)),{read:d,write:g}},[]);v.current.read=c.read,v.current.write=c.write,s.useLayoutEffect(()=>{var d,g;n&&((d=v.current.read)==null||d.setSize(a.x,a.y),(g=v.current.write)==null||g.setSize(a.x,a.y))},[a,n]),s.useEffect(()=>{const d=v.current;return()=>{var g,p;(g=d.read)==null||g.dispose(),(p=d.write)==null||p.dispose()}},[]);const h=s.useCallback((d,g)=>{var y;const p=v.current;return H({gl:d,scene:e,camera:r,fbo:p.write,onBeforeRender:()=>g&&g({read:p.read.texture,write:p.write.texture}),onSwap:()=>p.swap()}),(y=p.read)==null?void 0:y.texture},[e,r]);return[{read:v.current.read,write:v.current.write},h]},te=Object.freeze({texture:!1,map:!1,mapIntensity:.1,radius:.05,smudge:0,dissipation:1,motionBlur:0,motionSample:5,color:new t.Vector3(1,0,0),isCursor:!1,pressure:1,pointerValues:!1}),Ve=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Ie({scene:o,size:e,dpr:r}),f=A(e),l=X(),[v,a]=j({scene:o,camera:f,size:e,dpr:r,samples:i}),[c,h]=I(te),d=s.useRef(null);return[s.useCallback((p,y)=>{const{gl:w,pointer:M}=p;y&&h(y),c.texture?(u(n,"uIsTexture",!0),u(n,"uTexture",c.texture)):u(n,"uIsTexture",!1),c.map?(u(n,"uIsMap",!0),u(n,"uMap",c.map),u(n,"uMapIntensity",c.mapIntensity)):u(n,"uIsMap",!1),u(n,"uRadius",c.radius),u(n,"uSmudge",c.smudge),u(n,"uDissipation",c.dissipation),u(n,"uMotionBlur",c.motionBlur),u(n,"uMotionSample",c.motionSample);const b=c.pointerValues||l(M);b.isVelocityUpdate&&(u(n,"uMouse",b.currentPointer),u(n,"uPrevMouse",b.prevPointer)),u(n,"uVelocity",b.velocity);const T=typeof c.color=="function"?c.color(b.velocity):c.color;return u(n,"uColor",T),u(n,"uIsCursor",c.isCursor),u(n,"uPressureEnd",c.pressure),d.current===null&&(d.current=c.pressure),u(n,"uPressureStart",d.current),d.current=c.pressure,a(w,({read:C})=>{u(n,"uBuffer",C)})},[n,l,a,c,h]),h,{scene:o,mesh:m,material:n,camera:f,renderTarget:v,output:v.read.texture}]};var W=`varying vec2 vUv;
 varying vec2 vL;
 varying vec2 vR;
 varying vec2 vT;
@@ -126,11 +126,11 @@ void main () {
 	vT = vUv + vec2(0.0, texelSize.y);
 	vB = vUv - vec2(0.0, texelSize.y);
 	gl_Position = vec4(position, 1.0);
-}`,Se=`precision highp float;
+}`,Ue=`precision highp float;
 
 void main(){
 	gl_FragColor = vec4(0.0);
-}`;const Te=()=>s.useMemo(()=>new n.ShaderMaterial({vertexShader:O,fragmentShader:Se,depthTest:!1,depthWrite:!1}),[]);var Ce=`precision highp float;
+}`;const Be=()=>s.useMemo(()=>new t.ShaderMaterial({vertexShader:W,fragmentShader:Ue,depthTest:!1,depthWrite:!1}),[]);var ze=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uVelocity;
@@ -143,7 +143,7 @@ void main () {
 	vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
 	gl_FragColor = dissipation * texture2D(uSource, coord);
 	gl_FragColor.a = 1.0;
-}`;const be=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uVelocity:{value:new n.Texture},uSource:{value:new n.Texture},texelSize:{value:new n.Vector2},dt:{value:0},dissipation:{value:0}},vertexShader:O,fragmentShader:Ce}),[]);var Re=`precision highp float;
+}`;const Oe=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uVelocity:{value:new t.Texture},uSource:{value:new t.Texture},texelSize:{value:new t.Vector2},dt:{value:0},dissipation:{value:0}},vertexShader:W,fragmentShader:ze}),[]);var Ee=`precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -168,7 +168,7 @@ void main () {
 	float B = sampleVelocity(vB).y;
 	float div = 0.5 * (R - L + T - B);
 	gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
-}`;const De=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uVelocity:{value:null},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:Re}),[]);var Pe=`precision highp float;
+}`;const Le=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uVelocity:{value:null},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:Ee}),[]);var We=`precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -192,7 +192,7 @@ void main () {
 	float divergence = texture2D(uDivergence, vUv).x;
 	float pressure = (L + R + B + T - divergence) * 0.25;
 	gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
-}`;const Ae=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uPressure:{value:null},uDivergence:{value:null},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:Pe}),[]);var Ve=`precision highp float;
+}`;const ke=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uPressure:{value:null},uDivergence:{value:null},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:We}),[]);var $e=`precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -208,7 +208,7 @@ void main () {
 	float B = texture2D(uVelocity, vB).x;
 	float vorticity = R - L - T + B;
 	gl_FragColor = vec4(vorticity, 0.0, 0.0, 1.0);
-}`;const Ue=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uVelocity:{value:null},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:Ve}),[]);var Fe=`precision highp float;
+}`;const je=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uVelocity:{value:null},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:$e}),[]);var qe=`precision highp float;
 
 varying vec2 vUv;
 varying vec2 vT;
@@ -226,7 +226,7 @@ void main () {
 	force *= 1.0 / length(force + 0.00001) * curl * C;
 	vec2 vel = texture2D(uVelocity, vUv).xy;
 	gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
-}`;const Ie=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uVelocity:{value:null},uCurl:{value:null},curl:{value:0},dt:{value:0},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:Fe}),[]);var Oe=`precision highp float;
+}`;const Ne=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uVelocity:{value:null},uCurl:{value:null},curl:{value:0},dt:{value:0},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:qe}),[]);var Ge=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -234,7 +234,7 @@ uniform float value;
 
 void main () {
 	gl_FragColor = value * texture2D(uTexture, vUv);
-}`;const Be=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTexture:{value:new n.Texture},value:{value:0},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:Oe}),[]);var Ee=`precision highp float;
+}`;const Ke=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTexture:{value:new t.Texture},value:{value:0},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:Ge}),[]);var Xe=`precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -257,7 +257,7 @@ void main () {
 	vec2 velocity = texture2D(uVelocity, vUv).xy;
 	velocity.xy -= vec2(R - L, T - B);
 	gl_FragColor = vec4(velocity, 0.0, 1.0);
-}`;const Le=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uPressure:{value:new n.Texture},uVelocity:{value:new n.Texture},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:Ee}),[]);var ze=`precision highp float;
+}`;const He=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uPressure:{value:new t.Texture},uVelocity:{value:new t.Texture},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:Xe}),[]);var Ye=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTarget;
@@ -273,12 +273,12 @@ void main () {
 	vec3 splat = exp(-dot(p, p) / radius) * color;
 	vec3 base = texture2D(uTarget, vUv).xyz;
 	gl_FragColor = vec4(base + splat, 1.0);
-}`;const $e=()=>s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTarget:{value:new n.Texture},aspectRatio:{value:0},color:{value:new n.Vector3},point:{value:new n.Vector2},radius:{value:0},texelSize:{value:new n.Vector2}},vertexShader:O,fragmentShader:ze}),[]),ke=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=Te(),l=t.clone(),v=Ue(),f=Ie(),r=be(),c=De(),p=Ae(),d=Be(),m=Le(),g=$e(),h=s.useMemo(()=>({vorticityMaterial:f,curlMaterial:v,advectionMaterial:r,divergenceMaterial:c,pressureMaterial:p,clearMaterial:d,gradientSubtractMaterial:m,splatMaterial:g}),[f,v,r,c,p,d,m,g]),M=F(u,o);s.useEffect(()=>{i(h.splatMaterial,"aspectRatio",M.x/M.y);for(const S of Object.values(h))i(S,"texelSize",new n.Vector2(1/M.x,1/M.y))},[M,h]);const w=D(e,a,t);s.useEffect(()=>{t.dispose(),w.material=l},[t,w,l]),s.useEffect(()=>()=>{for(const S of Object.values(h))S.dispose()},[h]);const _=s.useCallback(S=>{w.material=S,w.material.needsUpdate=!0},[w]);return[h,_]},Y={density_dissipation:.98,velocity_dissipation:.99,velocity_acceleration:10,pressure_dissipation:.9,pressure_iterations:20,curl_strength:35,splat_radius:.002,fluid_color:new n.Vector3(1,1,1),pointerValues:!1},Ge=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),[t,l]=ke({scene:a,size:e,dpr:u}),v=C(e),f=j(),r=s.useMemo(()=>({scene:a,camera:v,size:e,samples:o}),[a,v,e,o]),[c,p]=z(r),[d,m]=z(r),[g,h]=R(r),[M,w]=R(r),[_,S]=z(r),T=s.useRef(0),U=s.useRef(new n.Vector2(0,0)),V=s.useRef(new n.Vector3(0,0,0)),[y,A]=b(Y);return[s.useCallback((E,L)=>{const{gl:I,pointer:vn,clock:H,size:de}=E;L&&A(L),T.current===0&&(T.current=H.getElapsedTime());const pe=Math.min((H.getElapsedTime()-T.current)/3,.02);T.current=H.getElapsedTime();const K=p(I,({read:P})=>{l(t.advectionMaterial),i(t.advectionMaterial,"uVelocity",P),i(t.advectionMaterial,"uSource",P),i(t.advectionMaterial,"dt",pe),i(t.advectionMaterial,"dissipation",y.velocity_dissipation)}),mn=m(I,({read:P})=>{l(t.advectionMaterial),i(t.advectionMaterial,"uVelocity",K),i(t.advectionMaterial,"uSource",P),i(t.advectionMaterial,"dissipation",y.density_dissipation)}),W=y.pointerValues||f(vn);W.isVelocityUpdate&&(p(I,({read:P})=>{l(t.splatMaterial),i(t.splatMaterial,"uTarget",P),i(t.splatMaterial,"point",W.currentPointer);const $=W.diffPointer.multiply(U.current.set(de.width,de.height).multiplyScalar(y.velocity_acceleration));i(t.splatMaterial,"color",V.current.set($.x,$.y,1)),i(t.splatMaterial,"radius",y.splat_radius)}),m(I,({read:P})=>{l(t.splatMaterial),i(t.splatMaterial,"uTarget",P);const $=typeof y.fluid_color=="function"?y.fluid_color(W.velocity):y.fluid_color;i(t.splatMaterial,"color",$)}));const fn=h(I,()=>{l(t.curlMaterial),i(t.curlMaterial,"uVelocity",K)});p(I,({read:P})=>{l(t.vorticityMaterial),i(t.vorticityMaterial,"uVelocity",P),i(t.vorticityMaterial,"uCurl",fn),i(t.vorticityMaterial,"curl",y.curl_strength),i(t.vorticityMaterial,"dt",pe)});const dn=w(I,()=>{l(t.divergenceMaterial),i(t.divergenceMaterial,"uVelocity",K)});S(I,({read:P})=>{l(t.clearMaterial),i(t.clearMaterial,"uTexture",P),i(t.clearMaterial,"value",y.pressure_dissipation)}),l(t.pressureMaterial),i(t.pressureMaterial,"uDivergence",dn);let ge;for(let P=0;P<y.pressure_iterations;P++)ge=S(I,({read:$})=>{i(t.pressureMaterial,"uPressure",$)});return p(I,({read:P})=>{l(t.gradientSubtractMaterial),i(t.gradientSubtractMaterial,"uPressure",ge),i(t.gradientSubtractMaterial,"uVelocity",P)}),mn},[t,l,h,m,w,f,S,p,A,y]),A,{scene:a,materials:t,camera:v,renderTarget:{velocity:c,density:d,curl:g,divergence:M,pressure:_},output:d.read.texture}]},Ne=({scale:e,max:u,texture:o,scene:a})=>{const t=s.useRef([]),l=s.useMemo(()=>new n.PlaneGeometry(e,e),[e]),v=s.useMemo(()=>new n.MeshBasicMaterial({map:o,transparent:!0,blending:n.AdditiveBlending,depthTest:!1,depthWrite:!1}),[o]);return s.useEffect(()=>{for(let f=0;f<u;f++){const r=new n.Mesh(l.clone(),v.clone());r.rotateZ(2*Math.PI*Math.random()),r.visible=!1,a.add(r),t.current.push(r)}},[l,v,a,u]),s.useEffect(()=>()=>{t.current.forEach(f=>{f.geometry.dispose(),Array.isArray(f.material)?f.material.forEach(r=>r.dispose()):f.material.dispose(),a.remove(f)}),t.current=[]},[a]),t.current},Q={frequency:.01,rotation:.05,fadeout_speed:.9,scale:.3,alpha:.6,pointerValues:!1},je=({texture:e=new n.Texture,scale:u=64,max:o=100,size:a,dpr:t,samples:l=0})=>{const v=s.useMemo(()=>new n.Scene,[]),f=Ne({scale:u,max:o,texture:e,scene:v}),r=C(a),c=j(),[p,d]=R({scene:v,camera:r,size:a,dpr:t,samples:l}),[m,g]=b(Q),h=s.useRef(0);return[s.useCallback((w,_)=>{const{gl:S,pointer:T,size:U}=w;_&&g(_);const V=m.pointerValues||c(T);if(m.frequency<V.diffPointer.length()){const y=f[h.current];y.visible=!0,y.position.set(V.currentPointer.x*(U.width/2),V.currentPointer.y*(U.height/2),0),y.scale.x=y.scale.y=0,y.material.opacity=m.alpha,h.current=(h.current+1)%o}return f.forEach(y=>{if(y.visible){const A=y.material;y.rotation.z+=m.rotation,A.opacity*=m.fadeout_speed,y.scale.x=m.fadeout_speed*y.scale.x+m.scale,y.scale.y=y.scale.x,A.opacity<.002&&(y.visible=!1)}}),d(S)},[d,f,c,o,m,g]),g,{scene:v,camera:r,meshArr:f,renderTarget:p,output:p.texture}]};var qe=`varying vec2 vUv;
+}`;const Qe=()=>s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTarget:{value:new t.Texture},aspectRatio:{value:0},color:{value:new t.Vector3},point:{value:new t.Vector2},radius:{value:0},texelSize:{value:new t.Vector2}},vertexShader:W,fragmentShader:Ye}),[]),Ze=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=Be(),m=n.clone(),f=je(),l=Ne(),v=Oe(),a=Le(),c=ke(),h=Ke(),d=He(),g=Qe(),p=s.useMemo(()=>({vorticityMaterial:l,curlMaterial:f,advectionMaterial:v,divergenceMaterial:a,pressureMaterial:c,clearMaterial:h,gradientSubtractMaterial:d,splatMaterial:g}),[l,f,v,a,c,h,d,g]),y=E(r,i);s.useEffect(()=>{u(p.splatMaterial,"aspectRatio",y.x/y.y);for(const b of Object.values(p))u(b,"texelSize",new t.Vector2(1/y.x,1/y.y))},[y,p]);const w=R(e,o,n,t.Mesh);s.useEffect(()=>{n.dispose(),w.material=m},[n,w,m]),s.useEffect(()=>()=>{for(const b of Object.values(p))b.dispose()},[p]);const M=s.useCallback(b=>{w.material=b,w.material.needsUpdate=!0},[w]);return{materials:p,setMeshMaterial:M,mesh:w}},re=Object.freeze({density_dissipation:.98,velocity_dissipation:.99,velocity_acceleration:10,pressure_dissipation:.9,pressure_iterations:20,curl_strength:35,splat_radius:.002,fluid_color:new t.Vector3(1,1,1),pointerValues:!1}),Je=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{materials:n,setMeshMaterial:m,mesh:f}=Ze({scene:o,size:e,dpr:r}),l=A(e),v=X(),a=s.useMemo(()=>({scene:o,camera:l,size:e,samples:i}),[o,l,e,i]),[c,h]=j(a),[d,g]=j(a),[p,y]=D(a),[w,M]=D(a),[b,T]=j(a),C=s.useRef(0),P=s.useRef(new t.Vector2(0,0)),S=s.useRef(new t.Vector3(0,0,0)),[_,B]=I(re);return[s.useCallback((O,$)=>{const{gl:z,pointer:J,clock:ee,size:Ce}=O;$&&B($),C.current===0&&(C.current=ee.getElapsedTime());const Te=Math.min((ee.getElapsedTime()-C.current)/3,.02);C.current=ee.getElapsedTime();const ne=h(z,({read:U})=>{m(n.advectionMaterial),u(n.advectionMaterial,"uVelocity",U),u(n.advectionMaterial,"uSource",U),u(n.advectionMaterial,"dt",Te),u(n.advectionMaterial,"dissipation",_.velocity_dissipation)}),Ut=g(z,({read:U})=>{m(n.advectionMaterial),u(n.advectionMaterial,"uVelocity",ne),u(n.advectionMaterial,"uSource",U),u(n.advectionMaterial,"dissipation",_.density_dissipation)}),Y=_.pointerValues||v(J);Y.isVelocityUpdate&&(h(z,({read:U})=>{m(n.splatMaterial),u(n.splatMaterial,"uTarget",U),u(n.splatMaterial,"point",Y.currentPointer);const N=Y.diffPointer.multiply(P.current.set(Ce.width,Ce.height).multiplyScalar(_.velocity_acceleration));u(n.splatMaterial,"color",S.current.set(N.x,N.y,1)),u(n.splatMaterial,"radius",_.splat_radius)}),g(z,({read:U})=>{m(n.splatMaterial),u(n.splatMaterial,"uTarget",U);const N=typeof _.fluid_color=="function"?_.fluid_color(Y.velocity):_.fluid_color;u(n.splatMaterial,"color",N)}));const Bt=y(z,()=>{m(n.curlMaterial),u(n.curlMaterial,"uVelocity",ne)});h(z,({read:U})=>{m(n.vorticityMaterial),u(n.vorticityMaterial,"uVelocity",U),u(n.vorticityMaterial,"uCurl",Bt),u(n.vorticityMaterial,"curl",_.curl_strength),u(n.vorticityMaterial,"dt",Te)});const zt=M(z,()=>{m(n.divergenceMaterial),u(n.divergenceMaterial,"uVelocity",ne)});T(z,({read:U})=>{m(n.clearMaterial),u(n.clearMaterial,"uTexture",U),u(n.clearMaterial,"value",_.pressure_dissipation)}),m(n.pressureMaterial),u(n.pressureMaterial,"uDivergence",zt);let Pe;for(let U=0;U<_.pressure_iterations;U++)Pe=T(z,({read:N})=>{u(n.pressureMaterial,"uPressure",N)});return h(z,({read:U})=>{m(n.gradientSubtractMaterial),u(n.gradientSubtractMaterial,"uPressure",Pe),u(n.gradientSubtractMaterial,"uVelocity",U)}),Ut},[n,m,y,g,M,v,T,h,B,_]),B,{scene:o,mesh:f,materials:n,camera:l,renderTarget:{velocity:c,density:d,curl:p,divergence:w,pressure:b},output:d.read.texture}]},en=({scale:e,max:r,texture:i,scene:o})=>{const n=s.useRef([]),m=s.useMemo(()=>new t.PlaneGeometry(e,e),[e]),f=s.useMemo(()=>new t.MeshBasicMaterial({map:i,transparent:!0,blending:t.AdditiveBlending,depthTest:!1,depthWrite:!1}),[i]);return s.useEffect(()=>{for(let l=0;l<r;l++){const v=new t.Mesh(m.clone(),f.clone());v.rotateZ(2*Math.PI*Math.random()),v.visible=!1,o.add(v),n.current.push(v)}},[m,f,o,r]),s.useEffect(()=>()=>{n.current.forEach(l=>{l.geometry.dispose(),Array.isArray(l.material)?l.material.forEach(v=>v.dispose()):l.material.dispose(),o.remove(l)}),n.current=[]},[o]),n.current},oe=Object.freeze({frequency:.01,rotation:.05,fadeout_speed:.9,scale:.3,alpha:.6,pointerValues:!1}),nn=({texture:e=new t.Texture,scale:r=64,max:i=100,size:o,dpr:n,samples:m=0})=>{const f=s.useMemo(()=>new t.Scene,[]),l=en({scale:r,max:i,texture:e,scene:f}),v=A(o),a=X(),[c,h]=D({scene:f,camera:v,size:o,dpr:n,samples:m}),[d,g]=I(oe),p=s.useRef(0);return[s.useCallback((w,M)=>{const{gl:b,pointer:T,size:C}=w;M&&g(M);const P=d.pointerValues||a(T);if(d.frequency<P.diffPointer.length()){const S=l[p.current];S.visible=!0,S.position.set(P.currentPointer.x*(C.width/2),P.currentPointer.y*(C.height/2),0),S.scale.x=S.scale.y=0,S.material.opacity=d.alpha,p.current=(p.current+1)%i}return l.forEach(S=>{if(S.visible){const _=S.material;S.rotation.z+=d.rotation,_.opacity*=d.fadeout_speed,S.scale.x=d.fadeout_speed*S.scale.x+d.scale,S.scale.y=S.scale.x,_.opacity<.002&&(S.visible=!1)}}),h(b)},[h,l,a,i,d,g]),g,{scene:f,camera:v,meshArr:l,renderTarget:c,output:c.texture}]};var tn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,We=`precision highp float;
+}`,rn=`precision highp float;
 precision highp int;
 
 varying vec2 vUv;
@@ -351,12 +351,12 @@ float warp(vec2 x, float g,float time){
 void main() {
 	float noise = warp(gl_FragCoord.xy * scale ,warpStrength,uTime * timeStrength);
 	gl_FragColor = vec4(vec3(noise),1.0);
-}`;const He=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTime:{value:0},scale:{value:0},timeStrength:{value:0},noiseOctaves:{value:0},fbmOctaves:{value:0},warpOctaves:{value:0},warpDirection:{value:new n.Vector2},warpStrength:{value:0}},vertexShader:qe,fragmentShader:We}),[]);return D(e,u,o),o},Z={scale:.004,timeStrength:.3,noiseOctaves:2,fbmOctaves:2,warpOctaves:2,warpDirection:new n.Vector2(2,2),warpStrength:8,beat:!1},Ke=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=He(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(Z);return[s.useCallback((d,m)=>{const{gl:g,clock:h}=d;return m&&c(m),i(t,"scale",r.scale),i(t,"timeStrength",r.timeStrength),i(t,"noiseOctaves",r.noiseOctaves),i(t,"fbmOctaves",r.fbmOctaves),i(t,"warpOctaves",r.warpOctaves),i(t,"warpDirection",r.warpDirection),i(t,"warpStrength",r.warpStrength),i(t,"uTime",r.beat||h.getElapsedTime()),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var Xe=`varying vec2 vUv;
+}`;const on=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTime:{value:0},scale:{value:0},timeStrength:{value:0},noiseOctaves:{value:0},fbmOctaves:{value:0},warpOctaves:{value:0},warpDirection:{value:new t.Vector2},warpStrength:{value:0}},vertexShader:tn,fragmentShader:rn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},ie=Object.freeze({scale:.004,timeStrength:.3,noiseOctaves:2,fbmOctaves:2,warpOctaves:2,warpDirection:new t.Vector2(2,2),warpStrength:8,beat:!1}),an=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=on(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(ie);return[s.useCallback((d,g)=>{const{gl:p,clock:y}=d;return g&&c(g),u(n,"scale",a.scale),u(n,"timeStrength",a.timeStrength),u(n,"noiseOctaves",a.noiseOctaves),u(n,"fbmOctaves",a.fbmOctaves),u(n,"warpOctaves",a.warpOctaves),u(n,"warpDirection",a.warpDirection),u(n,"warpStrength",a.warpStrength),u(n,"uTime",a.beat||y.getElapsedTime()),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var un=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Ye=`precision highp float;
+}`,sn=`precision highp float;
 varying vec2 vUv;
 
 uniform sampler2D uTexture;
@@ -398,12 +398,12 @@ void main() {
 	col = clamp(col, 0.0, 1.0);
 	
 	gl_FragColor = vec4(col, alpha);
-}`;const Qe=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTexture:{value:new n.Texture},isTexture:{value:!1},scale:{value:1},noise:{value:new n.Texture},noiseStrength:{value:new n.Vector2(0,0)},isNoise:{value:!1},laminateLayer:{value:1},laminateInterval:{value:new n.Vector2(.1,.1)},laminateDetail:{value:new n.Vector2(1,1)},distortion:{value:new n.Vector2(0,0)},colorFactor:{value:new n.Vector3(1,1,1)},uTime:{value:0},timeStrength:{value:new n.Vector2(0,0)}},vertexShader:Xe,fragmentShader:Ye}),[]);return D(e,u,o),o},J={texture:!1,scale:1,laminateLayer:1,laminateInterval:new n.Vector2(.1,.1),laminateDetail:new n.Vector2(1,1),distortion:new n.Vector2(0,0),colorFactor:new n.Vector3(1,1,1),timeStrength:new n.Vector2(0,0),noise:!1,noiseStrength:new n.Vector2(0,0),beat:!1},Ze=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Qe(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(J);return[s.useCallback((d,m)=>{const{gl:g,clock:h}=d;return m&&c(m),r.texture?(i(t,"uTexture",r.texture),i(t,"isTexture",!0)):(i(t,"isTexture",!1),i(t,"scale",r.scale)),r.noise?(i(t,"noise",r.noise),i(t,"isNoise",!0),i(t,"noiseStrength",r.noiseStrength)):i(t,"isNoise",!1),i(t,"uTime",r.beat||h.getElapsedTime()),i(t,"laminateLayer",r.laminateLayer),i(t,"laminateInterval",r.laminateInterval),i(t,"laminateDetail",r.laminateDetail),i(t,"distortion",r.distortion),i(t,"colorFactor",r.colorFactor),i(t,"timeStrength",r.timeStrength),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var Je=`varying vec2 vUv;
+}`;const ln=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTexture:{value:new t.Texture},isTexture:{value:!1},scale:{value:1},noise:{value:new t.Texture},noiseStrength:{value:new t.Vector2(0,0)},isNoise:{value:!1},laminateLayer:{value:1},laminateInterval:{value:new t.Vector2(.1,.1)},laminateDetail:{value:new t.Vector2(1,1)},distortion:{value:new t.Vector2(0,0)},colorFactor:{value:new t.Vector3(1,1,1)},uTime:{value:0},timeStrength:{value:new t.Vector2(0,0)}},vertexShader:un,fragmentShader:sn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},ae=Object.freeze({texture:!1,scale:1,laminateLayer:1,laminateInterval:new t.Vector2(.1,.1),laminateDetail:new t.Vector2(1,1),distortion:new t.Vector2(0,0),colorFactor:new t.Vector3(1,1,1),timeStrength:new t.Vector2(0,0),noise:!1,noiseStrength:new t.Vector2(0,0),beat:!1}),cn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=ln(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(ae);return[s.useCallback((d,g)=>{const{gl:p,clock:y}=d;return g&&c(g),a.texture?(u(n,"uTexture",a.texture),u(n,"isTexture",!0)):(u(n,"isTexture",!1),u(n,"scale",a.scale)),a.noise?(u(n,"noise",a.noise),u(n,"isNoise",!0),u(n,"noiseStrength",a.noiseStrength)):u(n,"isNoise",!1),u(n,"uTime",a.beat||y.getElapsedTime()),u(n,"laminateLayer",a.laminateLayer),u(n,"laminateInterval",a.laminateInterval),u(n,"laminateDetail",a.laminateDetail),u(n,"distortion",a.distortion),u(n,"colorFactor",a.colorFactor),u(n,"timeStrength",a.timeStrength),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var vn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,et=`precision highp float;
+}`,mn=`precision highp float;
 
 varying vec2 vUv;
 uniform float u_time;
@@ -428,12 +428,12 @@ void main() {
 	float time = u_time * u_timeStrength;
 	vec3 color = clamp(marble(vec3(gl_FragCoord.xy*u_scale,time)),0.,1.);
 	gl_FragColor = vec4(color,1.);
-}`;const tt=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{u_time:{value:0},u_pattern:{value:0},u_complexity:{value:0},u_complexityAttenuation:{value:0},u_iterations:{value:0},u_timeStrength:{value:0},u_scale:{value:0}},vertexShader:Je,fragmentShader:et}),[]);return D(e,u,o),o},ee={pattern:0,complexity:2,complexityAttenuation:.2,iterations:8,timeStrength:.2,scale:.002,beat:!1},nt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=tt(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(ee);return[s.useCallback((d,m)=>{const{gl:g,clock:h}=d;return m&&c(m),i(t,"u_pattern",r.pattern),i(t,"u_complexity",r.complexity),i(t,"u_complexityAttenuation",r.complexityAttenuation),i(t,"u_iterations",r.iterations),i(t,"u_timeStrength",r.timeStrength),i(t,"u_scale",r.scale),i(t,"u_time",r.beat||h.getElapsedTime()),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var rt=`varying vec2 vUv;
+}`;const fn=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{u_time:{value:0},u_pattern:{value:0},u_complexity:{value:0},u_complexityAttenuation:{value:0},u_iterations:{value:0},u_timeStrength:{value:0},u_scale:{value:0}},vertexShader:vn,fragmentShader:mn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},ue=Object.freeze({pattern:0,complexity:2,complexityAttenuation:.2,iterations:8,timeStrength:.2,scale:.002,beat:!1}),pn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=fn(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(ue);return[s.useCallback((d,g)=>{const{gl:p,clock:y}=d;return g&&c(g),u(n,"u_pattern",a.pattern),u(n,"u_complexity",a.complexity),u(n,"u_complexityAttenuation",a.complexityAttenuation),u(n,"u_iterations",a.iterations),u(n,"u_timeStrength",a.timeStrength),u(n,"u_scale",a.scale),u(n,"u_time",a.beat||y.getElapsedTime()),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var dn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,ot=`precision highp float;
+}`,gn=`precision highp float;
 precision highp int;
 
 varying vec2 vUv;
@@ -462,12 +462,12 @@ void main() {
 	);
 
 	gl_FragColor = vec4(outColor, tex.a);
-}`;const ut=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTexture:{value:new n.Texture},uRgbWeight:{value:new n.Vector3(.299,.587,.114)},uColor1:{value:new n.Color().set(.5,.5,.5)},uColor2:{value:new n.Color().set(.5,.5,.5)},uColor3:{value:new n.Color().set(1,1,1)},uColor4:{value:new n.Color().set(0,.1,.2)}},vertexShader:rt,fragmentShader:ot}),[]);return D(e,u,o),o},te={texture:new n.Texture,color1:new n.Color().set(.5,.5,.5),color2:new n.Color().set(.5,.5,.5),color3:new n.Color().set(1,1,1),color4:new n.Color().set(0,.1,.2),rgbWeight:new n.Vector3(.299,.587,.114)},at=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=ut(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(te);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"uTexture",r.texture),i(t,"uColor1",r.color1),i(t,"uColor2",r.color2),i(t,"uColor3",r.color3),i(t,"uColor4",r.color4),i(t,"uRgbWeight",r.rgbWeight),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var it=`varying vec2 vUv;
+}`;const hn=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTexture:{value:new t.Texture},uRgbWeight:{value:new t.Vector3(.299,.587,.114)},uColor1:{value:new t.Color().set(.5,.5,.5)},uColor2:{value:new t.Color().set(.5,.5,.5)},uColor3:{value:new t.Color().set(1,1,1)},uColor4:{value:new t.Color().set(0,.1,.2)}},vertexShader:dn,fragmentShader:gn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},se=Object.freeze({texture:new t.Texture,color1:new t.Color().set(.5,.5,.5),color2:new t.Color().set(.5,.5,.5),color3:new t.Color().set(1,1,1),color4:new t.Color().set(0,.1,.2),rgbWeight:new t.Vector3(.299,.587,.114)}),xn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=hn(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(se);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"uTexture",a.texture),u(n,"uColor1",a.color1),u(n,"uColor2",a.color2),u(n,"uColor3",a.color3),u(n,"uColor4",a.color4),u(n,"uRgbWeight",a.rgbWeight),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var yn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,st=`precision highp float;
+}`,Mn=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -481,12 +481,12 @@ void main() {
 	float grayscale = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
 	vec3 duotone = mix(uColor0, uColor1, grayscale);
 	gl_FragColor = vec4(duotone, texColor.a);
-}`;const lt=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTexture:{value:new n.Texture},uColor0:{value:new n.Color(16777215)},uColor1:{value:new n.Color(0)}},vertexShader:it,fragmentShader:st}),[]);return D(e,u,o),o},ne={texture:new n.Texture,color0:new n.Color(16777215),color1:new n.Color(0)},ct=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=lt(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(ne);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"uTexture",r.texture),i(t,"uColor0",r.color0),i(t,"uColor1",r.color1),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var vt=`varying vec2 vUv;
+}`;const bn=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTexture:{value:new t.Texture},uColor0:{value:new t.Color(16777215)},uColor1:{value:new t.Color(0)}},vertexShader:yn,fragmentShader:Mn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},le={texture:new t.Texture,color0:new t.Color(16777215),color1:new t.Color(0)},wn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=bn(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(le);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"uTexture",a.texture),u(n,"uColor0",a.color0),u(n,"uColor1",a.color1),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var Sn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,mt=`precision highp float;
+}`,_n=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -526,12 +526,12 @@ void main() {
 	vec3 alphColor = mix(outputColor,mapColor,mixValue);
 
 	gl_FragColor = vec4(alphColor, alpha);
-}`;const ft=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_map:{value:new n.Texture},u_alphaMap:{value:new n.Texture},u_isAlphaMap:{value:!1},u_mapIntensity:{value:0},u_brightness:{value:new n.Vector3},u_min:{value:0},u_max:{value:.9},u_dodgeColor:{value:new n.Color(16777215)},u_isDodgeColor:{value:!1}},vertexShader:vt,fragmentShader:mt}),[]);return D(e,u,o),o},re={texture:new n.Texture,map:new n.Texture,alphaMap:!1,mapIntensity:.3,brightness:new n.Vector3(.5,.5,.5),min:0,max:1,dodgeColor:!1},dt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=ft(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(re);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"u_texture",r.texture),i(t,"u_map",r.map),i(t,"u_mapIntensity",r.mapIntensity),r.alphaMap?(i(t,"u_alphaMap",r.alphaMap),i(t,"u_isAlphaMap",!0)):i(t,"u_isAlphaMap",!1),i(t,"u_brightness",r.brightness),i(t,"u_min",r.min),i(t,"u_max",r.max),r.dodgeColor?(i(t,"u_dodgeColor",r.dodgeColor),i(t,"u_isDodgeColor",!0)):i(t,"u_isDodgeColor",!1),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var pt=`varying vec2 vUv;
+}`;const Cn=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{u_texture:{value:new t.Texture},u_map:{value:new t.Texture},u_alphaMap:{value:new t.Texture},u_isAlphaMap:{value:!1},u_mapIntensity:{value:0},u_brightness:{value:new t.Vector3},u_min:{value:0},u_max:{value:.9},u_dodgeColor:{value:new t.Color(16777215)},u_isDodgeColor:{value:!1}},vertexShader:Sn,fragmentShader:_n}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},ce={texture:new t.Texture,map:new t.Texture,alphaMap:!1,mapIntensity:.3,brightness:new t.Vector3(.5,.5,.5),min:0,max:1,dodgeColor:!1},Tn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Cn(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(ce);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"u_texture",a.texture),u(n,"u_map",a.map),u(n,"u_mapIntensity",a.mapIntensity),a.alphaMap?(u(n,"u_alphaMap",a.alphaMap),u(n,"u_isAlphaMap",!0)):u(n,"u_isAlphaMap",!1),u(n,"u_brightness",a.brightness),u(n,"u_min",a.min),u(n,"u_max",a.max),a.dodgeColor?(u(n,"u_dodgeColor",a.dodgeColor),u(n,"u_isDodgeColor",!0)):u(n,"u_isDodgeColor",!1),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var Pn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,gt=`precision highp float;
+}`,Dn=`precision highp float;
 
 varying vec2 vUv;
 uniform vec2 uResolution;
@@ -597,12 +597,12 @@ void main() {
 
 	gl_FragColor = mix(color0, color1, progress);
 
-}`;const xt=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uResolution:{value:new n.Vector2},uTextureResolution:{value:new n.Vector2},uTexture0:{value:new n.Texture},uTexture1:{value:new n.Texture},padding:{value:0},uMap:{value:new n.Texture},edgeIntensity:{value:0},mapIntensity:{value:0},epicenter:{value:new n.Vector2(0,0)},progress:{value:0},dirX:{value:0},dirY:{value:0}},vertexShader:pt,fragmentShader:gt}),[]),l=F(u,o);return s.useEffect(()=>{i(t,"uResolution",l.clone())},[l,t]),D(e,a,t),t},oe={texture0:new n.Texture,texture1:new n.Texture,padding:0,map:new n.Texture,mapIntensity:0,edgeIntensity:0,epicenter:new n.Vector2(0,0),progress:0,dir:new n.Vector2(0,0)},ht=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=xt({scene:a,size:e,dpr:u}),l=C(e),[v,f]=R({scene:a,camera:l,dpr:u,size:e,samples:o,isSizeUpdate:!0}),[r,c]=b(oe);return[s.useCallback((d,m)=>{var _,S,T,U,V,y,A,B;const{gl:g}=d;m&&c(m),i(t,"uTexture0",r.texture0),i(t,"uTexture1",r.texture1),i(t,"progress",r.progress);const h=[((S=(_=r.texture0)==null?void 0:_.image)==null?void 0:S.width)||0,((U=(T=r.texture0)==null?void 0:T.image)==null?void 0:U.height)||0],M=[((y=(V=r.texture1)==null?void 0:V.image)==null?void 0:y.width)||0,((B=(A=r.texture1)==null?void 0:A.image)==null?void 0:B.height)||0],w=h.map((E,L)=>E+(M[L]-E)*r.progress);return i(t,"uTextureResolution",w),i(t,"padding",r.padding),i(t,"uMap",r.map),i(t,"mapIntensity",r.mapIntensity),i(t,"edgeIntensity",r.edgeIntensity),i(t,"epicenter",r.epicenter),i(t,"dirX",r.dir.x),i(t,"dirY",r.dir.y),f(g)},[f,t,r,c]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var yt=`varying vec2 vUv;
+}`;const Rn=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uResolution:{value:new t.Vector2},uTextureResolution:{value:new t.Vector2},uTexture0:{value:new t.Texture},uTexture1:{value:new t.Texture},padding:{value:0},uMap:{value:new t.Texture},edgeIntensity:{value:0},mapIntensity:{value:0},epicenter:{value:new t.Vector2(0,0)},progress:{value:0},dirX:{value:0},dirY:{value:0}},vertexShader:Pn,fragmentShader:Dn}),[]),m=E(r,i);s.useEffect(()=>{u(n,"uResolution",m.clone())},[m,n]);const f=R(e,o,n,t.Mesh);return{material:n,mesh:f}},ve={texture0:new t.Texture,texture1:new t.Texture,padding:0,map:new t.Texture,mapIntensity:0,edgeIntensity:0,epicenter:new t.Vector2(0,0),progress:0,dir:new t.Vector2(0,0)},An=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Rn({scene:o,size:e,dpr:r}),f=A(e),[l,v]=D({scene:o,camera:f,dpr:r,size:e,samples:i,isSizeUpdate:!0}),[a,c]=I(ve);return[s.useCallback((d,g)=>{var b,T,C,P,S,_,B,L;const{gl:p}=d;g&&c(g),u(n,"uTexture0",a.texture0),u(n,"uTexture1",a.texture1),u(n,"progress",a.progress);const y=[((T=(b=a.texture0)==null?void 0:b.image)==null?void 0:T.width)||0,((P=(C=a.texture0)==null?void 0:C.image)==null?void 0:P.height)||0],w=[((_=(S=a.texture1)==null?void 0:S.image)==null?void 0:_.width)||0,((L=(B=a.texture1)==null?void 0:B.image)==null?void 0:L.height)||0],M=y.map((O,$)=>O+(w[$]-O)*a.progress);return u(n,"uTextureResolution",M),u(n,"padding",a.padding),u(n,"uMap",a.map),u(n,"mapIntensity",a.mapIntensity),u(n,"edgeIntensity",a.edgeIntensity),u(n,"epicenter",a.epicenter),u(n,"dirX",a.dir.x),u(n,"dirY",a.dir.y),v(p)},[v,n,a,c]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var In=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Mt=`precision highp float;
+}`,Fn=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -616,12 +616,12 @@ void main() {
 	float brightness = dot(color,u_brightness);
 	float alpha = clamp(smoothstep(u_min, u_max, brightness),0.0,1.0);
 	gl_FragColor = vec4(color, alpha);
-}`;const _t=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_brightness:{value:new n.Vector3},u_min:{value:0},u_max:{value:1}},vertexShader:yt,fragmentShader:Mt}),[]);return D(e,u,o),o},ue={texture:new n.Texture,brightness:new n.Vector3(.5,.5,.5),min:0,max:1},wt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=_t(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(ue);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"u_texture",r.texture),i(t,"u_brightness",r.brightness),i(t,"u_min",r.min),i(t,"u_max",r.max),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var St=`varying vec2 vUv;
+}`;const Vn=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{u_texture:{value:new t.Texture},u_brightness:{value:new t.Vector3},u_min:{value:0},u_max:{value:1}},vertexShader:In,fragmentShader:Fn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},me={texture:new t.Texture,brightness:new t.Vector3(.5,.5,.5),min:0,max:1},Un=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Vn(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(me);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"u_texture",a.texture),u(n,"u_brightness",a.brightness),u(n,"u_min",a.min),u(n,"u_max",a.max),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var Bn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Tt=`precision highp float;
+}`,zn=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -639,12 +639,12 @@ void main() {
 	uv = (uv + 1.0) / 2.0;
 
 	gl_FragColor = texture2D(u_texture, uv);
-}`;const Ct=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_map:{value:new n.Texture},u_mapIntensity:{value:0}},vertexShader:St,fragmentShader:Tt}),[]);return D(e,u,o),o},ae={texture:new n.Texture,map:new n.Texture,mapIntensity:.3},bt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Ct(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(ae);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"u_texture",r.texture),i(t,"u_map",r.map),i(t,"u_mapIntensity",r.mapIntensity),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var Rt=`varying vec2 vUv;
+}`;const On=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{u_texture:{value:new t.Texture},u_map:{value:new t.Texture},u_mapIntensity:{value:0}},vertexShader:Bn,fragmentShader:zn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},fe={texture:new t.Texture,map:new t.Texture,mapIntensity:.3},En=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=On(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(fe);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"u_texture",a.texture),u(n,"u_map",a.map),u(n,"u_mapIntensity",a.mapIntensity),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var Ln=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Dt=`precision highp float;
+}`,Wn=`precision highp float;
 
 uniform sampler2D uTexture;
 uniform sampler2D uMap;
@@ -656,12 +656,12 @@ void main() {
 	vec4 tex = texture2D(uTexture, uv);
 	vec4 map = texture2D(uMap, uv);
 	gl_FragColor = mix(tex,map,map.a);
-}`;const Pt=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTexture:{value:new n.Texture},uMap:{value:new n.Texture}},vertexShader:Rt,fragmentShader:Dt}),[]);return D(e,a,t),t},ie={texture:new n.Texture,map:new n.Texture},At=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Pt({scene:a,size:e,dpr:u}),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(ie);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"uTexture",r.texture),i(t,"uMap",r.map),f(g)},[t,f,r,c]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var Vt=`varying vec2 vUv;
+}`;const kn=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTexture:{value:new t.Texture},uMap:{value:new t.Texture}},vertexShader:Ln,fragmentShader:Wn}),[]),m=R(e,o,n,t.Mesh);return{material:n,mesh:m}},pe={texture:new t.Texture,map:new t.Texture},$n=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=kn({scene:o,size:e,dpr:r}),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(pe);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"uTexture",a.texture),u(n,"uMap",a.map),v(p)},[n,v,a,c]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var jn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Ut=`precision highp float;
+}`,qn=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -693,12 +693,12 @@ void main() {
 	hsv.z *= u_brightness;
 	vec3 final = hsv2rgb(hsv);
 	gl_FragColor = vec4(final, tex.a);
-}`;const Ft=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=s.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_brightness:{value:1},u_saturation:{value:1}},vertexShader:Vt,fragmentShader:Ut}),[]);return D(e,a,t),t},se={texture:new n.Texture,brightness:1,saturation:1},It=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Ft({scene:a,size:e,dpr:u}),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(se);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"u_texture",r.texture),i(t,"u_brightness",r.brightness),i(t,"u_saturation",r.saturation),f(g)},[t,f,r,c]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var Ot=`varying vec2 vUv;
+}`;const Nn=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=s.useMemo(()=>new t.ShaderMaterial({uniforms:{u_texture:{value:new t.Texture},u_brightness:{value:1},u_saturation:{value:1}},vertexShader:jn,fragmentShader:qn}),[]),m=R(e,o,n,t.Mesh);return{material:n,mesh:m}},de={texture:new t.Texture,brightness:1,saturation:1},Gn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Nn({scene:o,size:e,dpr:r}),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(de);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"u_texture",a.texture),u(n,"u_brightness",a.brightness),u(n,"u_saturation",a.saturation),v(p)},[n,v,a,c]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var Kn=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Bt=`precision highp float;
+}`,Xn=`precision highp float;
 
 varying vec2 vUv;
 uniform vec2 uResolution;
@@ -716,14 +716,14 @@ void main() {
 	
 	gl_FragColor = texture2D(uTexture, uv);
 
-}`;const Et=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uResolution:{value:new n.Vector2},uTextureResolution:{value:new n.Vector2},uTexture:{value:new n.Texture}},vertexShader:Ot,fragmentShader:Bt}),[]),l=F(u,o);return s.useEffect(()=>{i(t,"uResolution",l.clone())},[l,t]),D(e,a,t),t},le={texture:new n.Texture},Lt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Et({scene:a,size:e,dpr:u}),l=C(e),[v,f]=R({scene:a,camera:l,dpr:u,size:e,samples:o,isSizeUpdate:!0}),[r,c]=b(le);return[s.useCallback((d,m)=>{var h,M,w,_,S,T;const{gl:g}=d;return m&&c(m),i(t,"uTexture",r.texture),i(t,"uTextureResolution",[((w=(M=(h=r.texture)==null?void 0:h.source)==null?void 0:M.data)==null?void 0:w.width)||0,((T=(S=(_=r.texture)==null?void 0:_.source)==null?void 0:S.data)==null?void 0:T.height)||0]),f(g)},[f,t,r,c]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var zt=`precision mediump float;
+}`;const Hn=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uResolution:{value:new t.Vector2},uTextureResolution:{value:new t.Vector2},uTexture:{value:new t.Texture}},vertexShader:Kn,fragmentShader:Xn}),[]),m=E(r,i);s.useEffect(()=>{u(n,"uResolution",m.clone())},[m,n]);const f=R(e,o,n,t.Mesh);return{material:n,mesh:f}},ge={texture:new t.Texture},Yn=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Hn({scene:o,size:e,dpr:r}),f=A(e),[l,v]=D({scene:o,camera:f,dpr:r,size:e,samples:i,isSizeUpdate:!0}),[a,c]=I(ge);return[s.useCallback((d,g)=>{var y,w,M,b,T,C;const{gl:p}=d;return g&&c(g),u(n,"uTexture",a.texture),u(n,"uTextureResolution",[((M=(w=(y=a.texture)==null?void 0:y.source)==null?void 0:w.data)==null?void 0:M.width)||0,((C=(T=(b=a.texture)==null?void 0:b.source)==null?void 0:T.data)==null?void 0:C.height)||0]),v(p)},[v,n,a,c]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var Qn=`precision mediump float;
 
 varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,$t=`precision mediump float;
+}`,Zn=`precision mediump float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -748,12 +748,12 @@ void main() {
 		) / 9.0;
 	
 	gl_FragColor = outColor;
-}`;const kt=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uTexture:{value:new n.Texture},uResolution:{value:new n.Vector2(0,0)},uBlurSize:{value:1}},vertexShader:zt,fragmentShader:$t}),[]);return D(e,u,o),o},ce={texture:new n.Texture,blurSize:3,blurPower:5},Gt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=kt(a),l=C(e),v=s.useMemo(()=>({scene:a,camera:l,size:e,dpr:u,samples:o}),[a,l,e,u,o]),[f,r]=R(v),[c,p]=z(v),[d,m]=b(ce);return[s.useCallback((h,M)=>{var T,U,V,y,A,B;const{gl:w}=h;M&&m(M),i(t,"uTexture",d.texture),i(t,"uResolution",[((V=(U=(T=d.texture)==null?void 0:T.source)==null?void 0:U.data)==null?void 0:V.width)||0,((B=(A=(y=d.texture)==null?void 0:y.source)==null?void 0:A.data)==null?void 0:B.height)||0]),i(t,"uBlurSize",d.blurSize);let _=p(w);const S=d.blurPower;for(let E=0;E<S;E++)i(t,"uTexture",_),_=p(w);return r(w)},[r,p,t,m,d]),m,{scene:a,material:t,camera:l,renderTarget:f,output:f.texture}]};var Nt=`varying vec2 vUv;
+}`;const Jn=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uTexture:{value:new t.Texture},uResolution:{value:new t.Vector2(0,0)},uBlurSize:{value:Q.blurSize}},vertexShader:Qn,fragmentShader:Zn}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},Q=Object.freeze({texture:new t.Texture,blurSize:3,blurPower:5}),et=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=Jn(o),f=A(e),l=s.useMemo(()=>({scene:o,camera:f,size:e,dpr:r,samples:i}),[o,f,e,r,i]),[v,a]=D(l),[c,h]=j(l),[d,g]=I(Q);return[s.useCallback((y,w)=>{var C,P,S,_,B,L;const{gl:M}=y;w&&g(w),u(n,"uTexture",d.texture),u(n,"uResolution",[((S=(P=(C=d.texture)==null?void 0:C.source)==null?void 0:P.data)==null?void 0:S.width)||0,((L=(B=(_=d.texture)==null?void 0:_.source)==null?void 0:B.data)==null?void 0:L.height)||0]),u(n,"uBlurSize",d.blurSize);let b=h(M);const T=d.blurPower;for(let O=0;O<T;O++)u(n,"uTexture",b),b=h(M);return a(M)},[a,h,n,g,d]),g,{scene:o,mesh:m,material:n,camera:f,renderTarget:v,output:v.texture}]};var nt=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,jt=`precision highp float;
+}`,tt=`precision highp float;
 
 varying vec2 vUv;
 uniform float uProgress;
@@ -802,12 +802,12 @@ void main() {
 	color *= progressFactor;
 
 	gl_FragColor = vec4(color, 1.0);
-}`;const qt=e=>{const u=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),o=s.useMemo(()=>new n.ShaderMaterial({uniforms:{uEpicenter:{value:new n.Vector2(0,0)},uProgress:{value:0},uStrength:{value:0},uWidth:{value:0},uMode:{value:0}},vertexShader:Nt,fragmentShader:jt}),[]);return D(e,u,o),o},ve={epicenter:new n.Vector2(0,0),progress:0,width:0,strength:0,mode:"center"},Wt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=qt(a),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o,isSizeUpdate:!0}),[r,c]=b(ve);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"uEpicenter",r.epicenter),i(t,"uProgress",r.progress),i(t,"uWidth",r.width),i(t,"uStrength",r.strength),i(t,"uMode",r.mode==="center"?0:r.mode==="horizontal"?1:2),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]};var Ht=`varying vec2 vUv;
+}`;const rt=e=>{const r=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),i=s.useMemo(()=>new t.ShaderMaterial({uniforms:{uEpicenter:{value:q.epicenter},uProgress:{value:q.progress},uStrength:{value:q.strength},uWidth:{value:q.width},uMode:{value:0}},vertexShader:nt,fragmentShader:tt}),[]),o=R(e,r,i,t.Mesh);return{material:i,mesh:o}},q=Object.freeze({epicenter:new t.Vector2(0,0),progress:0,width:0,strength:0,mode:"center"}),ot=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=rt(o),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i,isSizeUpdate:!0}),[a,c]=I(q);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"uEpicenter",a.epicenter),u(n,"uProgress",a.progress),u(n,"uWidth",a.width),u(n,"uStrength",a.strength),u(n,"uMode",a.mode==="center"?0:a.mode==="horizontal"?1:2),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]};var it=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`,Kt=`precision highp float;
+}`,at=`precision highp float;
 varying vec2 vUv;
 
 uniform sampler2D u_texture;
@@ -875,12 +875,624 @@ void main() {
 	vec4 finColor = CalcColor(texColor);
 
 	gl_FragColor = finColor;
-}`;const Xt=({scene:e,size:u,dpr:o})=>{const a=s.useMemo(()=>new n.PlaneGeometry(2,2),[]),t=s.useMemo(()=>new n.ShaderMaterial({uniforms:{u_texture:{value:new n.Texture},u_resolution:{value:new n.Vector2},u_keyColor:{value:new n.Color},u_similarity:{value:0},u_smoothness:{value:0},u_spill:{value:0},u_color:{value:new n.Vector4},u_contrast:{value:0},u_brightness:{value:0},u_gamma:{value:0}},vertexShader:Ht,fragmentShader:Kt}),[]),l=F(u,o);return s.useEffect(()=>{i(t,"u_resolution",l.clone())},[l,t]),D(e,a,t),t},me={texture:new n.Texture,keyColor:new n.Color(65280),similarity:.2,smoothness:.1,spill:.2,color:new n.Vector4(1,1,1,1),contrast:1,brightness:0,gamma:1},Yt=({size:e,dpr:u,samples:o=0})=>{const a=s.useMemo(()=>new n.Scene,[]),t=Xt({scene:a,size:e,dpr:u}),l=C(e),[v,f]=R({scene:a,camera:l,size:e,dpr:u,samples:o}),[r,c]=b(me);return[s.useCallback((d,m)=>{const{gl:g}=d;return m&&c(m),i(t,"u_texture",r.texture),i(t,"u_keyColor",r.keyColor),i(t,"u_similarity",r.similarity),i(t,"u_smoothness",r.smoothness),i(t,"u_spill",r.spill),i(t,"u_color",r.color),i(t,"u_contrast",r.contrast),i(t,"u_brightness",r.brightness),i(t,"u_gamma",r.gamma),f(g)},[f,t,c,r]),c,{scene:a,material:t,camera:l,renderTarget:v,output:v.texture}]},Qt=({scene:e,camera:u,size:o,dpr:a=!1,isSizeUpdate:t=!1,samples:l=0,depthBuffer:v=!1,depthTexture:f=!1},r)=>{const c=s.useRef([]),p=F(o,a);c.current=s.useMemo(()=>Array.from({length:r},()=>{const m=new n.WebGLRenderTarget(p.x,p.y,{...G,samples:l,depthBuffer:v});return f&&(m.depthTexture=new n.DepthTexture(p.x,p.y,n.FloatType)),m}),[r]),s.useLayoutEffect(()=>{t&&c.current.forEach(m=>m.setSize(p.x,p.y))},[p,t]),s.useEffect(()=>{const m=c.current;return()=>{m.forEach(g=>g.dispose())}},[r]);const d=s.useCallback((m,g,h)=>{const M=c.current[g];return q({gl:m,scene:e,camera:u,fbo:M,onBeforeRender:()=>h&&h({read:M.texture})}),M.texture},[e,u]);return[c.current,d]},N=Object.freeze({easeInSine(e){return 1-Math.cos(e*Math.PI/2)},easeOutSine(e){return Math.sin(e*Math.PI/2)},easeInOutSine(e){return-(Math.cos(Math.PI*e)-1)/2},easeInQuad(e){return e*e},easeOutQuad(e){return 1-(1-e)*(1-e)},easeInOutQuad(e){return e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2},easeInCubic(e){return e*e*e},easeOutCubic(e){return 1-Math.pow(1-e,3)},easeInOutCubic(e){return e<.5?4*e*e*e:1-Math.pow(-2*e+2,3)/2},easeInQuart(e){return e*e*e*e},easeOutQuart(e){return 1-Math.pow(1-e,4)},easeInOutQuart(e){return e<.5?8*e*e*e*e:1-Math.pow(-2*e+2,4)/2},easeInQuint(e){return e*e*e*e*e},easeOutQuint(e){return 1-Math.pow(1-e,5)},easeInOutQuint(e){return e<.5?16*e*e*e*e*e:1-Math.pow(-2*e+2,5)/2},easeInExpo(e){return e===0?0:Math.pow(2,10*e-10)},easeOutExpo(e){return e===1?1:1-Math.pow(2,-10*e)},easeInOutExpo(e){return e===0?0:e===1?1:e<.5?Math.pow(2,20*e-10)/2:(2-Math.pow(2,-20*e+10))/2},easeInCirc(e){return 1-Math.sqrt(1-Math.pow(e,2))},easeOutCirc(e){return Math.sqrt(1-Math.pow(e-1,2))},easeInOutCirc(e){return e<.5?(1-Math.sqrt(1-Math.pow(2*e,2)))/2:(Math.sqrt(1-Math.pow(-2*e+2,2))+1)/2},easeInBack(e){return 2.70158*e*e*e-1.70158*e*e},easeOutBack(e){return 1+2.70158*Math.pow(e-1,3)+1.70158*Math.pow(e-1,2)},easeInOutBack(e){const o=2.5949095;return e<.5?Math.pow(2*e,2)*((o+1)*2*e-o)/2:(Math.pow(2*e-2,2)*((o+1)*(e*2-2)+o)+2)/2},easeInElastic(e){const u=2*Math.PI/3;return e===0?0:e===1?1:-Math.pow(2,10*e-10)*Math.sin((e*10-10.75)*u)},easeOutElastic(e){const u=2*Math.PI/3;return e===0?0:e===1?1:Math.pow(2,-10*e)*Math.sin((e*10-.75)*u)+1},easeInOutElastic(e){const u=2*Math.PI/4.5;return e===0?0:e===1?1:e<.5?-(Math.pow(2,20*e-10)*Math.sin((20*e-11.125)*u))/2:Math.pow(2,-20*e+10)*Math.sin((20*e-11.125)*u)/2+1},easeInBounce(e){return 1-N.easeOutBounce(1-e)},easeOutBounce(e){return e<1/2.75?7.5625*e*e:e<2/2.75?7.5625*(e-=1.5/2.75)*e+.75:e<2.5/2.75?7.5625*(e-=2.25/2.75)*e+.9375:7.5625*(e-=2.625/2.75)*e+.984375},easeInOutBounce(e){return e<.5?(1-N.easeOutBounce(1-2*e))/2:(1+N.easeOutBounce(2*e-1))/2}});function Zt(e){let u=Math.sin(e*12.9898)*43758.5453;return u-Math.floor(u)}const Jt=(e,u="easeOutQuart")=>{const o=e/60,a=N[u];return s.useCallback(l=>{let v=l.getElapsedTime()*o;const f=Math.floor(v),r=a(v-f);v=r+f;const c=Zt(f);return{beat:v,floor:f,fract:r,hash:c}},[o,a])},en=(e=60)=>{const u=s.useMemo(()=>1/Math.max(Math.min(e,60),1),[e]),o=s.useRef(null);return s.useCallback(t=>{const l=t.getElapsedTime();return o.current===null||l-o.current>=u?(o.current=l,!0):!1},[u])},tn=e=>{var a,t;const u=(a=e.dom)==null?void 0:a.length,o=(t=e.texture)==null?void 0:t.length;return!u||!o||u!==o};var nn=`varying vec2 vUv;
+}`;const ut=({scene:e,size:r,dpr:i})=>{const o=s.useMemo(()=>new t.PlaneGeometry(2,2),[]),n=s.useMemo(()=>new t.ShaderMaterial({uniforms:{u_texture:{value:new t.Texture},u_resolution:{value:new t.Vector2},u_keyColor:{value:new t.Color},u_similarity:{value:0},u_smoothness:{value:0},u_spill:{value:0},u_color:{value:new t.Vector4},u_contrast:{value:0},u_brightness:{value:0},u_gamma:{value:0}},vertexShader:it,fragmentShader:at}),[]),m=E(r,i);s.useEffect(()=>{u(n,"u_resolution",m.clone())},[m,n]);const f=R(e,o,n,t.Mesh);return{material:n,mesh:f}},he=Object.freeze({texture:new t.Texture,keyColor:new t.Color(65280),similarity:.2,smoothness:.1,spill:.2,color:new t.Vector4(1,1,1,1),contrast:1,brightness:0,gamma:1}),st=({size:e,dpr:r,samples:i=0})=>{const o=s.useMemo(()=>new t.Scene,[]),{material:n,mesh:m}=ut({scene:o,size:e,dpr:r}),f=A(e),[l,v]=D({scene:o,camera:f,size:e,dpr:r,samples:i}),[a,c]=I(he);return[s.useCallback((d,g)=>{const{gl:p}=d;return g&&c(g),u(n,"u_texture",a.texture),u(n,"u_keyColor",a.keyColor),u(n,"u_similarity",a.similarity),u(n,"u_smoothness",a.smoothness),u(n,"u_spill",a.spill),u(n,"u_color",a.color),u(n,"u_contrast",a.contrast),u(n,"u_brightness",a.brightness),u(n,"u_gamma",a.gamma),v(p)},[v,n,c,a]),c,{scene:o,mesh:m,material:n,camera:f,renderTarget:l,output:l.texture}]},Z=process.env.NODE_ENV==="development";var xe=`vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+float permute(float x){return floor(mod(((x*34.0)+1.0)*x, 289.0));}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+float taylorInvSqrt(float r){return 1.79284291400159 - 0.85373472095314 * r;}
+
+vec4 grad4(float j, vec4 ip)
+{
+	const vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);
+	vec4 p,s;
+
+	p.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;
+	p.w = 1.5 - dot(abs(p.xyz), ones.xyz);
+	s = vec4(lessThan(p, vec4(0.0)));
+	p.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www; 
+
+	return p;
+}
+
+float simplexNoise4d(vec4 v)
+{
+	const vec2  C = vec2( 0.138196601125010504,  
+									0.309016994374947451); 
+	
+	vec4 i  = floor(v + dot(v, C.yyyy) );
+	vec4 x0 = v -   i + dot(i, C.xxxx);
+
+	
+
+	
+	vec4 i0;
+
+	vec3 isX = step( x0.yzw, x0.xxx );
+	vec3 isYZ = step( x0.zww, x0.yyz );
+	
+	i0.x = isX.x + isX.y + isX.z;
+	i0.yzw = 1.0 - isX;
+
+	
+	i0.y += isYZ.x + isYZ.y;
+	i0.zw += 1.0 - isYZ.xy;
+
+	i0.z += isYZ.z;
+	i0.w += 1.0 - isYZ.z;
+
+	
+	vec4 i3 = clamp( i0, 0.0, 1.0 );
+	vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );
+	vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );
+
+	
+	vec4 x1 = x0 - i1 + 1.0 * C.xxxx;
+	vec4 x2 = x0 - i2 + 2.0 * C.xxxx;
+	vec4 x3 = x0 - i3 + 3.0 * C.xxxx;
+	vec4 x4 = x0 - 1.0 + 4.0 * C.xxxx;
+
+	
+	i = mod(i, 289.0); 
+	float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);
+	vec4 j1 = permute( permute( permute( permute (
+					i.w + vec4(i1.w, i2.w, i3.w, 1.0 ))
+				+ i.z + vec4(i1.z, i2.z, i3.z, 1.0 ))
+				+ i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))
+				+ i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));
+	
+	
+	
+
+	vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;
+
+	vec4 p0 = grad4(j0,   ip);
+	vec4 p1 = grad4(j1.x, ip);
+	vec4 p2 = grad4(j1.y, ip);
+	vec4 p3 = grad4(j1.z, ip);
+	vec4 p4 = grad4(j1.w, ip);
+
+	
+	vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+	p0 *= norm.x;
+	p1 *= norm.y;
+	p2 *= norm.z;
+	p3 *= norm.w;
+	p4 *= taylorInvSqrt(dot(p4,p4));
+
+	
+	vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
+	vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
+	m0 = m0 * m0;
+	m1 = m1 * m1;
+	return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
+						+ dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
+
+}
+
+float getWobble(vec3 position)
+{
+	vec3 warpedPosition = position;
+	warpedPosition += simplexNoise4d(
+		vec4(
+				position * uWarpPositionFrequency,
+				uTime * uWarpTimeFrequency
+		)
+	) * uWarpStrength;
+
+	return simplexNoise4d(vec4(
+		warpedPosition * uWobblePositionFrequency, 
+		uTime * uWobbleTimeFrequency         
+	)) * uWobbleStrength;
+}`;const ye=(e,r,i,o)=>{var m;let n=[];if(e&&e.length>0){(m=r==null?void 0:r.attributes[i])!=null&&m.array?n=[r.attributes[i].array,...e]:n=e;const f=Math.max(...n.map(l=>l.length));n.forEach((l,v)=>{if(l.length<f){const a=(f-l.length)/o,c=[],h=Array.from(l);for(let d=0;d<a;d++){const g=Math.floor(l.length/o*Math.random())*o;for(let p=0;p<o;p++)c.push(h[g+p])}n[v]=new Float32Array([...h,...c])}})}return n},Me=(e,r,i,o,n)=>{var c;const m=i==="position"?"positionTarget":"uvTarget",f=i==="position"?"// #usf <morphPositions>":"// #usf <morphUvs>",l=i==="position"?"// #usf <morphPositionTransition>":"// #usf <morphUvTransition>",v=i==="position"?"positionsList":"uvsList",a=i==="position"?`
+				float scaledProgress = uMorphProgress * ${e.length-1}.;
+				int baseIndex = int(floor(scaledProgress));		
+				baseIndex = clamp(baseIndex, 0, ${e.length-1});		
+				float progress = fract(scaledProgress);
+				int nextIndex = baseIndex + 1;
+				newPosition = mix(positionsList[baseIndex], positionsList[nextIndex], progress);
+			`:"newUv = mix(uvsList[baseIndex], uvsList[nextIndex], progress);";if(e.length>0){r.deleteAttribute(i),r.setAttribute(i,new t.BufferAttribute(e[0],n));let h="",d="";e.forEach((g,p)=>{r.setAttribute(`${m}${p}`,new t.BufferAttribute(g,n)),h+=`attribute vec${n} ${m}${p};
+`,p===0?d+=`${m}${p}`:d+=`,${m}${p}`}),o=o.replace(`${f}`,h),o=o.replace(`${l}`,`vec${n} ${v}[${e.length}] = vec${n}[](${d});
+				${a}
+			`)}else o=o.replace(`${f}`,""),o=o.replace(`${l}`,""),(c=r==null?void 0:r.attributes[i])!=null&&c.array||Z&&console.error(`use-shader-fx:geometry.attributes.${i}.array is not found`);return o},lt=({scene:e,geometry:r,material:i,positions:o,uvs:n})=>{const m=s.useMemo(()=>ye(o,r,"position",3),[o,r]),f=s.useMemo(()=>ye(n,r,"uv",2),[n,r]);s.useEffect(()=>{if(!r||!i)return;r.setIndex(null),r.deleteAttribute("normal"),m.length!==f.length&&Z&&console.log("use-shader-fx:positions and uvs are not matched");let a=i.vertexShader;if(!a){Z&&console.error("use-shader-fx:baseVertexShader is not found");return}const c=Me(f,r,"uv",Me(m,r,"position",a,3),2).replace("// #usf <getWobble>",`${xe}`);i.vertexShader=c},[o,r,i,m,f,n]);const l=R(e,r,i,t.Points),v=R(e,s.useMemo(()=>r.clone(),[r]),s.useMemo(()=>i.clone(),[i]),t.Mesh);return v.visible=!1,{object:l,interactiveMesh:v,positions:m,uvs:f}};var ct=`uniform vec2 uResolution;
+uniform float uMorphProgress;
+uniform float uPointSize;
+
+uniform sampler2D uPicture;
+uniform bool uIsPicture;
+uniform sampler2D uAlphaPicture;
+uniform bool uIsAlphaPicture;
+
+uniform vec3 uColor0;
+uniform vec3 uColor1;
+uniform vec3 uColor2;
+uniform vec3 uColor3;
+
+uniform float uTime;
+
+uniform float uWobblePositionFrequency;
+uniform float uWobbleTimeFrequency;
+uniform float uWobbleStrength;
+uniform float uWarpPositionFrequency;
+uniform float uWarpTimeFrequency;
+uniform float uWarpStrength;
+
+uniform sampler2D uDisplacement;
+uniform bool uIsDisplacement;
+uniform float uDisplacementIntensity;
+
+varying vec3 vColor;
+varying float vPictureAlpha;
+varying vec3 vDisplacementColor;
+varying float vDisplacementIntensity;
+
+void main() {
+	vec3 newPosition = position;
+	vec2 newUv = uv;
+	
+	
+
+	
+	vec3 displacement = uIsDisplacement ? texture2D(uDisplacement, newUv).rgb : vec3(0.0);
+	float displacementIntensity = smoothstep(0., 1., displacement.g);
+	vDisplacementColor = displacement;
+	vDisplacementIntensity = displacementIntensity;
+
+	
+	displacement = displacement * 2.-1.;
+	displacement *= displacementIntensity * uDisplacementIntensity;
+	newPosition += displacement;
+
+	
+	vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
+	vec4 viewPosition = viewMatrix * modelPosition;
+	vec4 projectedPosition = projectionMatrix * viewPosition;
+
+	
+	float wobble = uWobbleStrength > 0. ? getWobble(projectedPosition.xyz) : 0.0;
+	gl_Position = projectedPosition += wobble;
+	
+	
+	vColor = uIsPicture ? texture2D(uPicture, newUv).rgb : mix(mix(uColor0, uColor1, newPosition.x), mix(uColor2, uColor3, newPosition.y), newPosition.z);
+
+	
+	vPictureAlpha = uIsAlphaPicture ? texture2D(uAlphaPicture, newUv).g : 1.;
+
+	
+	gl_PointSize = uPointSize * vPictureAlpha * uResolution.y;
+	gl_PointSize *= (1.0 / - viewPosition.z);
+}`,vt=`precision highp float;
+precision highp int;
+
+varying vec3 vColor;
+varying float vPictureAlpha;
+varying vec3 vDisplacementColor;
+varying float vDisplacementIntensity;
+
+uniform float uBlurAlpha;
+uniform float uBlurRadius;
+uniform sampler2D uMap;
+uniform bool uIsMap;
+uniform sampler2D uAlphaMap;
+uniform bool uIsAlphaMap;
+uniform float uDisplacementColorIntensity;
+
+void main() {    
+	vec2 uv = gl_PointCoord;
+	uv.y = 1.0 - uv.y;
+   
+	
+	float distanceToCenter = length(uv - .5);
+	float alpha = clamp(uBlurRadius / distanceToCenter - (1.-uBlurAlpha) , 0. , 1.);
+
+	
+	vec3 finalColor = uIsMap ? texture2D(uMap,uv).rgb : vColor;
+
+	
+	float mixIntensity = clamp(uDisplacementColorIntensity * vDisplacementIntensity,0.,1.);
+	finalColor = vDisplacementIntensity > 0. ? mix(finalColor,vDisplacementColor,mixIntensity) : finalColor;
+
+	
+	float alphaMap = uIsAlphaMap ? texture2D(uAlphaMap,uv).g : 1.;
+
+	gl_FragColor = vec4(finalColor,alpha * vPictureAlpha * alphaMap);
+}`;const mt=({size:e,dpr:r})=>{const i=s.useMemo(()=>new t.ShaderMaterial({vertexShader:ct,fragmentShader:vt,depthTest:!1,depthWrite:!1,transparent:!0,blending:t.AdditiveBlending,uniforms:{uResolution:{value:new t.Vector2(0,0)},uMorphProgress:{value:V.morphProgress},uBlurAlpha:{value:V.blurAlpha},uBlurRadius:{value:V.blurRadius},uPointSize:{value:V.pointSize},uPicture:{value:new t.Texture},uIsPicture:{value:!1},uAlphaPicture:{value:new t.Texture},uIsAlphaPicture:{value:!1},uColor0:{value:V.color0},uColor1:{value:V.color1},uColor2:{value:V.color2},uColor3:{value:V.color3},uMap:{value:new t.Texture},uIsMap:{value:!1},uAlphaMap:{value:new t.Texture},uIsAlphaMap:{value:!1},uTime:{value:0},uWobblePositionFrequency:{value:V.wobblePositionFrequency},uWobbleTimeFrequency:{value:V.wobbleTimeFrequency},uWobbleStrength:{value:V.wobbleStrength},uWarpPositionFrequency:{value:V.warpPositionFrequency},uWarpTimeFrequency:{value:V.warpTimeFrequency},uWarpStrength:{value:V.warpStrength},uDisplacement:{value:new t.Texture},uIsDisplacement:{value:!1},uDisplacementIntensity:{value:V.displacementIntensity},uDisplacementColorIntensity:{value:V.displacementColorIntensity}}}),[]),o=E(e,r);return s.useEffect(()=>{u(i,"uResolution",o.clone())},[o,i]),i},be=({size:e,dpr:r,scene:i=!1,geometry:o,positions:n,uvs:m})=>{const f=s.useMemo(()=>o||new t.SphereGeometry(1,32,32),[o]),l=mt({size:e,dpr:r}),{object:v,interactiveMesh:a,positions:c,uvs:h}=lt({scene:i,geometry:f,material:l,positions:n,uvs:m});return[s.useCallback((g,p)=>{g&&u(l,"uTime",(p==null?void 0:p.beat)||g.clock.getElapsedTime()),p!==void 0&&(u(l,"uMorphProgress",p.morphProgress),u(l,"uBlurAlpha",p.blurAlpha),u(l,"uBlurRadius",p.blurRadius),u(l,"uPointSize",p.pointSize),p.picture?(u(l,"uPicture",p.picture),u(l,"uIsPicture",!0)):u(l,"uIsPicture",!1),p.alphaPicture?(u(l,"uAlphaPicture",p.alphaPicture),u(l,"uIsAlphaPicture",!0)):u(l,"uIsAlphaPicture",!1),u(l,"uColor0",p.color0),u(l,"uColor1",p.color1),u(l,"uColor2",p.color2),u(l,"uColor3",p.color3),p.map?(u(l,"uMap",p.map),u(l,"uIsMap",!0)):u(l,"uIsMap",!1),p.alphaMap?(u(l,"uAlphaMap",p.alphaMap),u(l,"uIsAlphaMap",!0)):u(l,"uIsAlphaMap",!1),u(l,"uWobbleStrength",p.wobbleStrength),u(l,"uWobblePositionFrequency",p.wobblePositionFrequency),u(l,"uWobbleTimeFrequency",p.wobbleTimeFrequency),u(l,"uWarpStrength",p.warpStrength),u(l,"uWarpPositionFrequency",p.warpPositionFrequency),u(l,"uWarpTimeFrequency",p.warpTimeFrequency),p.displacement?(u(l,"uDisplacement",p.displacement),u(l,"uIsDisplacement",!0)):u(l,"uIsDisplacement",!1),u(l,"uDisplacementIntensity",p.displacementIntensity),u(l,"uDisplacementColorIntensity",p.displacementColorIntensity))},[l]),{points:v,interactiveMesh:a,positions:c,uvs:h}]},V=Object.freeze({morphProgress:0,blurAlpha:.9,blurRadius:.05,pointSize:.05,picture:!1,alphaPicture:!1,color0:new t.Color(16711680),color1:new t.Color(65280),color2:new t.Color(255),color3:new t.Color(16776960),map:!1,wobbleStrength:0,wobblePositionFrequency:.5,wobbleTimeFrequency:.5,warpStrength:.5,warpPositionFrequency:.5,warpTimeFrequency:.5,displacement:!1,displacementIntensity:1,displacementColorIntensity:0,beat:!1}),ft=({size:e,dpr:r,samples:i=0,camera:o,geometry:n,positions:m,uvs:f})=>{const l=s.useMemo(()=>new t.Scene,[]),[v,{points:a,interactiveMesh:c,positions:h,uvs:d}]=be({scene:l,size:e,dpr:r,geometry:n,positions:m,uvs:f}),[g,p]=D({scene:l,camera:o,size:e,dpr:r,samples:i,depthBuffer:!0}),y=s.useCallback((M,b)=>(v(M,b),p(M.gl)),[p,v]),w=s.useCallback(M=>{v(null,M)},[v]);return[y,w,{scene:l,points:a,interactiveMesh:c,renderTarget:g,output:g.texture,positions:h,uvs:d}]};function pt(e,r=1e-4){r=Math.max(r,Number.EPSILON);const i={},o=e.getIndex(),n=e.getAttribute("position"),m=o?o.count:n.count;let f=0;const l=Object.keys(e.attributes),v={},a={},c=[],h=["getX","getY","getZ","getW"];for(let y=0,w=l.length;y<w;y++){const M=l[y];v[M]=[];const b=e.morphAttributes[M];b&&(a[M]=new Array(b.length).fill(0).map(()=>[]))}const d=Math.log10(1/r),g=Math.pow(10,d);for(let y=0;y<m;y++){const w=o?o.getX(y):y;let M="";for(let b=0,T=l.length;b<T;b++){const C=l[b],P=e.getAttribute(C),S=P.itemSize;for(let _=0;_<S;_++)M+=`${~~(P[h[_]](w)*g)},`}if(M in i)c.push(i[M]);else{for(let b=0,T=l.length;b<T;b++){const C=l[b],P=e.getAttribute(C),S=e.morphAttributes[C],_=P.itemSize,B=v[C],L=a[C];for(let O=0;O<_;O++){const $=h[O];if(B.push(P[$](w)),S)for(let z=0,J=S.length;z<J;z++)L[z].push(S[z][$](w))}}i[M]=f,c.push(f),f++}}const p=e.clone();for(let y=0,w=l.length;y<w;y++){const M=l[y],b=e.getAttribute(M),T=new b.array.constructor(v[M]),C=new k.BufferAttribute(T,b.itemSize,b.normalized);if(p.setAttribute(M,C),M in a)for(let P=0;P<a[M].length;P++){const S=e.morphAttributes[M][P],_=new S.array.constructor(a[M][P]),B=new k.BufferAttribute(_,S.itemSize,S.normalized);p.morphAttributes[M][P]=B}}return p.setIndex(c),p}var dt=`vec3 random3(vec3 c) {
+	float j = 4096.0*sin(dot(c,vec3(17.0, 59.4, 15.0)));
+	vec3 r;
+	r.z = fract(512.0*j);
+	j *= .125;
+	r.x = fract(512.0*j);
+	j *= .125;
+	r.y = fract(512.0*j);
+	return r-0.5;
+}
+
+const float F3 =  0.3333333;
+const float G3 =  0.1666667;
+float snoise(vec3 p) {
+
+	vec3 s = floor(p + dot(p, vec3(F3)));
+	vec3 x = p - s + dot(s, vec3(G3));
+	
+	vec3 e = step(vec3(0.0), x - x.yzx);
+	vec3 i1 = e*(1.0 - e.zxy);
+	vec3 i2 = 1.0 - e.zxy*(1.0 - e);
+ 	
+	vec3 x1 = x - i1 + G3;
+	vec3 x2 = x - i2 + 2.0*G3;
+	vec3 x3 = x - 1.0 + 3.0*G3;
+	 
+	vec4 w, d;
+	 
+	w.x = dot(x, x);
+	w.y = dot(x1, x1);
+	w.z = dot(x2, x2);
+	w.w = dot(x3, x3);
+	 
+	w = max(0.6 - w, 0.0);
+	 
+	d.x = dot(random3(s), x);
+	d.y = dot(random3(s + i1), x1);
+	d.z = dot(random3(s + i2), x2);
+	d.w = dot(random3(s + 1.0), x3);
+	 
+	w *= w;
+	w *= w;
+	d *= w;
+	 
+	return dot(d, vec4(52.0));
+}
+
+float snoiseFractal(vec3 m) {
+	return   0.5333333* snoise(m)
+				+0.2666667* snoise(2.0*m)
+				+0.1333333* snoise(4.0*m)
+				+0.0666667* snoise(8.0*m);
+}`,gt=`#ifdef USE_TRANSMISSION
+
+	
+	
+
+	uniform float _transmission;
+	uniform float thickness;
+	uniform float attenuationDistance;
+	uniform vec3 attenuationColor;
+
+	#ifdef USE_TRANSMISSIONMAP
+
+		uniform sampler2D transmissionMap;
+
+	#endif
+
+	#ifdef USE_THICKNESSMAP
+
+		uniform sampler2D thicknessMap;
+
+	#endif
+
+	uniform vec2 transmissionSamplerSize;
+	uniform sampler2D transmissionSamplerMap;
+
+	uniform mat4 modelMatrix;
+	uniform mat4 projectionMatrix;
+
+	varying vec3 vWorldPosition;
+
+	
+	
+
+	float w0( float a ) {
+
+		return ( 1.0 / 6.0 ) * ( a * ( a * ( - a + 3.0 ) - 3.0 ) + 1.0 );
+
+	}
+
+	float w1( float a ) {
+
+		return ( 1.0 / 6.0 ) * ( a *  a * ( 3.0 * a - 6.0 ) + 4.0 );
+
+	}
+
+	float w2( float a ){
+
+		return ( 1.0 / 6.0 ) * ( a * ( a * ( - 3.0 * a + 3.0 ) + 3.0 ) + 1.0 );
+
+	}
+
+	float w3( float a ) {
+
+		return ( 1.0 / 6.0 ) * ( a * a * a );
+
+	}
+
+	
+	float g0( float a ) {
+
+		return w0( a ) + w1( a );
+
+	}
+
+	float g1( float a ) {
+
+		return w2( a ) + w3( a );
+
+	}
+
+	
+	float h0( float a ) {
+
+		return - 1.0 + w1( a ) / ( w0( a ) + w1( a ) );
+
+	}
+
+	float h1( float a ) {
+
+		return 1.0 + w3( a ) / ( w2( a ) + w3( a ) );
+
+	}
+
+	vec4 bicubic( sampler2D tex, vec2 uv, vec4 texelSize, float lod ) {
+
+		uv = uv * texelSize.zw + 0.5;
+
+		vec2 iuv = floor( uv );
+		vec2 fuv = fract( uv );
+
+		float g0x = g0( fuv.x );
+		float g1x = g1( fuv.x );
+		float h0x = h0( fuv.x );
+		float h1x = h1( fuv.x );
+		float h0y = h0( fuv.y );
+		float h1y = h1( fuv.y );
+
+		vec2 p0 = ( vec2( iuv.x + h0x, iuv.y + h0y ) - 0.5 ) * texelSize.xy;
+		vec2 p1 = ( vec2( iuv.x + h1x, iuv.y + h0y ) - 0.5 ) * texelSize.xy;
+		vec2 p2 = ( vec2( iuv.x + h0x, iuv.y + h1y ) - 0.5 ) * texelSize.xy;
+		vec2 p3 = ( vec2( iuv.x + h1x, iuv.y + h1y ) - 0.5 ) * texelSize.xy;
+
+		return g0( fuv.y ) * ( g0x * textureLod( tex, p0, lod ) + g1x * textureLod( tex, p1, lod ) ) +
+			g1( fuv.y ) * ( g0x * textureLod( tex, p2, lod ) + g1x * textureLod( tex, p3, lod ) );
+
+	}
+
+	vec4 textureBicubic( sampler2D sampler, vec2 uv, float lod ) {
+
+		vec2 fLodSize = vec2( textureSize( sampler, int( lod ) ) );
+		vec2 cLodSize = vec2( textureSize( sampler, int( lod + 1.0 ) ) );
+		vec2 fLodSizeInv = 1.0 / fLodSize;
+		vec2 cLodSizeInv = 1.0 / cLodSize;
+		vec4 fSample = bicubic( sampler, uv, vec4( fLodSizeInv, fLodSize ), floor( lod ) );
+		vec4 cSample = bicubic( sampler, uv, vec4( cLodSizeInv, cLodSize ), ceil( lod ) );
+		return mix( fSample, cSample, fract( lod ) );
+
+	}
+
+	vec3 getVolumeTransmissionRay( const in vec3 n, const in vec3 v, const in float thickness, const in float ior, const in mat4 modelMatrix ) {
+
+		
+		vec3 refractionVector = refract( - v, normalize( n ), 1.0 / ior );
+
+		
+		vec3 modelScale;
+		modelScale.x = length( vec3( modelMatrix[ 0 ].xyz ) );
+		modelScale.y = length( vec3( modelMatrix[ 1 ].xyz ) );
+		modelScale.z = length( vec3( modelMatrix[ 2 ].xyz ) );
+
+		
+		return normalize( refractionVector ) * thickness * modelScale;
+
+	}
+
+	float applyIorToRoughness( const in float roughness, const in float ior ) {
+
+		
+		
+		return roughness * clamp( ior * 2.0 - 2.0, 0.0, 1.0 );
+
+	}
+
+	vec4 getTransmissionSample( const in vec2 fragCoord, const in float roughness, const in float ior ) {
+
+		float lod = log2( transmissionSamplerSize.x ) * applyIorToRoughness( roughness, ior );
+		return textureBicubic( transmissionSamplerMap, fragCoord.xy, lod );
+
+	}
+
+	vec3 volumeAttenuation( const in float transmissionDistance, const in vec3 attenuationColor, const in float attenuationDistance ) {
+
+		if ( isinf( attenuationDistance ) ) {
+
+			
+			return vec3( 1.0 );
+
+		} else {
+
+			
+			vec3 attenuationCoefficient = -log( attenuationColor ) / attenuationDistance;
+			vec3 transmittance = exp( - attenuationCoefficient * transmissionDistance ); 
+			return transmittance;
+
+		}
+
+	}
+
+	vec4 getIBLVolumeRefraction( const in vec3 n, const in vec3 v, const in float roughness, const in vec3 diffuseColor,
+		const in vec3 specularColor, const in float specularF90, const in vec3 position, const in mat4 modelMatrix,
+		const in mat4 viewMatrix, const in mat4 projMatrix, const in float ior, const in float thickness,
+		const in vec3 attenuationColor, const in float attenuationDistance ) {
+
+		vec3 transmissionRay = getVolumeTransmissionRay( n, v, thickness, ior, modelMatrix );
+		vec3 refractedRayExit = position + transmissionRay;
+
+		
+		vec4 ndcPos = projMatrix * viewMatrix * vec4( refractedRayExit, 1.0 );
+		vec2 refractionCoords = ndcPos.xy / ndcPos.w;
+		refractionCoords += 1.0;
+		refractionCoords /= 2.0;
+
+		
+		vec4 transmittedLight = getTransmissionSample( refractionCoords, roughness, ior );
+
+		vec3 transmittance = diffuseColor * volumeAttenuation( length( transmissionRay ), attenuationColor, attenuationDistance );
+		vec3 attenuatedColor = transmittance * transmittedLight.rgb;
+
+		
+		vec3 F = EnvironmentBRDF( n, v, specularColor, specularF90, roughness );
+
+		
+		
+		float transmittanceFactor = ( transmittance.r + transmittance.g + transmittance.b ) / 3.0;
+
+		return vec4( ( 1.0 - F ) * attenuatedColor, 1.0 - ( 1.0 - transmittedLight.a ) * transmittanceFactor );
+
+	}
+#endif`,ht=`#ifdef USE_TRANSMISSION
+
+material.transmission = _transmission;
+material.transmissionAlpha = 1.0;
+material.thickness = thickness;
+material.attenuationDistance = attenuationDistance;
+material.attenuationColor = attenuationColor;
+
+#ifdef USE_TRANSMISSIONMAP
+
+	material.transmission *= texture2D( transmissionMap, vTransmissionMapUv ).r;
+
+#endif
+
+#ifdef USE_THICKNESSMAP
+
+	material.thickness *= texture2D( thicknessMap, vThicknessMapUv ).g;
+
+#endif
+
+vec3 pos = vWorldPosition;
+
+vec3 v = normalize( cameraPosition - pos );
+vec3 n = inverseTransformDirection( normal, viewMatrix );
+
+vec4 transmitted = getIBLVolumeRefraction(
+	n, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
+	pos, modelMatrix, viewMatrix, projectionMatrix, material.ior, material.thickness,
+	material.attenuationColor, material.attenuationDistance );
+
+material.transmissionAlpha = mix( material.transmissionAlpha, transmitted.a, material.transmission );
+
+float runningSeed = 0.0;
+vec3 transmission = vec3(0.0);
+float transmissionR, transmissionB, transmissionG;
+float randomCoords = rand(runningSeed++);
+float thickness_smear = thickness * max(pow(roughnessFactor, 0.33), uAnisotropicBlur);
+vec3 distortionNormal = vec3(0.0);
+vec3 temporalOffset = vec3(uTime, -uTime, -uTime) * uTemporalDistortion;
+
+if (uDistortion > 0.0) {
+	distortionNormal = uDistortion * vec3(snoiseFractal(vec3((pos * uDistortionScale + temporalOffset))), snoiseFractal(vec3(pos.zxy * uDistortionScale - temporalOffset)), snoiseFractal(vec3(pos.yxz * uDistortionScale + temporalOffset)));
+}
+
+for (float i = 0.0; i < uSamples; i ++) {
+	vec3 sampleNorm = normalize(n + roughnessFactor * roughnessFactor * 2.0 * normalize(vec3(rand(runningSeed++) - 0.5, rand(runningSeed++) - 0.5, rand(runningSeed++) - 0.5)) * pow(rand(runningSeed++), 0.33) + distortionNormal);
+	
+	transmissionR = getIBLVolumeRefraction(
+		sampleNorm, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior, material.thickness  + thickness_smear * (i + randomCoords) / uSamples,
+		material.attenuationColor, material.attenuationDistance
+	).r;
+	transmissionG = getIBLVolumeRefraction(
+		sampleNorm, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior  * (1.0 + uChromaticAberration * (i + randomCoords) / uSamples) , material.thickness + thickness_smear * (i + randomCoords) / uSamples,
+		material.attenuationColor, material.attenuationDistance
+	).g;
+	transmissionB = getIBLVolumeRefraction(
+		sampleNorm, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior * (1.0 + 2.0 * uChromaticAberration * (i + randomCoords) / uSamples), material.thickness + thickness_smear * (i + randomCoords) / uSamples,
+		material.attenuationColor, material.attenuationDistance
+	).b;
+	transmission.r += transmissionR;
+	transmission.g += transmissionG;
+	transmission.b += transmissionB;
+}
+
+transmission /= uSamples;
+
+totalDiffuse = mix( totalDiffuse, transmission.rgb, material.transmission );
+
+#endif`;const we=e=>{let r=e;return r=r.replace("#include <beginnormal_vertex>",`
+		vec3 objectNormal = usf_Normal;
+		#ifdef USE_TANGENT
+		vec3 objectTangent = vec3( tangent.xyz );
+		#endif`),r=r.replace("#include <begin_vertex>",`
+		vec3 transformed = usf_Position;`),r=r.replace("void main() {",`
+		uniform float uTime;
+		uniform float uWobblePositionFrequency;
+		uniform float uWobbleTimeFrequency;
+		uniform float uWobbleStrength;
+		uniform float uWarpPositionFrequency;
+		uniform float uWarpTimeFrequency;
+		uniform float uWarpStrength;
+		attribute vec4 tangent;
+		varying float vWobble;
+		varying vec2 vPosition;
+		// #usf <getWobble>
+		void main() {`),r=r.replace("// #usf <getWobble>",`${xe}`),r=r.replace("void main() {",`
+		void main() {
+		vec3 usf_Position = position;
+		vec3 usf_Normal = normal;
+		vec3 biTangent = cross(normal, tangent.xyz);
+		
+		// Neighbours positions
+		float shift = 0.01;
+		vec3 positionA = usf_Position + tangent.xyz * shift;
+		vec3 positionB = usf_Position + biTangent * shift;
+		// Wobble
+		float wobble = getWobble(usf_Position);
+		usf_Position += wobble * normal;
+		positionA    += getWobble(positionA) * normal;
+		positionB    += getWobble(positionB) * normal;
+		// Compute normal
+		vec3 toA = normalize(positionA - usf_Position);
+		vec3 toB = normalize(positionB - usf_Position);
+		usf_Normal = cross(toA, toB);
+		// Varying
+		vPosition = usf_Position.xy;
+		vWobble = wobble / uWobbleStrength;`),r},xt=({baseMaterial:e,materialParameters:r})=>{const{material:i,depthMaterial:o}=s.useMemo(()=>{const n=new(e||t.MeshPhysicalMaterial)(r||{}),m=n.type==="MeshPhysicalMaterial"||n.type==="MeshStandardMaterial",f=n.type==="MeshPhysicalMaterial";Object.assign(n.userData,{uniforms:{uTime:{value:0},uWobblePositionFrequency:{value:F.wobblePositionFrequency},uWobbleTimeFrequency:{value:F.wobbleTimeFrequency},uWobbleStrength:{value:F.wobbleStrength},uWarpPositionFrequency:{value:F.warpPositionFrequency},uWarpTimeFrequency:{value:F.warpTimeFrequency},uWarpStrength:{value:F.warpStrength},uWobbleShine:{value:F.wobbleShine},uColor0:{value:F.color0},uColor1:{value:F.color1},uColor2:{value:F.color2},uColor3:{value:F.color3},uColorMix:{value:F.colorMix},uChromaticAberration:{value:F.chromaticAberration},uAnisotropicBlur:{value:F.anisotropicBlur},uDistortion:{value:F.distortion},uDistortionScale:{value:F.distortionScale},uTemporalDistortion:{value:F.temporalDistortion},uSamples:{value:F.samples},transmission:{value:0},_transmission:{value:1},transmissionMap:{value:null}}}),n.onBeforeCompile=v=>{Object.assign(v.uniforms,n.userData.uniforms),v.vertexShader=we(v.vertexShader),v.fragmentShader=v.fragmentShader.replace("#include <color_fragment>",`
+				#include <color_fragment>
+				diffuseColor = mix(diffuseColor,usf_DiffuseColor,uColorMix);`),m&&(v.fragmentShader=v.fragmentShader.replace("#include <roughnessmap_fragment>",`
+					#include <roughnessmap_fragment>
+					roughnessFactor = usf_Roughness;`)),v.fragmentShader=v.fragmentShader.replace("void main() {",`
+				uniform vec3 uColor0;
+				uniform vec3 uColor1;
+				uniform vec3 uColor2;
+				uniform vec3 uColor3;
+				uniform float uColorMix;
+				uniform float uWobbleShine;
+				
+				// transmission
+				uniform float uChromaticAberration;         
+				uniform float uAnisotropicBlur;      
+				uniform float uTime;
+				uniform float uDistortion;
+				uniform float uDistortionScale;
+				uniform float uTemporalDistortion;
+				uniform float uSamples;
+				
+				float rand(float n){return fract(sin(n) * 43758.5453123);}
+				${dt}
+
+				varying float vWobble;
+				varying vec2 vPosition;
+				void main(){
+					vec4 usf_DiffuseColor = vec4(1.0);
+					${m?"float usf_Roughness = roughness;":""}
+					float colorWobbleMix = smoothstep(-1.,1.,vWobble);
+					vec2 colorPosMix = vec2(smoothstep(-1.,1.,vPosition.x),smoothstep(-1.,1.,vPosition.y));
+				
+					usf_DiffuseColor.rgb = mix(mix(uColor0, uColor1, colorPosMix.x), mix(uColor2, uColor3, colorPosMix.y), colorWobbleMix);
+
+					${m?"usf_Roughness = max(roughness - colorWobbleMix * uWobbleShine,0.);":""}`),f&&(v.fragmentShader=v.fragmentShader.replace("#include <transmission_pars_fragment>",`${gt}`),v.fragmentShader=v.fragmentShader.replace("#include <transmission_fragment>",`${ht}`))},n.needsUpdate=!0;const l=new t.MeshDepthMaterial({depthPacking:t.RGBADepthPacking});return l.onBeforeCompile=v=>{Object.assign(v.uniforms,n.userData.uniforms),v.vertexShader=we(v.vertexShader)},l.needsUpdate=!0,{material:n,depthMaterial:l}},[r,e]);return{material:i,depthMaterial:o}},Se=({scene:e=!1,geometry:r,baseMaterial:i,materialParameters:o})=>{const n=s.useMemo(()=>{let a=r||new t.IcosahedronGeometry(2,50);return a=pt(a),a.computeTangents(),a},[r]),{material:m,depthMaterial:f}=xt({baseMaterial:i,materialParameters:o}),l=R(e,n,m,t.Mesh);return[s.useCallback((a,c)=>{const h=m.userData;a&&u(h,"uTime",(c==null?void 0:c.beat)||a.clock.getElapsedTime()),c!==void 0&&(u(h,"uWobbleStrength",c.wobbleStrength),u(h,"uWobblePositionFrequency",c.wobblePositionFrequency),u(h,"uWobbleTimeFrequency",c.wobbleTimeFrequency),u(h,"uWarpStrength",c.warpStrength),u(h,"uWarpPositionFrequency",c.warpPositionFrequency),u(h,"uWarpTimeFrequency",c.warpTimeFrequency),u(h,"uWobbleShine",c.wobbleShine),u(h,"uSamples",c.samples),u(h,"uColor0",c.color0),u(h,"uColor1",c.color1),u(h,"uColor2",c.color2),u(h,"uColor3",c.color3),u(h,"uColorMix",c.colorMix),u(h,"uChromaticAberration",c.chromaticAberration),u(h,"uAnisotropicBlur",c.anisotropicBlur),u(h,"uDistortion",c.distortion),u(h,"uDistortionScale",c.distortionScale),u(h,"uTemporalDistortion",c.temporalDistortion))},[m]),{mesh:l,depthMaterial:f}]},F=Object.freeze({beat:!1,wobbleStrength:.3,wobblePositionFrequency:.5,wobbleTimeFrequency:.4,wobbleShine:0,warpStrength:1.7,warpPositionFrequency:.38,warpTimeFrequency:.12,samples:6,color0:new t.Color(16711680),color1:new t.Color(65280),color2:new t.Color(255),color3:new t.Color(16776960),colorMix:1,chromaticAberration:.5,anisotropicBlur:.1,distortion:.1,distortionScale:.1,temporalDistortion:.1}),yt=({size:e,dpr:r,samples:i=0,camera:o,geometry:n,baseMaterial:m,materialParameters:f})=>{const l=s.useMemo(()=>new t.Scene,[]),[v,{mesh:a,depthMaterial:c}]=Se({baseMaterial:m,materialParameters:f,scene:l,geometry:n}),[h,d]=D({scene:l,camera:o,size:e,dpr:r,samples:i,depthBuffer:!0}),g=s.useCallback((y,w)=>(v(y,w),d(y.gl)),[d,v]),p=s.useCallback(y=>{v(null,y)},[v]);return[g,p,{scene:l,mesh:a,depthMaterial:c,renderTarget:h,output:h.texture}]},Mt=(e,r,i)=>{const o=s.useMemo(()=>new t.Mesh(r,i),[r,i]);return s.useEffect(()=>{e.add(o)},[e,o]),s.useEffect(()=>()=>{e.remove(o),r.dispose(),i.dispose()},[e,r,i,o]),o},K=Object.freeze({easeInSine(e){return 1-Math.cos(e*Math.PI/2)},easeOutSine(e){return Math.sin(e*Math.PI/2)},easeInOutSine(e){return-(Math.cos(Math.PI*e)-1)/2},easeInQuad(e){return e*e},easeOutQuad(e){return 1-(1-e)*(1-e)},easeInOutQuad(e){return e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2},easeInCubic(e){return e*e*e},easeOutCubic(e){return 1-Math.pow(1-e,3)},easeInOutCubic(e){return e<.5?4*e*e*e:1-Math.pow(-2*e+2,3)/2},easeInQuart(e){return e*e*e*e},easeOutQuart(e){return 1-Math.pow(1-e,4)},easeInOutQuart(e){return e<.5?8*e*e*e*e:1-Math.pow(-2*e+2,4)/2},easeInQuint(e){return e*e*e*e*e},easeOutQuint(e){return 1-Math.pow(1-e,5)},easeInOutQuint(e){return e<.5?16*e*e*e*e*e:1-Math.pow(-2*e+2,5)/2},easeInExpo(e){return e===0?0:Math.pow(2,10*e-10)},easeOutExpo(e){return e===1?1:1-Math.pow(2,-10*e)},easeInOutExpo(e){return e===0?0:e===1?1:e<.5?Math.pow(2,20*e-10)/2:(2-Math.pow(2,-20*e+10))/2},easeInCirc(e){return 1-Math.sqrt(1-Math.pow(e,2))},easeOutCirc(e){return Math.sqrt(1-Math.pow(e-1,2))},easeInOutCirc(e){return e<.5?(1-Math.sqrt(1-Math.pow(2*e,2)))/2:(Math.sqrt(1-Math.pow(-2*e+2,2))+1)/2},easeInBack(e){return 2.70158*e*e*e-1.70158*e*e},easeOutBack(e){return 1+2.70158*Math.pow(e-1,3)+1.70158*Math.pow(e-1,2)},easeInOutBack(e){const i=2.5949095;return e<.5?Math.pow(2*e,2)*((i+1)*2*e-i)/2:(Math.pow(2*e-2,2)*((i+1)*(e*2-2)+i)+2)/2},easeInElastic(e){const r=2*Math.PI/3;return e===0?0:e===1?1:-Math.pow(2,10*e-10)*Math.sin((e*10-10.75)*r)},easeOutElastic(e){const r=2*Math.PI/3;return e===0?0:e===1?1:Math.pow(2,-10*e)*Math.sin((e*10-.75)*r)+1},easeInOutElastic(e){const r=2*Math.PI/4.5;return e===0?0:e===1?1:e<.5?-(Math.pow(2,20*e-10)*Math.sin((20*e-11.125)*r))/2:Math.pow(2,-20*e+10)*Math.sin((20*e-11.125)*r)/2+1},easeInBounce(e){return 1-K.easeOutBounce(1-e)},easeOutBounce(e){return e<1/2.75?7.5625*e*e:e<2/2.75?7.5625*(e-=1.5/2.75)*e+.75:e<2.5/2.75?7.5625*(e-=2.25/2.75)*e+.9375:7.5625*(e-=2.625/2.75)*e+.984375},easeInOutBounce(e){return e<.5?(1-K.easeOutBounce(1-2*e))/2:(1+K.easeOutBounce(2*e-1))/2}});function bt(e){let r=Math.sin(e*12.9898)*43758.5453;return r-Math.floor(r)}const wt=(e,r="easeOutQuart")=>{const i=e/60,o=K[r];return s.useCallback(m=>{let f=m.getElapsedTime()*i;const l=Math.floor(f),v=o(f-l);f=v+l;const a=bt(l);return{beat:f,floor:l,fract:v,hash:a}},[i,o])},St=(e=60)=>{const r=s.useMemo(()=>1/Math.max(Math.min(e,60),1),[e]),i=s.useRef(null);return s.useCallback(n=>{const m=n.getElapsedTime();return i.current===null||m-i.current>=r?(i.current=m,!0):!1},[r])},_t=e=>{var o,n;const r=(o=e.dom)==null?void 0:o.length,i=(n=e.texture)==null?void 0:n.length;return!r||!i||r!==i};var Ct=`varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-}`,rn=`precision highp float;
+}`,Tt=`precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -923,5 +1535,5 @@ void main() {
 	alpha *= textureAlpha;
 
 	gl_FragColor = vec4(textureColor, alpha);
-}`;const on=({params:e,size:u,scene:o})=>{o.children.length>0&&(o.children.forEach(a=>{a instanceof n.Mesh&&(a.geometry.dispose(),a.material.dispose())}),o.remove(...o.children)),e.texture.forEach((a,t)=>{const l=new n.Mesh(new n.PlaneGeometry(1,1),new n.ShaderMaterial({vertexShader:nn,fragmentShader:rn,transparent:!0,uniforms:{u_texture:{value:a},u_textureResolution:{value:new n.Vector2(0,0)},u_resolution:{value:new n.Vector2(0,0)},u_borderRadius:{value:e.boderRadius[t]?e.boderRadius[t]:0}}}));o.add(l)})},un=()=>{const e=s.useRef([]),u=s.useRef([]);return s.useCallback(({isIntersectingRef:a,isIntersectingOnceRef:t,params:l})=>{e.current.length>0&&e.current.forEach((f,r)=>{f.unobserve(u.current[r])}),u.current=[],e.current=[];const v=new Array(l.dom.length).fill(!1);a.current=[...v],t.current=[...v],l.dom.forEach((f,r)=>{const c=d=>{d.forEach(m=>{l.onIntersect[r]&&l.onIntersect[r](m),a.current[r]=m.isIntersecting})},p=new IntersectionObserver(c,{rootMargin:"0px",threshold:0});p.observe(f),e.current.push(p),u.current.push(f)})},[])},an=()=>{const e=s.useRef([]),u=s.useCallback(({params:o,size:a,resolutionRef:t,scene:l,isIntersectingRef:v})=>{l.children.length!==e.current.length&&(e.current=new Array(l.children.length)),l.children.forEach((f,r)=>{var d,m,g,h,M,w;const c=o.dom[r];if(!c)return;const p=c.getBoundingClientRect();if(e.current[r]=p,f.scale.set(p.width,p.height,1),f.position.set(p.left+p.width*.5-a.width*.5,-p.top-p.height*.5+a.height*.5,0),v.current[r]&&(o.rotation[r]&&f.rotation.copy(o.rotation[r]),f instanceof n.Mesh)){const _=f.material;i(_,"u_texture",o.texture[r]),i(_,"u_textureResolution",[((g=(m=(d=o.texture[r])==null?void 0:d.source)==null?void 0:m.data)==null?void 0:g.width)||0,((w=(M=(h=o.texture[r])==null?void 0:h.source)==null?void 0:M.data)==null?void 0:w.height)||0]),i(_,"u_resolution",t.current.set(p.width,p.height)),i(_,"u_borderRadius",o.boderRadius[r]?o.boderRadius[r]:0)}})},[]);return[e.current,u]},sn=()=>{const e=s.useRef([]),u=s.useRef([]),o=s.useCallback((a,t=!1)=>{e.current.forEach((v,f)=>{v&&(u.current[f]=!0)});const l=t?[...u.current]:[...e.current];return a<0?l:l[a]},[]);return{isIntersectingRef:e,isIntersectingOnceRef:u,isIntersecting:o}},ln=e=>({onView:o,onHidden:a})=>{const t=s.useRef(!1);s.useEffect(()=>{let l;const v=()=>{e.current.some(f=>f)?t.current||(o&&o(),t.current=!0):t.current&&(a&&a(),t.current=!1),l=requestAnimationFrame(v)};return l=requestAnimationFrame(v),()=>{cancelAnimationFrame(l)}},[o,a])},fe={texture:[],dom:[],boderRadius:[],rotation:[],onIntersect:[]},cn=({size:e,dpr:u,samples:o=0},a=[])=>{const t=s.useMemo(()=>new n.Scene,[]),l=C(e),[v,f]=R({scene:t,camera:l,size:e,dpr:u,samples:o,isSizeUpdate:!0}),[r,c]=b({...fe,updateKey:performance.now()}),[p,d]=an(),m=s.useRef(new n.Vector2(0,0)),[g,h]=s.useState(!0);s.useEffect(()=>{h(!0)},a);const M=s.useRef(null),w=s.useMemo(()=>new n.Texture,[]),_=un(),{isIntersectingOnceRef:S,isIntersectingRef:T,isIntersecting:U}=sn(),V=ln(T);return[s.useCallback((A,B)=>{const{gl:E,size:L}=A;if(B&&c(B),tn(r))return w;if(g){if(M.current===r.updateKey)return w;M.current=r.updateKey}return g&&(on({params:r,size:L,scene:t}),_({isIntersectingRef:T,isIntersectingOnceRef:S,params:r}),h(!1)),d({params:r,size:L,resolutionRef:m,scene:t,isIntersectingRef:T}),f(E)},[f,c,_,d,g,t,r,S,T,w]),c,{scene:t,camera:l,renderTarget:v,output:v.texture,isIntersecting:U,DOMRects:p,intersections:T.current,useDomView:V}]};x.ALPHABLENDING_PARAMS=ie,x.BLENDING_PARAMS=re,x.BRIGHTNESSPICKER_PARAMS=ue,x.BRUSH_PARAMS=X,x.CHROMAKEY_PARAMS=me,x.COLORSTRATA_PARAMS=J,x.COSPALETTE_PARAMS=te,x.COVERTEXTURE_PARAMS=le,x.DOMSYNCER_PARAMS=fe,x.DUOTONE_PARAMS=ne,x.Easing=N,x.FBO_OPTION=G,x.FLUID_PARAMS=Y,x.FXBLENDING_PARAMS=ae,x.FXTEXTURE_PARAMS=oe,x.HSV_PARAMS=se,x.MARBLE_PARAMS=ee,x.NOISE_PARAMS=Z,x.RIPPLE_PARAMS=Q,x.SIMPLEBLUR_PARAMS=ce,x.WAVE_PARAMS=ve,x.renderFBO=q,x.setUniform=i,x.useAddMesh=D,x.useAlphaBlending=At,x.useBeat=Jt,x.useBlending=dt,x.useBrightnessPicker=wt,x.useBrush=we,x.useCamera=C,x.useChromaKey=Yt,x.useColorStrata=Ze,x.useCopyTexture=Qt,x.useCosPalette=at,x.useCoverTexture=Lt,x.useDomSyncer=cn,x.useDoubleFBO=z,x.useDuoTone=ct,x.useFPSLimiter=en,x.useFluid=Ge,x.useFxBlending=bt,x.useFxTexture=ht,x.useHSV=It,x.useMarble=nt,x.useNoise=Ke,x.useParams=b,x.usePointer=j,x.useResolution=F,x.useRipple=je,x.useSimpleBlur=Gt,x.useSingleFBO=R,x.useWave=Wt,Object.defineProperty(x,Symbol.toStringTag,{value:"Module"})});
+}`;const Pt=({params:e,size:r,scene:i})=>{i.children.length>0&&(i.children.forEach(o=>{o instanceof t.Mesh&&(o.geometry.dispose(),o.material.dispose())}),i.remove(...i.children)),e.texture.forEach((o,n)=>{const m=new t.Mesh(new t.PlaneGeometry(1,1),new t.ShaderMaterial({vertexShader:Ct,fragmentShader:Tt,transparent:!0,uniforms:{u_texture:{value:o},u_textureResolution:{value:new t.Vector2(0,0)},u_resolution:{value:new t.Vector2(0,0)},u_borderRadius:{value:e.boderRadius[n]?e.boderRadius[n]:0}}}));i.add(m)})},Dt=()=>{const e=s.useRef([]),r=s.useRef([]);return s.useCallback(({isIntersectingRef:o,isIntersectingOnceRef:n,params:m})=>{e.current.length>0&&e.current.forEach((l,v)=>{l.unobserve(r.current[v])}),r.current=[],e.current=[];const f=new Array(m.dom.length).fill(!1);o.current=[...f],n.current=[...f],m.dom.forEach((l,v)=>{const a=h=>{h.forEach(d=>{m.onIntersect[v]&&m.onIntersect[v](d),o.current[v]=d.isIntersecting})},c=new IntersectionObserver(a,{rootMargin:"0px",threshold:0});c.observe(l),e.current.push(c),r.current.push(l)})},[])},Rt=()=>{const e=s.useRef([]),r=s.useCallback(({params:i,size:o,resolutionRef:n,scene:m,isIntersectingRef:f})=>{m.children.length!==e.current.length&&(e.current=new Array(m.children.length)),m.children.forEach((l,v)=>{var h,d,g,p,y,w;const a=i.dom[v];if(!a)return;const c=a.getBoundingClientRect();if(e.current[v]=c,l.scale.set(c.width,c.height,1),l.position.set(c.left+c.width*.5-o.width*.5,-c.top-c.height*.5+o.height*.5,0),f.current[v]&&(i.rotation[v]&&l.rotation.copy(i.rotation[v]),l instanceof t.Mesh)){const M=l.material;u(M,"u_texture",i.texture[v]),u(M,"u_textureResolution",[((g=(d=(h=i.texture[v])==null?void 0:h.source)==null?void 0:d.data)==null?void 0:g.width)||0,((w=(y=(p=i.texture[v])==null?void 0:p.source)==null?void 0:y.data)==null?void 0:w.height)||0]),u(M,"u_resolution",n.current.set(c.width,c.height)),u(M,"u_borderRadius",i.boderRadius[v]?i.boderRadius[v]:0)}})},[]);return[e.current,r]},At=()=>{const e=s.useRef([]),r=s.useRef([]),i=s.useCallback((o,n=!1)=>{e.current.forEach((f,l)=>{f&&(r.current[l]=!0)});const m=n?[...r.current]:[...e.current];return o<0?m:m[o]},[]);return{isIntersectingRef:e,isIntersectingOnceRef:r,isIntersecting:i}},It=e=>({onView:i,onHidden:o})=>{const n=s.useRef(!1);s.useEffect(()=>{let m;const f=()=>{e.current.some(l=>l)?n.current||(i&&i(),n.current=!0):n.current&&(o&&o(),n.current=!1),m=requestAnimationFrame(f)};return m=requestAnimationFrame(f),()=>{cancelAnimationFrame(m)}},[i,o])},_e={texture:[],dom:[],boderRadius:[],rotation:[],onIntersect:[]},Ft=({size:e,dpr:r,samples:i=0},o=[])=>{const n=s.useMemo(()=>new t.Scene,[]),m=A(e),[f,l]=D({scene:n,camera:m,size:e,dpr:r,samples:i,isSizeUpdate:!0}),[v,a]=I({..._e,updateKey:performance.now()}),[c,h]=Rt(),d=s.useRef(new t.Vector2(0,0)),[g,p]=s.useState(!0);s.useEffect(()=>{p(!0)},o);const y=s.useRef(null),w=s.useMemo(()=>new t.Texture,[]),M=Dt(),{isIntersectingOnceRef:b,isIntersectingRef:T,isIntersecting:C}=At(),P=It(T);return[s.useCallback((_,B)=>{const{gl:L,size:O}=_;if(B&&a(B),_t(v))return w;if(g){if(y.current===v.updateKey)return w;y.current=v.updateKey}return g&&(Pt({params:v,size:O,scene:n}),M({isIntersectingRef:T,isIntersectingOnceRef:b,params:v}),p(!1)),h({params:v,size:O,resolutionRef:d,scene:n,isIntersectingRef:T}),l(L)},[l,a,M,h,g,n,v,b,T,w]),a,{scene:n,camera:m,renderTarget:f,output:f.texture,isIntersecting:C,DOMRects:c,intersections:T.current,useDomView:P}]},Vt=({scene:e,camera:r,size:i,dpr:o=!1,isSizeUpdate:n=!1,samples:m=0,depthBuffer:f=!1,depthTexture:l=!1},v)=>{const a=s.useRef([]),c=E(i,o);a.current=s.useMemo(()=>Array.from({length:v},()=>{const d=new t.WebGLRenderTarget(c.x,c.y,{...G,samples:m,depthBuffer:f});return l&&(d.depthTexture=new t.DepthTexture(c.x,c.y,t.FloatType)),d}),[v]),s.useLayoutEffect(()=>{n&&a.current.forEach(d=>d.setSize(c.x,c.y))},[c,n]),s.useEffect(()=>{const d=a.current;return()=>{d.forEach(g=>g.dispose())}},[v]);const h=s.useCallback((d,g,p)=>{const y=a.current[g];return H({gl:d,scene:e,camera:r,fbo:y,onBeforeRender:()=>p&&p({read:y.texture})}),y.texture},[e,r]);return[a.current,h]};x.ALPHABLENDING_PARAMS=pe,x.BLENDING_PARAMS=ce,x.BRIGHTNESSPICKER_PARAMS=me,x.BRUSH_PARAMS=te,x.CHROMAKEY_PARAMS=he,x.COLORSTRATA_PARAMS=ae,x.COSPALETTE_PARAMS=se,x.COVERTEXTURE_PARAMS=ge,x.DOMSYNCER_PARAMS=_e,x.DUOTONE_PARAMS=le,x.Easing=K,x.FBO_OPTION=G,x.FLUID_PARAMS=re,x.FXBLENDING_PARAMS=fe,x.FXTEXTURE_PARAMS=ve,x.HSV_PARAMS=de,x.MARBLE_PARAMS=ue,x.MORPHPARTICLES_PARAMS=V,x.NOISE_PARAMS=ie,x.RIPPLE_PARAMS=oe,x.SIMPLEBLUR_PARAMS=Q,x.WAVE_PARAMS=q,x.WOBBLE3D_PARAMS=F,x.renderFBO=H,x.setUniform=u,x.useAddMesh=Mt,x.useAlphaBlending=$n,x.useBeat=wt,x.useBlending=Tn,x.useBrightnessPicker=Un,x.useBrush=Ve,x.useCamera=A,x.useChromaKey=st,x.useColorStrata=cn,x.useCopyTexture=Vt,x.useCosPalette=xn,x.useCoverTexture=Yn,x.useCreateMorphParticles=be,x.useCreateWobble3D=Se,x.useDomSyncer=Ft,x.useDoubleFBO=j,x.useDuoTone=wn,x.useFPSLimiter=St,x.useFluid=Je,x.useFxBlending=En,x.useFxTexture=An,x.useHSV=Gn,x.useMarble=pn,x.useMorphParticles=ft,x.useNoise=an,x.useParams=I,x.usePointer=X,x.useResolution=E,x.useRipple=nn,x.useSimpleBlur=et,x.useSingleFBO=D,x.useWave=ot,x.useWobble3D=yt,Object.defineProperty(x,Symbol.toStringTag,{value:"Module"})});
 //# sourceMappingURL=use-shader-fx.umd.cjs.map

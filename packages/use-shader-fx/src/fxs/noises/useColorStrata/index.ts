@@ -35,6 +35,7 @@ export type ColorStrataParams = {
 
 export type ColorStrataObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -64,7 +65,7 @@ export const useColorStrata = ({
    samples = 0,
 }: HooksProps): HooksReturn<ColorStrataParams, ColorStrataObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh(scene);
+   const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -116,6 +117,7 @@ export const useColorStrata = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

@@ -7,9 +7,9 @@ import {
    WobbleMaterialProps,
    WobbleMaterialConstructor,
 } from "./useMaterial";
-import { Wobble3DParams, WOBBLE3D_PARAMS } from ".";
+import { Wobble3DParams } from ".";
 import { setUniform } from "../../../utils/setUniforms";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useAddObject } from "../../../utils/useAddObject";
 import { Create3DHooksProps } from "../types";
 
@@ -18,8 +18,9 @@ export type UseCreateWobble3DProps = {
    geometry?: THREE.BufferGeometry;
 };
 
+type UpdateUniform = (props: RootState | null, params?: Wobble3DParams) => void;
 type UseCreateWobble3DReturn = [
-   (props: RootState | null, params: Wobble3DParams) => void,
+   UpdateUniform,
    {
       mesh: THREE.Mesh;
       depthMaterial: THREE.MeshDepthMaterial;
@@ -45,67 +46,55 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
       materialParameters,
    });
 
-   const object = useAddObject(
-      scene,
-      wobbleGeometry,
-      material,
-      THREE.Mesh
-   ) as THREE.Mesh;
+   const object = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
 
-   const updateUniform = useCallback(
-      (props: RootState | null, params: Wobble3DParams) => {
-         const newParams = { ...WOBBLE3D_PARAMS, ...params };
+   const updateUniform = useCallback<UpdateUniform>(
+      (props, params) => {
          const userData = material.userData as Wobble3DMaterial;
-
          if (props) {
             setUniform(
                userData,
                "uTime",
-               newParams.beat || props.clock.getElapsedTime()
+               params?.beat || props.clock.getElapsedTime()
             );
          }
-         setUniform(userData, "uWobbleStrength", newParams.wobbleStrength!);
+         if (params === undefined) {
+            return;
+         }
+         setUniform(userData, "uWobbleStrength", params.wobbleStrength);
          setUniform(
             userData,
             "uWobblePositionFrequency",
-            newParams.wobblePositionFrequency!
+            params.wobblePositionFrequency
          );
          setUniform(
             userData,
             "uWobbleTimeFrequency",
-            newParams.wobbleTimeFrequency!
+            params.wobbleTimeFrequency
          );
-         setUniform(userData, "uWarpStrength", newParams.warpStrength!);
+         setUniform(userData, "uWarpStrength", params.warpStrength);
          setUniform(
             userData,
             "uWarpPositionFrequency",
-            newParams.warpPositionFrequency!
+            params.warpPositionFrequency
          );
-         setUniform(
-            userData,
-            "uWarpTimeFrequency",
-            newParams.warpTimeFrequency!
-         );
-         setUniform(userData, "uWobbleShine", newParams.wobbleShine!);
-         setUniform(userData, "uSamples", newParams.samples!);
-         setUniform(userData, "uColor0", newParams.color0!);
-         setUniform(userData, "uColor1", newParams.color1!);
-         setUniform(userData, "uColor2", newParams.color2!);
-         setUniform(userData, "uColor3", newParams.color3!);
-         setUniform(userData, "uColorMix", newParams.colorMix!);
+         setUniform(userData, "uWarpTimeFrequency", params.warpTimeFrequency);
+         setUniform(userData, "uWobbleShine", params.wobbleShine);
+         setUniform(userData, "uSamples", params.samples);
+         setUniform(userData, "uColor0", params.color0);
+         setUniform(userData, "uColor1", params.color1);
+         setUniform(userData, "uColor2", params.color2);
+         setUniform(userData, "uColor3", params.color3);
+         setUniform(userData, "uColorMix", params.colorMix);
          setUniform(
             userData,
             "uChromaticAberration",
-            newParams.chromaticAberration!
+            params.chromaticAberration
          );
-         setUniform(userData, "uAnisotropicBlur", newParams.anisotropicBlur!);
-         setUniform(userData, "uDistortion", newParams.distortion!);
-         setUniform(userData, "uDistortionScale", newParams.distortionScale!);
-         setUniform(
-            userData,
-            "uTemporalDistortion",
-            newParams.temporalDistortion!
-         );
+         setUniform(userData, "uAnisotropicBlur", params.anisotropicBlur);
+         setUniform(userData, "uDistortion", params.distortion);
+         setUniform(userData, "uDistortionScale", params.distortionScale);
+         setUniform(userData, "uTemporalDistortion", params.temporalDistortion);
       },
       [material]
    );

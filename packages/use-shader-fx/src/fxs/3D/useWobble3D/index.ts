@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { useParams } from "../../../utils/useParams";
 import { HooksReturn } from "../../types";
 import { useCreateWobble3D, UseCreateWobble3DProps } from "./useCreateWobble3D";
 import { WobbleMaterialProps, WobbleMaterialConstructor } from "./useMaterial";
@@ -93,8 +92,6 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       geometry,
    });
 
-   const [params, setParams] = useParams<Wobble3DParams>(WOBBLE3D_PARAMS);
-
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
@@ -106,12 +103,17 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
 
    const updateFx = useCallback(
       (props: RootState, updateParams?: Wobble3DParams) => {
-         const { gl } = props;
-         updateParams && setParams(updateParams);
-         updateUniform(props, params);
-         return updateRenderTarget(gl);
+         updateUniform(props, updateParams);
+         return updateRenderTarget(props.gl);
       },
-      [updateRenderTarget, updateUniform, params, setParams]
+      [updateRenderTarget, updateUniform]
+   );
+
+   const setParams = useCallback(
+      (updateParams: Wobble3DParams) => {
+         updateUniform(null, updateParams);
+      },
+      [updateUniform]
    );
 
    return [

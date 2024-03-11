@@ -15,4 +15,7 @@ export declare class BrightnessPickerMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => BrightnessPickerMaterial;
+export declare const useMesh: (scene: THREE.Scene) => {
+    material: BrightnessPickerMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

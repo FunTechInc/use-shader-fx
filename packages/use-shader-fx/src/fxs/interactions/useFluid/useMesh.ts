@@ -25,9 +25,9 @@ import {
    useGradientSubtractMaterial,
 } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial, useSplateMaterial } from "./materials/useSplatMaterial";
-import { useAddMesh } from "../../../utils/useAddMesh";
 import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
+import { useAddObject } from "../../../utils/useAddObject";
 
 type TMaterials =
    | AdvectionMaterial
@@ -48,7 +48,6 @@ export type FluidMaterials = {
    gradientSubtractMaterial: GradientSubtractMaterial;
    splatMaterial: SplatMaterial;
 };
-type TUseMeshReturnType = [FluidMaterials, (material: TMaterials) => void];
 
 /**
  * Returns the material update function in the second argument
@@ -61,7 +60,7 @@ export const useMesh = ({
    scene: THREE.Scene;
    size: Size;
    dpr: number;
-}): TUseMeshReturnType => {
+}) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const initialMaterial = useInitialMaterial();
    const updateMaterial = initialMaterial.clone();
@@ -112,7 +111,8 @@ export const useMesh = ({
       }
    }, [resolution, materials]);
 
-   const mesh = useAddMesh(scene, geometry, initialMaterial);
+   const mesh = useAddObject(scene, geometry, initialMaterial, THREE.Mesh);
+
    useEffect(() => {
       initialMaterial.dispose();
       mesh.material = updateMaterial;
@@ -134,5 +134,5 @@ export const useMesh = ({
       [mesh]
    );
 
-   return [materials, setMeshMaterial];
+   return { materials, setMeshMaterial, mesh };
 };

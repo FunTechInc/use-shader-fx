@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 import { useEffect } from "react";
-import { useFrame, useThree, extend } from "@react-three/fiber";
+import { useFrame, useThree, extend, useLoader } from "@react-three/fiber";
 import {
    useBeat,
    useCreateWobble3D,
@@ -78,6 +78,7 @@ const setConfig = () => {
 
 export const Playground = () => {
    const updateGUI = useGUI(setGUI);
+   const [funkun] = useLoader(THREE.TextureLoader, ["/funkun.jpg"]);
 
    /*===============================================
 	example of FBO
@@ -129,15 +130,15 @@ export const Playground = () => {
          <directionalLight
             color={"white"}
             position={[0.25, 2, 3]}
-            intensity={2}
+            intensity={3}
             castShadow
          />
          <OrbitControls />
          <Environment preset="warehouse" background />
          <primitive object={wobble.mesh} />
-         <mesh receiveShadow position={[0, -4, -6]}>
+         <mesh receiveShadow position={[0, -4, -8]}>
             <planeGeometry args={[15, 15, 15]} />
-            <meshStandardMaterial />
+            <meshStandardMaterial map={funkun} />
          </mesh>
          {/* <OrbitControls />
          <planeGeometry args={[2, 2]} />
@@ -145,3 +146,24 @@ export const Playground = () => {
       </mesh>
    );
 };
+
+/*===============================================
+simpler example
+===============================================*/
+// export const Playground = () => {
+//    const [updateWobble, wobble] = useCreateWobble3D({
+//       baseMaterial: THREE.MeshPhysicalMaterial,
+//       materialParameters: {
+//          roughness: 0.0,
+//          transmission: 1,
+//          thickness: 1,
+//       },
+//    });
+//    useFrame((props) => updateWobble(props));
+//    return (
+//       <mesh>
+//          <Environment preset="warehouse" background />
+//          <primitive object={wobble.mesh} />
+//       </mesh>
+//    );
+// };

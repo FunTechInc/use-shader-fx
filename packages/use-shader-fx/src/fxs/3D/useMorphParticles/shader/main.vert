@@ -67,6 +67,6 @@ void main() {
 	vPictureAlpha = uIsAlphaPicture ? texture2D(uAlphaPicture, newUv).g : 1.;
 
 	// Multiply the point size by picturAalpha. The size can also be adjusted with alphaMap.
-	gl_PointSize = uPointSize * vPictureAlpha *  uResolution.y;
+	gl_PointSize = uPointSize * vPictureAlpha * uResolution.y;
 	gl_PointSize *= (1.0 / - viewPosition.z);
 }

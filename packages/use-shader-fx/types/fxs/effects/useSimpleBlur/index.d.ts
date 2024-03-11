@@ -10,6 +10,7 @@ export type SimpleBlurParams = {
 };
 export type SimpleBlurObject = {
     scene: THREE.Scene;
+    mesh: THREE.Mesh;
     material: THREE.Material;
     camera: THREE.Camera;
     renderTarget: THREE.WebGLRenderTarget;

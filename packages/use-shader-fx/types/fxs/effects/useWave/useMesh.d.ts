@@ -18,4 +18,7 @@ export declare class WaveMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => WaveMaterial;
+export declare const useMesh: (scene: THREE.Scene) => {
+    material: WaveMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { UseFboProps } from "./useSingleFBO";
+import { UseFboProps } from "../utils/useSingleFBO";
 type UpdateCopyFunction = (gl: THREE.WebGLRenderer, index: number, 
 /**  call before FBO is rendered */
 onBeforeRender?: ({ read }: {

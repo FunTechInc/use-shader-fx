@@ -19,7 +19,6 @@ export type FluidMaterials = {
     gradientSubtractMaterial: GradientSubtractMaterial;
     splatMaterial: SplatMaterial;
 };
-type TUseMeshReturnType = [FluidMaterials, (material: TMaterials) => void];
 /**
  * Returns the material update function in the second argument
  */
@@ -27,5 +26,18 @@ export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number;
-}) => TUseMeshReturnType;
+}) => {
+    materials: {
+        vorticityMaterial: VorticityMaterial;
+        curlMaterial: CurlMaterial;
+        advectionMaterial: AdvectionMaterial;
+        divergenceMaterial: DivergenceMaterial;
+        pressureMaterial: PressureMaterial;
+        clearMaterial: ClearMaterial;
+        gradientSubtractMaterial: GradientSubtractMaterial;
+        splatMaterial: SplatMaterial;
+    };
+    setMeshMaterial: (material: TMaterials) => void;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};
 export {};

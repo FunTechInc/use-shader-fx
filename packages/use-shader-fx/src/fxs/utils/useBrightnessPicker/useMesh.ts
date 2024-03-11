@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useMemo } from "react";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../../../utils/useAddMesh";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class BrightnessPickerMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -29,6 +29,6 @@ export const useMesh = (scene: THREE.Scene) => {
          }),
       []
    ) as BrightnessPickerMaterial;
-   useAddMesh(scene, geometry, material);
-   return material;
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+   return { material, mesh };
 };

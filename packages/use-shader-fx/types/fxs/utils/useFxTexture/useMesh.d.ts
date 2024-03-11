@@ -44,4 +44,7 @@ export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number;
-}) => FxTextureMaterial;
+}) => {
+    material: FxTextureMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

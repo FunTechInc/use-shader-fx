@@ -31,6 +31,7 @@ export type ChromaKeyParams = {
 
 export type ChromaKeyObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -58,7 +59,7 @@ export const useChromaKey = ({
    samples = 0,
 }: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -95,6 +96,7 @@ export const useChromaKey = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

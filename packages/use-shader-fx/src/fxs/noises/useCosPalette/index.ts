@@ -25,6 +25,7 @@ export type CosPaletteParams = {
 
 export type ColorPaletteObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    material: THREE.Material;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget;
@@ -49,7 +50,7 @@ export const useCosPalette = ({
    samples = 0,
 }: HooksProps): HooksReturn<CosPaletteParams, ColorPaletteObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const material = useMesh(scene);
+   const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -84,6 +85,7 @@ export const useCosPalette = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          material: material,
          camera: camera,
          renderTarget: renderTarget,

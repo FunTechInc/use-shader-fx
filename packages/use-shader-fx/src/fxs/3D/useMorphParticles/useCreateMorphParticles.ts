@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Size, RootState } from "@react-three/fiber";
 import { useCreateObject } from "./utils/useCreateObject";
 import { useMaterial } from "./utils/useMaterial";
-import { MorphParticlesParams, MORPHPARTICLES_PARAMS } from ".";
+import { MorphParticlesParams } from ".";
 import { setUniform } from "../../../utils/setUniforms";
 import { useCallback, useMemo } from "react";
 import { Create3DHooksProps } from "../types";
@@ -16,8 +16,12 @@ export type UseCreateMorphParticlesProps = {
    uvs?: Float32Array[];
 };
 
+type UpdateUniform = (
+   props: RootState | null,
+   params?: MorphParticlesParams
+) => void;
 type UseCreateMorphParticlesReturn = [
-   (props: RootState | null, params: MorphParticlesParams) => void,
+   UpdateUniform,
    {
       points: THREE.Points;
       interactiveMesh: THREE.Mesh;
@@ -54,73 +58,70 @@ export const useCreateMorphParticles = ({
       uvs,
    });
 
-   const updateUniform = useCallback(
-      (props: RootState | null, params: MorphParticlesParams) => {
-         const newParams = { ...MORPHPARTICLES_PARAMS, ...params };
-
-         setUniform(material, "uMorphProgress", newParams.morphProgress!);
-         setUniform(material, "uBlurAlpha", newParams.blurAlpha!);
-         setUniform(material, "uBlurRadius", newParams.blurRadius!);
-         setUniform(material, "uPointSize", newParams.pointSize!);
-         if (newParams.picture) {
-            setUniform(material, "uPicture", newParams.picture);
-            setUniform(material, "uIsPicture", true);
-         } else {
-            setUniform(material, "uIsPicture", false);
-         }
-         if (newParams.alphaPicture) {
-            setUniform(material, "uAlphaPicture", newParams.alphaPicture);
-            setUniform(material, "uIsAlphaPicture", true);
-         } else {
-            setUniform(material, "uIsAlphaPicture", false);
-         }
-         setUniform(material, "uColor0", newParams.color0!);
-         setUniform(material, "uColor1", newParams.color1!);
-         setUniform(material, "uColor2", newParams.color2!);
-         setUniform(material, "uColor3", newParams.color3!);
-         if (newParams.map) {
-            setUniform(material, "uMap", newParams.map);
-            setUniform(material, "uIsMap", true);
-         } else {
-            setUniform(material, "uIsMap", false);
-         }
-         if (newParams.alphaMap) {
-            setUniform(material, "uAlphaMap", newParams.alphaMap);
-            setUniform(material, "uIsAlphaMap", true);
-         } else {
-            setUniform(material, "uIsAlphaMap", false);
-         }
+   const updateUniform = useCallback<UpdateUniform>(
+      (props, params) => {
          if (props) {
             setUniform(
                material,
                "uTime",
-               newParams.beat || props.clock.getElapsedTime()
+               params?.beat || props.clock.getElapsedTime()
             );
          }
-         setUniform(material, "uWobbleStrength", newParams.wobbleStrength!);
+         if (params === undefined) {
+            return;
+         }
+         setUniform(material, "uMorphProgress", params.morphProgress);
+         setUniform(material, "uBlurAlpha", params.blurAlpha);
+         setUniform(material, "uBlurRadius", params.blurRadius);
+         setUniform(material, "uPointSize", params.pointSize);
+         if (params.picture) {
+            setUniform(material, "uPicture", params.picture);
+            setUniform(material, "uIsPicture", true);
+         } else {
+            setUniform(material, "uIsPicture", false);
+         }
+         if (params.alphaPicture) {
+            setUniform(material, "uAlphaPicture", params.alphaPicture);
+            setUniform(material, "uIsAlphaPicture", true);
+         } else {
+            setUniform(material, "uIsAlphaPicture", false);
+         }
+         setUniform(material, "uColor0", params.color0);
+         setUniform(material, "uColor1", params.color1);
+         setUniform(material, "uColor2", params.color2);
+         setUniform(material, "uColor3", params.color3);
+         if (params.map) {
+            setUniform(material, "uMap", params.map);
+            setUniform(material, "uIsMap", true);
+         } else {
+            setUniform(material, "uIsMap", false);
+         }
+         if (params.alphaMap) {
+            setUniform(material, "uAlphaMap", params.alphaMap);
+            setUniform(material, "uIsAlphaMap", true);
+         } else {
+            setUniform(material, "uIsAlphaMap", false);
+         }
+         setUniform(material, "uWobbleStrength", params.wobbleStrength);
          setUniform(
             material,
             "uWobblePositionFrequency",
-            newParams.wobblePositionFrequency!
+            params.wobblePositionFrequency
          );
          setUniform(
             material,
             "uWobbleTimeFrequency",
-            newParams.wobbleTimeFrequency!
+            params.wobbleTimeFrequency
          );
-         setUniform(material, "uWarpStrength", newParams.warpStrength!);
+         setUniform(material, "uWarpStrength", params.warpStrength);
          setUniform(
             material,
             "uWarpPositionFrequency",
-            newParams.warpPositionFrequency!
+            params.warpPositionFrequency
          );
-         setUniform(
-            material,
-            "uWarpTimeFrequency",
-            newParams.warpTimeFrequency!
-         );
-         if (newParams.displacement) {
-            setUniform(material, "uDisplacement", newParams.displacement);
+         setUniform(material, "uWarpTimeFrequency", params.warpTimeFrequency);
+         if (params.displacement) {
+            setUniform(material, "uDisplacement", params.displacement);
             setUniform(material, "uIsDisplacement", true);
          } else {
             setUniform(material, "uIsDisplacement", false);
@@ -128,12 +129,12 @@ export const useCreateMorphParticles = ({
          setUniform(
             material,
             "uDisplacementIntensity",
-            newParams.displacementIntensity!
+            params.displacementIntensity
          );
          setUniform(
             material,
             "uDisplacementColorIntensity",
-            newParams.displacementColorIntensity!
+            params.displacementColorIntensity
          );
       },
       [material]
@@ -142,8 +143,8 @@ export const useCreateMorphParticles = ({
    return [
       updateUniform,
       {
-         points: points as THREE.Points,
-         interactiveMesh: interactiveMesh as THREE.Mesh,
+         points,
+         interactiveMesh,
          positions: generatedPositions,
          uvs: generatedUvs,
       },

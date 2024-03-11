@@ -4,6 +4,7 @@ import getWobble from "../../../libs/shaders/getWobble.glsl";
 import snoise from "../../../libs/shaders/snoise.glsl";
 import transmission_pars_fragment from "./shaders/transmission_pars_fragment.glsl";
 import transmission_fragment from "./shaders/transmission_fragment.glsl";
+import { WOBBLE3D_PARAMS } from ".";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -125,25 +126,32 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       Object.assign(mat.userData, {
          uniforms: {
             uTime: { value: 0 },
-            uWobblePositionFrequency: { value: 0 },
-            uWobbleTimeFrequency: { value: 0 },
-            uWobbleStrength: { value: 0 },
-            uWarpPositionFrequency: { value: 0 },
-            uWarpTimeFrequency: { value: 0 },
-            uWarpStrength: { value: 0 },
-            uWobbleShine: { value: 0 },
-            uColor0: { value: new THREE.Color() },
-            uColor1: { value: new THREE.Color() },
-            uColor2: { value: new THREE.Color() },
-            uColor3: { value: new THREE.Color() },
-            uColorMix: { value: 0 },
-            // transmission
-            uChromaticAberration: { value: 0 },
-            uAnisotropicBlur: { value: 0 },
-            uDistortion: { value: 0 },
-            uDistortionScale: { value: 0 },
-            uTemporalDistortion: { value: 0 },
-            uSamples: { value: 6 },
+            uWobblePositionFrequency: {
+               value: WOBBLE3D_PARAMS.wobblePositionFrequency,
+            },
+            uWobbleTimeFrequency: {
+               value: WOBBLE3D_PARAMS.wobbleTimeFrequency,
+            },
+            uWobbleStrength: { value: WOBBLE3D_PARAMS.wobbleStrength },
+            uWarpPositionFrequency: {
+               value: WOBBLE3D_PARAMS.warpPositionFrequency,
+            },
+            uWarpTimeFrequency: { value: WOBBLE3D_PARAMS.warpTimeFrequency },
+            uWarpStrength: { value: WOBBLE3D_PARAMS.warpStrength },
+            uWobbleShine: { value: WOBBLE3D_PARAMS.wobbleShine },
+            uColor0: { value: WOBBLE3D_PARAMS.color0 },
+            uColor1: { value: WOBBLE3D_PARAMS.color1 },
+            uColor2: { value: WOBBLE3D_PARAMS.color2 },
+            uColor3: { value: WOBBLE3D_PARAMS.color3 },
+            uColorMix: { value: WOBBLE3D_PARAMS.colorMix },
+            uChromaticAberration: {
+               value: WOBBLE3D_PARAMS.chromaticAberration,
+            },
+            uAnisotropicBlur: { value: WOBBLE3D_PARAMS.anisotropicBlur },
+            uDistortion: { value: WOBBLE3D_PARAMS.distortion },
+            uDistortionScale: { value: WOBBLE3D_PARAMS.distortionScale },
+            uTemporalDistortion: { value: WOBBLE3D_PARAMS.temporalDistortion },
+            uSamples: { value: WOBBLE3D_PARAMS.samples },
             transmission: { value: 0 },
             _transmission: { value: 1 },
             transmissionMap: { value: null },

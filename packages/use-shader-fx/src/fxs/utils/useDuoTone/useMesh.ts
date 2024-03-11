@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../../../utils/useAddMesh";
+import { useAddObject } from "../../../utils/useAddObject";
 
 export class DuoToneMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -27,6 +27,6 @@ export const useMesh = (scene: THREE.Scene) => {
          }),
       []
    ) as DuoToneMaterial;
-   useAddMesh(scene, geometry, material);
-   return material;
+   const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
+   return { material, mesh };
 };

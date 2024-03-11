@@ -39,6 +39,11 @@ npm install @funtech-inc/use-shader-fx
 <td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usealphablending--docs">useAlphaBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-useblending--docs">useBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usebrightnesspicker--docs">useBrightnessPicker</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usecovertexture--docs">useCoverTexture</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-useduotone--docs">useDuoTone</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usefxblending--docs">useFxBlending</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usefxtexture--docs">useFxTexture</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/utils-usehsv--docs">useHSV</a></td>
 </tr>
 
+<tr>
+<th><strong><a href="#3D">3D</a></strong></th>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/3d-usemorphparticles--docs">useMorphParticles</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/3d-usewobble3d--docs">useWobble3D</a></td>
+</tr>
+
 </table>
 ※ The hook with `~~Texutre` calculates the texture resolution and canvas resolution and covers the texture.
 
@@ -450,3 +455,28 @@ Generate an FBO array to copy the texture.
 const [renderTargets, copyTexture] = useCopyTexture(UseFboProps, length);
 copyTexture(gl, index); // return texture
 ```
+
+# 3D
+
+The `3D` series has a set of exported hooks, each with `Create`, like `useCreateWobble3D`, which can be used as a texture, but also to add `object3D` as a `primitive` to an r3f scene. It is also possible to add `object3D` as a `primitive` to an r3f scene.
+
+```tsx
+const [updateWobble, wobble] = useCreateWobble3D({
+   baseMaterial: THREE.MeshPhysicalMaterial,
+   materialParameters: {
+      roughness: 0.0,
+      transmission: 1,
+      thickness: 1,
+   },
+});
+useFrame((props) => updateWobble(props));
+return (
+   <mesh>
+      <Environment preset="warehouse" background />
+      <primitive object={wobble.mesh} />
+   </mesh>
+);
+```
+
+👉 [wobble3D demo](https://use-shader-fx.vercel.app/useWobble3D) 👈
+👉 [morphParticles demo](https://use-shader-fx.vercel.app/useMorphParticles) 👈

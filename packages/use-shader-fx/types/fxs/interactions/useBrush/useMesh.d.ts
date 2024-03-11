@@ -65,4 +65,7 @@ export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number;
-}) => BrushMaterial;
+}) => {
+    material: BrushMaterial;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+};

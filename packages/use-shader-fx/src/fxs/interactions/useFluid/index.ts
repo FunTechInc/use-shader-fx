@@ -37,6 +37,7 @@ export type FluidParams = {
 
 export type FluidObject = {
    scene: THREE.Scene;
+   mesh: THREE.Mesh;
    materials: FluidMaterials;
    camera: THREE.Camera;
    renderTarget: {
@@ -70,7 +71,7 @@ export const useFluid = ({
    samples = 0,
 }: HooksProps): HooksReturn<FluidParams, FluidObject> => {
    const scene = useMemo(() => new THREE.Scene(), []);
-   const [materials, setMeshMaterial] = useMesh({ scene, size, dpr });
+   const { materials, setMeshMaterial, mesh } = useMesh({ scene, size, dpr });
    const camera = useCamera(size);
    const updatePointer = usePointer();
 
@@ -251,6 +252,7 @@ export const useFluid = ({
       setParams,
       {
          scene: scene,
+         mesh: mesh,
          materials: materials,
          camera: camera,
          renderTarget: {

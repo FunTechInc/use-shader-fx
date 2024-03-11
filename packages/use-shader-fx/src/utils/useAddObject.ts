@@ -1,24 +1,22 @@
 import * as THREE from "three";
 import { useEffect, useMemo } from "react";
 
-type ObjectTypes = typeof THREE.Mesh | typeof THREE.Points;
-type Object3D = THREE.Mesh | THREE.Points;
+type Object3DConstructor<T> = new (
+   geometry: THREE.BufferGeometry,
+   material: THREE.Material
+) => T;
 
 /**
  * Object3Dにgeometryとmaterialを追加してsceneに追加する
  */
-export const useAddObject = (
+export const useAddObject = <T extends THREE.Object3D>(
    scene: THREE.Scene | false,
    geometry: THREE.BufferGeometry,
    material: THREE.Material,
-   Proto: ObjectTypes
+   Proto: Object3DConstructor<T>
 ) => {
    const object3D = useMemo(() => {
-      const Constructor = Proto as unknown as new (
-         geometry: THREE.BufferGeometry,
-         material: THREE.Material
-      ) => Object3D;
-      return new Constructor(geometry, material);
+      return new Proto(geometry, material);
    }, [geometry, material, Proto]);
 
    useEffect(() => {
