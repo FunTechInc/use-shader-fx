@@ -88,7 +88,14 @@ export declare class MorphParticlesMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMaterial: ({ size, dpr }: {
+export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, }: {
     size: Size;
     dpr: number;
-}) => MorphParticlesMaterial;
+    geometry: THREE.BufferGeometry;
+    positions?: Float32Array[] | undefined;
+    uvs?: Float32Array[] | undefined;
+}) => {
+    material: MorphParticlesMaterial;
+    modifiedPositions: Float32Array[];
+    modifiedUvs: Float32Array[];
+};
