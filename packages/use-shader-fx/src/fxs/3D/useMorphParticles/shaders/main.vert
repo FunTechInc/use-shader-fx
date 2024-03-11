@@ -30,15 +30,17 @@ varying float vPictureAlpha;
 varying vec3 vDisplacementColor;
 varying float vDisplacementIntensity;
 
-// #usf <morphPositions>
-// #usf <morphUvs>
-// #usf <getWobble>
+#usf <morphPositions>
+
+#usf <morphUvs>
+
+#usf <getWobble>
 
 void main() {
 	vec3 newPosition = position;
 	vec2 newUv = uv;
-	// #usf <morphPositionTransition>
-	// #usf <morphUvTransition>
+	#usf <morphPositionTransition>
+	#usf <morphUvTransition>
 
 	// displacement for `newPosition`
 	vec3 displacement = uIsDisplacement ? texture2D(uDisplacement, newUv).rgb : vec3(0.0);

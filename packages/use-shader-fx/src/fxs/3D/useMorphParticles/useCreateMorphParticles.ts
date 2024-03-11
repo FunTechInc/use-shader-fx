@@ -39,23 +39,25 @@ export const useCreateMorphParticles = ({
    uvs,
 }: Create3DHooksProps &
    UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
-   const morphGeometry = useMemo(
-      () => geometry || new THREE.SphereGeometry(1, 32, 32),
-      [geometry]
-   );
+   const morphGeometry = useMemo(() => {
+      const geo = geometry || new THREE.SphereGeometry(1, 32, 32);
+      geo.setIndex(null);
+      // Since it is a particle, normal is not necessary
+      geo.deleteAttribute("normal");
+      return geo;
+   }, [geometry]);
 
-   const material = useMaterial({ size, dpr });
-   const {
-      object: points,
-      interactiveMesh,
-      positions: generatedPositions,
-      uvs: generatedUvs,
-   } = useCreateObject({
+   const { material, modifiedPositions, modifiedUvs } = useMaterial({
+      size,
+      dpr,
+      geometry: morphGeometry,
+      positions,
+      uvs,
+   });
+   const { points, interactiveMesh } = useCreateObject({
       scene,
       geometry: morphGeometry,
       material,
-      positions,
-      uvs,
    });
 
    const updateUniform = useCallback<UpdateUniform>(
@@ -145,8 +147,8 @@ export const useCreateMorphParticles = ({
       {
          points,
          interactiveMesh,
-         positions: generatedPositions,
-         uvs: generatedUvs,
+         positions: modifiedPositions,
+         uvs: modifiedUvs,
       },
    ];
 };
