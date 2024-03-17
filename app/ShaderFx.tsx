@@ -8,16 +8,18 @@ import { PerformanceMonitor } from "@react-three/drei";
 export const ShaderFx = ({
    children,
    preserveDrawingBuffer = false,
+   shadows = false,
 }: {
    children: React.ReactNode;
    preserveDrawingBuffer?: boolean;
+   shadows?: boolean;
 }) => {
    const [dpr, setDpr] = useState(1.5);
    return (
       <Canvas
          dpr={dpr}
          gl={{ preserveDrawingBuffer: preserveDrawingBuffer }}
-         shadows>
+         shadows={shadows}>
          <PerformanceMonitor
             factor={1}
             onChange={({ factor }) => {
@@ -28,7 +30,7 @@ export const ShaderFx = ({
                setDpr(Math.round((1.0 + 1.0 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>{children}</Suspense>
-            {/* <Perf position={"bottom-left"} minimal={false} /> */}
+            <Perf position={"bottom-left"} minimal={false} />
          </PerformanceMonitor>
       </Canvas>
    );

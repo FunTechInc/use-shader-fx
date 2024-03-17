@@ -9,6 +9,8 @@ export type UseCreateMorphParticlesProps = {
     geometry?: THREE.BufferGeometry;
     positions?: Float32Array[];
     uvs?: Float32Array[];
+    /** Array of textures to map to points. Mapped at random. */
+    mapArray?: THREE.Texture[];
 };
 type UpdateUniform = (props: RootState | null, params?: MorphParticlesParams) => void;
 type UseCreateMorphParticlesReturn = [
@@ -20,5 +22,5 @@ type UseCreateMorphParticlesReturn = [
         uvs: Float32Array[];
     }
 ];
-export declare const useCreateMorphParticles: ({ size, dpr, scene, geometry, positions, uvs, }: Create3DHooksProps & UseCreateMorphParticlesProps) => UseCreateMorphParticlesReturn;
+export declare const useCreateMorphParticles: ({ size, dpr, scene, geometry, positions, uvs, mapArray, }: Create3DHooksProps & UseCreateMorphParticlesProps) => UseCreateMorphParticlesReturn;
 export {};

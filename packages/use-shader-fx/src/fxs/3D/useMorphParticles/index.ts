@@ -15,6 +15,8 @@ export type MorphParticlesParams = {
    blurAlpha?: number;
    blurRadius?: number;
    pointSize?: number;
+   /** default:1 */
+   pointAlpha?: number;
    /** Since the color is extracted based on the attribute `uv`, the intended behavior will not occur if there is no uv in the attribute. */
    picture?: THREE.Texture | false;
    /** The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). use the green channel when sampling this texture. It also affects the size of the point. Default is false. */
@@ -27,10 +29,11 @@ export type MorphParticlesParams = {
    map?: THREE.Texture | false;
    /** The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). use the green channel when sampling this texture. Default is false. */
    alphaMap?: THREE.Texture | false;
-   /** `If ​​wobbleStrength is set to 0, wobble will stop. It will also affect noise calculation` */
+   /** If ​​wobbleStrength is set to 0, wobble will stop. It will also affect noise calculation, default:0 */
    wobbleStrength?: number;
    wobblePositionFrequency?: number;
    wobbleTimeFrequency?: number;
+   /** default:0 */
    warpStrength?: number;
    warpPositionFrequency?: number;
    warpTimeFrequency?: number;
@@ -40,6 +43,15 @@ export type MorphParticlesParams = {
    displacementIntensity?: number;
    /** Strength to reflect color ch of displacement texture */
    displacementColorIntensity?: number;
+   /** If set to 0, noise calculation stops, default:0 */
+   sizeRandomIntensity?: number;
+   sizeRandomTimeFrequency?: number;
+   sizeRandomMin?: number;
+   sizeRandomMax?: number;
+   /** Divergence rate of a point. Negative cases are dense, positive cases are divergent, default:0 */
+   divergence?: number;
+   /** Divergence centre point, default:THREE.Vector3(0) */
+   divergencePoint?: THREE.Vector3;
    /** you can get into the rhythm ♪ , default:false */
    beat?: number | false;
 };
@@ -59,6 +71,7 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = Object.freeze({
    blurAlpha: 0.9,
    blurRadius: 0.05,
    pointSize: 0.05,
+   pointAlpha: 1,
    picture: false,
    alphaPicture: false,
    color0: new THREE.Color(0xff0000),
@@ -70,12 +83,18 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = Object.freeze({
    wobbleStrength: 0.0,
    wobblePositionFrequency: 0.5,
    wobbleTimeFrequency: 0.5,
-   warpStrength: 0.5,
+   warpStrength: 0.0,
    warpPositionFrequency: 0.5,
    warpTimeFrequency: 0.5,
    displacement: false,
    displacementIntensity: 1,
    displacementColorIntensity: 0,
+   sizeRandomIntensity: 0,
+   sizeRandomTimeFrequency: 0.2,
+   sizeRandomMin: 0.5,
+   sizeRandomMax: 1.5,
+   divergence: 0,
+   divergencePoint: new THREE.Vector3(0),
    beat: false,
 });
 

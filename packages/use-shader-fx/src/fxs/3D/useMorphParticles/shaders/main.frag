@@ -5,6 +5,7 @@ varying vec3 vColor;
 varying float vPictureAlpha;
 varying vec3 vDisplacementColor;
 varying float vDisplacementIntensity;
+varying float vMapArrayIndex;
 
 uniform float uBlurAlpha;
 uniform float uBlurRadius;
@@ -13,6 +14,9 @@ uniform bool uIsMap;
 uniform sampler2D uAlphaMap;
 uniform bool uIsAlphaMap;
 uniform float uDisplacementColorIntensity;
+uniform float uPointAlpha;
+
+#usf <mapArrayUniforms>
 
 void main() {    
 	vec2 uv = gl_PointCoord;
@@ -22,8 +26,11 @@ void main() {
 	float distanceToCenter = length(uv - .5);
 	float alpha = clamp(uBlurRadius / distanceToCenter - (1.-uBlurAlpha) , 0. , 1.);
 
-	// Map if there is a map
-	vec3 finalColor = uIsMap ? texture2D(uMap,uv).rgb : vColor;
+	// Map if there is a map	
+	vec4 mapArrayColor;
+	#usf <mapArraySwitcher>
+	vec4 mapColor = isMapArray ? mapArrayColor : uIsMap ? texture2D(uMap,uv) : vec4(1.);
+	vec3 finalColor = isMapArray || uIsMap ? mapColor.rgb : vColor;
 
 	// Mix with finalColor if displacement is true
 	float mixIntensity = clamp(uDisplacementColorIntensity * vDisplacementIntensity,0.,1.);
@@ -32,5 +39,5 @@ void main() {
 	// get alpha map
 	float alphaMap = uIsAlphaMap ? texture2D(uAlphaMap,uv).g : 1.;
 
-	gl_FragColor = vec4(finalColor,alpha * vPictureAlpha * alphaMap);
+	gl_FragColor = vec4(finalColor,alpha * vPictureAlpha * alphaMap * mapColor.a * uPointAlpha);
 }

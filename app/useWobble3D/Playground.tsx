@@ -134,7 +134,7 @@ export const Playground = () => {
             castShadow
          />
          <OrbitControls />
-         <Environment preset="warehouse" background />
+         <Environment preset="warehouse" background={true} />
          <primitive object={wobble.mesh} />
          <mesh receiveShadow position={[0, -4, -8]}>
             <planeGeometry args={[15, 15, 15]} />

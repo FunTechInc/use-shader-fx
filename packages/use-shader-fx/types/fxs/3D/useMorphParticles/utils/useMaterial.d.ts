@@ -17,6 +17,9 @@ export declare class MorphParticlesMaterial extends THREE.ShaderMaterial {
         uPointSize: {
             value: number;
         };
+        uPointAlpha: {
+            value: number;
+        };
         uPicture: {
             value: THREE.Texture;
         };
@@ -86,14 +89,33 @@ export declare class MorphParticlesMaterial extends THREE.ShaderMaterial {
         uDisplacementColorIntensity: {
             value: number;
         };
+        uSizeRandomIntensity: {
+            value: number;
+        };
+        uSizeRandomTimeFrequency: {
+            value: number;
+        };
+        uSizeRandomMin: {
+            value: number;
+        };
+        uSizeRandomMax: {
+            value: number;
+        };
+        uDivergence: {
+            value: number;
+        };
+        uDivergencePoint: {
+            value: THREE.Vector3;
+        };
     };
 }
-export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, }: {
+export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, mapArray, }: {
     size: Size;
     dpr: number;
     geometry: THREE.BufferGeometry;
     positions?: Float32Array[] | undefined;
     uvs?: Float32Array[] | undefined;
+    mapArray?: THREE.Texture[] | undefined;
 }) => {
     material: MorphParticlesMaterial;
     modifiedPositions: Float32Array[];

@@ -10,6 +10,7 @@ import { MORPHPARTICLES_PARAMS } from "..";
 import { ISDEV } from "../../../../libs/constants";
 import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
+import { rewriteFragmentShader } from "./rewriteFragmentShader";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -18,6 +19,7 @@ export class MorphParticlesMaterial extends THREE.ShaderMaterial {
       uBlurAlpha: { value: number };
       uBlurRadius: { value: number };
       uPointSize: { value: number };
+      uPointAlpha: { value: number };
       uPicture: { value: THREE.Texture };
       uIsPicture: { value: boolean };
       uAlphaPicture: { value: THREE.Texture };
@@ -41,6 +43,12 @@ export class MorphParticlesMaterial extends THREE.ShaderMaterial {
       uIsDisplacement: { value: boolean };
       uDisplacementIntensity: { value: number };
       uDisplacementColorIntensity: { value: number };
+      uSizeRandomIntensity: { value: number };
+      uSizeRandomTimeFrequency: { value: number };
+      uSizeRandomMin: { value: number };
+      uSizeRandomMax: { value: number };
+      uDivergence: { value: number };
+      uDivergencePoint: { value: THREE.Vector3 };
    };
 }
 
@@ -50,12 +58,14 @@ export const useMaterial = ({
    geometry,
    positions,
    uvs,
+   mapArray,
 }: {
    size: Size;
    dpr: number;
    geometry: THREE.BufferGeometry;
    positions?: Float32Array[];
    uvs?: Float32Array[];
+   mapArray?: THREE.Texture[];
 }) => {
    const modifiedPositions = useMemo(
       () => modifyAttributes(positions, geometry, "position", 3),
@@ -73,7 +83,8 @@ export const useMaterial = ({
             console.log("use-shader-fx:positions and uvs are not matched");
       }
 
-      const rewritedShader = rewriteVertexShader(
+      // vertex
+      const rewritedVertexShader = rewriteVertexShader(
          modifiedUvs,
          geometry,
          "uv",
@@ -87,9 +98,12 @@ export const useMaterial = ({
          2
       ).replace(`#usf <getWobble>`, getWobble);
 
+      // fragment
+      const mapArraySwitch = rewriteFragmentShader(mapArray, fragmentShader);
+
       return new THREE.ShaderMaterial({
-         vertexShader: rewritedShader,
-         fragmentShader,
+         vertexShader: rewritedVertexShader,
+         fragmentShader: mapArraySwitch.rewritedFragmentShader,
          depthTest: false,
          depthWrite: false,
          transparent: true,
@@ -100,6 +114,7 @@ export const useMaterial = ({
             uBlurAlpha: { value: MORPHPARTICLES_PARAMS.blurAlpha },
             uBlurRadius: { value: MORPHPARTICLES_PARAMS.blurRadius },
             uPointSize: { value: MORPHPARTICLES_PARAMS.pointSize },
+            uPointAlpha: { value: MORPHPARTICLES_PARAMS.pointAlpha },
             uPicture: { value: new THREE.Texture() },
             uIsPicture: { value: false },
             uAlphaPicture: { value: new THREE.Texture() },
@@ -135,9 +150,25 @@ export const useMaterial = ({
             uDisplacementColorIntensity: {
                value: MORPHPARTICLES_PARAMS.displacementColorIntensity,
             },
+            uSizeRandomIntensity: {
+               value: MORPHPARTICLES_PARAMS.sizeRandomIntensity,
+            },
+            uSizeRandomTimeFrequency: {
+               value: MORPHPARTICLES_PARAMS.sizeRandomTimeFrequency,
+            },
+            uSizeRandomMin: { value: MORPHPARTICLES_PARAMS.sizeRandomMin },
+            uSizeRandomMax: { value: MORPHPARTICLES_PARAMS.sizeRandomMax },
+            uDivergence: { value: MORPHPARTICLES_PARAMS.divergence },
+            uDivergencePoint: { value: MORPHPARTICLES_PARAMS.divergencePoint },
+            ...mapArraySwitch.mapArrayUniforms,
          },
       });
-   }, [geometry, modifiedPositions, modifiedUvs]) as MorphParticlesMaterial;
+   }, [
+      geometry,
+      modifiedPositions,
+      modifiedUvs,
+      mapArray,
+   ]) as MorphParticlesMaterial;
 
    const resolution = useResolution(size, dpr);
    useEffect(() => {
