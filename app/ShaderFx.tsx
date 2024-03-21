@@ -35,7 +35,7 @@ export const ShaderFx = ({
                setDpr(Math.round((1.0 + 1.0 * factor) * 10) / 10);
             }}>
             <Suspense fallback={null}>{children}</Suspense>
-            <Perf position={"bottom-left"} minimal={false} />
+            {/* <Perf position={"bottom-left"} minimal={false} /> */}
          </PerformanceMonitor>
       </Canvas>
    );
