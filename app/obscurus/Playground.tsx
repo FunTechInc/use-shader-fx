@@ -57,8 +57,8 @@ const PARTICLE_CONFIG: MorphParticlesParams = {
    color1: new THREE.Color(0x000000),
    color2: new THREE.Color(0x000000),
    color3: new THREE.Color(0x000000),
-   wobbleStrength: 0.4,
-   warpStrength: 2.6,
+   wobbleStrength: 0.6,
+   warpStrength: 3,
    wobblePositionFrequency: 0.4,
    wobbleTimeFrequency: 0.4,
    warpTimeFrequency: 0.2,
@@ -129,7 +129,7 @@ const setWobbleConfig = () => {
 export const Playground = () => {
    useGUI(setGUI);
    const [noise] = useLoader(THREE.TextureLoader, ["/noise.jpg"]);
-   const { size, viewport } = useThree();
+   const { size, viewport, camera } = useThree();
    const [updateWobble, wobble] = useCreateWobble3D({
       baseMaterial: THREE.MeshPhysicalMaterial,
       geometry: useMemo(() => new THREE.IcosahedronGeometry(2.4, 10), []),
@@ -143,7 +143,8 @@ export const Playground = () => {
    useEffect(() => {
       const particleMat = particles.points.material as THREE.ShaderMaterial;
       particleMat.blending = THREE.NormalBlending;
-   }, [noise, updateParticle, particles.points.material]);
+      camera.position.z = 8;
+   }, [noise, updateParticle, particles.points.material, camera]);
 
    useFrame((props) => {
       updateWobble(props, {
