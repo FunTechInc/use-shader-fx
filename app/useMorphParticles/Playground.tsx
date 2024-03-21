@@ -42,6 +42,11 @@ const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "warpTimeFrequency", 0, 10, 0.01);
    gui.add(CONFIG, "displacementIntensity", 0, 10, 0.01);
    gui.add(CONFIG, "displacementColorIntensity", 0, 40, 0.01);
+   gui.add(CONFIG, "sizeRandomIntensity", 0, 10, 0.01);
+   gui.add(CONFIG, "sizeRandomTimeFrequency", 0, 3, 0.01);
+   gui.add(CONFIG, "sizeRandomMin", 0, 1, 0.01);
+   gui.add(CONFIG, "sizeRandomMax", 1, 2, 0.01);
+   gui.add(CONFIG, "divergence", -2, 2, 0.1);
 };
 const setConfig = () => {
    return {

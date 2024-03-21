@@ -4,7 +4,7 @@ import { WobbleMaterialProps, WobbleMaterialConstructor } from "./useMaterial";
 import { Wobble3DParams } from ".";
 import { Create3DHooksProps } from "../types";
 export type UseCreateWobble3DProps = {
-    /** default : THREE.IcosahedronGeometry(2,50) */
+    /** default : THREE.IcosahedronGeometry(2,20) */
     geometry?: THREE.BufferGeometry;
 };
 type UpdateUniform = (props: RootState | null, params?: Wobble3DParams) => void;

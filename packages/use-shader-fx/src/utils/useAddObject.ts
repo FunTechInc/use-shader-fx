@@ -7,7 +7,7 @@ type Object3DConstructor<T> = new (
 ) => T;
 
 /**
- * Object3Dにgeometryとmaterialを追加してsceneに追加する
+ * Add geometry and material to Object3D and add them to scene.
  */
 export const useAddObject = <T extends THREE.Object3D>(
    scene: THREE.Scene | false,

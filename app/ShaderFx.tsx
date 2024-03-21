@@ -8,20 +8,27 @@ import { PerformanceMonitor } from "@react-three/drei";
 export const ShaderFx = ({
    children,
    preserveDrawingBuffer = false,
+   shadows = false,
+   isDprUpdate = true,
 }: {
    children: React.ReactNode;
    preserveDrawingBuffer?: boolean;
+   shadows?: boolean;
+   isDprUpdate?: boolean;
 }) => {
    const [dpr, setDpr] = useState(1.5);
    return (
       <Canvas
          dpr={dpr}
          gl={{ preserveDrawingBuffer: preserveDrawingBuffer }}
-         shadows>
+         shadows={shadows}>
          <PerformanceMonitor
             factor={1}
             onChange={({ factor }) => {
                if (preserveDrawingBuffer) {
+                  return;
+               }
+               if (!isDprUpdate) {
                   return;
                }
                console.log(`dpr:${dpr}`);

@@ -14,7 +14,7 @@ import { useAddObject } from "../../../utils/useAddObject";
 import { Create3DHooksProps } from "../types";
 
 export type UseCreateWobble3DProps = {
-   /** default : THREE.IcosahedronGeometry(2,50) */
+   /** default : THREE.IcosahedronGeometry(2,20) */
    geometry?: THREE.BufferGeometry;
 };
 
@@ -36,7 +36,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    Create3DHooksProps &
    WobbleMaterialProps<T>): UseCreateWobble3DReturn => {
    const wobbleGeometry = useMemo(() => {
-      let geo = geometry || new THREE.IcosahedronGeometry(2, 50);
+      let geo = geometry || new THREE.IcosahedronGeometry(2, 20);
       geo = mergeVertices(geo);
       geo.computeTangents();
       return geo;

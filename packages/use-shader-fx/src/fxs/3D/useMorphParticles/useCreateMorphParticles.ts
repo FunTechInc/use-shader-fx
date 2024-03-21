@@ -14,6 +14,8 @@ export type UseCreateMorphParticlesProps = {
    geometry?: THREE.BufferGeometry;
    positions?: Float32Array[];
    uvs?: Float32Array[];
+   /** Array of textures to map to points. Mapped at random. */
+   mapArray?: THREE.Texture[];
 };
 
 type UpdateUniform = (
@@ -37,6 +39,7 @@ export const useCreateMorphParticles = ({
    geometry,
    positions,
    uvs,
+   mapArray,
 }: Create3DHooksProps &
    UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
    const morphGeometry = useMemo(() => {
@@ -53,7 +56,9 @@ export const useCreateMorphParticles = ({
       geometry: morphGeometry,
       positions,
       uvs,
+      mapArray,
    });
+
    const { points, interactiveMesh } = useCreateObject({
       scene,
       geometry: morphGeometry,
@@ -76,16 +81,17 @@ export const useCreateMorphParticles = ({
          setUniform(material, "uBlurAlpha", params.blurAlpha);
          setUniform(material, "uBlurRadius", params.blurRadius);
          setUniform(material, "uPointSize", params.pointSize);
+         setUniform(material, "uPointAlpha", params.pointAlpha);
          if (params.picture) {
             setUniform(material, "uPicture", params.picture);
             setUniform(material, "uIsPicture", true);
-         } else {
+         } else if (params.picture === false) {
             setUniform(material, "uIsPicture", false);
          }
          if (params.alphaPicture) {
             setUniform(material, "uAlphaPicture", params.alphaPicture);
             setUniform(material, "uIsAlphaPicture", true);
-         } else {
+         } else if (params.alphaPicture === false) {
             setUniform(material, "uIsAlphaPicture", false);
          }
          setUniform(material, "uColor0", params.color0);
@@ -95,13 +101,13 @@ export const useCreateMorphParticles = ({
          if (params.map) {
             setUniform(material, "uMap", params.map);
             setUniform(material, "uIsMap", true);
-         } else {
+         } else if (params.map === false) {
             setUniform(material, "uIsMap", false);
          }
          if (params.alphaMap) {
             setUniform(material, "uAlphaMap", params.alphaMap);
             setUniform(material, "uIsAlphaMap", true);
-         } else {
+         } else if (params.alphaMap === false) {
             setUniform(material, "uIsAlphaMap", false);
          }
          setUniform(material, "uWobbleStrength", params.wobbleStrength);
@@ -125,7 +131,7 @@ export const useCreateMorphParticles = ({
          if (params.displacement) {
             setUniform(material, "uDisplacement", params.displacement);
             setUniform(material, "uIsDisplacement", true);
-         } else {
+         } else if (params.displacement === false) {
             setUniform(material, "uIsDisplacement", false);
          }
          setUniform(
@@ -138,6 +144,20 @@ export const useCreateMorphParticles = ({
             "uDisplacementColorIntensity",
             params.displacementColorIntensity
          );
+         setUniform(
+            material,
+            "uSizeRandomIntensity",
+            params.sizeRandomIntensity
+         );
+         setUniform(
+            material,
+            "uSizeRandomTimeFrequency",
+            params.sizeRandomTimeFrequency
+         );
+         setUniform(material, "uSizeRandomMin", params.sizeRandomMin);
+         setUniform(material, "uSizeRandomMax", params.sizeRandomMax);
+         setUniform(material, "uDivergence", params.divergence);
+         setUniform(material, "uDivergencePoint", params.divergencePoint);
       },
       [material]
    );

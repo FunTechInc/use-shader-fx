@@ -10,7 +10,7 @@ export default function Page() {
             height: "100svh",
             pointerEvents: "none",
          }}>
-         <ShaderFx>
+         <ShaderFx shadows={true}>
             <Playground />
          </ShaderFx>
       </div>
