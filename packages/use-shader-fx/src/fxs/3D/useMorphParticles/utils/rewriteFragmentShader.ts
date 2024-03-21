@@ -6,25 +6,23 @@ export const rewriteFragmentShader = (
 ) => {
    let mapArrayShader = "";
    const mapArrayUniforms: any = {};
-   let textureSwitcherCode = "";
+   let textureSwitcherCode = "mapArrayColor = ";
+
    if (mapArray && mapArray.length > 0) {
-      textureSwitcherCode += "if (false) {}"; // Dummy conditions for initialisation.
       mapArray.forEach((map, index) => {
-         textureSwitcherCode += ` else if (vMapArrayIndex == ${index}.0) {\n`;
-         textureSwitcherCode += `  mapArrayColor = texture2D(uMapArray${index}, uv);\n`;
-         textureSwitcherCode += `}`;
+         const condition = `vMapArrayIndex < ${index}.1`; // Comparison with a number with .1 added as the handling of floating points may vary between GPU drivers
+         const action = `texture2D(uMapArray${index}, uv)`;
+         textureSwitcherCode += `( ${condition} ) ? ${action} : `;
          mapArrayShader += `
-      			uniform sampler2D uMapArray${index};
-      		`;
+        uniform sampler2D uMapArray${index};
+      `;
          mapArrayUniforms[`uMapArray${index}`] = { value: map };
       });
-      textureSwitcherCode += " else {\n";
-      textureSwitcherCode += "  mapArrayColor = vec4(1.0);\n";
-      textureSwitcherCode += "}";
+      textureSwitcherCode += "vec4(1.);";
       mapArrayShader += `bool isMapArray = true;`;
       mapArrayUniforms["uMapArrayLength"] = { value: mapArray.length };
    } else {
-      textureSwitcherCode += "mapArrayColor = vec4(1.0);\n";
+      textureSwitcherCode += "vec4(1.0);";
       mapArrayShader += `bool isMapArray = false;`;
       mapArrayUniforms["uMapArrayLength"] = { value: 0 };
    }

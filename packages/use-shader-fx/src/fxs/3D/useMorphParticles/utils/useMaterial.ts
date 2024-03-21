@@ -101,6 +101,8 @@ export const useMaterial = ({
       // fragment
       const mapArraySwitch = rewriteFragmentShader(mapArray, fragmentShader);
 
+      console.log(mapArraySwitch.rewritedFragmentShader);
+
       return new THREE.ShaderMaterial({
          vertexShader: rewritedVertexShader,
          fragmentShader: mapArraySwitch.rewritedFragmentShader,

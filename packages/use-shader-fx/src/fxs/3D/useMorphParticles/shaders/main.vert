@@ -84,6 +84,7 @@ void main() {
 
 	// wobble ※Do not calculate noise if uWobbleStrength is 0
 	float wobble = uWobbleStrength > 0. ? getWobble(projectedPosition.xyz) : 0.0;
+
 	gl_Position = projectedPosition += wobble;
 	
 	// If picture is true then display picture, otherwise 4 color linear interpolation
