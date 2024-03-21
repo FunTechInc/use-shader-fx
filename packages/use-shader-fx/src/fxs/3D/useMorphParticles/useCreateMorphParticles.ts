@@ -58,6 +58,7 @@ export const useCreateMorphParticles = ({
       uvs,
       mapArray,
    });
+
    const { points, interactiveMesh } = useCreateObject({
       scene,
       geometry: morphGeometry,

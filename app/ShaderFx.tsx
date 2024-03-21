@@ -9,10 +9,12 @@ export const ShaderFx = ({
    children,
    preserveDrawingBuffer = false,
    shadows = false,
+   isDprUpdate = true,
 }: {
    children: React.ReactNode;
    preserveDrawingBuffer?: boolean;
    shadows?: boolean;
+   isDprUpdate?: boolean;
 }) => {
    const [dpr, setDpr] = useState(1.5);
    return (
@@ -24,6 +26,9 @@ export const ShaderFx = ({
             factor={1}
             onChange={({ factor }) => {
                if (preserveDrawingBuffer) {
+                  return;
+               }
+               if (!isDprUpdate) {
                   return;
                }
                console.log(`dpr:${dpr}`);

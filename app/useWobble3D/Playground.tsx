@@ -100,7 +100,7 @@ export const Playground = () => {
 	===============================================*/
    const [updateWobble, wobble] = useCreateWobble3D({
       baseMaterial: THREE.MeshPhysicalMaterial,
-      materialParameters: { ...MATERIAL_CONFIG },
+      materialParameters: MATERIAL_CONFIG,
    });
 
    useEffect(() => {
