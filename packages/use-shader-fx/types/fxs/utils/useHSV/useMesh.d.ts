@@ -19,5 +19,5 @@ export declare const useMesh: ({ scene, size, dpr, }: {
     dpr: number;
 }) => {
     material: HSVMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, HSVMaterial>;
 };

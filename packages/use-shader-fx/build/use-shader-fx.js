@@ -2469,7 +2469,12 @@ const Gn = ({
   geometry: u,
   material: a
 }) => {
-  const r = I(e, u, a, t.Points), n = I(
+  const r = I(
+    e,
+    u,
+    a,
+    t.Points
+  ), n = I(
     e,
     h(() => u.clone(), [u]),
     h(() => a.clone(), [a]),

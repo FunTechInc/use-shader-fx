@@ -16,5 +16,5 @@ export declare const useMesh: ({ scene, size, dpr, }: {
     dpr: number;
 }) => {
     material: AlphaBlendingMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, AlphaBlendingMaterial>;
 };

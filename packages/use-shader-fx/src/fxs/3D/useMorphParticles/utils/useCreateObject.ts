@@ -8,12 +8,26 @@ type UseCreateObjectProps = {
    material: THREE.ShaderMaterial;
 };
 
+export type MorphParticlePoints = THREE.Points<
+   THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+   THREE.ShaderMaterial
+>;
+export type InteractiveMesh = THREE.Mesh<
+   THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+   THREE.ShaderMaterial
+>;
+
 export const useCreateObject = ({
    scene,
    geometry,
    material,
 }: UseCreateObjectProps) => {
-   const points = useAddObject(scene, geometry, material, THREE.Points);
+   const points = useAddObject(
+      scene,
+      geometry,
+      material,
+      THREE.Points
+   ) as MorphParticlePoints;
 
    // Generate a mesh for pointer
    const interactiveMesh = useAddObject(
@@ -21,7 +35,7 @@ export const useCreateObject = ({
       useMemo(() => geometry.clone(), [geometry]),
       useMemo(() => material.clone(), [material]),
       THREE.Mesh
-   );
+   ) as InteractiveMesh;
    interactiveMesh.visible = false;
 
    return {

@@ -19,7 +19,7 @@ export type UseCreateWobble3DProps = {
 };
 
 type UpdateUniform = (props: RootState | null, params?: Wobble3DParams) => void;
-type UseCreateWobble3DReturn = [
+type UseCreateWobble3DReturn<T> = [
    UpdateUniform,
    {
       mesh: THREE.Mesh;
@@ -34,7 +34,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    materialParameters,
 }: UseCreateWobble3DProps &
    Create3DHooksProps &
-   WobbleMaterialProps<T>): UseCreateWobble3DReturn => {
+   WobbleMaterialProps<T>): UseCreateWobble3DReturn<T> => {
    const wobbleGeometry = useMemo(() => {
       let geo = geometry || new THREE.IcosahedronGeometry(2, 20);
       geo = mergeVertices(geo);
@@ -46,7 +46,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
       materialParameters,
    });
 
-   const object = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
+   const mesh = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
 
    const updateUniform = useCallback<UpdateUniform>(
       (props, params) => {
@@ -102,7 +102,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    return [
       updateUniform,
       {
-         mesh: object,
+         mesh,
          depthMaterial,
       },
    ];

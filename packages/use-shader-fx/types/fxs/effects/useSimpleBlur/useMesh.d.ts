@@ -14,5 +14,5 @@ export declare class SampleMaterial extends THREE.ShaderMaterial {
 }
 export declare const useMesh: (scene: THREE.Scene) => {
     material: SampleMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, SampleMaterial>;
 };

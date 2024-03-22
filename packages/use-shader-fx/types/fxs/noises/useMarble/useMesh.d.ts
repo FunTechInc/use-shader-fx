@@ -26,5 +26,5 @@ export declare class MarbleMaterial extends THREE.ShaderMaterial {
 }
 export declare const useMesh: (scene: THREE.Scene) => {
     material: MarbleMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, MarbleMaterial>;
 };

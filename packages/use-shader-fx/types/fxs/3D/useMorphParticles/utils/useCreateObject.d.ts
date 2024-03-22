@@ -4,8 +4,10 @@ type UseCreateObjectProps = {
     geometry: THREE.BufferGeometry;
     material: THREE.ShaderMaterial;
 };
+export type MorphParticlePoints = THREE.Points<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.ShaderMaterial>;
+export type InteractiveMesh = THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.ShaderMaterial>;
 export declare const useCreateObject: ({ scene, geometry, material, }: UseCreateObjectProps) => {
-    points: THREE.Points<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
-    interactiveMesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+    points: MorphParticlePoints;
+    interactiveMesh: InteractiveMesh;
 };
 export {};

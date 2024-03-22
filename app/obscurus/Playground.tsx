@@ -128,10 +128,9 @@ const setWobbleConfig = () => {
 
 export const Playground = () => {
    useGUI(setGUI);
-   const [noise] = useLoader(THREE.TextureLoader, ["/noise.jpg"]);
    const { size, viewport, camera } = useThree();
+   const [noise] = useLoader(THREE.TextureLoader, ["/noise.jpg"]);
    const [updateWobble, wobble] = useCreateWobble3D({
-      baseMaterial: THREE.MeshPhysicalMaterial,
       geometry: useMemo(() => new THREE.IcosahedronGeometry(2.4, 10), []),
       materialParameters: MATERIAL_CONFIG,
    });
@@ -141,11 +140,9 @@ export const Playground = () => {
       geometry: useMemo(() => new THREE.IcosahedronGeometry(0.8, 10), []),
    });
    useEffect(() => {
-      const particleMat = particles.points.material as THREE.ShaderMaterial;
-      particleMat.blending = THREE.NormalBlending;
+      particles.points.material.blending = THREE.NormalBlending;
       camera.position.z = 8;
    }, [noise, updateParticle, particles.points.material, camera]);
-
    useFrame((props) => {
       updateWobble(props, {
          ...setWobbleConfig(),
@@ -171,3 +168,42 @@ export const Playground = () => {
       </mesh>
    );
 };
+
+/*===============================================
+simple version
+===============================================*/
+// export const Playground = () => {
+//    const { size, viewport, camera } = useThree();
+//    const [noise] = useLoader(THREE.TextureLoader, ["/noise.jpg"]);
+
+// 	const [updateWobble, wobble] = useCreateWobble3D({
+//       baseMaterial: THREE.MeshPhysicalMaterial,
+//       geometry: useMemo(() => new THREE.IcosahedronGeometry(2.4, 10), []),
+//       materialParameters: MATERIAL_CONFIG,
+//    });
+//    const [updateParticle, particles] = useCreateMorphParticles({
+//       size,
+//       dpr: viewport.dpr,
+//       geometry: useMemo(() => new THREE.IcosahedronGeometry(0.8, 10), []),
+//    });
+
+// 	useEffect(() => {
+//       particles.points.material.blending = THREE.NormalBlending;
+//       camera.position.z = 8;
+//       updateWobble(null, WOBBLE_CONFIG);
+//       updateParticle(null, { ...PARTICLE_CONFIG, alphaMap: noise });
+//    }, [particles.points.material, camera, updateWobble, updateParticle, noise]);
+//    useFrame((props) => {
+//       updateWobble(props);
+//       updateParticle(props);
+//    });
+
+// 	return (
+//       <mesh>
+//          <OrbitControls />
+//          <Environment files={"/snowpark.exr"} background={true} />
+//          <primitive object={wobble.mesh} />
+//          <primitive object={particles.points} />
+//       </mesh>
+//    );
+// };

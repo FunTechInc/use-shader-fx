@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import { Size, RootState } from "@react-three/fiber";
-import { useCreateObject } from "./utils/useCreateObject";
+import {
+   InteractiveMesh,
+   MorphParticlePoints,
+   useCreateObject,
+} from "./utils/useCreateObject";
 import { useMaterial } from "./utils/useMaterial";
 import { MorphParticlesParams } from ".";
 import { setUniform } from "../../../utils/setUniforms";
@@ -22,11 +26,12 @@ type UpdateUniform = (
    props: RootState | null,
    params?: MorphParticlesParams
 ) => void;
+
 type UseCreateMorphParticlesReturn = [
    UpdateUniform,
    {
-      points: THREE.Points;
-      interactiveMesh: THREE.Mesh;
+      points: MorphParticlePoints;
+      interactiveMesh: InteractiveMesh;
       positions: Float32Array[];
       uvs: Float32Array[];
    }
