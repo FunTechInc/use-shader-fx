@@ -8,12 +8,12 @@ export type UseCreateWobble3DProps = {
     geometry?: THREE.BufferGeometry;
 };
 type UpdateUniform = (props: RootState | null, params?: Wobble3DParams) => void;
-type UseCreateWobble3DReturn = [
+type UseCreateWobble3DReturn<T> = [
     UpdateUniform,
     {
         mesh: THREE.Mesh;
         depthMaterial: THREE.MeshDepthMaterial;
     }
 ];
-export declare const useCreateWobble3D: <T extends WobbleMaterialConstructor>({ scene, geometry, baseMaterial, materialParameters, }: UseCreateWobble3DProps & Create3DHooksProps & WobbleMaterialProps<T>) => UseCreateWobble3DReturn;
+export declare const useCreateWobble3D: <T extends WobbleMaterialConstructor>({ scene, geometry, baseMaterial, materialParameters, }: UseCreateWobble3DProps & Create3DHooksProps & WobbleMaterialProps<T>) => UseCreateWobble3DReturn<T>;
 export {};

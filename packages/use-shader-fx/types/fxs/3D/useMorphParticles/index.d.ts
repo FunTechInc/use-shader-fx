@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { HooksReturn } from "../../types";
 import { UseCreateMorphParticlesProps } from "./useCreateMorphParticles";
 import { HooksProps3D } from "../types";
+import { InteractiveMesh, MorphParticlePoints } from "./utils/useCreateObject";
 export type MorphParticlesParams = {
     /** progress value to morph vertices,0~1 */
     morphProgress?: number;
@@ -50,8 +51,8 @@ export type MorphParticlesParams = {
 };
 export type MorphParticlesObject = {
     scene: THREE.Scene;
-    points: THREE.Points;
-    interactiveMesh: THREE.Mesh;
+    points: MorphParticlePoints;
+    interactiveMesh: InteractiveMesh;
     renderTarget: THREE.WebGLRenderTarget;
     output: THREE.Texture;
     positions: Float32Array[];

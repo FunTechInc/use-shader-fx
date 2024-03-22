@@ -23,5 +23,5 @@ export declare class CosPaletteMaterial extends THREE.ShaderMaterial {
 }
 export declare const useMesh: (scene: THREE.Scene) => {
     material: CosPaletteMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, CosPaletteMaterial>;
 };
