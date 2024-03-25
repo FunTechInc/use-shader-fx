@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
-import { useAddMesh } from "../../../utils/useAddMesh";
 import { useAddObject } from "../../../utils/useAddObject";
 
 export class MarbleMaterial extends THREE.ShaderMaterial {

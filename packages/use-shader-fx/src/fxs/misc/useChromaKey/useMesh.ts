@@ -54,9 +54,7 @@ export const useMesh = ({
    ) as ChromaKeyMaterial;
 
    const resolution = useResolution(size, dpr);
-   useEffect(() => {
-      setUniform(material, "u_resolution", resolution.clone());
-   }, [resolution, material]);
+   setUniform(material, "u_resolution", resolution.clone());
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

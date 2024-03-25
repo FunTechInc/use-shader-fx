@@ -19,12 +19,10 @@ export const useAddObject = <
    Proto: Object3DConstructor<T, M>
 ) => {
    const object3D = useMemo(() => {
-      return new Proto(geometry, material);
-   }, [geometry, material, Proto]);
-
-   useEffect(() => {
-      scene && scene.add(object3D);
-   }, [scene, object3D]);
+      const obj = new Proto(geometry, material);
+      scene && scene.add(obj);
+      return obj;
+   }, [geometry, material, Proto, scene]);
 
    useEffect(() => {
       return () => {

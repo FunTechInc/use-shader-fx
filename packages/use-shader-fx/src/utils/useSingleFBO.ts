@@ -1,11 +1,5 @@
 import * as THREE from "three";
-import {
-   useCallback,
-   useEffect,
-   useLayoutEffect,
-   useMemo,
-   useRef,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useResolution } from "./useResolution";
 import { Size } from "@react-three/fiber";
 
@@ -107,11 +101,9 @@ export const useSingleFBO = ({
       []
    );
 
-   useLayoutEffect(() => {
-      if (isSizeUpdate) {
-         renderTarget.current?.setSize(resolution.x, resolution.y);
-      }
-   }, [resolution, isSizeUpdate]);
+   if (isSizeUpdate) {
+      renderTarget.current?.setSize(resolution.x, resolution.y);
+   }
 
    useEffect(() => {
       const temp = renderTarget.current;

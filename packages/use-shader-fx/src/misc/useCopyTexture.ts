@@ -1,11 +1,5 @@
 import * as THREE from "three";
-import {
-   useCallback,
-   useEffect,
-   useLayoutEffect,
-   useMemo,
-   useRef,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useResolution } from "../utils/useResolution";
 import { UseFboProps, renderFBO, FBO_OPTION } from "../utils/useSingleFBO";
 
@@ -64,13 +58,11 @@ export const useCopyTexture = (
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [length]);
 
-   useLayoutEffect(() => {
-      if (isSizeUpdate) {
-         renderTargetArr.current.forEach((fbo) =>
-            fbo.setSize(resolution.x, resolution.y)
-         );
-      }
-   }, [resolution, isSizeUpdate]);
+   if (isSizeUpdate) {
+      renderTargetArr.current.forEach((fbo) =>
+         fbo.setSize(resolution.x, resolution.y)
+      );
+   }
 
    useEffect(() => {
       const temp = renderTargetArr.current;

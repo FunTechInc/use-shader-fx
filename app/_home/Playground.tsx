@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    useNoise,
@@ -115,7 +115,7 @@ export const Playground = ({
       dpr: viewport.dpr,
    });
 
-   useEffect(() => {
+   useMemo(() => {
       CONFIG.random();
       setNoise({
          scale: 1000,

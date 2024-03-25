@@ -171,9 +171,7 @@ export const useMaterial = ({
    ]) as MorphParticlesMaterial;
 
    const resolution = useResolution(size, dpr);
-   useEffect(() => {
-      setUniform(material, "uResolution", resolution.clone());
-   }, [resolution, material]);
+   setUniform(material, "uResolution", resolution.clone());
 
    return { material, modifiedPositions, modifiedUvs };
 };

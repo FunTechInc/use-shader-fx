@@ -58,9 +58,7 @@ export const useMesh = ({
    ) as FxTextureMaterial;
 
    const resolution = useResolution(size, dpr);
-   useEffect(() => {
-      setUniform(material, "uResolution", resolution.clone());
-   }, [resolution, material]);
+   setUniform(material, "uResolution", resolution.clone());
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

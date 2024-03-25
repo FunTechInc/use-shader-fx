@@ -7,14 +7,11 @@ export const useAddMesh = (
    geometry: THREE.BufferGeometry,
    material: THREE.Material
 ) => {
-   const mesh = useMemo(
-      () => new THREE.Mesh(geometry, material),
-      [geometry, material]
-   );
-
-   useEffect(() => {
+   const mesh = useMemo(() => {
+      const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
-   }, [scene, mesh]);
+      return mesh;
+   }, [geometry, material, scene]);
 
    useEffect(() => {
       return () => {
