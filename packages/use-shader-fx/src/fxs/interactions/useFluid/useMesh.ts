@@ -96,7 +96,7 @@ export const useMesh = ({
    );
 
    const resolution = useResolution(size, dpr);
-   useEffect(() => {
+   useMemo(() => {
       setUniform(
          materials.splatMaterial,
          "aspectRatio",
@@ -113,7 +113,7 @@ export const useMesh = ({
 
    const mesh = useAddObject(scene, geometry, initialMaterial, THREE.Mesh);
 
-   useEffect(() => {
+   useMemo(() => {
       initialMaterial.dispose();
       mesh.material = updateMaterial;
    }, [initialMaterial, mesh, updateMaterial]);

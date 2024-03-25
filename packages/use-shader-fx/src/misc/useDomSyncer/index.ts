@@ -85,10 +85,11 @@ export const useDomSyncer = (
 
    // Update monitored doms according to the dependency array
    const [refreshTrigger, setRefreshTrigger] = useState(true);
-   useEffect(() => {
-      setRefreshTrigger(true);
+   useMemo(
+      () => setRefreshTrigger(true),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, dependencies);
+      dependencies
+   );
 
    // If the dependencies have been updated but the key has not been updated, skip processing and return an empty texture
    const updateKey = useRef<Key | null>(null);

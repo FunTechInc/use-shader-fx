@@ -1,11 +1,5 @@
 import * as THREE from "three";
-import {
-   useCallback,
-   useEffect,
-   useLayoutEffect,
-   useMemo,
-   useRef,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { FBO_OPTION, UseFboProps, renderFBO } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
 
@@ -94,12 +88,10 @@ export const useDoubleFBO = ({
    renderTarget.current.read = initRenderTargets.read;
    renderTarget.current.write = initRenderTargets.write;
 
-   useLayoutEffect(() => {
-      if (isSizeUpdate) {
-         renderTarget.current.read?.setSize(resolution.x, resolution.y);
-         renderTarget.current.write?.setSize(resolution.x, resolution.y);
-      }
-   }, [resolution, isSizeUpdate]);
+   if (isSizeUpdate) {
+      renderTarget.current.read?.setSize(resolution.x, resolution.y);
+      renderTarget.current.write?.setSize(resolution.x, resolution.y);
+   }
 
    useEffect(() => {
       const temp = renderTarget.current;

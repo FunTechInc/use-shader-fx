@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useFrame, useThree, extend, useLoader } from "@react-three/fiber";
 import {
    useCreateWobble3D,
@@ -139,10 +139,10 @@ export const Playground = () => {
       dpr: viewport.dpr,
       geometry: useMemo(() => new THREE.IcosahedronGeometry(0.8, 10), []),
    });
-   useEffect(() => {
+   useMemo(() => {
       particles.points.material.blending = THREE.NormalBlending;
       camera.position.z = 8;
-   }, [noise, updateParticle, particles.points.material, camera]);
+   }, [particles.points.material, camera]);
    useFrame((props) => {
       updateWobble(props, {
          ...setWobbleConfig(),
