@@ -16,11 +16,9 @@ export class HSVMaterial extends THREE.ShaderMaterial {
 export const useMesh = ({
    scene,
    size,
-   dpr,
 }: {
    scene: THREE.Scene;
    size: Size;
-   dpr: number | false;
 }) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(

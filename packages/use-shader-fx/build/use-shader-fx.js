@@ -1894,10 +1894,9 @@ void main() {
 }`;
 const Rn = ({
   scene: e,
-  size: u,
-  dpr: o
+  size: u
 }) => {
-  const s = g(() => new t.PlaneGeometry(2, 2), []), i = g(
+  const o = g(() => new t.PlaneGeometry(2, 2), []), s = g(
     () => new t.ShaderMaterial({
       uniforms: {
         uTexture: { value: new t.Texture() },
@@ -1907,8 +1906,8 @@ const Rn = ({
       fragmentShader: Dn
     }),
     []
-  ), n = z(e, s, i, t.Mesh);
-  return { material: i, mesh: n };
+  ), i = z(e, o, s, t.Mesh);
+  return { material: s, mesh: i };
 }, An = {
   texture: new t.Texture(),
   map: new t.Texture()
@@ -1917,7 +1916,7 @@ const Rn = ({
   dpr: u,
   samples: o = 0
 }) => {
-  const s = I(u), i = g(() => new t.Scene(), []), { material: n, mesh: p } = Rn({ scene: i, size: e, dpr: s.shader }), v = U(e), [c, l] = F({
+  const s = I(u), i = g(() => new t.Scene(), []), { material: n, mesh: p } = Rn({ scene: i, size: e }), v = U(e), [c, l] = F({
     scene: i,
     camera: v,
     size: e,
@@ -1983,10 +1982,9 @@ void main() {
 }`;
 const zn = ({
   scene: e,
-  size: u,
-  dpr: o
+  size: u
 }) => {
-  const s = g(() => new t.PlaneGeometry(2, 2), []), i = g(
+  const o = g(() => new t.PlaneGeometry(2, 2), []), s = g(
     () => new t.ShaderMaterial({
       uniforms: {
         u_texture: { value: new t.Texture() },
@@ -1997,8 +1995,8 @@ const zn = ({
       fragmentShader: Fn
     }),
     []
-  ), n = z(e, s, i, t.Mesh);
-  return { material: i, mesh: n };
+  ), i = z(e, o, s, t.Mesh);
+  return { material: s, mesh: i };
 }, Un = {
   texture: new t.Texture(),
   brightness: 1,
@@ -2008,7 +2006,7 @@ const zn = ({
   dpr: u,
   samples: o = 0
 }) => {
-  const s = I(u), i = g(() => new t.Scene(), []), { material: n, mesh: p } = zn({ scene: i, size: e, dpr: s.shader }), v = U(e), [c, l] = F({
+  const s = I(u), i = g(() => new t.Scene(), []), { material: n, mesh: p } = zn({ scene: i, size: e }), v = U(e), [c, l] = F({
     scene: i,
     camera: v,
     size: e,

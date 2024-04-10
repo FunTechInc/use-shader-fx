@@ -10,10 +10,9 @@ export declare class AlphaBlendingMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, }: {
+export declare const useMesh: ({ scene, size, }: {
     scene: THREE.Scene;
     size: Size;
-    dpr: number | false;
 }) => {
     material: AlphaBlendingMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, AlphaBlendingMaterial>;
