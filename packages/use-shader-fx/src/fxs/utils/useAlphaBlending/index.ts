@@ -41,7 +41,7 @@ export const useAlphaBlending = ({
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
+   const { material, mesh } = useMesh({ scene, size });
    const camera = useCamera(size);
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({

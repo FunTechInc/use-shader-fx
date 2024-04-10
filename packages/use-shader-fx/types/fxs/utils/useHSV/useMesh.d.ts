@@ -13,10 +13,9 @@ export declare class HSVMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, }: {
+export declare const useMesh: ({ scene, size, }: {
     scene: THREE.Scene;
     size: Size;
-    dpr: number | false;
 }) => {
     material: HSVMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, HSVMaterial>;
