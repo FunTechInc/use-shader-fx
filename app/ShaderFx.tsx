@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Perf } from "r3f-perf";
+// import { Perf } from "r3f-perf";
 import { PerformanceMonitor } from "@react-three/drei";
 
 const Loading = () => {
@@ -53,7 +53,7 @@ export const ShaderFx = ({
                   setDpr(Math.round((1.0 + 1.0 * factor) * 10) / 10);
                }}>
                {children}
-               <Perf position={"bottom-left"} minimal={false} />
+               {/* <Perf position={"bottom-left"} minimal={false} /> */}
             </PerformanceMonitor>
          </Canvas>
       </Suspense>
