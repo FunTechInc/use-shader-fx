@@ -2,7 +2,7 @@
 
 import { ShaderFx } from "../ShaderFx";
 import { Playground } from "./Playground";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { EasingTypes } from "@/packages/use-shader-fx/src";
 import Image from "next/image";
 import s from "./index.module.scss";
@@ -25,6 +25,9 @@ const Install = () => {
 };
 
 export default function Page() {
+   const wrapper = useRef<HTMLDivElement>(
+      null
+   ) as React.MutableRefObject<HTMLDivElement>;
    const [bpm, setBpm] = useState(120);
    const [easing, setEasing] = useState<EasingTypes>("easeOutQuad");
 
@@ -64,64 +67,71 @@ export default function Page() {
    return (
       <>
          <div className={s.canvas}>
-            <ShaderFx>
+            <ShaderFx eventSource={wrapper}>
                <Playground bpm={bpm} easing={easing} />
             </ShaderFx>
          </div>
-         <div className={s.wrapper}>
-            <div className={s.content}>
-               <h1 className={s.title}>⚡️ More FXs, Less GLSL</h1>
-               <Install />
-               <p className={s.link}>
-                  Oh, right, u can download the gradient from
-                  <a href="/gradation" target="_blank">
-                     here 👉
-                  </a>
-               </p>
-               <div className={s.input}>
-                  <p>BPM:</p>
-                  <input
-                     type="number"
-                     value={bpm}
-                     onChange={(e) => {
-                        setBpm(+e.target.value);
-                     }}
-                  />
-               </div>
-               <div className={s.input}>
-                  <p>Easing:</p>
-                  <select
-                     value={easing}
-                     onChange={(e) => {
-                        setEasing(e.target.value as EasingTypes);
-                     }}>
-                     {easingTypes.map((type) => (
-                        <option key={type} value={type}>
-                           {type}
-                        </option>
-                     ))}
-                  </select>
-               </div>
-            </div>
-            <ul className={s.snsLink}>
-               <li>
-                  <a
-                     href="https://github.com/FunTechInc/use-shader-fx"
-                     target={"_blank"}>
-                     <Image
-                        src="github-logo.svg"
-                        alt="GitHub"
-                        width={28}
-                        height={28}
+         <div ref={wrapper}>
+            <div className={s.wrapper}>
+               <div className={s.content}>
+                  <h1 className={s.title}>⚡️ More FXs, Less GLSL</h1>
+                  <Install />
+                  <p className={s.link}>
+                     Oh, right, u can download the gradient from
+                     <a href="/gradation" target="_blank">
+                        here 👉
+                     </a>
+                  </p>
+                  <div className={s.input}>
+                     <p>BPM:</p>
+                     <input
+                        type="number"
+                        value={bpm}
+                        onChange={(e) => {
+                           setBpm(+e.target.value);
+                        }}
                      />
-                  </a>
-               </li>
-               <li>
-                  <a href="https://twitter.com/tkm_hmng8" target={"_blank"}>
-                     <Image src="x-logo.svg" alt="X" width={24} height={24} />
-                  </a>
-               </li>
-            </ul>
+                  </div>
+                  <div className={s.input}>
+                     <p>Easing:</p>
+                     <select
+                        value={easing}
+                        onChange={(e) => {
+                           setEasing(e.target.value as EasingTypes);
+                        }}>
+                        {easingTypes.map((type) => (
+                           <option key={type} value={type}>
+                              {type}
+                           </option>
+                        ))}
+                     </select>
+                  </div>
+               </div>
+               <ul className={s.snsLink}>
+                  <li>
+                     <a
+                        href="https://github.com/FunTechInc/use-shader-fx"
+                        target={"_blank"}>
+                        <Image
+                           src="github-logo.svg"
+                           alt="GitHub"
+                           width={28}
+                           height={28}
+                        />
+                     </a>
+                  </li>
+                  <li>
+                     <a href="https://twitter.com/tkm_hmng8" target={"_blank"}>
+                        <Image
+                           src="x-logo.svg"
+                           alt="X"
+                           width={24}
+                           height={24}
+                        />
+                     </a>
+                  </li>
+               </ul>
+            </div>
          </div>
       </>
    );
