@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type AlphaBlendingParams = {
-    /** default:THREE.Texture()*/
+    /** default : `THREE.Texture()` */
     texture?: THREE.Texture;
-    /** alpha map , default:THREE.Texture() */
+    /** alpha map , default : `THREE.Texture()` */
     map?: THREE.Texture;
 };
 export type AlphaBlendingObject = {

@@ -7,11 +7,12 @@ import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
+import { getDpr } from "../../../utils/getDpr";
 
 export type AlphaBlendingParams = {
-   /** default:THREE.Texture()*/
+   /** default : `THREE.Texture()` */
    texture?: THREE.Texture;
-   /** alpha map , default:THREE.Texture() */
+   /** alpha map , default : `THREE.Texture()` */
    map?: THREE.Texture;
 };
 
@@ -37,15 +38,17 @@ export const useAlphaBlending = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<AlphaBlendingParams, AlphaBlendingObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
    const camera = useCamera(size);
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 

@@ -7,9 +7,10 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
+import { getDpr } from "../../../utils/getDpr";
 
 export type CoverTextureParams = {
-   /** Textures that you want to display exactly on the screen , default:THREE.Texture()  */
+   /** Textures that you want to display exactly on the screen , default : `THREE.Texture()` */
    texture?: THREE.Texture;
 };
 
@@ -34,13 +35,15 @@ export const useCoverTexture = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<CoverTextureParams, CoverTextureObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
-      dpr,
+      dpr: _dpr.fbo,
       size,
       samples,
       isSizeUpdate: true,

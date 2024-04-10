@@ -1,6 +1,6 @@
 import * as THREE from "three";
 /**
- * @param fps FPS you want to limit , default : 60
+ * @param fps FPS you want to limit , default : `60`
  *
  * ```tsx
  * const limiter = useFPSLimiter(fps);

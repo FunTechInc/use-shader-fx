@@ -1,21 +1,21 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type NoiseParams = {
-    /** noise scale , default:0.004 */
+    /** noise scale , default : `0.004` */
     scale?: number;
-    /** time factor default:0.3 */
+    /** time factor default : `0.3` */
     timeStrength?: number;
-    /** noiseOctaves, affects performance default:2 */
+    /** noiseOctaves, affects performance default : `2` */
     noiseOctaves?: number;
-    /** fbmOctaves, affects performance default:2 */
+    /** fbmOctaves, affects performance default : `2` */
     fbmOctaves?: number;
-    /** domain warping octaves , affects performance default:2  */
+    /** domain warping octaves , affects performance default : `2`  */
     warpOctaves?: number;
-    /** direction of domain warping , default:(2.0,2,0) */
+    /** direction of domain warping , default : `(2.0,2,0)` */
     warpDirection?: THREE.Vector2;
-    /** strength of domain warping , default:8.0 */
+    /** strength of domain warping , default : `8.0` */
     warpStrength?: number;
-    /** you can get into the rhythm ♪ , default:false */
+    /** you can get into the rhythm ♪ , default : `false` */
     beat?: number | false;
 };
 export type NoiseObject = {

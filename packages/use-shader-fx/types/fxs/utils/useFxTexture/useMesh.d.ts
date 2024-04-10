@@ -43,7 +43,7 @@ export declare class FxTextureMaterial extends THREE.ShaderMaterial {
 export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
-    dpr: number;
+    dpr: number | false;
 }) => {
     material: FxTextureMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxTextureMaterial>;

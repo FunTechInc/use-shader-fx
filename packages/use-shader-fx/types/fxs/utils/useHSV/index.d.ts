@@ -1,11 +1,11 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type HSVParams = {
-    /** default:THREE.Texture() */
+    /** default : `THREE.Texture()` */
     texture?: THREE.Texture;
-    /** default:1 */
+    /** default : `1` */
     brightness?: number;
-    /** default:1 */
+    /** default : `1` */
     saturation?: number;
 };
 export type HSVObject = {

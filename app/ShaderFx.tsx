@@ -53,7 +53,6 @@ export const ShaderFx = ({
                   setDpr(Math.round((1.0 + 1.0 * factor) * 10) / 10);
                }}>
                {children}
-               {/* <Suspense fallback={null}>{children}</Suspense> */}
                {/* <Perf position={"bottom-left"} minimal={false} /> */}
             </PerformanceMonitor>
          </Canvas>

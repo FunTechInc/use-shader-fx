@@ -61,7 +61,7 @@ export const useMaterial = ({
    mapArray,
 }: {
    size: Size;
-   dpr: number;
+   dpr: number | false;
    geometry: THREE.BufferGeometry;
    positions?: Float32Array[];
    uvs?: Float32Array[];

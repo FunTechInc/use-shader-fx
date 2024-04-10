@@ -7,30 +7,30 @@ export type Wobble3DParams = {
     wobbleStrength?: number;
     wobblePositionFrequency?: number;
     wobbleTimeFrequency?: number;
-    /** The roughness is attenuated by the strength of the wobble. It has no meaning if the roughness is set to 0 or if the material does not have a roughness param ,default:0 */
+    /** The roughness is attenuated by the strength of the wobble. It has no meaning if the roughness is set to 0 or if the material does not have a roughness param ,default : `0` */
     wobbleShine?: number;
     warpStrength?: number;
     warpPositionFrequency?: number;
     warpTimeFrequency?: number;
-    /** Refraction samples, default:6  */
+    /** Refraction samples, default : `6`  */
     samples?: number;
     color0?: THREE.Color;
     color1?: THREE.Color;
     color2?: THREE.Color;
     color3?: THREE.Color;
-    /** Mixing ratio with the material's original output color, 0~1 , defaulat : 1 */
+    /** Mixing ratio with the material's original output color, 0~1 , defaulat : `1` */
     colorMix?: number;
-    /** valid only for MeshPhysicalMaterial , default:0.5 */
+    /** valid only for MeshPhysicalMaterial , default : `0.5` */
     chromaticAberration?: number;
-    /** valid only for MeshPhysicalMaterial , default:0.1 */
+    /** valid only for MeshPhysicalMaterial , default : `0.1` */
     anisotropicBlur?: number;
-    /** valid only for MeshPhysicalMaterial , default:0.1 */
+    /** valid only for MeshPhysicalMaterial , default : `0.1` */
     distortion?: number;
-    /** valid only for MeshPhysicalMaterial , default:0.1 */
+    /** valid only for MeshPhysicalMaterial , default : `0.1` */
     distortionScale?: number;
-    /** valid only for MeshPhysicalMaterial , default:0.1 */
+    /** valid only for MeshPhysicalMaterial , default : `0.1` */
     temporalDistortion?: number;
-    /** you can get into the rhythm ♪ , default:false */
+    /** you can get into the rhythm ♪ , default : `false` */
     beat?: number | false;
 };
 export type Wobble3DObject = {

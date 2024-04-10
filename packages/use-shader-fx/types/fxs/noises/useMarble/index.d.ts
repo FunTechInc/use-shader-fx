@@ -1,19 +1,19 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type MarbleParams = {
-    /** You can add random patterns to noise by passing random numbers ,default:0 */
+    /** You can add random patterns to noise by passing random numbers ,default : `0` */
     pattern?: number;
-    /** default:2 */
+    /** default : `2` */
     complexity?: number;
-    /** default:0.2 */
+    /** default : `0.2` */
     complexityAttenuation?: number;
-    /** default:8 */
+    /** default : `8` */
     iterations?: number;
-    /** default:0.2 */
+    /** default : `0.2` */
     timeStrength?: number;
-    /** default:0.002 */
+    /** default : `0.002` */
     scale?: number;
-    /** you can get into the rhythm ♪ , default:false */
+    /** you can get into the rhythm ♪ , default : `false` */
     beat?: number | false;
 };
 export type MarbleObject = {

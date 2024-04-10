@@ -10,11 +10,13 @@ import { MorphParticlesParams } from ".";
 import { setUniform } from "../../../utils/setUniforms";
 import { useCallback, useMemo } from "react";
 import { Create3DHooksProps } from "../types";
+import { Dpr } from "../../types";
+import { getDpr } from "../../../utils/getDpr";
 
 export type UseCreateMorphParticlesProps = {
    size: Size;
-   dpr: number;
-   /** default : THREE.SphereGeometry(1, 32, 32) */
+   dpr: Dpr;
+   /** default : `THREE.SphereGeometry(1, 32, 32)` */
    geometry?: THREE.BufferGeometry;
    positions?: Float32Array[];
    uvs?: Float32Array[];
@@ -47,6 +49,8 @@ export const useCreateMorphParticles = ({
    mapArray,
 }: Create3DHooksProps &
    UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
+   const _dpr = getDpr(dpr);
+
    const morphGeometry = useMemo(() => {
       const geo = geometry || new THREE.SphereGeometry(1, 32, 32);
       geo.setIndex(null);
@@ -57,7 +61,7 @@ export const useCreateMorphParticles = ({
 
    const { material, modifiedPositions, modifiedUvs } = useMaterial({
       size,
-      dpr,
+      dpr: _dpr.shader,
       geometry: morphGeometry,
       positions,
       uvs,

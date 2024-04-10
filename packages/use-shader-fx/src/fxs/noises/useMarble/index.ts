@@ -7,21 +7,22 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
+import { getDpr } from "../../../utils/getDpr";
 
 export type MarbleParams = {
-   /** You can add random patterns to noise by passing random numbers ,default:0 */
+   /** You can add random patterns to noise by passing random numbers ,default : `0` */
    pattern?: number;
-   /** default:2 */
+   /** default : `2` */
    complexity?: number;
-   /** default:0.2 */
+   /** default : `0.2` */
    complexityAttenuation?: number;
-   /** default:8 */
+   /** default : `8` */
    iterations?: number;
-   /** default:0.2 */
+   /** default : `0.2` */
    timeStrength?: number;
-   /** default:0.002 */
+   /** default : `0.002` */
    scale?: number;
-   /** you can get into the rhythm ♪ , default:false */
+   /** you can get into the rhythm ♪ , default : `false` */
    beat?: number | false;
 };
 
@@ -52,6 +53,7 @@ export const useMarble = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<MarbleParams, MarbleObject> => {
+   const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
    const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
@@ -59,7 +61,7 @@ export const useMarble = ({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 

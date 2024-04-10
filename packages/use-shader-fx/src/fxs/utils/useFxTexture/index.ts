@@ -7,25 +7,26 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
+import { getDpr } from "../../../utils/getDpr";
 
 export type FxTextureParams = {
-   /** 1st texture , default:THREE.Texture() */
+   /** 1st texture , default : `THREE.Texture()` */
    texture0?: THREE.Texture;
-   /** 2nd texture , default:THREE.Texture() */
+   /** 2nd texture , default : `THREE.Texture()` */
    texture1?: THREE.Texture;
-   /** add transparent padding, 0.0 ~ 1.0 , default:0.0 */
+   /** add transparent padding, 0.0 ~ 1.0 , default : `0.0` */
    padding?: number;
-   /** The color map. The uv value is affected according to this rbg , default:THREE.Texture() */
+   /** The color map. The uv value is affected according to this rbg , default : `THREE.Texture()` */
    map?: THREE.Texture;
-   /** intensity of map , r,g value are affecting , default:0.0 */
+   /** intensity of map , r,g value are affecting , default : `0.0` */
    mapIntensity?: number;
-   /** Intensity of effect on edges , default:0.0 */
+   /** Intensity of effect on edges , default : `0.0` */
    edgeIntensity?: number;
-   /** epicenter of fx, -1 ~ 1 , default:vec2(0.0,0.0)*/
+   /** epicenter of fx, -1 ~ 1 , default : `vec2(0.0,0.0)` */
    epicenter?: THREE.Vector2;
-   /** Switch value to switch between texture0 and texture1 , 0 ~ 1 , default : 0 */
+   /** Switch value to switch between texture0 and texture1 , 0 ~ 1 , default : `0` */
    progress?: number;
-   /** direction of transition , default: THREE.Vector2(0, 0) */
+   /** direction of transition , default: `THREE.Vector2(0, 0)` */
    dir?: THREE.Vector2;
 };
 
@@ -58,13 +59,15 @@ export const useFxTexture = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<FxTextureParams, FxTextureObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
-      dpr,
+      dpr: _dpr.fbo,
       size,
       samples,
       isSizeUpdate: true,

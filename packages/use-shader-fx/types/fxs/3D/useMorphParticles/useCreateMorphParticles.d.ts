@@ -3,10 +3,11 @@ import { Size, RootState } from "@react-three/fiber";
 import { InteractiveMesh, MorphParticlePoints } from "./utils/useCreateObject";
 import { MorphParticlesParams } from ".";
 import { Create3DHooksProps } from "../types";
+import { Dpr } from "../../types";
 export type UseCreateMorphParticlesProps = {
     size: Size;
-    dpr: number;
-    /** default : THREE.SphereGeometry(1, 32, 32) */
+    dpr: Dpr;
+    /** default : `THREE.SphereGeometry(1, 32, 32)` */
     geometry?: THREE.BufferGeometry;
     positions?: Float32Array[];
     uvs?: Float32Array[];

@@ -22,7 +22,7 @@ export const useMesh = ({
 }: {
    scene: THREE.Scene;
    size: Size;
-   dpr: number;
+   dpr: number | false;
 }) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(

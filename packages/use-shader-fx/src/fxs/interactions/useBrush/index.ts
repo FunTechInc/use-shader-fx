@@ -8,34 +8,35 @@ import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { DoubleRenderTarget, useDoubleFBO } from "../../../utils/useDoubleFBO";
+import { getDpr } from "../../../utils/getDpr";
 
 export type BrushParams = {
-   /** Texture applied to the brush, If texture is true, it will take precedence over color , default:false */
+   /** Texture applied to the brush, If texture is true, it will take precedence over color , default : `false` */
    texture?: THREE.Texture | false;
-   /** You can attach an fx map , default:false */
+   /** You can attach an fx map , default : `false` */
    map?: THREE.Texture | false;
-   /** map intensity , default:0.1 */
+   /** map intensity , default : `0.1` */
    mapIntensity?: number;
-   /** size of the stamp, percentage of the size ,default:0.05 */
+   /** size of the stamp, percentage of the size ,default : `0.05` */
    radius?: number;
-   /** Strength of smudge effect , default:0.0*/
+   /** Strength of smudge effect , default : `0.0`*/
    smudge?: number;
-   /** dissipation rate. If set to 1, it will remain. ,default:1.0 */
+   /** dissipation rate. If set to 1, it will remain. , default : `1.0` */
    dissipation?: number;
-   /** Strength of motion blur , default:0.0 */
+   /** Strength of motion blur , default : `0.0` */
    motionBlur?: number;
-   /** Number of motion blur samples. Affects performance default: 5 */
+   /** Number of motion blur samples. Affects performance default : `5` */
    motionSample?: number;
-   /** brush color , it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
+   /** brush color , it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default : `THREE.Vector3(1.0, 1.0, 1.0)` */
    color?:
       | ((velocity: THREE.Vector2) => THREE.Vector3)
       | THREE.Vector3
       | THREE.Color;
-   /** Follows the cursor even if it loses speed , default:false */
+   /** Follows the cursor even if it loses speed , default : `false` */
    isCursor?: boolean;
-   /** brush pressure (0 to 1) , default : 1.0 */
+   /** brush pressure (0 to 1) , default : `1.0` */
    pressure?: number;
-   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:false */
+   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default : `false` */
    pointerValues?: PointerValues | false;
 };
 
@@ -71,15 +72,17 @@ export const useBrush = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<BrushParams, BrushObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
    const camera = useCamera(size);
    const updatePointer = usePointer();
    const [renderTarget, updateRenderTarget] = useDoubleFBO({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 

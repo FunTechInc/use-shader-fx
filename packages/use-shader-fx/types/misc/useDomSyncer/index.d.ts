@@ -8,7 +8,7 @@ export type DomSyncerParams = {
     dom?: (HTMLElement | Element | null)[];
     /** Texture array that you want to synchronize with the DOM rectangle */
     texture?: THREE.Texture[];
-    /** default:0.0[] */
+    /** default : `0.0[]` */
     boderRadius?: number[];
     /** the angle you want to rotate */
     rotation?: THREE.Euler[];

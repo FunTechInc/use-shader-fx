@@ -7,13 +7,14 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
+import { getDpr } from "../../../utils/getDpr";
 
 export type DuoToneParams = {
-   /** Make this texture duotone , Default:new THREE.Texture() */
+   /** Make this texture duotone , Default : `THREE.Texture()` */
    texture?: THREE.Texture;
-   /** 1st color ,　Default:new THREE.Color(0xffffff) */
+   /** 1st color ,　Default : `THREE.Color(0xffffff)` */
    color0?: THREE.Color;
-   /** 2nd color , Default: new THREE.Color(0x000000) */
+   /** 2nd color , Default : `THREE.Color(0x000000)` */
    color1?: THREE.Color;
 };
 
@@ -40,6 +41,8 @@ export const useDuoTone = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<DuoToneParams, DuoToneObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
    const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
@@ -47,7 +50,7 @@ export const useDuoTone = ({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 

@@ -1,11 +1,11 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type FxBlendingParams = {
-    /** Make this texture Blending , default:THREE.Texture */
+    /** Make this texture Blending , default : `THREE.Texture` */
     texture?: THREE.Texture;
-    /** map texture, default:THREE.Texture */
+    /** map texture, default : `THREE.Texture` */
     map?: THREE.Texture;
-    /** map strength , r,g value are affecting , default:0.3 */
+    /** map strength , r,g value are affecting , default : `0.3` */
     mapIntensity?: number;
 };
 export type FxBlendingObject = {

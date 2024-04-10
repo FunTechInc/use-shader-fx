@@ -25,7 +25,7 @@ export type FluidMaterials = {
 export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
-    dpr: number;
+    dpr: number | false;
 }) => {
     materials: {
         vorticityMaterial: VorticityMaterial;

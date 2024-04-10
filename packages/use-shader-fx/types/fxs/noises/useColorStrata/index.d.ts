@@ -1,27 +1,27 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type ColorStrataParams = {
-    /** default: null */
+    /** default : `null` */
     texture?: THREE.Texture | false;
-    /** Valid when texture is false. default : 1 */
+    /** Valid when texture is false. default : `1` */
     scale?: number;
-    /** default: 1.0 */
+    /** default : `1.0` */
     laminateLayer?: number;
-    /** default: (0.1, 0.1) */
+    /** default : `(0.1, 0.1)` */
     laminateInterval?: THREE.Vector2;
-    /** default: (1.0, 1.0) */
+    /** default : `(1.0, 1.0)` */
     laminateDetail?: THREE.Vector2;
-    /** default: (0.0, 0.0) */
+    /** default : `(0.0, 0.0)` */
     distortion?: THREE.Vector2;
-    /** default: (1.0, 1.0,1.0) */
+    /** default : `(1.0, 1.0, 1.0)` */
     colorFactor?: THREE.Vector3;
-    /** default: (0.0, 0.0) */
+    /** default : `(0.0, 0.0)` */
     timeStrength?: THREE.Vector2;
-    /** default:false */
+    /** default : `false` */
     noise?: THREE.Texture | false;
-    /** default : (0.0,0.0) */
+    /** default : `(0.0,0.0)` */
     noiseStrength?: THREE.Vector2;
-    /** you can get into the rhythm ♪ , default:false */
+    /** you can get into the rhythm ♪ , default : `false` */
     beat?: number | false;
 };
 export type ColorStrataObject = {

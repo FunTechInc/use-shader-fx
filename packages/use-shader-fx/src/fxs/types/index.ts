@@ -1,9 +1,22 @@
 import * as THREE from "three";
 import { RootState, Size } from "@react-three/fiber";
 
+export type Dpr =
+   | number
+   | {
+        dpr: number;
+        /** you can set whether `dpr` affects `shader` and `fbo`. default is `true` for both */
+        effect?: {
+           /** default : `true` */
+           shader?: boolean;
+           /** default : `true` */
+           fbo?: boolean;
+        };
+     };
+
 export type HooksProps = {
    size: Size;
-   dpr: number;
+   dpr: Dpr;
    /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
    samples?: number;
 };

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type CoverTextureParams = {
-    /** Textures that you want to display exactly on the screen , default:THREE.Texture()  */
+    /** Textures that you want to display exactly on the screen , default : `THREE.Texture()` */
     texture?: THREE.Texture;
 };
 export type CoverTextureObject = {

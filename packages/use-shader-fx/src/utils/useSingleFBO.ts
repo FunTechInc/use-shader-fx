@@ -14,15 +14,15 @@ export type UseFboProps = {
    scene: THREE.Scene;
    camera: THREE.Camera;
    size: Size;
-   /** If dpr is set, dpr will be multiplied, default:false */
+   /** If dpr is set, dpr will be multiplied, default : `false` */
    dpr?: number | false;
-   /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false */
+   /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default : `false` */
    isSizeUpdate?: boolean;
-   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
+   /** Defines the count of MSAA samples. Can only be used with WebGL 2. default : `0.0` */
    samples?: number;
-   /** Renders to the depth buffer. Unlike the three.js,　Default is false. */
+   /** Renders to the depth buffer. Unlike the three.js, default : `false` */
    depthBuffer?: boolean;
-   /** If set, the scene depth will be rendered to this texture. Default is false. */
+   /** If set, the scene depth will be rendered to this texture. default : `false` */
    depthTexture?: boolean;
 };
 
