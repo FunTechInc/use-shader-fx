@@ -7,13 +7,14 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
+import { getDpr } from "../../../utils/getDpr";
 
 export type FxBlendingParams = {
-   /** Make this texture Blending , default:THREE.Texture */
+   /** Make this texture Blending , default : `THREE.Texture` */
    texture?: THREE.Texture;
-   /** map texture, default:THREE.Texture */
+   /** map texture, default : `THREE.Texture` */
    map?: THREE.Texture;
-   /** map strength , r,g value are affecting , default:0.3 */
+   /** map strength , r,g value are affecting , default : `0.3` */
    mapIntensity?: number;
 };
 
@@ -41,6 +42,8 @@ export const useFxBlending = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<FxBlendingParams, FxBlendingObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
    const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
@@ -48,7 +51,7 @@ export const useFxBlending = ({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 

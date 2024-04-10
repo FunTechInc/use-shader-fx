@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useCallback, useEffect, useMemo, useRef, useState, Key } from "react";
+import { useCallback, useMemo, useRef, useState, Key } from "react";
 import { useCamera } from "../../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../utils/useSingleFBO";
@@ -11,13 +11,14 @@ import { useIntersectionHandler } from "./utils/useIntersectionHandler";
 import { useUpdateDomRect } from "./utils/useUpdateDomRect";
 import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
 import { UseDomView, createUseDomView } from "./utils/createUseDomView";
+import { getDpr } from "../../utils/getDpr";
 
 export type DomSyncerParams = {
    /** DOM array you want to synchronize */
    dom?: (HTMLElement | Element | null)[];
    /** Texture array that you want to synchronize with the DOM rectangle */
    texture?: THREE.Texture[];
-   /** default:0.0[] */
+   /** default : `0.0[]` */
    boderRadius?: number[];
    /** the angle you want to rotate */
    rotation?: THREE.Euler[];
@@ -63,13 +64,15 @@ export const useDomSyncer = (
    { size, dpr, samples = 0 }: HooksProps,
    dependencies: React.DependencyList = []
 ): HooksReturn<DomSyncerParams, DomSyncerObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
       isSizeUpdate: true,
    });

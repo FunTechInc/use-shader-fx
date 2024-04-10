@@ -7,19 +7,20 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { useParams } from "../../../utils/useParams";
 import { HooksProps, HooksReturn } from "../../types";
+import { getDpr } from "../../../utils/getDpr";
 
 export type CosPaletteParams = {
-   /** color1, default:rgb(50%, 50%, 50%) */
+   /** color1, default : `rgb(50%, 50%, 50%)` */
    color1?: THREE.Color;
-   /** color2, default:rgb(50%, 50%, 50%) */
+   /** color2, default : `rgb(50%, 50%, 50%)` */
    color2?: THREE.Color;
-   /** color3, default:rgb(100%, 100%, 100%) */
+   /** color3, default : `rgb(100%, 100%, 100%)` */
    color3?: THREE.Color;
-   /** color4, default:rgb(0%, 10%, 20%) */
+   /** color4, default : `rgb(0%, 10%, 20%)` */
    color4?: THREE.Color;
    /** texture to be used as a palette */
    texture?: THREE.Texture;
-   /** weight of the rgb, default:THREE.Vector3(1.0,0.0,0.0) */
+   /** weight of the rgb, default : `THREE.Vector3(1.0,0.0,0.0)` */
    rgbWeight?: THREE.Vector3;
 };
 
@@ -49,6 +50,8 @@ export const useCosPalette = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<CosPaletteParams, ColorPaletteObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
    const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
@@ -56,7 +59,7 @@ export const useCosPalette = ({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 

@@ -64,7 +64,7 @@ export declare class BrushMaterial extends THREE.ShaderMaterial {
 export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
-    dpr: number;
+    dpr: number | false;
 }) => {
     material: BrushMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, BrushMaterial>;

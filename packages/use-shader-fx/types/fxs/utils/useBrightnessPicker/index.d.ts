@@ -1,13 +1,13 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type BrightnessPickerParams = {
-    /** pick brightness from this texture , default:THREE.Texture */
+    /** pick brightness from this texture , default : `THREE.Texture` */
     texture?: THREE.Texture;
-    /** default:(0.5,0.5,0.5) */
+    /** default : `(0.5,0.5,0.5)` */
     brightness?: THREE.Vector3;
-    /** default:0.0 */
+    /** default : `0.0` */
     min?: number;
-    /** default:1.0 */
+    /** default : `1.0` */
     max?: number;
 };
 export type BrightnessPickerObject = {

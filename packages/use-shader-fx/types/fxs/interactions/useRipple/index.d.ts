@@ -2,17 +2,17 @@ import * as THREE from "three";
 import { PointerValues } from "../../../misc/usePointer";
 import { HooksProps, HooksReturn } from "../../types";
 export type RippleParams = {
-    /** How often ripples appear,default:0.01 */
+    /** How often ripples appear, default : `0.01` */
     frequency?: number;
-    /** rotation rate,default:0.05 */
+    /** rotation rate, default : `0.05` */
     rotation?: number;
-    /** fadeout speed,default:0.9 */
+    /** fadeout speed, default : `0.9` */
     fadeout_speed?: number;
-    /** scale rate,default:0.3 */
+    /** scale rate, default : `0.3` */
     scale?: number;
-    /** alpha,default:0.6 */
+    /** alpha, default : `0.6` */
     alpha?: number;
-    /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:false */
+    /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default : `false` */
     pointerValues?: PointerValues | false;
 };
 export type RippleObject = {

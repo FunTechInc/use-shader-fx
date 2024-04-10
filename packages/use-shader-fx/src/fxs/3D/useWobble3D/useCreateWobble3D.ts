@@ -14,7 +14,7 @@ import { useAddObject } from "../../../utils/useAddObject";
 import { Create3DHooksProps } from "../types";
 
 export type UseCreateWobble3DProps = {
-   /** default : THREE.IcosahedronGeometry(2,20) */
+   /** default : `THREE.IcosahedronGeometry(2,20)` */
    geometry?: THREE.BufferGeometry;
 };
 

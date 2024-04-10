@@ -1,21 +1,21 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type BlendingParams = {
-    /** Make this texture Blending , default:THREE.Texture */
+    /** Make this texture Blending , default : `THREE.Texture` */
     texture?: THREE.Texture;
-    /** map texture, default:THREE.Texture */
+    /** map texture, default : `THREE.Texture` */
     map?: THREE.Texture;
-    /** map strength , r,g value are affecting , default:0.3 */
+    /** map strength , r,g value are affecting , default : `0.3` */
     mapIntensity?: number;
-    /** Alpha blending is performed using the alpha of the set texture. , default:false */
+    /** Alpha blending is performed using the alpha of the set texture. , default : `false` */
     alphaMap?: THREE.Texture | false;
-    /** default:(0.5,0.5,0.5) */
+    /** default : `(0.5,0.5,0.5)` */
     brightness?: THREE.Vector3;
-    /** default:0.0 */
+    /** default : `0.0` */
     min?: number;
-    /** default:1.0 */
+    /** default : `1.0` */
     max?: number;
-    /** If set, this value will apply color dodge , default: false */
+    /** If set, this value will apply color dodge , default : `false` */
     dodgeColor?: THREE.Color | false;
 };
 export type BlendingObject = {

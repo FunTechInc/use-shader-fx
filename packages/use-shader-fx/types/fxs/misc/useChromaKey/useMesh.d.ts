@@ -37,7 +37,7 @@ export declare class ChromaKeyMaterial extends THREE.ShaderMaterial {
 export declare const useMesh: ({ scene, size, dpr, }: {
     scene: THREE.Scene;
     size: Size;
-    dpr: number;
+    dpr: number | false;
 }) => {
     material: ChromaKeyMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, ChromaKeyMaterial>;

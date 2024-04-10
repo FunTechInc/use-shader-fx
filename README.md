@@ -68,7 +68,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 const [updateFx, setParams, fxObject] = useSomeFx(config);
 ```
 
-Execute `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
+invoke `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
 
 ```js
 useFrame((props) => {
@@ -286,6 +286,29 @@ usePerformanceMonitor({
       });
    },
 });
+```
+
+When using some expensive FX (such as `useFluid`), lowering the `dpr` of the FBO of that FX can improve performance.
+
+```js
+const [updateFx, setParams, fxObject] = useSomeFx({ size, dpr: 0.01 });
+```
+
+Also, you can make more detailed adjustments by passing an object to `dpr` instead of `number`.
+
+```ts
+type Dpr =
+   | number
+   | {
+        dpr: number;
+        /** you can set whether `dpr` affects `shader` and `fbo`. default is `true` for both */
+        effect?: {
+           /** default : `true` */
+           shader?: boolean;
+           /** default : `true` */
+           fbo?: boolean;
+        };
+     };
 ```
 
 # Misc

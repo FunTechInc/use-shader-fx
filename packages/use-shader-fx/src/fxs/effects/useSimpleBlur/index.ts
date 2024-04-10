@@ -9,13 +9,14 @@ import { setUniform } from "../../../utils/setUniforms";
 import { useParams } from "../../../utils/useParams";
 
 import type { HooksProps, HooksReturn } from "../../types";
+import { getDpr } from "../../../utils/getDpr";
 
 export type SimpleBlurParams = {
-   /** Make this texture blur , Default:new THREE.Texture() */
+   /** Make this texture blur , default : `THREE.Texture()` */
    texture?: THREE.Texture;
-   /** blurSize, default:3 */
+   /** blurSize, default : `3` */
    blurSize?: number;
-   /** blurPower, affects performance default:5 */
+   /** blurPower, affects performance default : `5` */
    blurPower?: number;
 };
 
@@ -42,6 +43,7 @@ export const useSimpleBlur = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<SimpleBlurParams, SimpleBlurObject> => {
+   const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
    const { material, mesh } = useMesh(scene);
    const camera = useCamera(size);
@@ -51,10 +53,10 @@ export const useSimpleBlur = ({
          scene,
          camera,
          size,
-         dpr,
+         dpr: _dpr.fbo,
          samples,
       }),
-      [scene, camera, size, dpr, samples]
+      [scene, camera, size, _dpr.fbo, samples]
    );
    const [renderTarget, updateRenderTarget] = useSingleFBO(fboProps);
    const [_, updateTempTexture] = useDoubleFBO(fboProps);

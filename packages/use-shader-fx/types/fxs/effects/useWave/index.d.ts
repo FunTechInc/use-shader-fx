@@ -1,15 +1,15 @@
 import * as THREE from "three";
 import { HooksProps, HooksReturn } from "../../types";
 export type WaveParams = {
-    /** -1.0 ~ 1.0 , default:vec2(0.0,0.0) */
+    /** -1.0 ~ 1.0 , default : `vec2(0.0,0.0)` */
     epicenter?: THREE.Vector2;
-    /** 0.0 ~ 1.0 , default:0.0 */
+    /** 0.0 ~ 1.0 , default : `0.0` */
     progress?: number;
-    /** default:0.0 */
+    /** default : `0.0` */
     width?: number;
-    /** default:0.0 */
+    /** default : `0.0` */
     strength?: number;
-    /** default:center */
+    /** default : `center` */
     mode?: "center" | "horizontal" | "vertical";
 };
 export type WaveObject = {

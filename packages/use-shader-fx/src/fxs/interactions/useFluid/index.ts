@@ -10,28 +10,29 @@ import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { UseFboProps } from "../../../utils/useSingleFBO";
 import { DoubleRenderTarget, useDoubleFBO } from "../../../utils/useDoubleFBO";
+import { getDpr } from "../../../utils/getDpr";
 
 export type FluidParams = {
-   /** density disspation , default:0.98 */
+   /** density disspation , default : `0.98` */
    density_dissipation?: number;
-   /** velocity dissipation , default:0.99 */
+   /** velocity dissipation , default : `0.99` */
    velocity_dissipation?: number;
-   /** velocity acceleration , default:10.0 */
+   /** velocity acceleration , default : `10.0` */
    velocity_acceleration?: number;
-   /** pressure dissipation , default:0.9 */
+   /** pressure dissipation , default : `0.9` */
    pressure_dissipation?: number;
-   /** pressure iterations. affects performance , default:20 */
+   /** pressure iterations. affects performance , default : `20` */
    pressure_iterations?: number;
-   /** curl_strength , default:35 */
+   /** curl_strength , default : `35` */
    curl_strength?: number;
-   /** splat radius , default:0.002 */
+   /** splat radius , default : `0.002` */
    splat_radius?: number;
-   /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default:THREE.Vector3(1.0, 1.0, 1.0) */
+   /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default : `THREE.Vector3(1.0, 1.0, 1.0)` */
    fluid_color?:
       | ((velocity: THREE.Vector2) => THREE.Vector3)
       | THREE.Vector3
       | THREE.Color;
-   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default:false */
+   /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default : `false` */
    pointerValues?: PointerValues | false;
 };
 
@@ -70,8 +71,14 @@ export const useFluid = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<FluidParams, FluidObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { materials, setMeshMaterial, mesh } = useMesh({ scene, size, dpr });
+   const { materials, setMeshMaterial, mesh } = useMesh({
+      scene,
+      size,
+      dpr: _dpr.shader,
+   });
    const camera = useCamera(size);
    const updatePointer = usePointer();
 
@@ -79,10 +86,11 @@ export const useFluid = ({
       () => ({
          scene,
          camera,
+         dpr: _dpr.fbo,
          size,
          samples,
       }),
-      [scene, camera, size, samples]
+      [scene, camera, size, samples, _dpr.fbo]
    );
    const [velocityFBO, updateVelocityFBO] = useDoubleFBO(fboProps);
    const [densityFBO, updateDensityFBO] = useDoubleFBO(fboProps);

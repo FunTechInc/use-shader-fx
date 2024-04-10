@@ -7,25 +7,26 @@ import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { setUniform } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
+import { getDpr } from "../../../utils/getDpr";
 
 export type ChromaKeyParams = {
-   /** Process this texture with chroma key , default:THREE.Texture */
+   /** Process this texture with chroma key , default : `THREE.Texture` */
    texture?: THREE.Texture;
-   /** key color for chromakey processing , default: THREE.Color(0x00ff00) */
+   /** key color for chromakey processing , default: `THREE.Color(0x00ff00)` */
    keyColor?: THREE.Color;
-   /** If the similarity with the key color exceeds this value, it becomes transparent. , default: 0.2 */
+   /** If the similarity with the key color exceeds this value, it becomes transparent. , default : `0.2` */
    similarity?: number;
-   /** smoothness , default : 0.1 */
+   /** smoothness , default : `0.1` */
    smoothness?: number;
-   /** spill , default : 0.2 */
+   /** spill , default : `0.2` */
    spill?: number;
-   /** tone correction , default : THREE.Vector4(1.0, 1.0, 1.0, 1.0) */
+   /** tone correction , default : `THREE.Vector4(1.0, 1.0, 1.0, 1.0)` */
    color?: THREE.Vector4;
-   /** contrast , default : 1.0 */
+   /** contrast , default : `1.0` */
    contrast?: number;
-   /** brightness , default : 0.0 */
+   /** brightness , default : `0.0` */
    brightness?: number;
-   /** gamma correction , default : 1.0 */
+   /** gamma correction , default : `1.0` */
    gamma?: number;
 };
 
@@ -58,14 +59,16 @@ export const useChromaKey = ({
    dpr,
    samples = 0,
 }: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject> => {
+   const _dpr = getDpr(dpr);
+
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr });
+   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
       size,
-      dpr,
+      dpr: _dpr.fbo,
       samples,
    });
 
