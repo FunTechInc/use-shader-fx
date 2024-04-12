@@ -69,7 +69,8 @@ export const FLUID_PARAMS: FluidParams = Object.freeze({
 export const useFluid = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<FluidParams, FluidObject> => {
    const _dpr = getDpr(dpr);
 
@@ -89,8 +90,9 @@ export const useFluid = ({
          dpr: _dpr.fbo,
          size,
          samples,
+         isSizeUpdate,
       }),
-      [scene, camera, size, samples, _dpr.fbo]
+      [scene, camera, size, samples, _dpr.fbo, isSizeUpdate]
    );
    const [velocityFBO, updateVelocityFBO] = useDoubleFBO(fboProps);
    const [densityFBO, updateDensityFBO] = useDoubleFBO(fboProps);

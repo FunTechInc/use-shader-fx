@@ -40,4 +40,4 @@ export declare const BRUSH_PARAMS: BrushParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useBrush: ({ size, dpr, samples, }: HooksProps) => HooksReturn<BrushParams, BrushObject>;
+export declare const useBrush: ({ size, dpr, samples, isSizeUpdate, }: HooksProps) => HooksReturn<BrushParams, BrushObject>;

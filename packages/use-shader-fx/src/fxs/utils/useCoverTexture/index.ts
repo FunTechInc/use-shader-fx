@@ -33,7 +33,8 @@ export const COVERTEXTURE_PARAMS: CoverTextureParams = {
 export const useCoverTexture = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<CoverTextureParams, CoverTextureObject> => {
    const _dpr = getDpr(dpr);
 
@@ -46,7 +47,7 @@ export const useCoverTexture = ({
       dpr: _dpr.fbo,
       size,
       samples,
-      isSizeUpdate: true,
+      isSizeUpdate,
    });
 
    const [params, setParams] =

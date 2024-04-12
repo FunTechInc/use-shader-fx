@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { useMemo, useRef } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
-   useNoise,
    useColorStrata,
    useMarble,
    useHSV,
@@ -92,10 +91,6 @@ export const Playground = ({
    const { size, viewport } = useThree();
    const funkun = useVideoTexture("/FT_Ch02-comp.mp4");
 
-   const [updateNoise, setNoise, { output: noise }] = useNoise({
-      size,
-      dpr: viewport.dpr,
-   });
    const [updateColorStrata, setColorStrata, { output: colorStrata }] =
       useColorStrata({ size, dpr: viewport.dpr });
    const [updateMarble, setMarble, { output: marble }] = useMarble({
@@ -108,22 +103,15 @@ export const Playground = ({
    });
    const [updateBrush, setBrush, { output: brush }] = useBrush({
       size,
-      dpr: viewport.dpr,
+      dpr: 0.05,
    });
    const [updateCover, setCover, { output: cover }] = useCoverTexture({
       size,
-      dpr: viewport.dpr,
+      dpr: 0.1,
    });
 
    useMemo(() => {
       CONFIG.random();
-      setNoise({
-         scale: 1000,
-         warpOctaves: 1,
-         noiseOctaves: 1,
-         fbmOctaves: 1,
-         timeStrength: 1,
-      });
 
       setMarble({
          ...setConfig("marble"),
@@ -145,7 +133,6 @@ export const Playground = ({
       });
 
       setBrush({
-         map: noise,
          texture: cover,
          mapIntensity: 0.35,
          radius: 0.2,
@@ -169,7 +156,6 @@ export const Playground = ({
          hashMemo.current = hash;
          CONFIG.random();
       }
-      updateNoise(props);
       updateColorStrata(props, {
          ...(setConfig("colorStrata") as ColorStrataParams),
       });
@@ -194,7 +180,6 @@ export const Playground = ({
          <fxMaterial
             key={FxMaterial.key}
             u_noise={marble}
-            u_grain={noise}
             u_colorStrata={hsv}
             u_brush={brush}
             ref={ref}

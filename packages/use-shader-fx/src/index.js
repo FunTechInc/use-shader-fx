@@ -24,6 +24,7 @@ export * from "./fxs/utils/useCoverTexture";
 
 // effects
 export * from "./fxs/effects/useSimpleBlur";
+export * from "./fxs/effects/useMotionBlur";
 export * from "./fxs/effects/useWave";
 
 // misc

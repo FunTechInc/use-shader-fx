@@ -32,4 +32,4 @@ export declare const FXTEXTURE_PARAMS: FxTextureParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useFxTexture: ({ size, dpr, samples, }: HooksProps) => HooksReturn<FxTextureParams, FxTextureObject>;
+export declare const useFxTexture: ({ size, dpr, samples, isSizeUpdate, }: HooksProps) => HooksReturn<FxTextureParams, FxTextureObject>;

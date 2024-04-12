@@ -14,6 +14,7 @@ export * from "./fxs/utils/useAlphaBlending";
 export * from "./fxs/utils/useHSV";
 export * from "./fxs/utils/useCoverTexture";
 export * from "./fxs/effects/useSimpleBlur";
+export * from "./fxs/effects/useMotionBlur";
 export * from "./fxs/effects/useWave";
 export * from "./fxs/misc/useChromaKey";
 export * from "./fxs/3D/useMorphParticles";

@@ -41,4 +41,4 @@ export declare const FLUID_PARAMS: FluidParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useFluid: ({ size, dpr, samples, }: HooksProps) => HooksReturn<FluidParams, FluidObject>;
+export declare const useFluid: ({ size, dpr, samples, isSizeUpdate, }: HooksProps) => HooksReturn<FluidParams, FluidObject>;

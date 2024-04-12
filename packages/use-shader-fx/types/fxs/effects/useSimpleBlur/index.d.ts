@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
 import type { HooksProps, HooksReturn } from "../../types";
 export type SimpleBlurParams = {
     /** Make this texture blur , default : `THREE.Texture()` */
@@ -13,11 +14,11 @@ export type SimpleBlurObject = {
     mesh: THREE.Mesh;
     material: THREE.Material;
     camera: THREE.Camera;
-    renderTarget: THREE.WebGLRenderTarget;
+    renderTarget: DoubleRenderTarget;
     output: THREE.Texture;
 };
 export declare const SIMPLEBLUR_PARAMS: SimpleBlurParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useSimpleBlur: ({ size, dpr, samples, }: HooksProps) => HooksReturn<SimpleBlurParams, SimpleBlurObject>;
+export declare const useSimpleBlur: ({ size, dpr, samples, isSizeUpdate, }: HooksProps) => HooksReturn<SimpleBlurParams, SimpleBlurObject>;

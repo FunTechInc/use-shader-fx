@@ -56,7 +56,8 @@ If you don't want to reflect the map's color, you can use useFxBlending instead.
 export const useBlending = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<BlendingParams, BlendingObject> => {
    const _dpr = getDpr(dpr);
 
@@ -69,6 +70,7 @@ export const useBlending = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);

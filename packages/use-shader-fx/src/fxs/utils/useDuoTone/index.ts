@@ -39,7 +39,8 @@ export const DUOTONE_PARAMS: DuoToneParams = {
 export const useDuoTone = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<DuoToneParams, DuoToneObject> => {
    const _dpr = getDpr(dpr);
 
@@ -52,6 +53,7 @@ export const useDuoTone = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);

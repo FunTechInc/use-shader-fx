@@ -17,8 +17,10 @@ export type Dpr =
 export type HooksProps = {
    size: Size;
    dpr: Dpr;
-   /** Defines the count of MSAA samples. Can only be used with WebGL 2. Default is 0. */
+   /** Defines the count of MSAA samples. Can only be used with WebGL 2. default : `0` */
    samples?: number;
+   /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
+   isSizeUpdate?: boolean;
 };
 
 /**

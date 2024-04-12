@@ -44,4 +44,4 @@ export declare const WOBBLE3D_PARAMS: Wobble3DParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useWobble3D: <T extends WobbleMaterialConstructor>({ size, dpr, samples, camera, geometry, baseMaterial, materialParameters, }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>) => HooksReturn<Wobble3DParams, Wobble3DObject>;
+export declare const useWobble3D: <T extends WobbleMaterialConstructor>({ size, dpr, samples, isSizeUpdate, camera, geometry, baseMaterial, materialParameters, }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>) => HooksReturn<Wobble3DParams, Wobble3DObject>;

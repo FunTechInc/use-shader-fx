@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    useNoise,
@@ -16,6 +16,7 @@ import { FxMaterial, FxMaterialProps } from "./FxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
 import { CONFIG as HomeConfig } from "../_home/Playground";
+import { useDownloadCanvas } from "@/utils/useDownloadCanvas";
 
 extend({ FxMaterial });
 
@@ -34,26 +35,11 @@ const setConfig = (key: "marble" | "colorStrata" | "hsv") => {
    };
 };
 
-function useDownloadCanvas() {
-   const { gl } = useThree();
-   const downloadImage = useCallback(
-      (filename = "image.png") => {
-         const image = gl.domElement.toDataURL("image/png");
-         const link = document.createElement("a");
-         link.download = filename;
-         link.href = image;
-         link.click();
-         link.remove();
-      },
-      [gl]
-   );
-   return downloadImage;
-}
-
 export const Playground = () => {
    const ref = useRef<FxMaterialProps>();
 
    const saveImage = useDownloadCanvas();
+
    useEffect(() => {
       CONFIG.save = saveImage;
       CONFIG.random();
