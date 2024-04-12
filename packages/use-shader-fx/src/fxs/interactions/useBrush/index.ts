@@ -70,7 +70,8 @@ export const BRUSH_PARAMS: BrushParams = Object.freeze({
 export const useBrush = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<BrushParams, BrushObject> => {
    const _dpr = getDpr(dpr);
 
@@ -84,6 +85,7 @@ export const useBrush = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);

@@ -75,7 +75,8 @@ export const WOBBLE3D_PARAMS: Wobble3DParams = Object.freeze({
 export const useWobble3D = <T extends WobbleMaterialConstructor>({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
    camera,
    geometry,
    baseMaterial,
@@ -101,6 +102,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
       depthBuffer: true,
    });
 

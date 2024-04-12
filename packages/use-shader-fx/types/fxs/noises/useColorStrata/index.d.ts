@@ -36,4 +36,4 @@ export declare const COLORSTRATA_PARAMS: ColorStrataParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useColorStrata: ({ size, dpr, samples, }: HooksProps) => HooksReturn<ColorStrataParams, ColorStrataObject>;
+export declare const useColorStrata: ({ size, dpr, samples, isSizeUpdate, }: HooksProps) => HooksReturn<ColorStrataParams, ColorStrataObject>;

@@ -36,7 +36,8 @@ export const ALPHABLENDING_PARAMS: AlphaBlendingParams = {
 export const useAlphaBlending = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<AlphaBlendingParams, AlphaBlendingObject> => {
    const _dpr = getDpr(dpr);
 
@@ -50,6 +51,7 @@ export const useAlphaBlending = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] =

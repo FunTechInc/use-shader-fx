@@ -40,7 +40,8 @@ export const FXBLENDING_PARAMS: FxBlendingParams = {
 export const useFxBlending = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<FxBlendingParams, FxBlendingObject> => {
    const _dpr = getDpr(dpr);
 
@@ -53,6 +54,7 @@ export const useFxBlending = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<FxBlendingParams>(FXBLENDING_PARAMS);

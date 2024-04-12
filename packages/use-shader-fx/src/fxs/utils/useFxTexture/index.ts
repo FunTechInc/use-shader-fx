@@ -57,7 +57,8 @@ export const FXTEXTURE_PARAMS: FxTextureParams = {
 export const useFxTexture = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<FxTextureParams, FxTextureObject> => {
    const _dpr = getDpr(dpr);
 
@@ -70,7 +71,7 @@ export const useFxTexture = ({
       dpr: _dpr.fbo,
       size,
       samples,
-      isSizeUpdate: true,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<FxTextureParams>(FXTEXTURE_PARAMS);

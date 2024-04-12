@@ -63,7 +63,8 @@ export const COLORSTRATA_PARAMS: ColorStrataParams = Object.freeze({
 export const useColorStrata = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<ColorStrataParams, ColorStrataObject> => {
    const _dpr = getDpr(dpr);
 
@@ -76,6 +77,7 @@ export const useColorStrata = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<ColorStrataParams>(COLORSTRATA_PARAMS);

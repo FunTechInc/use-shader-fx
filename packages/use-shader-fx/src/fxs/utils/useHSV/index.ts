@@ -39,7 +39,8 @@ export const HSV_PARAMS: HSVParams = {
 export const useHSV = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<HSVParams, HSVObject> => {
    const _dpr = getDpr(dpr);
 
@@ -53,6 +54,7 @@ export const useHSV = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<HSVParams>(HSV_PARAMS);

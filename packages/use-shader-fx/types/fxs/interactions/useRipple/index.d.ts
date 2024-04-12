@@ -34,5 +34,5 @@ interface UseRippleProps extends HooksProps {
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useRipple: ({ texture, scale, max, size, dpr, samples, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject>;
+export declare const useRipple: ({ texture, scale, max, size, dpr, samples, isSizeUpdate, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject>;
 export {};

@@ -57,7 +57,8 @@ export const CHROMAKEY_PARAMS: ChromaKeyParams = Object.freeze({
 export const useChromaKey = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject> => {
    const _dpr = getDpr(dpr);
 
@@ -70,6 +71,7 @@ export const useChromaKey = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<ChromaKeyParams>(CHROMAKEY_PARAMS);

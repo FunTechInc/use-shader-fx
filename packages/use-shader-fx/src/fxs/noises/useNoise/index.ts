@@ -56,7 +56,8 @@ export const NOISE_PARAMS: NoiseParams = Object.freeze({
 export const useNoise = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<NoiseParams, NoiseObject> => {
    const _dpr = getDpr(dpr);
 
@@ -69,6 +70,7 @@ export const useNoise = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<NoiseParams>(NOISE_PARAMS);

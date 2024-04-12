@@ -42,7 +42,8 @@ export const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams = {
 export const useBrightnessPicker = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<BrightnessPickerParams, BrightnessPickerObject> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -54,6 +55,7 @@ export const useBrightnessPicker = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<BrightnessPickerParams>(

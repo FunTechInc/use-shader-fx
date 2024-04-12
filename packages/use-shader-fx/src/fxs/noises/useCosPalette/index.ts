@@ -48,7 +48,8 @@ export const COSPALETTE_PARAMS: CosPaletteParams = Object.freeze({
 export const useCosPalette = ({
    size,
    dpr,
-   samples = 0,
+   samples,
+   isSizeUpdate,
 }: HooksProps): HooksReturn<CosPaletteParams, ColorPaletteObject> => {
    const _dpr = getDpr(dpr);
 
@@ -61,6 +62,7 @@ export const useCosPalette = ({
       size,
       dpr: _dpr.fbo,
       samples,
+      isSizeUpdate,
    });
 
    const [params, setParams] = useParams<CosPaletteParams>(COSPALETTE_PARAMS);
