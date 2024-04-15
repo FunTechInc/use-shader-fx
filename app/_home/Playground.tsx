@@ -14,6 +14,7 @@ import {
    ColorStrataParams,
    HSVParams,
    MarbleParams,
+   useFluid,
 } from "@/packages/use-shader-fx/src";
 
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
@@ -89,7 +90,16 @@ export const Playground = ({
 }) => {
    const ref = useRef<FxMaterialProps>();
    const { size, viewport } = useThree();
-   const funkun = useVideoTexture("/FT_Ch02-comp.mp4");
+
+   const funkun = useVideoTexture("/FT_Ch02-comp.mp4", {
+      width: 1280,
+      height: 780,
+   });
+   const [updateCover, setCover, { output: cover }] = useCoverTexture({
+      size,
+      dpr: viewport.dpr,
+   });
+   setCover({ texture: funkun });
 
    const [updateColorStrata, setColorStrata, { output: colorStrata }] =
       useColorStrata({ size, dpr: viewport.dpr });
@@ -101,13 +111,9 @@ export const Playground = ({
       size,
       dpr: viewport.dpr,
    });
-   const [updateBrush, setBrush, { output: brush }] = useBrush({
+   const [updateFluid, setFluid, { output: brush }] = useFluid({
       size,
-      dpr: 0.05,
-   });
-   const [updateCover, setCover, { output: cover }] = useCoverTexture({
-      size,
-      dpr: 0.1,
+      dpr: 0.03,
    });
 
    useMemo(() => {
@@ -128,22 +134,16 @@ export const Playground = ({
          texture: colorStrata,
       });
 
-      setCover({
-         texture: funkun,
-      });
-
-      setBrush({
-         texture: cover,
-         mapIntensity: 0.35,
-         radius: 0.2,
-         dissipation: 0.9,
-         isCursor: true,
+      setFluid({
+         density_dissipation: 0.96,
+         velocity_dissipation: 0.96,
+         splat_radius: 0.001,
+         pressure_iterations: 2,
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
    const beting = useBeat(bpm, easing);
-   const updatePointer = usePointer(0.8);
    const limiter = useFPSLimiter(40);
    const hashMemo = useRef(0);
 
@@ -166,12 +166,10 @@ export const Playground = ({
          ...(setConfig("marble") as MarbleParams),
          beat: beat,
       });
+      updateFluid(props);
       updateCover(props);
-      const pointerValues = updatePointer(props.pointer);
-      updateBrush(props, {
-         pointerValues: pointerValues,
-      });
       ref.current!.u_noiseIntensity = CONFIG.noiseIntensity;
+      ref.current!.u_time = props.clock.getElapsedTime();
    });
 
    return (
@@ -182,6 +180,7 @@ export const Playground = ({
             u_noise={marble}
             u_colorStrata={hsv}
             u_brush={brush}
+            u_funkun={cover}
             ref={ref}
          />
       </mesh>
