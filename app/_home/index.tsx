@@ -93,7 +93,10 @@ export default function Page() {
                         setEasing(e.target.value as EasingTypes);
                      }}>
                      {easingTypes.map((type) => (
-                        <option key={type} value={type}>
+                        <option
+                           style={{ color: "black" }}
+                           key={type}
+                           value={type}>
                            {type}
                         </option>
                      ))}

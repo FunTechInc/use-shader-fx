@@ -23,7 +23,7 @@ const Menu = () => {
                window.location.href = e.target.value;
             }}>
             {pages.map((page) => (
-               <option key={page} value={page}>
+               <option style={{ color: "black" }} key={page} value={page}>
                   {page}
                </option>
             ))}
