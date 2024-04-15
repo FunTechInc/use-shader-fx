@@ -11,21 +11,21 @@
    width: 100%;
    height: 100svh;
    display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.container {
+   width: fit-content;
+   height: auto;
+   display: flex;
    flex-direction: column;
    align-items: center;
    justify-content: center;
    pointer-events: none;
    overflow: hidden;
-   position: relative;
-}
-
-.content {
-   color: white;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
    mix-blend-mode: difference;
+   color: white;
 }
 
 .title {
@@ -43,19 +43,15 @@
    display: flex;
    align-items: baseline;
    gap: 8px;
+   background-color: rgba(255, 255, 255, 0.24);
+   padding: 6px;
+   width: 100%;
+   text-align: center;
+   justify-content: center;
+   border-radius: 100vh;
    &.copied {
       pointer-events: none;
       opacity: 0.24;
-   }
-}
-
-.link {
-   margin-top: 24px;
-   font-size: 18px;
-   a {
-      pointer-events: auto;
-      text-decoration: underline;
-      margin-left: 8px;
    }
 }
 
@@ -64,7 +60,7 @@
    flex-direction: row;
    align-items: center;
    justify-content: center;
-   font-size: 16px;
+   font-size: 12px;
    margin-top: 16px;
    p {
       width: 64px;
@@ -76,21 +72,11 @@
       cursor: pointer;
       width: 160px;
       text-align: center;
+      font-size: 16px;
       @media (max-width: 560px) {
          text-align: left;
          padding: 0 16px;
          width: 120px;
       }
    }
-}
-
-.snsLink {
-   position: absolute;
-   bottom: 16px;
-   right: 16px;
-   display: flex;
-   align-items: center;
-   gap: 16px;
-   mix-blend-mode: difference;
-   pointer-events: auto;
 }

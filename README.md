@@ -16,7 +16,7 @@ npm install @funtech-inc/use-shader-fx
 <table>
 <tr>
 <th><strong>effects</strong></th>
-<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usesimpleblur--docs">useSimpleBlur</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usewave--docs">useWave</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usemotionblur--docs">useMotionBlur</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usesimpleblur--docs">useSimpleBlur</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/effects-usewave--docs">useWave</a></td>
 </tr>
 
 <tr>

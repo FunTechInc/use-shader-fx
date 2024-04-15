@@ -1,6 +1,7 @@
 import "the-new-css-reset/css/reset.css";
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
+import { UI } from "./_ui";
 
 const oswald = Oswald({
    subsets: ["latin"],
@@ -19,7 +20,10 @@ export default function RootLayout({
 }) {
    return (
       <html lang="en" style={{ overflow: "hidden", backgroundColor: "#000" }}>
-         <body className={oswald.className}>{children}</body>
+         <body className={oswald.className}>
+            {children}
+            <UI />
+         </body>
       </html>
    );
 }
