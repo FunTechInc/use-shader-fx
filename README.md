@@ -9,6 +9,17 @@ For details on each FX, please refer to Storybook
 npm install @funtech-inc/use-shader-fx
 ```
 
+<p>
+	<a href="https://use-shader-fx.vercel.app/"><img src="public/gif/gif0.gif" width="240"/></a>
+	<a href="https://use-shader-fx.vercel.app/cream"><img src="public/gif/gif1.gif" width="240"/></a>
+	<a href="https://use-shader-fx.vercel.app/useMorphParticles"><img src="public/gif/gif2.gif" 
+	width="240"/></a>
+	<a href="https://use-shader-fx.vercel.app/obscurus"><img src="public/gif/gif3.gif" 
+	width="240"/></a>
+	<a href="https://use-shader-fx.vercel.app/useWobble3D"><img src="public/gif/gif4.gif" 
+	width="240"/></a>
+</p>
+
 # Hooks Index
 
 ### FXs
