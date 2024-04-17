@@ -120,7 +120,7 @@ export const Playground = () => {
          // map: funkun,
          // alphaMap: funkunAlpha,
          beat: b.beat,
-         // morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
+         morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
          // morphProgress: 0.5,
       });
       updateGUI();
