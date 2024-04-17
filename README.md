@@ -19,6 +19,8 @@ npm install @funtech-inc/use-shader-fx
 	width="240"/></a></td>
 	 <td><a href="https://use-shader-fx.vercel.app/obscurus"><img src="public/gif/gif3.gif" 
 	width="240"/></a></td>
+  </tr>
+  <tr>
     <td><a href="https://use-shader-fx.vercel.app/useWobble3D"><img src="public/gif/gif4.gif" 
 	width="240"/></a></td>
   </tr>
