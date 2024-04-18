@@ -21,7 +21,11 @@ npm install @funtech-inc/use-shader-fx
 	width="240"/></a></td>
   </tr>
   <tr>
-    <td><a href="https://use-shader-fx.vercel.app/useWobble3D"><img src="public/gif/gif4.gif" 
+	<td><a href="https://particles-demo-green.vercel.app/"><img src="public/gif/gif6.gif" 
+	width="240"/></a></td>
+   <td><a href="https://use-shader-fx.vercel.app/useWobble3D"><img src="public/gif/gif4.gif" 
+	width="240"/></a></td>
+	<td><a href="https://romanticism.vercel.app/"><img src="public/gif/gif5.gif" 
 	width="240"/></a></td>
   </tr>
 </table>
@@ -96,6 +100,12 @@ useFrame((props) => {
    }
 });
 ```
+
+### Starter template with Next.js + TypeScript 🎨
+
+<a href="https://github.com/FunTechInc/blankcanvas"><img width="100%" src="public/gif/blankcanvas.gif"/></a>
+
+[blankcanvas](https://github.com/FunTechInc/blankcanvas)
 
 ## The simplest example
 
