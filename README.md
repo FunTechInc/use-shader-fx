@@ -101,10 +101,11 @@ useFrame((props) => {
 });
 ```
 
-<a href="https://github.com/FunTechInc/blankcanvas"><img src="public/gif/blankcanvas.gif"/></a>
+### Starter template with Next.js + TypeScript 🎨
 
-This is starter template project with Next.js + typescript
-👉 [blankcanvas](https://github.com/FunTechInc/blankcanvas) 👈
+<a href="https://github.com/FunTechInc/blankcanvas"><img width="100%" src="public/gif/blankcanvas.gif"/></a>
+
+[blankcanvas](https://github.com/FunTechInc/blankcanvas)
 
 ## The simplest example
 
