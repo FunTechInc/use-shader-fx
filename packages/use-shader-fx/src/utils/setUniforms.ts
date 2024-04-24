@@ -17,16 +17,14 @@ type UniformValue =
    | undefined;
 type UniformObject = { [key: string]: { value: UniformValue } };
 
-export const setUniform = <T extends UniformObject>(
-   material: { uniforms: T },
-   key: keyof T,
-   value: UniformValue
-) => {
-   if (value === undefined) {
-      return;
-   }
-   // By design, I don't want to pass null to uniform
-   if (material.uniforms && material.uniforms[key] && value !== null) {
-      material.uniforms[key].value = value;
-   }
-};
+export const setUniform =
+   <T extends UniformObject>(material: { uniforms: T }) =>
+   (key: keyof T, value: UniformValue) => {
+      if (value === undefined) {
+         return;
+      }
+      // By design, I don't want to pass null to uniform
+      if (material.uniforms[key] && value !== null) {
+         material.uniforms[key].value = value;
+      }
+   };

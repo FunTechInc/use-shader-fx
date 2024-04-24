@@ -38,11 +38,12 @@ export const useAlphaBlending = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<AlphaBlendingParams, AlphaBlendingObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size });
+   const { material, mesh } = useMesh({ scene, size, onBeforeCompile });
    const camera = useCamera(size);
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
@@ -57,18 +58,20 @@ export const useAlphaBlending = ({
    const [params, setParams] =
       useParams<AlphaBlendingParams>(ALPHABLENDING_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: AlphaBlendingParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uMap", params.map!);
+         updateValue("uTexture", params.texture!);
+         updateValue("uMap", params.map!);
 
          return updateRenderTarget(gl);
       },
-      [material, updateRenderTarget, params, setParams]
+      [updateValue, updateRenderTarget, params, setParams]
    );
 
    return [

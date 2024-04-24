@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 export declare class WaveMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uEpicenter: {
@@ -18,7 +19,9 @@ export declare class WaveMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => {
+export declare const useMesh: ({ scene, onBeforeCompile, }: {
+    scene: THREE.Scene;
+} & MaterialProps) => {
     material: WaveMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, WaveMaterial>;
 };

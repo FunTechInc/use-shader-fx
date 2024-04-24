@@ -12,6 +12,7 @@ const Menu = () => {
       "/obscurus",
       "/useMorphParticles",
       "/useWobble3D",
+      "/useBlank",
    ];
    const pathname = usePathname();
    return (

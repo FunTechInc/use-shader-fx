@@ -47,6 +47,7 @@ export const useCreateMorphParticles = ({
    positions,
    uvs,
    mapArray,
+   onBeforeCompile,
 }: Create3DHooksProps &
    UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
    const _dpr = getDpr(dpr);
@@ -66,6 +67,7 @@ export const useCreateMorphParticles = ({
       positions,
       uvs,
       mapArray,
+      onBeforeCompile,
    });
 
    const { points, interactiveMesh } = useCreateObject({
@@ -74,101 +76,79 @@ export const useCreateMorphParticles = ({
       material,
    });
 
+   const updateValue = setUniform(material);
    const updateUniform = useCallback<UpdateUniform>(
       (props, params) => {
          if (props) {
-            setUniform(
-               material,
-               "uTime",
-               params?.beat || props.clock.getElapsedTime()
-            );
+            updateValue("uTime", params?.beat || props.clock.getElapsedTime());
          }
          if (params === undefined) {
             return;
          }
-         setUniform(material, "uMorphProgress", params.morphProgress);
-         setUniform(material, "uBlurAlpha", params.blurAlpha);
-         setUniform(material, "uBlurRadius", params.blurRadius);
-         setUniform(material, "uPointSize", params.pointSize);
-         setUniform(material, "uPointAlpha", params.pointAlpha);
+         updateValue("uMorphProgress", params.morphProgress);
+         updateValue("uBlurAlpha", params.blurAlpha);
+         updateValue("uBlurRadius", params.blurRadius);
+         updateValue("uPointSize", params.pointSize);
+         updateValue("uPointAlpha", params.pointAlpha);
          if (params.picture) {
-            setUniform(material, "uPicture", params.picture);
-            setUniform(material, "uIsPicture", true);
+            updateValue("uPicture", params.picture);
+            updateValue("uIsPicture", true);
          } else if (params.picture === false) {
-            setUniform(material, "uIsPicture", false);
+            updateValue("uIsPicture", false);
          }
          if (params.alphaPicture) {
-            setUniform(material, "uAlphaPicture", params.alphaPicture);
-            setUniform(material, "uIsAlphaPicture", true);
+            updateValue("uAlphaPicture", params.alphaPicture);
+            updateValue("uIsAlphaPicture", true);
          } else if (params.alphaPicture === false) {
-            setUniform(material, "uIsAlphaPicture", false);
+            updateValue("uIsAlphaPicture", false);
          }
-         setUniform(material, "uColor0", params.color0);
-         setUniform(material, "uColor1", params.color1);
-         setUniform(material, "uColor2", params.color2);
-         setUniform(material, "uColor3", params.color3);
+         updateValue("uColor0", params.color0);
+         updateValue("uColor1", params.color1);
+         updateValue("uColor2", params.color2);
+         updateValue("uColor3", params.color3);
          if (params.map) {
-            setUniform(material, "uMap", params.map);
-            setUniform(material, "uIsMap", true);
+            updateValue("uMap", params.map);
+            updateValue("uIsMap", true);
          } else if (params.map === false) {
-            setUniform(material, "uIsMap", false);
+            updateValue("uIsMap", false);
          }
          if (params.alphaMap) {
-            setUniform(material, "uAlphaMap", params.alphaMap);
-            setUniform(material, "uIsAlphaMap", true);
+            updateValue("uAlphaMap", params.alphaMap);
+            updateValue("uIsAlphaMap", true);
          } else if (params.alphaMap === false) {
-            setUniform(material, "uIsAlphaMap", false);
+            updateValue("uIsAlphaMap", false);
          }
-         setUniform(material, "uWobbleStrength", params.wobbleStrength);
-         setUniform(
-            material,
+         updateValue("uWobbleStrength", params.wobbleStrength);
+         updateValue(
             "uWobblePositionFrequency",
             params.wobblePositionFrequency
          );
-         setUniform(
-            material,
-            "uWobbleTimeFrequency",
-            params.wobbleTimeFrequency
-         );
-         setUniform(material, "uWarpStrength", params.warpStrength);
-         setUniform(
-            material,
-            "uWarpPositionFrequency",
-            params.warpPositionFrequency
-         );
-         setUniform(material, "uWarpTimeFrequency", params.warpTimeFrequency);
+         updateValue("uWobbleTimeFrequency", params.wobbleTimeFrequency);
+         updateValue("uWarpStrength", params.warpStrength);
+         updateValue("uWarpPositionFrequency", params.warpPositionFrequency);
+         updateValue("uWarpTimeFrequency", params.warpTimeFrequency);
          if (params.displacement) {
-            setUniform(material, "uDisplacement", params.displacement);
-            setUniform(material, "uIsDisplacement", true);
+            updateValue("uDisplacement", params.displacement);
+            updateValue("uIsDisplacement", true);
          } else if (params.displacement === false) {
-            setUniform(material, "uIsDisplacement", false);
+            updateValue("uIsDisplacement", false);
          }
-         setUniform(
-            material,
-            "uDisplacementIntensity",
-            params.displacementIntensity
-         );
-         setUniform(
-            material,
+         updateValue("uDisplacementIntensity", params.displacementIntensity);
+         updateValue(
             "uDisplacementColorIntensity",
             params.displacementColorIntensity
          );
-         setUniform(
-            material,
-            "uSizeRandomIntensity",
-            params.sizeRandomIntensity
-         );
-         setUniform(
-            material,
+         updateValue("uSizeRandomIntensity", params.sizeRandomIntensity);
+         updateValue(
             "uSizeRandomTimeFrequency",
             params.sizeRandomTimeFrequency
          );
-         setUniform(material, "uSizeRandomMin", params.sizeRandomMin);
-         setUniform(material, "uSizeRandomMax", params.sizeRandomMax);
-         setUniform(material, "uDivergence", params.divergence);
-         setUniform(material, "uDivergencePoint", params.divergencePoint);
+         updateValue("uSizeRandomMin", params.sizeRandomMin);
+         updateValue("uSizeRandomMax", params.sizeRandomMax);
+         updateValue("uDivergence", params.divergence);
+         updateValue("uDivergencePoint", params.divergencePoint);
       },
-      [material]
+      [updateValue]
    );
 
    return [

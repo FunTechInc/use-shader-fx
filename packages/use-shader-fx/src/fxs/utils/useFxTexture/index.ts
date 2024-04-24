@@ -59,11 +59,17 @@ export const useFxTexture = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<FxTextureParams, FxTextureObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
+   const { material, mesh } = useMesh({
+      scene,
+      size,
+      dpr: _dpr.shader,
+      onBeforeCompile,
+   });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -76,16 +82,18 @@ export const useFxTexture = ({
 
    const [params, setParams] = useParams<FxTextureParams>(FXTEXTURE_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: FxTextureParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture0", params.texture0!);
-         setUniform(material, "uTexture1", params.texture1!);
+         updateValue("uTexture0", params.texture0!);
+         updateValue("uTexture1", params.texture1!);
 
-         setUniform(material, "progress", params.progress!);
+         updateValue("progress", params.progress!);
 
          // calculate resolution by linear interpolation.
          const tex0Res = [
@@ -99,19 +107,19 @@ export const useFxTexture = ({
          const interpolatedResolution = tex0Res.map((value, index) => {
             return value + (tex1Res[index] - value) * params.progress!;
          });
-         setUniform(material, "uTextureResolution", interpolatedResolution);
+         updateValue("uTextureResolution", interpolatedResolution);
 
-         setUniform(material, "padding", params.padding!);
-         setUniform(material, "uMap", params.map!);
-         setUniform(material, "mapIntensity", params.mapIntensity!);
-         setUniform(material, "edgeIntensity", params.edgeIntensity!);
-         setUniform(material, "epicenter", params.epicenter!);
-         setUniform(material, "dirX", params.dir!.x);
-         setUniform(material, "dirY", params.dir!.y);
+         updateValue("padding", params.padding!);
+         updateValue("uMap", params.map!);
+         updateValue("mapIntensity", params.mapIntensity!);
+         updateValue("edgeIntensity", params.edgeIntensity!);
+         updateValue("epicenter", params.epicenter!);
+         updateValue("dirX", params.dir!.x);
+         updateValue("dirY", params.dir!.y);
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, params, setParams]
+      [updateRenderTarget, updateValue, params, setParams]
    );
    return [
       updateFx,

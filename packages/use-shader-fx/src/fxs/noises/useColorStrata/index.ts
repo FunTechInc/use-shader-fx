@@ -65,11 +65,12 @@ export const useColorStrata = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<ColorStrataParams, ColorStrataObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -82,39 +83,41 @@ export const useColorStrata = ({
 
    const [params, setParams] = useParams<ColorStrataParams>(COLORSTRATA_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: ColorStrataParams) => {
          const { gl, clock } = props;
          updateParams && setParams(updateParams);
 
          if (params.texture) {
-            setUniform(material, "uTexture", params.texture);
-            setUniform(material, "isTexture", true);
+            updateValue("uTexture", params.texture);
+            updateValue("isTexture", true);
          } else {
-            setUniform(material, "isTexture", false);
-            setUniform(material, "scale", params.scale!);
+            updateValue("isTexture", false);
+            updateValue("scale", params.scale!);
          }
 
          if (params.noise) {
-            setUniform(material, "noise", params.noise);
-            setUniform(material, "isNoise", true);
-            setUniform(material, "noiseStrength", params.noiseStrength!);
+            updateValue("noise", params.noise);
+            updateValue("isNoise", true);
+            updateValue("noiseStrength", params.noiseStrength!);
          } else {
-            setUniform(material, "isNoise", false);
+            updateValue("isNoise", false);
          }
 
-         setUniform(material, "uTime", params.beat || clock.getElapsedTime());
+         updateValue("uTime", params.beat || clock.getElapsedTime());
 
-         setUniform(material, "laminateLayer", params.laminateLayer!);
-         setUniform(material, "laminateInterval", params.laminateInterval!);
-         setUniform(material, "laminateDetail", params.laminateDetail!);
-         setUniform(material, "distortion", params.distortion!);
-         setUniform(material, "colorFactor", params.colorFactor!);
-         setUniform(material, "timeStrength", params.timeStrength!);
+         updateValue("laminateLayer", params.laminateLayer!);
+         updateValue("laminateInterval", params.laminateInterval!);
+         updateValue("laminateDetail", params.laminateDetail!);
+         updateValue("distortion", params.distortion!);
+         updateValue("colorFactor", params.colorFactor!);
+         updateValue("timeStrength", params.timeStrength!);
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

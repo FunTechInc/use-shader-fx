@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 export declare class MarbleMaterial extends THREE.ShaderMaterial {
     uniforms: {
         u_time: {
@@ -24,7 +25,9 @@ export declare class MarbleMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => {
+export declare const useMesh: ({ scene, onBeforeCompile, }: {
+    scene: THREE.Scene;
+} & MaterialProps) => {
     material: MarbleMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, MarbleMaterial>;
 };

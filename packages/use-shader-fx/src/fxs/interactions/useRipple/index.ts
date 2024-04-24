@@ -61,6 +61,7 @@ export const useRipple = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: UseRippleProps): HooksReturn<RippleParams, RippleObject> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -69,6 +70,7 @@ export const useRipple = ({
       max: max,
       texture,
       scene,
+      onBeforeCompile,
    });
    const camera = useCamera(size);
    const updatePointer = usePointer();

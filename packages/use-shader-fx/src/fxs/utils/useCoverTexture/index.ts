@@ -35,11 +35,17 @@ export const useCoverTexture = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<CoverTextureParams, CoverTextureObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
+   const { material, mesh } = useMesh({
+      scene,
+      size,
+      dpr: _dpr.shader,
+      onBeforeCompile,
+   });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -53,21 +59,23 @@ export const useCoverTexture = ({
    const [params, setParams] =
       useParams<CoverTextureParams>(COVERTEXTURE_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: CoverTextureParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uTextureResolution", [
+         updateValue("uTexture", params.texture!);
+         updateValue("uTextureResolution", [
             params.texture!?.source?.data?.width || 0,
             params.texture!?.source?.data?.height || 0,
          ]);
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, params, setParams]
+      [updateRenderTarget, updateValue, params, setParams]
    );
    return [
       updateFx,

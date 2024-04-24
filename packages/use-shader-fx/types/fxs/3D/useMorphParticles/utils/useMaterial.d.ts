@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../../types";
 export declare class MorphParticlesMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uResolution: {
@@ -109,14 +110,14 @@ export declare class MorphParticlesMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, mapArray, }: {
+export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, mapArray, onBeforeCompile, }: {
     size: Size;
     dpr: number | false;
     geometry: THREE.BufferGeometry;
     positions?: Float32Array[] | undefined;
     uvs?: Float32Array[] | undefined;
     mapArray?: THREE.Texture[] | undefined;
-}) => {
+} & MaterialProps) => {
     material: MorphParticlesMaterial;
     modifiedPositions: Float32Array[];
     modifiedUvs: Float32Array[];

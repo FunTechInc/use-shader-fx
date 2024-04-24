@@ -112,6 +112,7 @@ export const useMorphParticles = ({
    geometry,
    positions,
    uvs,
+   onBeforeCompile,
 }: HooksProps3D & UseCreateMorphParticlesProps): HooksReturn<
    MorphParticlesParams,
    MorphParticlesObject
@@ -128,7 +129,15 @@ export const useMorphParticles = ({
          positions: generatedPositions,
          uvs: generatedUvs,
       },
-   ] = useCreateMorphParticles({ scene, size, dpr, geometry, positions, uvs });
+   ] = useCreateMorphParticles({
+      scene,
+      size,
+      dpr,
+      geometry,
+      positions,
+      uvs,
+      onBeforeCompile,
+   });
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,

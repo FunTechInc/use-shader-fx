@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Size } from "@react-three/fiber";
 import { useResolution } from "../../../../utils/useResolution";
 import { setUniform } from "../../../../utils/setUniforms";
@@ -11,6 +11,7 @@ import { ISDEV } from "../../../../libs/constants";
 import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
 import { rewriteFragmentShader } from "./rewriteFragmentShader";
+import { MaterialProps } from "../../../types";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -59,6 +60,7 @@ export const useMaterial = ({
    positions,
    uvs,
    mapArray,
+   onBeforeCompile,
 }: {
    size: Size;
    dpr: number | false;
@@ -66,7 +68,7 @@ export const useMaterial = ({
    positions?: Float32Array[];
    uvs?: Float32Array[];
    mapArray?: THREE.Texture[];
-}) => {
+} & MaterialProps) => {
    const modifiedPositions = useMemo(
       () => modifyAttributes(positions, geometry, "position", 3),
       [positions, geometry]
@@ -99,11 +101,12 @@ export const useMaterial = ({
       ).replace(`#usf <getWobble>`, getWobble);
 
       // fragment
-      const mapArraySwitch = rewriteFragmentShader(mapArray, fragmentShader);
+      const { rewritedFragmentShader, mapArrayUniforms } =
+         rewriteFragmentShader(mapArray, fragmentShader);
 
-      return new THREE.ShaderMaterial({
+      const mat = new THREE.ShaderMaterial({
          vertexShader: rewritedVertexShader,
-         fragmentShader: mapArraySwitch.rewritedFragmentShader,
+         fragmentShader: rewritedFragmentShader,
          depthTest: false,
          depthWrite: false,
          transparent: true,
@@ -160,18 +163,25 @@ export const useMaterial = ({
             uSizeRandomMax: { value: MORPHPARTICLES_PARAMS.sizeRandomMax },
             uDivergence: { value: MORPHPARTICLES_PARAMS.divergence },
             uDivergencePoint: { value: MORPHPARTICLES_PARAMS.divergencePoint },
-            ...mapArraySwitch.mapArrayUniforms,
+            ...mapArrayUniforms,
          },
       });
+
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+
+      return mat;
    }, [
       geometry,
       modifiedPositions,
       modifiedUvs,
       mapArray,
+      onBeforeCompile,
    ]) as MorphParticlesMaterial;
 
    const resolution = useResolution(size, dpr);
-   setUniform(material, "uResolution", resolution.clone());
+   setUniform(material)("uResolution", resolution.clone());
 
    return { material, modifiedPositions, modifiedUvs };
 };

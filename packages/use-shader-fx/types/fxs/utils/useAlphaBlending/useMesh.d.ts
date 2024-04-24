@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../types";
 export declare class AlphaBlendingMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTexture: {
@@ -10,10 +11,10 @@ export declare class AlphaBlendingMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, }: {
+export declare const useMesh: ({ scene, size, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
-}) => {
+} & MaterialProps) => {
     material: AlphaBlendingMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, AlphaBlendingMaterial>;
 };

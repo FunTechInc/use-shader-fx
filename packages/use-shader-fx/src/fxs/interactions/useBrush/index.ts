@@ -72,11 +72,17 @@ export const useBrush = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<BrushParams, BrushObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
+   const { material, mesh } = useMesh({
+      scene,
+      size,
+      dpr: _dpr.shader,
+      onBeforeCompile,
+   });
    const camera = useCamera(size);
    const updatePointer = usePointer();
    const [renderTarget, updateRenderTarget] = useDoubleFBO({
@@ -92,6 +98,8 @@ export const useBrush = ({
 
    const pressureEnd = useRef<number | null>(null);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: BrushParams) => {
          const { gl, pointer } = props;
@@ -99,55 +107,55 @@ export const useBrush = ({
          updateParams && setParams(updateParams);
 
          if (params.texture!) {
-            setUniform(material, "uIsTexture", true);
-            setUniform(material, "uTexture", params.texture!);
+            updateValue("uIsTexture", true);
+            updateValue("uTexture", params.texture!);
          } else {
-            setUniform(material, "uIsTexture", false);
+            updateValue("uIsTexture", false);
          }
 
          if (params.map!) {
-            setUniform(material, "uIsMap", true);
-            setUniform(material, "uMap", params.map!);
-            setUniform(material, "uMapIntensity", params.mapIntensity!);
+            updateValue("uIsMap", true);
+            updateValue("uMap", params.map!);
+            updateValue("uMapIntensity", params.mapIntensity!);
          } else {
-            setUniform(material, "uIsMap", false);
+            updateValue("uIsMap", false);
          }
 
-         setUniform(material, "uRadius", params.radius!);
-         setUniform(material, "uSmudge", params.smudge!);
-         setUniform(material, "uDissipation", params.dissipation!);
-         setUniform(material, "uMotionBlur", params.motionBlur!);
-         setUniform(material, "uMotionSample", params.motionSample!);
+         updateValue("uRadius", params.radius!);
+         updateValue("uSmudge", params.smudge!);
+         updateValue("uDissipation", params.dissipation!);
+         updateValue("uMotionBlur", params.motionBlur!);
+         updateValue("uMotionSample", params.motionSample!);
 
          const pointerValues = params.pointerValues! || updatePointer(pointer);
 
          if (pointerValues.isVelocityUpdate) {
-            setUniform(material, "uMouse", pointerValues.currentPointer);
-            setUniform(material, "uPrevMouse", pointerValues.prevPointer);
+            updateValue("uMouse", pointerValues.currentPointer);
+            updateValue("uPrevMouse", pointerValues.prevPointer);
          }
-         setUniform(material, "uVelocity", pointerValues.velocity);
+         updateValue("uVelocity", pointerValues.velocity);
 
          const color: THREE.Vector3 | THREE.Color =
             typeof params.color === "function"
                ? params.color(pointerValues.velocity)
                : params.color!;
-         setUniform(material, "uColor", color);
+         updateValue("uColor", color);
 
-         setUniform(material, "uIsCursor", params.isCursor!);
+         updateValue("uIsCursor", params.isCursor!);
 
          // pressure
-         setUniform(material, "uPressureEnd", params.pressure!);
+         updateValue("uPressureEnd", params.pressure!);
          if (pressureEnd.current === null) {
             pressureEnd.current = params.pressure!;
          }
-         setUniform(material, "uPressureStart", pressureEnd.current);
+         updateValue("uPressureStart", pressureEnd.current);
          pressureEnd.current = params.pressure!;
 
          return updateRenderTarget(gl, ({ read }) => {
-            setUniform(material, "uBuffer", read);
+            updateValue("uBuffer", read);
          });
       },
-      [material, updatePointer, updateRenderTarget, params, setParams]
+      [updateValue, updatePointer, updateRenderTarget, params, setParams]
    );
 
    return [

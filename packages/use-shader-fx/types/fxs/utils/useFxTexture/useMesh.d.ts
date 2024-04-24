@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../types";
 export declare class FxTextureMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uResolution: {
@@ -40,11 +41,11 @@ export declare class FxTextureMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, }: {
+export declare const useMesh: ({ scene, size, dpr, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;
-}) => {
+} & MaterialProps) => {
     material: FxTextureMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxTextureMaterial>;
 };

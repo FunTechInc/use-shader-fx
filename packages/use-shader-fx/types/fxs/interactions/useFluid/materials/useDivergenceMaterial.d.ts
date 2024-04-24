@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class DivergenceMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uVelocity: {
@@ -9,4 +10,4 @@ export declare class DivergenceMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useDivergenceMaterial: () => DivergenceMaterial;
+export declare const useDivergenceMaterial: ({ onBeforeCompile }: MaterialProps) => DivergenceMaterial;

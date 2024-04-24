@@ -6,6 +6,7 @@ import fragmentShader from "./shader/main.frag";
 import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
+import { MaterialProps } from "../../types";
 
 export class FxTextureMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -19,28 +20,31 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   onBeforeCompile,
 }: {
    scene: THREE.Scene;
    size: Size;
    dpr: number | false;
-}) => {
+} & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-   const material = useMemo(
-      () =>
-         new THREE.ShaderMaterial({
-            uniforms: {
-               uResolution: { value: new THREE.Vector2() },
-               uTextureResolution: { value: new THREE.Vector2() },
-               uTexture: { value: new THREE.Texture() },
-            },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-         }),
-      []
-   ) as FxTextureMaterial;
+   const material = useMemo(() => {
+      const mat = new THREE.ShaderMaterial({
+         uniforms: {
+            uResolution: { value: new THREE.Vector2() },
+            uTextureResolution: { value: new THREE.Vector2() },
+            uTexture: { value: new THREE.Texture() },
+         },
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+      });
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+      return mat;
+   }, [onBeforeCompile]) as FxTextureMaterial;
 
    const resolution = useResolution(size, dpr);
-   setUniform(material, "uResolution", resolution.clone());
+   setUniform(material)("uResolution", resolution.clone());
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

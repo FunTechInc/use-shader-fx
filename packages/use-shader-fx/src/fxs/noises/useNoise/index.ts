@@ -58,11 +58,12 @@ export const useNoise = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<NoiseParams, NoiseObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -75,25 +76,26 @@ export const useNoise = ({
 
    const [params, setParams] = useParams<NoiseParams>(NOISE_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: NoiseParams) => {
          const { gl, clock } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "scale", params.scale!);
-         setUniform(material, "timeStrength", params.timeStrength!);
-         setUniform(material, "noiseOctaves", params.noiseOctaves!);
-         setUniform(material, "fbmOctaves", params.fbmOctaves!);
-         setUniform(material, "warpOctaves", params.warpOctaves!);
-         setUniform(material, "warpDirection", params.warpDirection!);
-         setUniform(material, "warpStrength", params.warpStrength!);
-
-         setUniform(material, "uTime", params.beat || clock.getElapsedTime());
+         updateValue("scale", params.scale!);
+         updateValue("timeStrength", params.timeStrength!);
+         updateValue("noiseOctaves", params.noiseOctaves!);
+         updateValue("fbmOctaves", params.fbmOctaves!);
+         updateValue("warpOctaves", params.warpOctaves!);
+         updateValue("warpDirection", params.warpDirection!);
+         updateValue("warpStrength", params.warpStrength!);
+         updateValue("uTime", params.beat || clock.getElapsedTime());
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

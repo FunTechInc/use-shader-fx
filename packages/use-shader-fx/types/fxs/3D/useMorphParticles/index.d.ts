@@ -62,4 +62,4 @@ export declare const MORPHPARTICLES_PARAMS: MorphParticlesParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useMorphParticles: ({ size, dpr, samples, isSizeUpdate, camera, geometry, positions, uvs, }: HooksProps3D & UseCreateMorphParticlesProps) => HooksReturn<MorphParticlesParams, MorphParticlesObject>;
+export declare const useMorphParticles: ({ size, dpr, samples, isSizeUpdate, camera, geometry, positions, uvs, onBeforeCompile, }: HooksProps3D & UseCreateMorphParticlesProps) => HooksReturn<MorphParticlesParams, MorphParticlesObject>;

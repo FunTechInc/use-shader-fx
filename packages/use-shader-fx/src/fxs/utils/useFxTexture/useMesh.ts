@@ -6,6 +6,7 @@ import fragmentShader from "./shader/main.frag";
 import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
+import { MaterialProps } from "../../types";
 
 export class FxTextureMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -28,37 +29,40 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   onBeforeCompile,
 }: {
    scene: THREE.Scene;
    size: Size;
    dpr: number | false;
-}) => {
+} & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-   const material = useMemo(
-      () =>
-         new THREE.ShaderMaterial({
-            uniforms: {
-               uResolution: { value: new THREE.Vector2() },
-               uTextureResolution: { value: new THREE.Vector2() },
-               uTexture0: { value: new THREE.Texture() },
-               uTexture1: { value: new THREE.Texture() },
-               padding: { value: 0.0 },
-               uMap: { value: new THREE.Texture() },
-               edgeIntensity: { value: 0.0 },
-               mapIntensity: { value: 0.0 },
-               epicenter: { value: new THREE.Vector2(0.0, 0.0) },
-               progress: { value: 0.0 },
-               dirX: { value: 0.0 },
-               dirY: { value: 0.0 },
-            },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-         }),
-      []
-   ) as FxTextureMaterial;
+   const material = useMemo(() => {
+      const mat = new THREE.ShaderMaterial({
+         uniforms: {
+            uResolution: { value: new THREE.Vector2() },
+            uTextureResolution: { value: new THREE.Vector2() },
+            uTexture0: { value: new THREE.Texture() },
+            uTexture1: { value: new THREE.Texture() },
+            padding: { value: 0.0 },
+            uMap: { value: new THREE.Texture() },
+            edgeIntensity: { value: 0.0 },
+            mapIntensity: { value: 0.0 },
+            epicenter: { value: new THREE.Vector2(0.0, 0.0) },
+            progress: { value: 0.0 },
+            dirX: { value: 0.0 },
+            dirY: { value: 0.0 },
+         },
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+      });
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+      return mat;
+   }, [onBeforeCompile]) as FxTextureMaterial;
 
    const resolution = useResolution(size, dpr);
-   setUniform(material, "uResolution", resolution.clone());
+   setUniform(material)("uResolution", resolution.clone());
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

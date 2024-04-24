@@ -1,2 +1,3 @@
 import * as THREE from "three";
-export declare const useInitialMaterial: () => THREE.ShaderMaterial;
+import { MaterialProps } from "../../../types";
+export declare const useInitialMaterial: ({ onBeforeCompile }: MaterialProps) => THREE.ShaderMaterial;

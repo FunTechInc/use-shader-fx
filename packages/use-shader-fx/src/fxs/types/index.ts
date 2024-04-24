@@ -4,24 +4,32 @@ import { RootState, Size } from "@react-three/fiber";
 export type Dpr =
    | number
    | {
-        dpr: number;
-        /** you can set whether `dpr` affects `shader` and `fbo`. default is `true` for both */
-        effect?: {
-           /** default : `true` */
-           shader?: boolean;
-           /** default : `true` */
-           fbo?: boolean;
-        };
+        /** you can set whether `dpr` affects `shader`. default : `false` */
+        shader?: false | number;
+        /** you can set whether `dpr` affects `fbo`. default : `false` */
+        fbo?: false | number;
      };
 
-export type HooksProps = {
+export type MaterialProps = {
+   /**
+    * An optional callback that is executed immediately before the shader program is compiled.
+    * @param shader — Source code of the shader
+    * @param renderer — WebGLRenderer Context that is initializing the material
+    */
+   onBeforeCompile?: (
+      shader: THREE.Shader,
+      renderer: THREE.WebGLRenderer
+   ) => void;
+};
+
+export interface HooksProps extends MaterialProps {
    size: Size;
    dpr: Dpr;
    /** Defines the count of MSAA samples. Can only be used with WebGL 2. default : `0` */
    samples?: number;
    /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
    isSizeUpdate?: boolean;
-};
+}
 
 /**
  * @returns {HooksReturn<T, O>}

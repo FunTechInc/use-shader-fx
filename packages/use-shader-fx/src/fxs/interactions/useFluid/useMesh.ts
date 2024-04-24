@@ -24,10 +24,11 @@ import {
    GradientSubtractMaterial,
    useGradientSubtractMaterial,
 } from "./materials/useGradientSubtractMaterial";
-import { SplatMaterial, useSplateMaterial } from "./materials/useSplatMaterial";
+import { SplatMaterial, useSplatMaterial } from "./materials/useSplatMaterial";
 import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
+import { MaterialProps } from "../../types";
 
 type TMaterials =
    | AdvectionMaterial
@@ -49,6 +50,28 @@ export type FluidMaterials = {
    splatMaterial: SplatMaterial;
 };
 
+export type FluidOnBeforeCompile = {
+   initial?: MaterialProps;
+   curl?: MaterialProps;
+   vorticity?: MaterialProps;
+   advection?: MaterialProps;
+   divergence?: MaterialProps;
+   pressure?: MaterialProps;
+   clear?: MaterialProps;
+   gradientSubtract?: MaterialProps;
+   splat?: MaterialProps;
+};
+
+const useCustomMaterial = <T extends THREE.Material>(
+   materialHook: ({ onBeforeCompile }: MaterialProps) => T,
+   onBeforeCompileObj?: MaterialProps
+) => {
+   const onBeforeCompile = onBeforeCompileObj?.onBeforeCompile;
+   return materialHook({
+      onBeforeCompile,
+   });
+};
+
 /**
  * Returns the material update function in the second argument
  */
@@ -56,22 +79,43 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   fluidOnBeforeCompile,
 }: {
    scene: THREE.Scene;
    size: Size;
    dpr: number | false;
+   fluidOnBeforeCompile?: FluidOnBeforeCompile;
 }) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-   const initialMaterial = useInitialMaterial();
+
+   const {
+      initial,
+      curl,
+      vorticity,
+      advection,
+      divergence,
+      pressure,
+      clear,
+      gradientSubtract,
+      splat,
+   } = fluidOnBeforeCompile ?? {};
+
+   const initialMaterial = useCustomMaterial(useInitialMaterial, initial);
    const updateMaterial = initialMaterial.clone();
-   const curlMaterial = useCurlMaterial();
-   const vorticityMaterial = useVorticityMaterial();
-   const advectionMaterial = useAdvectionMaterial();
-   const divergenceMaterial = useDivergenceMaterial();
-   const pressureMaterial = usePressureMaterial();
-   const clearMaterial = useClearMaterial();
-   const gradientSubtractMaterial = useGradientSubtractMaterial();
-   const splatMaterial = useSplateMaterial();
+   const curlMaterial = useCustomMaterial(useCurlMaterial, curl);
+   const vorticityMaterial = useCustomMaterial(useVorticityMaterial, vorticity);
+   const advectionMaterial = useCustomMaterial(useAdvectionMaterial, advection);
+   const divergenceMaterial = useCustomMaterial(
+      useDivergenceMaterial,
+      divergence
+   );
+   const pressureMaterial = useCustomMaterial(usePressureMaterial, pressure);
+   const clearMaterial = useCustomMaterial(useClearMaterial, clear);
+   const gradientSubtractMaterial = useCustomMaterial(
+      useGradientSubtractMaterial,
+      gradientSubtract
+   );
+   const splatMaterial = useCustomMaterial(useSplatMaterial, splat);
    const materials = useMemo(
       () => ({
          vorticityMaterial,
@@ -97,14 +141,12 @@ export const useMesh = ({
 
    const resolution = useResolution(size, dpr);
    useMemo(() => {
-      setUniform(
-         materials.splatMaterial,
+      setUniform(materials.splatMaterial)(
          "aspectRatio",
          resolution.x / resolution.y
       );
       for (const material of Object.values(materials)) {
-         setUniform<typeof material.uniforms>(
-            material,
+         setUniform<typeof material.uniforms>(material)(
             "texelSize",
             new THREE.Vector2(1.0 / resolution.x, 1.0 / resolution.y)
          );

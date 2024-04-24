@@ -41,7 +41,10 @@ export const UseBlending = (args: BlendingParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateCover] = useCoverTexture({ size, dpr });
-   const [updateFluid, setFluid, { output: fluid }] = useFluid({ size, dpr });
+   const [updateFluid, setFluid, { output: fluid }] = useFluid({
+      size,
+      dpr,
+   });
    const [updateBlending, setBlending] = useBlending({ size, dpr });
    const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
 

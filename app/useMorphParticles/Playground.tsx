@@ -95,6 +95,13 @@ export const Playground = () => {
       positions: morphList,
       uvs: uvList,
       // geometry: new THREE.PlaneGeometry(5, 5, 100, 100),
+      // onBeforeCompile: useCallback((shader: THREE.Shader) => {
+      //    // shader.vertexShader = shader.vertexShader.replace(
+      //    //    "gl_Position = projectedPosition += wobble;",
+      //    //    "gl_Position = projectedPosition += wobble + 2.;"
+      //    // );
+      //    console.log(shader);
+      // }, []),
    });
 
    const beat = useBeat(140, "easeOutCubic");

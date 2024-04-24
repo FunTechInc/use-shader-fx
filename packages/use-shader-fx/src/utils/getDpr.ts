@@ -6,9 +6,8 @@ export const getDpr = (
    if (typeof dpr === "number") {
       return { shader: dpr, fbo: dpr };
    }
-   // use dpr if `shader` and `fbo` are undefined
    return {
-      shader: (dpr.effect?.shader ?? true) && dpr.dpr,
-      fbo: (dpr.effect?.fbo ?? true) && dpr.dpr,
+      shader: dpr.shader ?? false,
+      fbo: dpr.fbo ?? false,
    };
 };

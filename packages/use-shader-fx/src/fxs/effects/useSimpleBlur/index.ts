@@ -43,10 +43,11 @@ export const useSimpleBlur = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<SimpleBlurParams, SimpleBlurObject> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
 
    const fboProps = useMemo(
@@ -64,30 +65,31 @@ export const useSimpleBlur = ({
    const [renderTarget, updateTempTexture] = useDoubleFBO(fboProps);
    const [params, setParams] = useParams<SimpleBlurParams>(SIMPLEBLUR_PARAMS);
 
+   const updateValue = setUniform(material);
    const updateFx = useCallback(
       (props: RootState, updateParams?: SimpleBlurParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uResolution", [
+         updateValue("uTexture", params.texture!);
+         updateValue("uResolution", [
             params.texture!?.source?.data?.width || 0,
             params.texture!?.source?.data?.height || 0,
          ]);
-         setUniform(material, "uBlurSize", params.blurSize!);
+         updateValue("uBlurSize", params.blurSize!);
 
          let _tempTexture: THREE.Texture = updateTempTexture(gl);
 
          const iterations = params.blurPower!;
          for (let i = 0; i < iterations; i++) {
-            setUniform(material, "uTexture", _tempTexture);
+            updateValue("uTexture", _tempTexture);
             _tempTexture = updateTempTexture(gl);
          }
 
          return _tempTexture;
       },
-      [updateTempTexture, material, setParams, params]
+      [updateTempTexture, updateValue, setParams, params]
    );
 
    return [

@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
    useFrame,
    useThree,
@@ -46,6 +46,13 @@ export const Playground = () => {
       useMotionBlur({
          size,
          dpr: 0.1,
+         onBeforeCompile: useCallback((shader: THREE.Shader) => {
+            // shader.fragmentShader = shader.fragmentShader.replace(
+            //    "gl_FragColor = mixed;",
+            //    "gl_FragColor = vec4(0.2,1.,0.2,1.);"
+            // );
+            console.log(shader.fragmentShader);
+         }, []),
       });
    setMotionBlur({
       texture: cover,

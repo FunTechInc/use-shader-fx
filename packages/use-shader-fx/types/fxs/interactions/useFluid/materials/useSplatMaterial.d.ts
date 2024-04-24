@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class SplatMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTarget: {
@@ -21,4 +22,4 @@ export declare class SplatMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useSplateMaterial: () => SplatMaterial;
+export declare const useSplatMaterial: ({ onBeforeCompile }: MaterialProps) => SplatMaterial;

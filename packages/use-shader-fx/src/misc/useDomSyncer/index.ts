@@ -61,7 +61,7 @@ export const DOMSYNCER_PARAMS: DomSyncerParams = {
  * @param dependencies - When this dependency array is changed, the mesh and intersection judgment will be updated according to the passed DOM array.
  */
 export const useDomSyncer = (
-   { size, dpr, samples, isSizeUpdate }: HooksProps,
+   { size, dpr, samples, isSizeUpdate, onBeforeCompile }: HooksProps,
    dependencies: React.DependencyList = []
 ): HooksReturn<DomSyncerParams, DomSyncerObject> => {
    const _dpr = getDpr(dpr);
@@ -129,6 +129,7 @@ export const useDomSyncer = (
                params,
                size,
                scene,
+               onBeforeCompile,
             });
 
             intersectionHandler({
@@ -155,6 +156,7 @@ export const useDomSyncer = (
          setParams,
          intersectionHandler,
          updateDomRects,
+         onBeforeCompile,
          refreshTrigger,
          scene,
          params,

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 
 type UseMeshProps = {
    scale: number;
@@ -8,23 +9,31 @@ type UseMeshProps = {
    scene: THREE.Scene;
 };
 
-export const useMesh = ({ scale, max, texture, scene }: UseMeshProps) => {
+export const useMesh = ({
+   scale,
+   max,
+   texture,
+   scene,
+   onBeforeCompile,
+}: UseMeshProps & MaterialProps) => {
    const meshArr = useRef<THREE.Mesh[]>([]);
    const geometry = useMemo(
       () => new THREE.PlaneGeometry(scale, scale),
       [scale]
    );
-   const material = useMemo(
-      () =>
-         new THREE.MeshBasicMaterial({
-            map: texture,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthTest: false,
-            depthWrite: false,
-         }),
-      [texture]
-   );
+   const material = useMemo(() => {
+      const mat = new THREE.MeshBasicMaterial({
+         map: texture,
+         transparent: true,
+         blending: THREE.AdditiveBlending,
+         depthTest: false,
+         depthWrite: false,
+      });
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+      return mat;
+   }, [texture, onBeforeCompile]);
 
    useEffect(() => {
       for (let i = 0; i < max; i++) {
