@@ -113,7 +113,7 @@ export const Playground = ({
    });
    const [updateFluid, setFluid, { output: brush }] = useFluid({
       size,
-      dpr: 0.03,
+      dpr: 0.06,
    });
 
    useMemo(() => {

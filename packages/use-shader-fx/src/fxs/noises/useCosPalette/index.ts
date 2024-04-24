@@ -50,11 +50,12 @@ export const useCosPalette = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<CosPaletteParams, ColorPaletteObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -67,22 +68,24 @@ export const useCosPalette = ({
 
    const [params, setParams] = useParams<CosPaletteParams>(COSPALETTE_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: CosPaletteParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uColor1", params.color1!);
-         setUniform(material, "uColor2", params.color2!);
-         setUniform(material, "uColor3", params.color3!);
-         setUniform(material, "uColor4", params.color4!);
-         setUniform(material, "uRgbWeight", params.rgbWeight!);
+         updateValue("uTexture", params.texture!);
+         updateValue("uColor1", params.color1!);
+         updateValue("uColor2", params.color2!);
+         updateValue("uColor3", params.color3!);
+         updateValue("uColor4", params.color4!);
+         updateValue("uRgbWeight", params.rgbWeight!);
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

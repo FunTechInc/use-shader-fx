@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class PressureMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uPressure: {
@@ -12,4 +13,4 @@ export declare class PressureMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const usePressureMaterial: () => PressureMaterial;
+export declare const usePressureMaterial: ({ onBeforeCompile }: MaterialProps) => PressureMaterial;

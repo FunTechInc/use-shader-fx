@@ -31,8 +31,14 @@ export const UseAlphaBlending = (args: AlphaBlendingParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
 
-   const [updateBrush, setBrush, { output: brush }] = useBrush({ size, dpr });
-   const [update, set, { output }] = useAlphaBlending({ size, dpr });
+   const [updateBrush, setBrush, { output: brush }] = useBrush({
+      size,
+      dpr,
+   });
+   const [update, set, { output }] = useAlphaBlending({
+      size,
+      dpr,
+   });
    const [updateMarble, setMarble, { output: marble }] = useMarble({
       size,
       dpr,

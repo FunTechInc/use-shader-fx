@@ -47,10 +47,11 @@ export const useWave = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<WaveParams, WaveObject> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -63,18 +64,19 @@ export const useWave = ({
 
    const [params, setParams] = useParams<WaveParams>(WAVE_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: WaveParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uEpicenter", params.epicenter!);
-         setUniform(material, "uProgress", params.progress!);
-         setUniform(material, "uWidth", params.width!);
-         setUniform(material, "uStrength", params.strength!);
-         setUniform(
-            material,
+         updateValue("uEpicenter", params.epicenter!);
+         updateValue("uProgress", params.progress!);
+         updateValue("uWidth", params.width!);
+         updateValue("uStrength", params.strength!);
+         updateValue(
             "uMode",
             params.mode! === "center"
                ? 0
@@ -85,7 +87,7 @@ export const useWave = ({
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

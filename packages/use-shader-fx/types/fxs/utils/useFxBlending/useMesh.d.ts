@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 export declare class FxBlendingMaterial extends THREE.ShaderMaterial {
     uniforms: {
         u_texture: {
@@ -12,7 +13,9 @@ export declare class FxBlendingMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => {
+export declare const useMesh: ({ scene, onBeforeCompile, }: {
+    scene: THREE.Scene;
+} & MaterialProps) => {
     material: FxBlendingMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxBlendingMaterial>;
 };

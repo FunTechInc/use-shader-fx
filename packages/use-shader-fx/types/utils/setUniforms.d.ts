@@ -6,5 +6,5 @@ type UniformObject = {
 };
 export declare const setUniform: <T extends UniformObject>(material: {
     uniforms: T;
-}, key: keyof T, value: UniformValue) => void;
+}) => (key: keyof T, value: UniformValue) => void;
 export {};

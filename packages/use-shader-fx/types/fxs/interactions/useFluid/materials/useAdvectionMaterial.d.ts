@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class AdvectionMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uVelocity: {
@@ -18,4 +19,4 @@ export declare class AdvectionMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useAdvectionMaterial: () => AdvectionMaterial;
+export declare const useAdvectionMaterial: ({ onBeforeCompile }: MaterialProps) => AdvectionMaterial;

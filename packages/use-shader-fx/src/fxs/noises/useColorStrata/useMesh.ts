@@ -3,6 +3,7 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddObject } from "../../../utils/useAddObject";
+import { MaterialProps } from "../../types";
 
 export class ColorStrataMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -22,31 +23,36 @@ export class ColorStrataMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useMesh = (scene: THREE.Scene) => {
+export const useMesh = ({
+   scene,
+   onBeforeCompile,
+}: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-   const material = useMemo(
-      () =>
-         new THREE.ShaderMaterial({
-            uniforms: {
-               uTexture: { value: new THREE.Texture() },
-               isTexture: { value: false },
-               scale: { value: 1.0 },
-               noise: { value: new THREE.Texture() },
-               noiseStrength: { value: new THREE.Vector2(0, 0) },
-               isNoise: { value: false },
-               laminateLayer: { value: 1.0 },
-               laminateInterval: { value: new THREE.Vector2(0.1, 0.1) },
-               laminateDetail: { value: new THREE.Vector2(1, 1) },
-               distortion: { value: new THREE.Vector2(0, 0) },
-               colorFactor: { value: new THREE.Vector3(1, 1, 1) },
-               uTime: { value: 0 },
-               timeStrength: { value: new THREE.Vector2(0, 0) },
-            },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-         }),
-      []
-   ) as ColorStrataMaterial;
+   const material = useMemo(() => {
+      const mat = new THREE.ShaderMaterial({
+         uniforms: {
+            uTexture: { value: new THREE.Texture() },
+            isTexture: { value: false },
+            scale: { value: 1.0 },
+            noise: { value: new THREE.Texture() },
+            noiseStrength: { value: new THREE.Vector2(0, 0) },
+            isNoise: { value: false },
+            laminateLayer: { value: 1.0 },
+            laminateInterval: { value: new THREE.Vector2(0.1, 0.1) },
+            laminateDetail: { value: new THREE.Vector2(1, 1) },
+            distortion: { value: new THREE.Vector2(0, 0) },
+            colorFactor: { value: new THREE.Vector3(1, 1, 1) },
+            uTime: { value: 0 },
+            timeStrength: { value: new THREE.Vector2(0, 0) },
+         },
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+      });
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+      return mat;
+   }, [onBeforeCompile]) as ColorStrataMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

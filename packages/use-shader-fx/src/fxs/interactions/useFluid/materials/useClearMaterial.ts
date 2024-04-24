@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/clear.frag";
+import { MaterialProps } from "../../../types";
 
 export class ClearMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -11,20 +12,22 @@ export class ClearMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useClearMaterial = () => {
-   const advectionMaterial = useMemo(
-      () =>
-         new THREE.ShaderMaterial({
-            uniforms: {
-               uTexture: { value: new THREE.Texture() },
-               value: { value: 0.0 },
-               texelSize: { value: new THREE.Vector2() },
-            },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-         }),
-      []
-   );
+export const useClearMaterial = ({ onBeforeCompile }: MaterialProps) => {
+   const advectionMaterial = useMemo(() => {
+      const mat = new THREE.ShaderMaterial({
+         uniforms: {
+            uTexture: { value: new THREE.Texture() },
+            value: { value: 0.0 },
+            texelSize: { value: new THREE.Vector2() },
+         },
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+      });
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+      return mat;
+   }, [onBeforeCompile]);
 
    return advectionMaterial as ClearMaterial;
 };

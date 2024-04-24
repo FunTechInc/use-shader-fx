@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class ClearMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTexture: {
@@ -12,4 +13,4 @@ export declare class ClearMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useClearMaterial: () => ClearMaterial;
+export declare const useClearMaterial: ({ onBeforeCompile }: MaterialProps) => ClearMaterial;

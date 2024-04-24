@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../types";
 export declare class HSVMaterial extends THREE.ShaderMaterial {
     uniforms: {
         u_texture: {
@@ -13,10 +14,10 @@ export declare class HSVMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, }: {
+export declare const useMesh: ({ scene, size, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
-}) => {
+} & MaterialProps) => {
     material: HSVMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, HSVMaterial>;
 };

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/splat.frag";
+import { MaterialProps } from "../../../types";
 
 export class SplatMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -14,23 +15,25 @@ export class SplatMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useSplateMaterial = () => {
-   const splatMaterial = useMemo(
-      () =>
-         new THREE.ShaderMaterial({
-            uniforms: {
-               uTarget: { value: new THREE.Texture() },
-               aspectRatio: { value: 0 },
-               color: { value: new THREE.Vector3() },
-               point: { value: new THREE.Vector2() },
-               radius: { value: 0.0 },
-               texelSize: { value: new THREE.Vector2() },
-            },
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
-         }),
-      []
-   );
+export const useSplatMaterial = ({ onBeforeCompile }: MaterialProps) => {
+   const splatMaterial = useMemo(() => {
+      const mat = new THREE.ShaderMaterial({
+         uniforms: {
+            uTarget: { value: new THREE.Texture() },
+            aspectRatio: { value: 0 },
+            color: { value: new THREE.Vector3() },
+            point: { value: new THREE.Vector2() },
+            radius: { value: 0.0 },
+            texelSize: { value: new THREE.Vector2() },
+         },
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+      });
+      if (onBeforeCompile) {
+         mat.onBeforeCompile = onBeforeCompile;
+      }
+      return mat;
+   }, [onBeforeCompile]);
 
    return splatMaterial as SplatMaterial;
 };

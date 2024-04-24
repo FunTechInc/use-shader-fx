@@ -58,11 +58,12 @@ export const useBlending = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<BlendingParams, BlendingObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -75,33 +76,35 @@ export const useBlending = ({
 
    const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: BlendingParams) => {
          const { gl } = props;
          updateParams && setParams(updateParams);
-         setUniform(material, "u_texture", params.texture!);
-         setUniform(material, "u_map", params.map!);
-         setUniform(material, "u_mapIntensity", params.mapIntensity!);
+         updateValue("u_texture", params.texture!);
+         updateValue("u_map", params.map!);
+         updateValue("u_mapIntensity", params.mapIntensity!);
 
          if (params.alphaMap) {
-            setUniform(material, "u_alphaMap", params.alphaMap!);
-            setUniform(material, "u_isAlphaMap", true);
+            updateValue("u_alphaMap", params.alphaMap!);
+            updateValue("u_isAlphaMap", true);
          } else {
-            setUniform(material, "u_isAlphaMap", false);
+            updateValue("u_isAlphaMap", false);
          }
 
-         setUniform(material, "u_brightness", params.brightness!);
-         setUniform(material, "u_min", params.min!);
-         setUniform(material, "u_max", params.max!);
+         updateValue("u_brightness", params.brightness!);
+         updateValue("u_min", params.min!);
+         updateValue("u_max", params.max!);
          if (params.dodgeColor) {
-            setUniform(material, "u_dodgeColor", params.dodgeColor);
-            setUniform(material, "u_isDodgeColor", true);
+            updateValue("u_dodgeColor", params.dodgeColor);
+            updateValue("u_isDodgeColor", true);
          } else {
-            setUniform(material, "u_isDodgeColor", false);
+            updateValue("u_isDodgeColor", false);
          }
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class GradientSubtractMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uPressure: {
@@ -12,4 +13,4 @@ export declare class GradientSubtractMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useGradientSubtractMaterial: () => GradientSubtractMaterial;
+export declare const useGradientSubtractMaterial: ({ onBeforeCompile, }: MaterialProps) => GradientSubtractMaterial;

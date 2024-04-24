@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class VorticityMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uVelocity: {
@@ -18,4 +19,4 @@ export declare class VorticityMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useVorticityMaterial: () => VorticityMaterial;
+export declare const useVorticityMaterial: ({ onBeforeCompile }: MaterialProps) => VorticityMaterial;

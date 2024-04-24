@@ -32,6 +32,8 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    geometry,
    baseMaterial,
    materialParameters,
+   onBeforeCompile,
+   depthOnBeforeCompile,
 }: UseCreateWobble3DProps &
    Create3DHooksProps &
    WobbleMaterialProps<T>): UseCreateWobble3DReturn<T> => {
@@ -44,59 +46,53 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    const { material, depthMaterial } = useMaterial({
       baseMaterial,
       materialParameters,
+      onBeforeCompile,
+      depthOnBeforeCompile,
    });
 
    const mesh = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
 
+   const userData = material.userData as Wobble3DMaterial;
+   const updateValue = setUniform(userData);
    const updateUniform = useCallback<UpdateUniform>(
       (props, params) => {
-         const userData = material.userData as Wobble3DMaterial;
          if (props) {
-            setUniform(
-               userData,
-               "uTime",
-               params?.beat || props.clock.getElapsedTime()
-            );
+            updateValue("uTime", params?.beat || props.clock.getElapsedTime());
          }
          if (params === undefined) {
             return;
          }
-         setUniform(userData, "uWobbleStrength", params.wobbleStrength);
-         setUniform(
-            userData,
+         updateValue("uWobbleStrength", params.wobbleStrength);
+         updateValue(
             "uWobblePositionFrequency",
             params.wobblePositionFrequency
          );
-         setUniform(
-            userData,
-            "uWobbleTimeFrequency",
-            params.wobbleTimeFrequency
-         );
-         setUniform(userData, "uWarpStrength", params.warpStrength);
-         setUniform(
-            userData,
-            "uWarpPositionFrequency",
-            params.warpPositionFrequency
-         );
-         setUniform(userData, "uWarpTimeFrequency", params.warpTimeFrequency);
-         setUniform(userData, "uWobbleShine", params.wobbleShine);
-         setUniform(userData, "uSamples", params.samples);
-         setUniform(userData, "uColor0", params.color0);
-         setUniform(userData, "uColor1", params.color1);
-         setUniform(userData, "uColor2", params.color2);
-         setUniform(userData, "uColor3", params.color3);
-         setUniform(userData, "uColorMix", params.colorMix);
-         setUniform(
-            userData,
-            "uChromaticAberration",
-            params.chromaticAberration
-         );
-         setUniform(userData, "uAnisotropicBlur", params.anisotropicBlur);
-         setUniform(userData, "uDistortion", params.distortion);
-         setUniform(userData, "uDistortionScale", params.distortionScale);
-         setUniform(userData, "uTemporalDistortion", params.temporalDistortion);
+         updateValue("uWobbleTimeFrequency", params.wobbleTimeFrequency);
+         updateValue("uWarpStrength", params.warpStrength);
+         updateValue("uWarpPositionFrequency", params.warpPositionFrequency);
+         updateValue("uWarpTimeFrequency", params.warpTimeFrequency);
+         updateValue("uWobbleShine", params.wobbleShine);
+         if (params.wobbleMap) {
+            updateValue("uWobbleMap", params.wobbleMap);
+            updateValue("uIsWobbleMap", true);
+         } else if (params.wobbleMap === false) {
+            updateValue("uIsWobbleMap", false);
+         }
+         updateValue("uWobbleMapStrength", params.wobbleMapStrength);
+         updateValue("uWobbleMapDistortion", params.wobbleMapDistortion);
+         updateValue("uSamples", params.samples);
+         updateValue("uColor0", params.color0);
+         updateValue("uColor1", params.color1);
+         updateValue("uColor2", params.color2);
+         updateValue("uColor3", params.color3);
+         updateValue("uColorMix", params.colorMix);
+         updateValue("uChromaticAberration", params.chromaticAberration);
+         updateValue("uAnisotropicBlur", params.anisotropicBlur);
+         updateValue("uDistortion", params.distortion);
+         updateValue("uDistortionScale", params.distortionScale);
+         updateValue("uTemporalDistortion", params.temporalDistortion);
       },
-      [material]
+      [updateValue]
    );
 
    return [

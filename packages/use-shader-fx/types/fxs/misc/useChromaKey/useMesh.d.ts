@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../types";
 export declare class ChromaKeyMaterial extends THREE.ShaderMaterial {
     uniforms: {
         u_texture: {
@@ -34,11 +35,11 @@ export declare class ChromaKeyMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, }: {
+export declare const useMesh: ({ scene, size, dpr, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;
-}) => {
+} & MaterialProps) => {
     material: ChromaKeyMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, ChromaKeyMaterial>;
 };

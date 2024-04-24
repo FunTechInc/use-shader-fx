@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 export declare class DuoToneMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTexture: {
@@ -12,7 +13,9 @@ export declare class DuoToneMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => {
+export declare const useMesh: ({ scene, onBeforeCompile, }: {
+    scene: THREE.Scene;
+} & MaterialProps) => {
     material: DuoToneMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, DuoToneMaterial>;
 };

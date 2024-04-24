@@ -44,10 +44,11 @@ export const useBrightnessPicker = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<BrightnessPickerParams, BrightnessPickerObject> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -62,17 +63,19 @@ export const useBrightnessPicker = ({
       BRIGHTNESSPICKER_PARAMS
    );
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: BrightnessPickerParams) => {
          const { gl } = props;
          updateParams && setParams(updateParams);
-         setUniform(material, "u_texture", params.texture!);
-         setUniform(material, "u_brightness", params.brightness!);
-         setUniform(material, "u_min", params.min!);
-         setUniform(material, "u_max", params.max!);
+         updateValue("u_texture", params.texture!);
+         updateValue("u_brightness", params.brightness!);
+         updateValue("u_min", params.min!);
+         updateValue("u_max", params.max!);
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

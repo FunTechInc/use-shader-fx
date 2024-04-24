@@ -47,7 +47,7 @@ npm install @funtech-inc/use-shader-fx
 
 <tr>
 <th><strong>misc</strong></th>
-<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/misc-usechromakey--docs">useChromaKey</a></td>
+<td><a href="https://use-shader-fx-stories.vercel.app/?path=/docs/misc-usechromakey--docs">useChromaKey</a>, <a href="https://use-shader-fx-stories.vercel.app/?path=/docs/misc-useblank--docs">useBlank</a></td>
 </tr>
 
 <tr>
@@ -79,21 +79,22 @@ npm install @funtech-inc/use-shader-fx
 
 # Usage
 
-From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. The `config` is an object, which varies for each Hook, containing details such as `size`,`dpr` and `samples`.
+From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. `HooksProps` are objects that are different for each hook and contain values such as `size`, `dpr` ... etc.
 
 1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
 2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
 3. `fxObject` - An object that holds various FX components, such as scene, camera, material,renderTarget, and `output`(final rendered texture).
+4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`onBeforeCompile`but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
 
 ```js
-const [updateFx, setParams, fxObject] = useSomeFx(config);
+const [updateFx, setParams, fxObject] = useSomeFx(HooksProps);
 ```
 
 invoke `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
 
 ```js
 useFrame((props) => {
-   const texture = updateFx(props, params);
+   const texture = updateFx(props, HookPrams);
    const main = mainShaderRef.current;
    if (main) {
       main.u_bufferTexture = texture;
@@ -327,14 +328,10 @@ Also, you can make more detailed adjustments by passing an object to `dpr` inste
 type Dpr =
    | number
    | {
-        dpr: number;
-        /** you can set whether `dpr` affects `shader` and `fbo`. default is `true` for both */
-        effect?: {
-           /** default : `true` */
-           shader?: boolean;
-           /** default : `true` */
-           fbo?: boolean;
-        };
+        /** you can set whether `dpr` affects `shader`. default : `false` */
+        shader?: false | number;
+        /** you can set whether `dpr` affects `fbo`. default : `false` */
+        fbo?: false | number;
      };
 ```
 
@@ -531,3 +528,34 @@ return (
 👉 [wobble3D demo](https://use-shader-fx.vercel.app/useWobble3D) 👈
 
 👉 [morphParticles demo](https://use-shader-fx.vercel.app/useMorphParticles) 👈
+
+# useBlank
+
+By default, it is a blank canvas with nothing drawn on it. You can customise the shaders using `onBeforeCompile`.
+
+Fragment shaders have `uTexture`,`uBackbuffer`,`uTime`,`uPointer` and `uResolution` as default uniforms.
+
+```tsx
+const [updateBlank, _, { output: blank, material }] = useBlank({
+   size,
+   dpr: viewport.dpr,
+   uniforms: {
+      hoge: { value: 0 },
+   },
+   onBeforeCompile: useCallback((shader: THREE.Shader) => {
+      shader.fragmentShader = shader.fragmentShader.replace(
+         "//#usf uniforms",
+         "uniform float hoge;"
+      );
+      shader.fragmentShader = shader.fragmentShader.replace(
+         "//#usf main",
+         `usf_FragColor=vec4(vec3(1.,hoge,1.),1.);`
+      );
+      console.log(shader.vertexShader);
+      console.log(shader.fragmentShader);
+   }, []),
+});
+```
+
+※ `usf_FragColor` overrides `gl_FragColor`
+※ `usf_Position` overrides `gl_Position`

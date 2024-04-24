@@ -45,11 +45,12 @@ export const useMotionBlur = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<MotionBlurParams, MotionBlurObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
 
    const fboProps = useMemo(
@@ -68,22 +69,24 @@ export const useMotionBlur = ({
 
    const [params, setParams] = useParams<MotionBlurParams>(MOTIONBLUR_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: MotionBlurParams) => {
          const { gl } = props;
 
          updateParams && setParams(updateParams);
 
-         setUniform(material, "uTexture", params.texture!);
-         setUniform(material, "uBegin", params.begin!);
-         setUniform(material, "uEnd", params.end!);
-         setUniform(material, "uStrength", params.strength!);
+         updateValue("uTexture", params.texture!);
+         updateValue("uBegin", params.begin!);
+         updateValue("uEnd", params.end!);
+         updateValue("uStrength", params.strength!);
 
          return updateRenderTarget(gl, ({ read }) => {
-            setUniform(material, "uBackbuffer", read);
+            updateValue("uBackbuffer", read);
          });
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

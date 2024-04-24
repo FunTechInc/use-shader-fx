@@ -59,11 +59,17 @@ export const useChromaKey = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, dpr: _dpr.shader });
+   const { material, mesh } = useMesh({
+      scene,
+      size,
+      dpr: _dpr.shader,
+      onBeforeCompile,
+   });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -76,24 +82,26 @@ export const useChromaKey = ({
 
    const [params, setParams] = useParams<ChromaKeyParams>(CHROMAKEY_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: ChromaKeyParams) => {
          const { gl } = props;
          updateParams && setParams(updateParams);
 
-         setUniform(material, "u_texture", params.texture!);
-         setUniform(material, "u_keyColor", params.keyColor!);
-         setUniform(material, "u_similarity", params.similarity!);
-         setUniform(material, "u_smoothness", params.smoothness!);
-         setUniform(material, "u_spill", params.spill!);
-         setUniform(material, "u_color", params.color!);
-         setUniform(material, "u_contrast", params.contrast!);
-         setUniform(material, "u_brightness", params.brightness!);
-         setUniform(material, "u_gamma", params.gamma!);
+         updateValue("u_texture", params.texture!);
+         updateValue("u_keyColor", params.keyColor!);
+         updateValue("u_similarity", params.similarity!);
+         updateValue("u_smoothness", params.smoothness!);
+         updateValue("u_spill", params.spill!);
+         updateValue("u_color", params.color!);
+         updateValue("u_contrast", params.contrast!);
+         updateValue("u_brightness", params.brightness!);
+         updateValue("u_gamma", params.gamma!);
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [

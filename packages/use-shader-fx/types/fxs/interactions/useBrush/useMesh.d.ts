@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../types";
 export declare class BrushMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uBuffer: {
@@ -61,11 +62,11 @@ export declare class BrushMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, }: {
+export declare const useMesh: ({ scene, size, dpr, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;
-}) => {
+} & MaterialProps) => {
     material: BrushMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, BrushMaterial>;
 };

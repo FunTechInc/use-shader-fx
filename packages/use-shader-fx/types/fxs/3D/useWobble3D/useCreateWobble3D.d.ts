@@ -15,5 +15,5 @@ type UseCreateWobble3DReturn<T> = [
         depthMaterial: THREE.MeshDepthMaterial;
     }
 ];
-export declare const useCreateWobble3D: <T extends WobbleMaterialConstructor>({ scene, geometry, baseMaterial, materialParameters, }: UseCreateWobble3DProps & Create3DHooksProps & WobbleMaterialProps<T>) => UseCreateWobble3DReturn<T>;
+export declare const useCreateWobble3D: <T extends WobbleMaterialConstructor>({ scene, geometry, baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, }: UseCreateWobble3DProps & Create3DHooksProps & WobbleMaterialProps<T>) => UseCreateWobble3DReturn<T>;
 export {};

@@ -13,10 +13,8 @@ export const Playground = () => {
    const [updateFluid, setFluid, { output: fluid }] = useFluid({
       size,
       dpr: {
-         dpr: 0.08,
-         effect: {
-            fbo: false,
-         },
+         shader: 0.08,
+         fbo: 0.2,
       },
    });
 

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 export declare class CosPaletteMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTexture: {
@@ -21,7 +22,9 @@ export declare class CosPaletteMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: (scene: THREE.Scene) => {
+export declare const useMesh: ({ scene, onBeforeCompile, }: {
+    scene: THREE.Scene;
+} & MaterialProps) => {
     material: CosPaletteMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, CosPaletteMaterial>;
 };

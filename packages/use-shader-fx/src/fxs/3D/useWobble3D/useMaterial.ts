@@ -5,6 +5,7 @@ import snoise from "../../../libs/shaders/snoise.glsl";
 import transmission_pars_fragment from "./shaders/transmission_pars_fragment.glsl";
 import transmission_fragment from "./shaders/transmission_fragment.glsl";
 import { WOBBLE3D_PARAMS } from ".";
+import { MaterialProps } from "../../types";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -16,6 +17,10 @@ export class Wobble3DMaterial extends THREE.Material {
       uWarpTimeFrequency: { value: number };
       uWarpStrength: { value: number };
       uWobbleShine: { value: number };
+      uIsWobbleMap: { value: boolean };
+      uWobbleMap: { value: THREE.Texture };
+      uWobbleMapStrength: { value: number };
+      uWobbleMapDistortion: { value: number };
       uColor0: { value: THREE.Color };
       uColor1: { value: THREE.Color };
       uColor2: { value: THREE.Color };
@@ -59,6 +64,10 @@ const rewriteVertex = (vertex: string) => {
 		uniform float uWarpPositionFrequency;
 		uniform float uWarpTimeFrequency;
 		uniform float uWarpStrength;
+		uniform bool uIsWobbleMap;
+		uniform sampler2D uWobbleMap;
+		uniform float uWobbleMapStrength;
+		uniform float uWobbleMapDistortion;
 		attribute vec4 tangent;
 		varying float vWobble;
 		varying vec2 vPosition;
@@ -82,18 +91,29 @@ const rewriteVertex = (vertex: string) => {
 		float shift = 0.01;
 		vec3 positionA = usf_Position + tangent.xyz * shift;
 		vec3 positionB = usf_Position + biTangent * shift;
-		// Wobble
-		float wobble = getWobble(usf_Position);
-		usf_Position += wobble * normal;
-		positionA    += getWobble(positionA) * normal;
-		positionB    += getWobble(positionB) * normal;
+		
+		// wobbleMap & wobble
+		float wobbleMap = uIsWobbleMap ? texture2D(uWobbleMap, uv).g : 0.0;
+		vec3 nWobbleMap = wobbleMap * normal * uWobbleMapStrength;
+		float wobbleMapDistortion = wobbleMap * uWobbleMapDistortion;
+
+		float wobble = (uWobbleStrength > 0.) ? getWobble(usf_Position) : 0.0;
+		float wobblePositionA = (uWobbleStrength > 0.) ? getWobble(positionA) : 0.0;
+		float wobblePositionB = (uWobbleStrength > 0.) ? getWobble(positionB) : 0.0;
+		
+		usf_Position += nWobbleMap + (wobble * normal);
+		positionA += nWobbleMap + wobbleMapDistortion + (wobblePositionA * normal);
+		positionB += nWobbleMap + wobbleMapDistortion + (wobblePositionB * normal);
+
 		// Compute normal
 		vec3 toA = normalize(positionA - usf_Position);
 		vec3 toB = normalize(positionB - usf_Position);
 		usf_Normal = cross(toA, toB);
+		
 		// Varying
 		vPosition = usf_Position.xy;
-		vWobble = wobble / uWobbleStrength;`
+		vWobble = wobble/uWobbleStrength;
+		`
    );
    return shader;
 };
@@ -103,15 +123,27 @@ export type WobbleMaterialConstructor = new (opts: {
 }) => THREE.Material;
 type MaterialParams<T extends WobbleMaterialConstructor> =
    ConstructorParameters<T>[0];
-export type WobbleMaterialProps<T extends WobbleMaterialConstructor> = {
+export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
+   extends MaterialProps {
    /** default:THREE.MeshPhysicalMaterial */
    baseMaterial?: T;
    materialParameters?: MaterialParams<T>;
-};
+   /**
+    * An optional callback that is executed immediately before the depth shader program is compiled.
+    * @param shader — Source code of the shader
+    * @param renderer — WebGLRenderer Context that is initializing the material
+    */
+   depthOnBeforeCompile?: (
+      shader: THREE.Shader,
+      renderer: THREE.WebGLRenderer
+   ) => void;
+}
 
 export const useMaterial = <T extends WobbleMaterialConstructor>({
    baseMaterial,
    materialParameters,
+   onBeforeCompile,
+   depthOnBeforeCompile,
 }: WobbleMaterialProps<T>) => {
    const { material, depthMaterial } = useMemo(() => {
       const mat = new (baseMaterial || THREE.MeshPhysicalMaterial)(
@@ -139,6 +171,12 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             uWarpTimeFrequency: { value: WOBBLE3D_PARAMS.warpTimeFrequency },
             uWarpStrength: { value: WOBBLE3D_PARAMS.warpStrength },
             uWobbleShine: { value: WOBBLE3D_PARAMS.wobbleShine },
+            uIsWobbleMap: { value: false },
+            uWobbleMap: { value: new THREE.Texture() },
+            uWobbleMapStrength: { value: WOBBLE3D_PARAMS.wobbleMapStrength },
+            uWobbleMapDistortion: {
+               value: WOBBLE3D_PARAMS.wobbleMapDistortion,
+            },
             uColor0: { value: WOBBLE3D_PARAMS.color0 },
             uColor1: { value: WOBBLE3D_PARAMS.color1 },
             uColor2: { value: WOBBLE3D_PARAMS.color2 },
@@ -158,7 +196,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
          },
       });
 
-      mat.onBeforeCompile = (shader) => {
+      mat.onBeforeCompile = (shader, renderer) => {
          Object.assign(shader.uniforms, mat.userData.uniforms);
 
          /********************
@@ -212,6 +250,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 
 				varying float vWobble;
 				varying vec2 vPosition;
+
 				void main(){
 					vec4 usf_DiffuseColor = vec4(1.0);
 					${hasRoughness ? "float usf_Roughness = roughness;" : ""}
@@ -239,6 +278,8 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
                `${transmission_fragment}`
             );
          }
+
+         onBeforeCompile && onBeforeCompile(shader, renderer);
       };
       mat.needsUpdate = true;
 
@@ -248,14 +289,20 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       const depthMat = new THREE.MeshDepthMaterial({
          depthPacking: THREE.RGBADepthPacking,
       });
-      depthMat.onBeforeCompile = (shader) => {
+      depthMat.onBeforeCompile = (shader, renderer) => {
          Object.assign(shader.uniforms, mat.userData.uniforms);
          shader.vertexShader = rewriteVertex(shader.vertexShader);
+         depthOnBeforeCompile && depthOnBeforeCompile(shader, renderer);
       };
       depthMat.needsUpdate = true;
 
       return { material: mat, depthMaterial: depthMat };
-   }, [materialParameters, baseMaterial]);
+   }, [
+      materialParameters,
+      baseMaterial,
+      onBeforeCompile,
+      depthOnBeforeCompile,
+   ]);
 
    return {
       material: material as Wobble3DMaterial,

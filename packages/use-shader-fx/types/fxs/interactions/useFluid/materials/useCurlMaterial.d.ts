@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../../types";
 export declare class CurlMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uVelocity: {
@@ -9,4 +10,4 @@ export declare class CurlMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useCurlMaterial: () => CurlMaterial;
+export declare const useCurlMaterial: ({ onBeforeCompile }: MaterialProps) => CurlMaterial;

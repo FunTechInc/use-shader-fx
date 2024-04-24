@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MaterialProps } from "../../types";
 export declare class Wobble3DMaterial extends THREE.Material {
     uniforms: {
         uTime: {
@@ -23,6 +24,18 @@ export declare class Wobble3DMaterial extends THREE.Material {
             value: number;
         };
         uWobbleShine: {
+            value: number;
+        };
+        uIsWobbleMap: {
+            value: boolean;
+        };
+        uWobbleMap: {
+            value: THREE.Texture;
+        };
+        uWobbleMapStrength: {
+            value: number;
+        };
+        uWobbleMapDistortion: {
             value: number;
         };
         uColor0: {
@@ -64,12 +77,18 @@ export type WobbleMaterialConstructor = new (opts: {
     [key: string]: any;
 }) => THREE.Material;
 type MaterialParams<T extends WobbleMaterialConstructor> = ConstructorParameters<T>[0];
-export type WobbleMaterialProps<T extends WobbleMaterialConstructor> = {
+export interface WobbleMaterialProps<T extends WobbleMaterialConstructor> extends MaterialProps {
     /** default:THREE.MeshPhysicalMaterial */
     baseMaterial?: T;
     materialParameters?: MaterialParams<T>;
-};
-export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, }: WobbleMaterialProps<T>) => {
+    /**
+     * An optional callback that is executed immediately before the depth shader program is compiled.
+     * @param shader — Source code of the shader
+     * @param renderer — WebGLRenderer Context that is initializing the material
+     */
+    depthOnBeforeCompile?: (shader: THREE.Shader, renderer: THREE.WebGLRenderer) => void;
+}
+export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, }: WobbleMaterialProps<T>) => {
     material: Wobble3DMaterial;
     depthMaterial: THREE.MeshDepthMaterial;
 };

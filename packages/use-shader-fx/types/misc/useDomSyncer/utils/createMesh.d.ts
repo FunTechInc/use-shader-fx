@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { DomSyncerParams } from "../";
 import { Size } from "@react-three/fiber";
+import { MaterialProps } from "../../../fxs/types";
 export declare class DomSyncerMaterial extends THREE.ShaderMaterial {
     uniforms: {
         u_texture: {
@@ -17,8 +18,8 @@ export declare class DomSyncerMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const createMesh: ({ params, size, scene, }: {
+export declare const createMesh: ({ params, size, scene, onBeforeCompile, }: {
     params: DomSyncerParams;
     size: Size;
     scene: THREE.Scene;
-}) => void;
+} & MaterialProps) => void;

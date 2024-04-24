@@ -53,10 +53,11 @@ export const useMarble = ({
    dpr,
    samples,
    isSizeUpdate,
+   onBeforeCompile,
 }: HooksProps): HooksReturn<MarbleParams, MarbleObject> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh(scene);
+   const { material, mesh } = useMesh({ scene, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -69,27 +70,25 @@ export const useMarble = ({
 
    const [params, setParams] = useParams<MarbleParams>(MARBLE_PARAMS);
 
+   const updateValue = setUniform(material);
+
    const updateFx = useCallback(
       (props: RootState, updateParams?: MarbleParams) => {
          const { gl, clock } = props;
          updateParams && setParams(updateParams);
 
-         setUniform(material, "u_pattern", params.pattern!);
-         setUniform(material, "u_complexity", params.complexity!);
-         setUniform(
-            material,
-            "u_complexityAttenuation",
-            params.complexityAttenuation!
-         );
-         setUniform(material, "u_iterations", params.iterations!);
-         setUniform(material, "u_timeStrength", params.timeStrength!);
-         setUniform(material, "u_scale", params.scale!);
+         updateValue("u_pattern", params.pattern!);
+         updateValue("u_complexity", params.complexity!);
+         updateValue("u_complexityAttenuation", params.complexityAttenuation!);
+         updateValue("u_iterations", params.iterations!);
+         updateValue("u_timeStrength", params.timeStrength!);
+         updateValue("u_scale", params.scale!);
 
-         setUniform(material, "u_time", params.beat || clock.getElapsedTime());
+         updateValue("u_time", params.beat || clock.getElapsedTime());
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, material, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params]
    );
 
    return [
