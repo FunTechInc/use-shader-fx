@@ -16,6 +16,7 @@ export class SampleMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -25,6 +26,7 @@ export const useMesh = ({
             uTexture: { value: new THREE.Texture() },
             uResolution: { value: new THREE.Vector2(0, 0) },
             uBlurSize: { value: SIMPLEBLUR_PARAMS.blurSize },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -33,7 +35,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as SampleMaterial;
+   }, [onBeforeCompile, uniforms]) as SampleMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

@@ -3,7 +3,11 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { useCallback, useMemo } from "react";
 import { RootState } from "@react-three/fiber";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
@@ -41,12 +45,18 @@ export const useHSV = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<HSVParams, HSVObject> => {
+}: HooksProps): HooksReturn<HSVParams, HSVObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, size, onBeforeCompile });
+   const { material, mesh } = useMesh({
+      scene,
+      size,
+      uniforms,
+      onBeforeCompile,
+   });
    const camera = useCamera(size);
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
@@ -61,20 +71,27 @@ export const useHSV = ({
    const [params, setParams] = useParams<HSVParams>(HSV_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: HSVParams) => {
+      (
+         props: RootState,
+         newParams?: HSVParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("u_texture", params.texture!);
          updateValue("u_brightness", params.brightness!);
          updateValue("u_saturation", params.saturation!);
 
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl);
       },
-      [updateValue, updateRenderTarget, params, setParams]
+      [updateValue, updateRenderTarget, params, setParams, updateCustomValue]
    );
 
    return [

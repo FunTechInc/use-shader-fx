@@ -20,6 +20,7 @@ export class NoiseMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -34,6 +35,7 @@ export const useMesh = ({
             warpOctaves: { value: 0 },
             warpDirection: { value: new THREE.Vector2() },
             warpStrength: { value: 0.0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -43,7 +45,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as NoiseMaterial;
+   }, [onBeforeCompile, uniforms]) as NoiseMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

@@ -18,6 +18,7 @@ export class WaveMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -29,6 +30,7 @@ export const useMesh = ({
             uStrength: { value: WAVE_PARAMS.strength },
             uWidth: { value: WAVE_PARAMS.width },
             uMode: { value: 0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -37,7 +39,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as WaveMaterial;
+   }, [onBeforeCompile, uniforms]) as WaveMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

@@ -14,6 +14,7 @@ export class GradientSubtractMaterial extends THREE.ShaderMaterial {
 
 export const useGradientSubtractMaterial = ({
    onBeforeCompile,
+   uniforms,
 }: MaterialProps) => {
    const gradientSubtractMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
@@ -21,6 +22,7 @@ export const useGradientSubtractMaterial = ({
             uPressure: { value: new THREE.Texture() },
             uVelocity: { value: new THREE.Texture() },
             texelSize: { value: new THREE.Vector2() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -29,7 +31,7 @@ export const useGradientSubtractMaterial = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return gradientSubtractMaterial as GradientSubtractMaterial;
 };

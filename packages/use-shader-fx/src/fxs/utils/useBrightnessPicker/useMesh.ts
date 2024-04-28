@@ -16,6 +16,7 @@ export class BrightnessPickerMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -26,6 +27,7 @@ export const useMesh = ({
             u_brightness: { value: new THREE.Vector3() },
             u_min: { value: 0.0 },
             u_max: { value: 1.0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -35,7 +37,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as BrightnessPickerMaterial;
+   }, [onBeforeCompile, uniforms]) as BrightnessPickerMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

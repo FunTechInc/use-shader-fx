@@ -25,7 +25,7 @@ import {
    useGradientSubtractMaterial,
 } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial, useSplatMaterial } from "./materials/useSplatMaterial";
-import { setUniform } from "../../../utils/setUniforms";
+import { CustomParams, setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
@@ -50,16 +50,20 @@ export type FluidMaterials = {
    splatMaterial: SplatMaterial;
 };
 
+export type CustomizableKeys =
+   | "advection"
+   | "splat"
+   | "curl"
+   | "vorticity"
+   | "divergence"
+   | "clear"
+   | "pressure"
+   | "gradientSubtract";
 export type FluidOnBeforeCompile = {
-   initial?: MaterialProps;
-   curl?: MaterialProps;
-   vorticity?: MaterialProps;
-   advection?: MaterialProps;
-   divergence?: MaterialProps;
-   pressure?: MaterialProps;
-   clear?: MaterialProps;
-   gradientSubtract?: MaterialProps;
-   splat?: MaterialProps;
+   [K in CustomizableKeys]?: MaterialProps;
+};
+export type FluidCustomParams = {
+   [K in CustomizableKeys]?: CustomParams;
 };
 
 const useCustomMaterial = <T extends THREE.Material>(
@@ -89,7 +93,6 @@ export const useMesh = ({
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
 
    const {
-      initial,
       curl,
       vorticity,
       advection,
@@ -100,7 +103,7 @@ export const useMesh = ({
       splat,
    } = fluidOnBeforeCompile ?? {};
 
-   const initialMaterial = useCustomMaterial(useInitialMaterial, initial);
+   const initialMaterial = useCustomMaterial(useInitialMaterial);
    const updateMaterial = initialMaterial.clone();
    const curlMaterial = useCustomMaterial(useCurlMaterial, curl);
    const vorticityMaterial = useCustomMaterial(useVorticityMaterial, vorticity);

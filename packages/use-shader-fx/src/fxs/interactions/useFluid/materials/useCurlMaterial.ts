@@ -11,12 +11,16 @@ export class CurlMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useCurlMaterial = ({ onBeforeCompile }: MaterialProps) => {
+export const useCurlMaterial = ({
+   onBeforeCompile,
+   uniforms,
+}: MaterialProps) => {
    const curlMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
             uVelocity: { value: null },
             texelSize: { value: new THREE.Vector2() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -25,7 +29,7 @@ export const useCurlMaterial = ({ onBeforeCompile }: MaterialProps) => {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return curlMaterial as CurlMaterial;
 };

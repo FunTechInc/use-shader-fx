@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { RootState, Size } from "@react-three/fiber";
+import { CustomParams } from "../../utils/setUniforms";
 
 export type Dpr =
    | number
@@ -11,6 +12,10 @@ export type Dpr =
      };
 
 export type MaterialProps = {
+   /** It is possible to add your own uniforms - they are not added to the GLSL and must be replace with `onBeforeCompile` */
+   uniforms?: {
+      [uniform: string]: THREE.IUniform<any>;
+   };
    /**
     * An optional callback that is executed immediately before the shader program is compiled.
     * @param shader — Source code of the shader
@@ -32,21 +37,22 @@ export interface HooksProps extends MaterialProps {
 }
 
 /**
- * @returns {HooksReturn<T, O>}
+ * @returns {HooksReturn<T, O, C>}
  *  updateFx - A function to be called inside `useFrame` that returns a `THREE.Texture`.
  *  setParams - A function to update the parameters, useful for performance tuning, etc.
  *  fxObject - An object containing various FX components such as scene, camera, material, and render target.
  *
  * @template T The type for the parameters of the hooks.
  * @template O The type for the FX object.
+ * @template C The type for the custom parameters.
  */
-export type HooksReturn<T, O> = [
+export type HooksReturn<T, O, C> = [
    /**
     * An update function that returns THREE.Texture. Call it inside useFrame
     * @param props RootState
     * @param params params of hooks
     */
-   (props: RootState, updateParams?: T) => THREE.Texture,
+   (props: RootState, newParams?: T, customParams?: C) => THREE.Texture,
    /**
     * Function to update params. No FBO rendering occurs.
     * @param params params of hooks

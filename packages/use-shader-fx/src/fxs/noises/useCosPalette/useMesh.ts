@@ -18,6 +18,7 @@ export class CosPaletteMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -30,6 +31,7 @@ export const useMesh = ({
             uColor2: { value: new THREE.Color().set(0.5, 0.5, 0.5) },
             uColor3: { value: new THREE.Color().set(1, 1, 1) },
             uColor4: { value: new THREE.Color().set(0, 0.1, 0.2) },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -38,7 +40,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as CosPaletteMaterial;
+   }, [onBeforeCompile, uniforms]) as CosPaletteMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

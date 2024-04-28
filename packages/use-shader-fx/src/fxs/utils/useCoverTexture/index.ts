@@ -4,7 +4,11 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
@@ -35,8 +39,13 @@ export const useCoverTexture = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<CoverTextureParams, CoverTextureObject> => {
+}: HooksProps): HooksReturn<
+   CoverTextureParams,
+   CoverTextureObject,
+   CustomParams
+> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -44,6 +53,7 @@ export const useCoverTexture = ({
       scene,
       size,
       dpr: _dpr.shader,
+      uniforms,
       onBeforeCompile,
    });
    const camera = useCamera(size);
@@ -60,12 +70,17 @@ export const useCoverTexture = ({
       useParams<CoverTextureParams>(COVERTEXTURE_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: CoverTextureParams) => {
+      (
+         props: RootState,
+         newParams?: CoverTextureParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uTextureResolution", [
@@ -73,9 +88,11 @@ export const useCoverTexture = ({
             params.texture!?.source?.data?.height || 0,
          ]);
 
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, params, setParams]
+      [updateRenderTarget, updateValue, params, setParams, updateCustomValue]
    );
    return [
       updateFx,

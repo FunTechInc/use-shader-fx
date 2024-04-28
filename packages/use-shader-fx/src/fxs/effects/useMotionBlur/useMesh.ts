@@ -18,6 +18,7 @@ export class MotionBlurMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -29,6 +30,7 @@ export const useMesh = ({
             uBegin: { value: MOTIONBLUR_PARAMS.begin },
             uEnd: { value: MOTIONBLUR_PARAMS.end },
             uStrength: { value: MOTIONBLUR_PARAMS.strength },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -37,7 +39,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as MotionBlurMaterial;
+   }, [onBeforeCompile, uniforms]) as MotionBlurMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

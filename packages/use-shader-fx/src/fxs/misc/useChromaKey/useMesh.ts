@@ -27,6 +27,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -47,6 +48,7 @@ export const useMesh = ({
             u_contrast: { value: 0 },
             u_brightness: { value: 0 },
             u_gamma: { value: 0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -55,7 +57,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as ChromaKeyMaterial;
+   }, [onBeforeCompile, uniforms]) as ChromaKeyMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("u_resolution", resolution.clone());

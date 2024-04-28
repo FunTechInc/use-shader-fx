@@ -1,10 +1,14 @@
 import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { RootState } from "@react-three/fiber";
-import { BlankMaterial, CustomUniforms, useMesh } from "./useMesh";
+import { BlankMaterial, useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { useDoubleFBO, DoubleRenderTarget } from "../../../utils/useDoubleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { useParams } from "../../../utils/useParams";
 import type { HooksProps, HooksReturn } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
@@ -48,9 +52,9 @@ export const useBlank = ({
    dpr,
    samples,
    isSizeUpdate,
-   onBeforeCompile,
    uniforms,
-}: HooksProps & CustomUniforms): HooksReturn<BlankParams, BlankObject> => {
+   onBeforeCompile,
+}: HooksProps): HooksReturn<BlankParams, BlankObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -58,8 +62,8 @@ export const useBlank = ({
       scene,
       size,
       dpr: _dpr.shader,
-      onBeforeCompile,
       uniforms,
+      onBeforeCompile,
    });
    const camera = useCamera(size);
 
@@ -80,22 +84,28 @@ export const useBlank = ({
    const [params, setParams] = useParams<BlankParams>(BLANK_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: BlankParams) => {
+      (
+         props: RootState,
+         newParams?: BlankParams,
+         customParams?: CustomParams
+      ) => {
          const { gl, clock, pointer } = props;
 
-         updateParams && setParams(updateParams);
-
+         newParams && setParams(newParams);
          updateValue("uTexture", params.texture!);
          updateValue("uPointer", pointer);
          updateValue("uTime", params.beat || clock.getElapsedTime());
+
+         updateCustomValue(customParams);
 
          return updateRenderTarget(gl, ({ read }) => {
             updateValue("uBackbuffer", read);
          });
       },
-      [updateRenderTarget, updateValue, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
    );
 
    return [

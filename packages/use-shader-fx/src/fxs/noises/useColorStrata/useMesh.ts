@@ -25,6 +25,7 @@ export class ColorStrataMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -44,6 +45,7 @@ export const useMesh = ({
             colorFactor: { value: new THREE.Vector3(1, 1, 1) },
             uTime: { value: 0 },
             timeStrength: { value: new THREE.Vector2(0, 0) },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -52,7 +54,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as ColorStrataMaterial;
+   }, [onBeforeCompile, uniforms]) as ColorStrataMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

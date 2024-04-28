@@ -23,8 +23,23 @@ export const setUniform =
       if (value === undefined) {
          return;
       }
-      // By design, I don't want to pass null to uniform
-      if (material.uniforms[key] && value !== null) {
-         material.uniforms[key].value = value;
+      const uniforms = material.uniforms;
+      if (uniforms && uniforms[key]) {
+         uniforms[key].value = value;
       }
+   };
+
+export type CustomParams = { [uniform: string]: UniformValue };
+export const setCustomUniform =
+   (material: { uniforms: UniformObject }) =>
+   (customParams: CustomParams | undefined) => {
+      if (customParams === undefined) {
+         return;
+      }
+      Object.keys(customParams).forEach((key) => {
+         const uniforms = material.uniforms;
+         if (uniforms && uniforms[key]) {
+            uniforms[key].value = customParams[key];
+         }
+      });
    };

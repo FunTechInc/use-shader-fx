@@ -60,6 +60,7 @@ export const useMaterial = ({
    positions,
    uvs,
    mapArray,
+   uniforms,
    onBeforeCompile,
 }: {
    size: Size;
@@ -164,6 +165,7 @@ export const useMaterial = ({
             uDivergence: { value: MORPHPARTICLES_PARAMS.divergence },
             uDivergencePoint: { value: MORPHPARTICLES_PARAMS.divergencePoint },
             ...mapArrayUniforms,
+            ...uniforms,
          },
       });
 
@@ -178,6 +180,7 @@ export const useMaterial = ({
       modifiedUvs,
       mapArray,
       onBeforeCompile,
+      uniforms,
    ]) as MorphParticlesMaterial;
 
    const resolution = useResolution(size, dpr);

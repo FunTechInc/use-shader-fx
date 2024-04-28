@@ -15,6 +15,7 @@ export class DuoToneMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -24,6 +25,7 @@ export const useMesh = ({
             uTexture: { value: new THREE.Texture() },
             uColor0: { value: new THREE.Color(0xffffff) },
             uColor1: { value: new THREE.Color(0x000000) },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -32,7 +34,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as DuoToneMaterial;
+   }, [onBeforeCompile, uniforms]) as DuoToneMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

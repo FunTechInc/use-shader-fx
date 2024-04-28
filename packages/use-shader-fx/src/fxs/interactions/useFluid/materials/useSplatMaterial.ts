@@ -15,7 +15,10 @@ export class SplatMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useSplatMaterial = ({ onBeforeCompile }: MaterialProps) => {
+export const useSplatMaterial = ({
+   onBeforeCompile,
+   uniforms,
+}: MaterialProps) => {
    const splatMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
@@ -25,6 +28,7 @@ export const useSplatMaterial = ({ onBeforeCompile }: MaterialProps) => {
             point: { value: new THREE.Vector2() },
             radius: { value: 0.0 },
             texelSize: { value: new THREE.Vector2() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -33,7 +37,7 @@ export const useSplatMaterial = ({ onBeforeCompile }: MaterialProps) => {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return splatMaterial as SplatMaterial;
 };

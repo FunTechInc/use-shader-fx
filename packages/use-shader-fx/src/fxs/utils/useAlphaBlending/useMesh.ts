@@ -15,7 +15,7 @@ export class AlphaBlendingMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   size,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -27,6 +27,7 @@ export const useMesh = ({
          uniforms: {
             uTexture: { value: new THREE.Texture() },
             uMap: { value: new THREE.Texture() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -35,7 +36,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as AlphaBlendingMaterial;
+   }, [onBeforeCompile, uniforms]) as AlphaBlendingMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

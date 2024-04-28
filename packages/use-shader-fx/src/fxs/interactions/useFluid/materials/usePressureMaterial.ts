@@ -12,13 +12,17 @@ export class PressureMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const usePressureMaterial = ({ onBeforeCompile }: MaterialProps) => {
+export const usePressureMaterial = ({
+   onBeforeCompile,
+   uniforms,
+}: MaterialProps) => {
    const pressureMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
             uPressure: { value: null },
             uDivergence: { value: null },
             texelSize: { value: new THREE.Vector2() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -27,7 +31,7 @@ export const usePressureMaterial = ({ onBeforeCompile }: MaterialProps) => {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return pressureMaterial as PressureMaterial;
 };

@@ -14,7 +14,10 @@ export class AdvectionMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useAdvectionMaterial = ({ onBeforeCompile }: MaterialProps) => {
+export const useAdvectionMaterial = ({
+   onBeforeCompile,
+   uniforms,
+}: MaterialProps) => {
    const advectionMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
@@ -23,6 +26,7 @@ export const useAdvectionMaterial = ({ onBeforeCompile }: MaterialProps) => {
             texelSize: { value: new THREE.Vector2() },
             dt: { value: 0.0 },
             dissipation: { value: 0.0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -31,7 +35,7 @@ export const useAdvectionMaterial = ({ onBeforeCompile }: MaterialProps) => {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return advectionMaterial as AdvectionMaterial;
 };

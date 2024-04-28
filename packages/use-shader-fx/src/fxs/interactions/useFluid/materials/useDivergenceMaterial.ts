@@ -11,12 +11,16 @@ export class DivergenceMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useDivergenceMaterial = ({ onBeforeCompile }: MaterialProps) => {
+export const useDivergenceMaterial = ({
+   onBeforeCompile,
+   uniforms,
+}: MaterialProps) => {
    const divergenceMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
             uVelocity: { value: null },
             texelSize: { value: new THREE.Vector2() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -25,7 +29,7 @@ export const useDivergenceMaterial = ({ onBeforeCompile }: MaterialProps) => {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return divergenceMaterial as DivergenceMaterial;
 };

@@ -36,6 +36,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -65,6 +66,7 @@ export const useMesh = ({
             uIsCursor: { value: false },
             uPressureStart: { value: 1.0 },
             uPressureEnd: { value: 1.0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -73,7 +75,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as BrushMaterial;
+   }, [onBeforeCompile, uniforms]) as BrushMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("uResolution", resolution.clone());

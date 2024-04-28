@@ -15,6 +15,7 @@ export class FxBlendingMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -24,6 +25,7 @@ export const useMesh = ({
             u_texture: { value: new THREE.Texture() },
             u_map: { value: new THREE.Texture() },
             u_mapIntensity: { value: 0.0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -32,7 +34,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as FxBlendingMaterial;
+   }, [onBeforeCompile, uniforms]) as FxBlendingMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };

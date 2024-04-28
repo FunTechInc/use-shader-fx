@@ -22,6 +22,7 @@ export class BlendingMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -38,6 +39,7 @@ export const useMesh = ({
             u_max: { value: 0.9 },
             u_dodgeColor: { value: new THREE.Color(0xffffff) },
             u_isDodgeColor: { value: false },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -46,7 +48,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as BlendingMaterial;
+   }, [onBeforeCompile, uniforms]) as BlendingMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

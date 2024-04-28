@@ -4,7 +4,11 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
@@ -58,12 +62,13 @@ export const useBlending = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<BlendingParams, BlendingObject> => {
+}: HooksProps): HooksReturn<BlendingParams, BlendingObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, onBeforeCompile });
+   const { material, mesh } = useMesh({ scene, uniforms, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -77,11 +82,16 @@ export const useBlending = ({
    const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: BlendingParams) => {
+      (
+         props: RootState,
+         newParams?: BlendingParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
          updateValue("u_texture", params.texture!);
          updateValue("u_map", params.map!);
          updateValue("u_mapIntensity", params.mapIntensity!);
@@ -102,9 +112,12 @@ export const useBlending = ({
          } else {
             updateValue("u_isDodgeColor", false);
          }
+
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
    );
 
    return [

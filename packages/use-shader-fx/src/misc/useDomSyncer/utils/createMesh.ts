@@ -16,8 +16,8 @@ export class DomSyncerMaterial extends THREE.ShaderMaterial {
 
 export const createMesh = ({
    params,
-   size,
    scene,
+   uniforms,
    onBeforeCompile,
 }: {
    params: DomSyncerParams;
@@ -48,6 +48,7 @@ export const createMesh = ({
             u_borderRadius: {
                value: params.boderRadius![i] ? params.boderRadius![i] : 0.0,
             },
+            ...uniforms,
          },
       });
       if (onBeforeCompile) {

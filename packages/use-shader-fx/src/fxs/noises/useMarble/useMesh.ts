@@ -19,6 +19,7 @@ export class MarbleMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
+   uniforms,
    onBeforeCompile,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
@@ -32,6 +33,7 @@ export const useMesh = ({
             u_iterations: { value: 0 },
             u_timeStrength: { value: 0 },
             u_scale: { value: 0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -40,7 +42,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as MarbleMaterial;
+   }, [onBeforeCompile, uniforms]) as MarbleMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

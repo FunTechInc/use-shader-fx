@@ -12,13 +12,17 @@ export class ClearMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useClearMaterial = ({ onBeforeCompile }: MaterialProps) => {
+export const useClearMaterial = ({
+   onBeforeCompile,
+   uniforms,
+}: MaterialProps) => {
    const advectionMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
             uTexture: { value: new THREE.Texture() },
             value: { value: 0.0 },
             texelSize: { value: new THREE.Vector2() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -27,7 +31,7 @@ export const useClearMaterial = ({ onBeforeCompile }: MaterialProps) => {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]);
+   }, [onBeforeCompile, uniforms]);
 
    return advectionMaterial as ClearMaterial;
 };

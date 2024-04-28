@@ -20,6 +20,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -33,6 +34,7 @@ export const useMesh = ({
             uResolution: { value: new THREE.Vector2() },
             uTextureResolution: { value: new THREE.Vector2() },
             uTexture: { value: new THREE.Texture() },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -41,7 +43,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as FxTextureMaterial;
+   }, [onBeforeCompile, uniforms]) as FxTextureMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("uResolution", resolution.clone());

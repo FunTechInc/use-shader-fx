@@ -26,6 +26,8 @@ export class Wobble3DMaterial extends THREE.Material {
       uColor2: { value: THREE.Color };
       uColor3: { value: THREE.Color };
       uColorMix: { value: number };
+      uEdgeThreshold: { value: number };
+      uEdgeColor: { value: THREE.Color };
       uChromaticAberration: { value: number };
       uAnisotropicBlur: { value: number };
       uDistortion: { value: number };
@@ -71,6 +73,9 @@ const rewriteVertex = (vertex: string) => {
 		attribute vec4 tangent;
 		varying float vWobble;
 		varying vec2 vPosition;
+		// edge
+		varying vec3 vEdgeNormal;
+		varying vec3 vEdgeViewPosition;
 		// #usf <getWobble>
 		void main() {`
    );
@@ -113,6 +118,10 @@ const rewriteVertex = (vertex: string) => {
 		// Varying
 		vPosition = usf_Position.xy;
 		vWobble = wobble/uWobbleStrength;
+		
+		vEdgeNormal = normalize(normalMatrix * usf_Normal);
+		vec4 viewPosition = viewMatrix * modelMatrix * vec4(usf_Position, 1.0);
+		vEdgeViewPosition = normalize(viewPosition.xyz);
 		`
    );
    return shader;
@@ -144,6 +153,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
    materialParameters,
    onBeforeCompile,
    depthOnBeforeCompile,
+   uniforms,
 }: WobbleMaterialProps<T>) => {
    const { material, depthMaterial } = useMemo(() => {
       const mat = new (baseMaterial || THREE.MeshPhysicalMaterial)(
@@ -182,6 +192,8 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             uColor2: { value: WOBBLE3D_PARAMS.color2 },
             uColor3: { value: WOBBLE3D_PARAMS.color3 },
             uColorMix: { value: WOBBLE3D_PARAMS.colorMix },
+            uEdgeThreshold: { value: WOBBLE3D_PARAMS.edgeThreshold },
+            uEdgeColor: { value: WOBBLE3D_PARAMS.edgeColor },
             uChromaticAberration: {
                value: WOBBLE3D_PARAMS.chromaticAberration,
             },
@@ -193,6 +205,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             transmission: { value: 0 },
             _transmission: { value: 1 },
             transmissionMap: { value: null },
+            ...uniforms,
          },
       });
 
@@ -211,8 +224,15 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
          shader.fragmentShader = shader.fragmentShader.replace(
             "#include <color_fragment>",
             `
-				#include <color_fragment>
-				diffuseColor = mix(diffuseColor,usf_DiffuseColor,uColorMix);`
+					#include <color_fragment>
+
+					if (uEdgeThreshold > 0.0) {
+						float edgeThreshold = dot(vEdgeNormal, -vEdgeViewPosition);
+						diffuseColor = edgeThreshold < uEdgeThreshold ? vec4(uEdgeColor, 1.0) : mix(diffuseColor, usf_DiffuseColor, uColorMix);
+					} else {
+						diffuseColor = mix(diffuseColor, usf_DiffuseColor, uColorMix);
+					}
+				`
          );
 
          // roughness
@@ -234,6 +254,8 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 				uniform vec3 uColor2;
 				uniform vec3 uColor3;
 				uniform float uColorMix;
+				uniform float uEdgeThreshold;
+				uniform vec3 uEdgeColor;
 				uniform float uWobbleShine;
 				
 				// transmission
@@ -250,7 +272,9 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 
 				varying float vWobble;
 				varying vec2 vPosition;
-
+				varying vec3 vEdgeNormal;
+				varying vec3 vEdgeViewPosition;
+				
 				void main(){
 					vec4 usf_DiffuseColor = vec4(1.0);
 					${hasRoughness ? "float usf_Roughness = roughness;" : ""}
@@ -302,6 +326,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       baseMaterial,
       onBeforeCompile,
       depthOnBeforeCompile,
+      uniforms,
    ]);
 
    return {

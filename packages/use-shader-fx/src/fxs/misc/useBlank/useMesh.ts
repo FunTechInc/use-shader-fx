@@ -17,21 +17,13 @@ export class BlankMaterial extends THREE.ShaderMaterial {
       uResolution: { value: THREE.Vector2 };
    };
 }
-
-export type CustomUniforms = {
-   uniforms?: {
-      [uniform: string]: THREE.IUniform<any>;
-   };
-};
-
 export const useMesh = ({
    scene,
    size,
    dpr,
-   onBeforeCompile,
    uniforms,
-}: { scene: THREE.Scene; size: Size; dpr: number | false } & MaterialProps &
-   CustomUniforms) => {
+   onBeforeCompile,
+}: { scene: THREE.Scene; size: Size; dpr: number | false } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({

@@ -14,6 +14,7 @@ export const useMesh = ({
    max,
    texture,
    scene,
+   uniforms,
    onBeforeCompile,
 }: UseMeshProps & MaterialProps) => {
    const meshArr = useRef<THREE.Mesh[]>([]);
@@ -29,11 +30,19 @@ export const useMesh = ({
          depthTest: false,
          depthWrite: false,
       });
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = (shader, renderer) => {
+         if (uniforms) {
+            Object.assign(mat.userData, {
+               uniforms: uniforms,
+            });
+            Object.assign(shader.uniforms, mat.userData.uniforms);
+         }
+         if (onBeforeCompile) {
+            onBeforeCompile(shader, renderer);
+         }
+      };
       return mat;
-   }, [texture, onBeforeCompile]);
+   }, [texture, onBeforeCompile, uniforms]);
 
    useEffect(() => {
       for (let i = 0; i < max; i++) {

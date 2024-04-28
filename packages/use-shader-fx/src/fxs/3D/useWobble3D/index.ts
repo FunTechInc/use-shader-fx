@@ -7,6 +7,7 @@ import { useCreateWobble3D, UseCreateWobble3DProps } from "./useCreateWobble3D";
 import { WobbleMaterialProps, WobbleMaterialConstructor } from "./useMaterial";
 import { HooksProps3D } from "../types";
 import { getDpr } from "../../../utils/getDpr";
+import { CustomParams } from "../../../utils/setUniforms";
 
 export type Wobble3DParams = {
    /** default : `0.3` */
@@ -24,14 +25,16 @@ export type Wobble3DParams = {
    wobbleMapStrength?: number;
    /** Strength of distorting the 'normal' by wobbleMap, default : `0.0` */
    wobbleMapDistortion?: number;
-   /** Refraction samples, default : `6`  */
-   samples?: number;
    color0?: THREE.Color;
    color1?: THREE.Color;
    color2?: THREE.Color;
    color3?: THREE.Color;
    /** Mixing ratio with the material's original output color, 0~1 , defaulat : `1` */
    colorMix?: number;
+   /** Threshold of edge. 0 for edge disabled, default : `0` */
+   edgeThreshold?: number;
+   /** Color of edge. default : `0x000000` */
+   edgeColor?: THREE.Color;
    /** valid only for MeshPhysicalMaterial , default : `0.1` */
    chromaticAberration?: number;
    /** valid only for MeshPhysicalMaterial , default : `0.1` */
@@ -42,6 +45,8 @@ export type Wobble3DParams = {
    distortionScale?: number;
    /** valid only for MeshPhysicalMaterial , default : `0.0` */
    temporalDistortion?: number;
+   /** Refraction samples, default : `6`  */
+   samples?: number;
    /** you can get into the rhythm ♪ , default : `false` */
    beat?: number | false;
 };
@@ -72,6 +77,8 @@ export const WOBBLE3D_PARAMS: Wobble3DParams = Object.freeze({
    color2: new THREE.Color(0x0000ff),
    color3: new THREE.Color(0xffff00),
    colorMix: 1,
+   edgeThreshold: 0.0,
+   edgeColor: new THREE.Color(0x000000),
    chromaticAberration: 0.1,
    anisotropicBlur: 0.1,
    distortion: 0.0,
@@ -91,11 +98,13 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
    geometry,
    baseMaterial,
    materialParameters,
+   uniforms,
    onBeforeCompile,
    depthOnBeforeCompile,
 }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>): HooksReturn<
    Wobble3DParams,
-   Wobble3DObject
+   Wobble3DObject,
+   CustomParams
 > => {
    const _dpr = getDpr(dpr);
 
@@ -106,6 +115,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       materialParameters,
       scene,
       geometry,
+      uniforms,
       onBeforeCompile,
       depthOnBeforeCompile,
    });
@@ -121,16 +131,20 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
    });
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: Wobble3DParams) => {
-         updateUniform(props, updateParams);
+      (
+         props: RootState,
+         newParams?: Wobble3DParams,
+         customParams?: CustomParams
+      ) => {
+         updateUniform(props, newParams, customParams);
          return updateRenderTarget(props.gl);
       },
       [updateRenderTarget, updateUniform]
    );
 
    const setParams = useCallback(
-      (updateParams: Wobble3DParams) => {
-         updateUniform(null, updateParams);
+      (newParams: Wobble3DParams, customParams?: CustomParams) => {
+         updateUniform(null, newParams, customParams);
       },
       [updateUniform]
    );

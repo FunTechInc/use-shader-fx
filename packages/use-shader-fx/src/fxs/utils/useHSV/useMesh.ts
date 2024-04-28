@@ -16,7 +16,7 @@ export class HSVMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   size,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -29,6 +29,7 @@ export const useMesh = ({
             u_texture: { value: new THREE.Texture() },
             u_brightness: { value: 1 },
             u_saturation: { value: 1 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
@@ -37,7 +38,7 @@ export const useMesh = ({
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as HSVMaterial;
+   }, [onBeforeCompile, uniforms]) as HSVMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

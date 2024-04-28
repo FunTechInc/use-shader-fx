@@ -12,6 +12,7 @@ import { useUpdateDomRect } from "./utils/useUpdateDomRect";
 import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
 import { UseDomView, createUseDomView } from "./utils/createUseDomView";
 import { getDpr } from "../../utils/getDpr";
+import { CustomParams } from "../../utils/setUniforms";
 
 export type DomSyncerParams = {
    /** DOM array you want to synchronize */
@@ -61,9 +62,9 @@ export const DOMSYNCER_PARAMS: DomSyncerParams = {
  * @param dependencies - When this dependency array is changed, the mesh and intersection judgment will be updated according to the passed DOM array.
  */
 export const useDomSyncer = (
-   { size, dpr, samples, isSizeUpdate, onBeforeCompile }: HooksProps,
+   { size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile }: HooksProps,
    dependencies: React.DependencyList = []
-): HooksReturn<DomSyncerParams, DomSyncerObject> => {
+): HooksReturn<DomSyncerParams, DomSyncerObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -107,10 +108,14 @@ export const useDomSyncer = (
    const useDomView = createUseDomView(isIntersectingRef);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: DomSyncerParams) => {
+      (
+         props: RootState,
+         newParams?: DomSyncerParams,
+         customParams?: CustomParams
+      ) => {
          const { gl, size } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          if (errorHandler(params)) {
             return emptyTexture;
@@ -129,6 +134,7 @@ export const useDomSyncer = (
                params,
                size,
                scene,
+               uniforms,
                onBeforeCompile,
             });
 
@@ -143,6 +149,7 @@ export const useDomSyncer = (
 
          updateDomRects({
             params,
+            customParams,
             size,
             resolutionRef,
             scene,
@@ -153,6 +160,7 @@ export const useDomSyncer = (
       },
       [
          updateRenderTarget,
+         uniforms,
          setParams,
          intersectionHandler,
          updateDomRects,

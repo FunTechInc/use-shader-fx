@@ -4,7 +4,11 @@ import { RootState } from "@react-three/fiber";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { useDoubleFBO, DoubleRenderTarget } from "../../../utils/useDoubleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { useParams } from "../../../utils/useParams";
 
 import type { HooksProps, HooksReturn } from "../../types";
@@ -43,11 +47,16 @@ export const useSimpleBlur = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<SimpleBlurParams, SimpleBlurObject> => {
+}: HooksProps): HooksReturn<
+   SimpleBlurParams,
+   SimpleBlurObject,
+   CustomParams
+> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, onBeforeCompile });
+   const { material, mesh } = useMesh({ scene, uniforms, onBeforeCompile });
    const camera = useCamera(size);
 
    const fboProps = useMemo(
@@ -66,11 +75,17 @@ export const useSimpleBlur = ({
    const [params, setParams] = useParams<SimpleBlurParams>(SIMPLEBLUR_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
+
    const updateFx = useCallback(
-      (props: RootState, updateParams?: SimpleBlurParams) => {
+      (
+         props: RootState,
+         newParams?: SimpleBlurParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uResolution", [
@@ -87,9 +102,11 @@ export const useSimpleBlur = ({
             _tempTexture = updateTempTexture(gl);
          }
 
+         updateCustomValue(customParams);
+
          return _tempTexture;
       },
-      [updateTempTexture, updateValue, setParams, params]
+      [updateTempTexture, updateValue, setParams, params, updateCustomValue]
    );
 
    return [
