@@ -7,6 +7,10 @@ import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../libs/constants";
 
 export class FxTextureMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -20,6 +24,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -32,16 +37,18 @@ export const useMesh = ({
          uniforms: {
             uResolution: { value: new THREE.Vector2() },
             uTextureResolution: { value: new THREE.Vector2() },
-            uTexture: { value: new THREE.Texture() },
+            uTexture: { value: DEFAULT_TEXTURE },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as FxTextureMaterial;
+   }, [onBeforeCompile, uniforms]) as FxTextureMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("uResolution", resolution.clone());

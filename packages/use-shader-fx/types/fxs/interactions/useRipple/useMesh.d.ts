@@ -3,8 +3,8 @@ import { MaterialProps } from "../../types";
 type UseMeshProps = {
     scale: number;
     max: number;
-    texture?: THREE.Texture;
     scene: THREE.Scene;
+    texture?: THREE.Texture;
 };
-export declare const useMesh: ({ scale, max, texture, scene, onBeforeCompile, }: UseMeshProps & MaterialProps) => THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material | THREE.Material[]>[];
+export declare const useMesh: ({ scale, max, texture, scene, uniforms, onBeforeCompile, }: UseMeshProps & MaterialProps) => THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>[];
 export {};

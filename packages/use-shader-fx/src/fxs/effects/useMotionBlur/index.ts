@@ -4,11 +4,16 @@ import { RootState } from "@react-three/fiber";
 import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { useDoubleFBO, DoubleRenderTarget } from "../../../utils/useDoubleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { useParams } from "../../../utils/useParams";
 import type { HooksProps, HooksReturn } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
 import { UseFboProps } from "../../..";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type MotionBlurParams = {
    /** Make this texture blur, default : `THREE.Texture()` */
@@ -31,7 +36,7 @@ export type MotionBlurObject = {
 };
 
 export const MOTIONBLUR_PARAMS: MotionBlurParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    begin: new THREE.Vector2(0, 0),
    end: new THREE.Vector2(0, 0),
    strength: 0.9,
@@ -45,12 +50,17 @@ export const useMotionBlur = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<MotionBlurParams, MotionBlurObject> => {
+}: HooksProps): HooksReturn<
+   MotionBlurParams,
+   MotionBlurObject,
+   CustomParams
+> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, onBeforeCompile });
+   const { material, mesh } = useMesh({ scene, uniforms, onBeforeCompile });
    const camera = useCamera(size);
 
    const fboProps = useMemo(
@@ -70,23 +80,30 @@ export const useMotionBlur = ({
    const [params, setParams] = useParams<MotionBlurParams>(MOTIONBLUR_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: MotionBlurParams) => {
+      (
+         props: RootState,
+         newParams?: MotionBlurParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uBegin", params.begin!);
          updateValue("uEnd", params.end!);
          updateValue("uStrength", params.strength!);
 
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl, ({ read }) => {
             updateValue("uBackbuffer", read);
          });
       },
-      [updateRenderTarget, updateValue, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
    );
 
    return [

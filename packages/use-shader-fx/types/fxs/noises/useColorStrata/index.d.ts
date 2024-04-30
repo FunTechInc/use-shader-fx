@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type ColorStrataParams = {
     /** default : `null` */
@@ -36,4 +37,4 @@ export declare const COLORSTRATA_PARAMS: ColorStrataParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useColorStrata: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<ColorStrataParams, ColorStrataObject>;
+export declare const useColorStrata: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<ColorStrataParams, ColorStrataObject, CustomParams>;

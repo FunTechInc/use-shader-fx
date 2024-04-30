@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { FluidMaterials, FluidOnBeforeCompile } from "./useMesh";
+import { FluidCustomParams, FluidMaterials, FluidOnBeforeCompile } from "./useMesh";
 import { PointerValues } from "../../../misc/usePointer";
 import { HooksProps, HooksReturn } from "../../types";
 import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
@@ -52,4 +52,4 @@ export declare const useFluid: ({ size, dpr, samples, isSizeUpdate, fluidOnBefor
       * ```
      */
     fluidOnBeforeCompile?: FluidOnBeforeCompile | undefined;
-} & HooksProps) => HooksReturn<FluidParams, FluidObject>;
+} & HooksProps) => HooksReturn<FluidParams, FluidObject, FluidCustomParams>;

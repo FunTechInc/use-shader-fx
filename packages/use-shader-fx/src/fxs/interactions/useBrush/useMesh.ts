@@ -7,6 +7,11 @@ import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   DEFAULT_TEXTURE,
+   MATERIAL_BASIC_PARAMS,
+} from "../../../libs/constants";
+import { BRUSH_PARAMS } from ".";
 
 export class BrushMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -16,7 +21,7 @@ export class BrushMaterial extends THREE.ShaderMaterial {
       uMap: { value: THREE.Texture };
       uIsMap: { value: boolean };
       uMapIntensity: { value: number };
-      uResolution: { value: THREE.Texture };
+      uResolution: { value: THREE.Vector2 };
       uRadius: { value: number };
       uSmudge: { value: number };
       uDissipation: { value: number };
@@ -36,6 +41,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -46,34 +52,39 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uBuffer: { value: new THREE.Texture() },
+            uBuffer: { value: DEFAULT_TEXTURE },
             uResolution: { value: new THREE.Vector2(0, 0) },
-            uTexture: { value: new THREE.Texture() },
+            uTexture: { value: DEFAULT_TEXTURE },
             uIsTexture: { value: false },
-            uMap: { value: new THREE.Texture() },
+            uMap: { value: DEFAULT_TEXTURE },
             uIsMap: { value: false },
-            uMapIntensity: { value: 0.0 },
-            uRadius: { value: 0.0 },
-            uSmudge: { value: 0.0 },
-            uDissipation: { value: 0.0 },
-            uMotionBlur: { value: 0.0 },
-            uMotionSample: { value: 0 },
+            uMapIntensity: { value: BRUSH_PARAMS.mapIntensity },
+            uRadius: { value: BRUSH_PARAMS.radius },
+            uSmudge: { value: BRUSH_PARAMS.smudge },
+            uDissipation: { value: BRUSH_PARAMS.dissipation },
+            uMotionBlur: { value: BRUSH_PARAMS.motionBlur },
+            uMotionSample: { value: BRUSH_PARAMS.motionSample },
             uMouse: { value: new THREE.Vector2(-10, -10) },
             uPrevMouse: { value: new THREE.Vector2(-10, -10) },
             uVelocity: { value: new THREE.Vector2(0, 0) },
-            uColor: { value: new THREE.Vector3(1, 0, 0) },
+            uColor: { value: BRUSH_PARAMS.color },
             uIsCursor: { value: false },
             uPressureStart: { value: 1.0 },
             uPressureEnd: { value: 1.0 },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
+         // Must be transparent
+         transparent: true,
       });
+
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as BrushMaterial;
+   }, [onBeforeCompile, uniforms]) as BrushMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("uResolution", resolution.clone());

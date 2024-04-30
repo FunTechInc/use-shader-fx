@@ -8,7 +8,11 @@ import {
    WobbleMaterialConstructor,
 } from "./useMaterial";
 import { Wobble3DParams } from ".";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   setUniform,
+   setCustomUniform,
+   CustomParams,
+} from "../../../utils/setUniforms";
 import { useCallback, useMemo } from "react";
 import { useAddObject } from "../../../utils/useAddObject";
 import { Create3DHooksProps } from "../types";
@@ -18,7 +22,12 @@ export type UseCreateWobble3DProps = {
    geometry?: THREE.BufferGeometry;
 };
 
-type UpdateUniform = (props: RootState | null, params?: Wobble3DParams) => void;
+type UpdateUniform = (
+   props: RootState | null,
+   params?: Wobble3DParams,
+   customParams?: CustomParams
+) => void;
+
 type UseCreateWobble3DReturn<T> = [
    UpdateUniform,
    {
@@ -34,6 +43,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    materialParameters,
    onBeforeCompile,
    depthOnBeforeCompile,
+   uniforms,
 }: UseCreateWobble3DProps &
    Create3DHooksProps &
    WobbleMaterialProps<T>): UseCreateWobble3DReturn<T> => {
@@ -48,51 +58,61 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
       materialParameters,
       onBeforeCompile,
       depthOnBeforeCompile,
+      uniforms,
    });
 
    const mesh = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
 
    const userData = material.userData as Wobble3DMaterial;
    const updateValue = setUniform(userData);
+   const updateCustomValue = setCustomUniform(userData);
+
    const updateUniform = useCallback<UpdateUniform>(
-      (props, params) => {
+      (props, newParams, customParams) => {
          if (props) {
-            updateValue("uTime", params?.beat || props.clock.getElapsedTime());
+            updateValue(
+               "uTime",
+               newParams?.beat || props.clock.getElapsedTime()
+            );
          }
-         if (params === undefined) {
+         if (newParams === undefined) {
             return;
          }
-         updateValue("uWobbleStrength", params.wobbleStrength);
+         updateValue("uWobbleStrength", newParams.wobbleStrength);
          updateValue(
             "uWobblePositionFrequency",
-            params.wobblePositionFrequency
+            newParams.wobblePositionFrequency
          );
-         updateValue("uWobbleTimeFrequency", params.wobbleTimeFrequency);
-         updateValue("uWarpStrength", params.warpStrength);
-         updateValue("uWarpPositionFrequency", params.warpPositionFrequency);
-         updateValue("uWarpTimeFrequency", params.warpTimeFrequency);
-         updateValue("uWobbleShine", params.wobbleShine);
-         if (params.wobbleMap) {
-            updateValue("uWobbleMap", params.wobbleMap);
+         updateValue("uWobbleTimeFrequency", newParams.wobbleTimeFrequency);
+         updateValue("uWarpStrength", newParams.warpStrength);
+         updateValue("uWarpPositionFrequency", newParams.warpPositionFrequency);
+         updateValue("uWarpTimeFrequency", newParams.warpTimeFrequency);
+         updateValue("uWobbleShine", newParams.wobbleShine);
+         if (newParams.wobbleMap) {
+            updateValue("uWobbleMap", newParams.wobbleMap);
             updateValue("uIsWobbleMap", true);
-         } else if (params.wobbleMap === false) {
+         } else if (newParams.wobbleMap === false) {
             updateValue("uIsWobbleMap", false);
          }
-         updateValue("uWobbleMapStrength", params.wobbleMapStrength);
-         updateValue("uWobbleMapDistortion", params.wobbleMapDistortion);
-         updateValue("uSamples", params.samples);
-         updateValue("uColor0", params.color0);
-         updateValue("uColor1", params.color1);
-         updateValue("uColor2", params.color2);
-         updateValue("uColor3", params.color3);
-         updateValue("uColorMix", params.colorMix);
-         updateValue("uChromaticAberration", params.chromaticAberration);
-         updateValue("uAnisotropicBlur", params.anisotropicBlur);
-         updateValue("uDistortion", params.distortion);
-         updateValue("uDistortionScale", params.distortionScale);
-         updateValue("uTemporalDistortion", params.temporalDistortion);
+         updateValue("uWobbleMapStrength", newParams.wobbleMapStrength);
+         updateValue("uWobbleMapDistortion", newParams.wobbleMapDistortion);
+         updateValue("uSamples", newParams.samples);
+         updateValue("uColor0", newParams.color0);
+         updateValue("uColor1", newParams.color1);
+         updateValue("uColor2", newParams.color2);
+         updateValue("uColor3", newParams.color3);
+         updateValue("uColorMix", newParams.colorMix);
+         updateValue("uEdgeThreshold", newParams.edgeThreshold);
+         updateValue("uEdgeColor", newParams.edgeColor);
+         updateValue("uChromaticAberration", newParams.chromaticAberration);
+         updateValue("uAnisotropicBlur", newParams.anisotropicBlur);
+         updateValue("uDistortion", newParams.distortion);
+         updateValue("uDistortionScale", newParams.distortionScale);
+         updateValue("uTemporalDistortion", newParams.temporalDistortion);
+
+         updateCustomValue(customParams);
       },
-      [updateValue]
+      [updateValue, updateCustomValue]
    );
 
    return [

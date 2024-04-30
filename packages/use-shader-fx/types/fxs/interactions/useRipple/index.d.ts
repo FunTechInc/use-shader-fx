@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { PointerValues } from "../../../misc/usePointer";
 import { HooksProps, HooksReturn } from "../../types";
+import { CustomParams } from "../../../utils/setUniforms";
 export type RippleParams = {
     /** How often ripples appear, default : `0.01` */
     frequency?: number;
@@ -34,5 +35,5 @@ interface UseRippleProps extends HooksProps {
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useRipple: ({ texture, scale, max, size, dpr, samples, isSizeUpdate, onBeforeCompile, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject>;
+export declare const useRipple: ({ texture, scale, max, size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject, CustomParams>;
 export {};

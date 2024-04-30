@@ -3,6 +3,7 @@ import { HooksReturn } from "../../types";
 import { UseCreateMorphParticlesProps } from "./useCreateMorphParticles";
 import { HooksProps3D } from "../types";
 import { InteractiveMesh, MorphParticlePoints } from "./utils/useCreateObject";
+import { CustomParams } from "../../../utils/setUniforms";
 export type MorphParticlesParams = {
     /** progress value to morph vertices,0~1 */
     morphProgress?: number;
@@ -62,4 +63,4 @@ export declare const MORPHPARTICLES_PARAMS: MorphParticlesParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useMorphParticles: ({ size, dpr, samples, isSizeUpdate, camera, geometry, positions, uvs, onBeforeCompile, }: HooksProps3D & UseCreateMorphParticlesProps) => HooksReturn<MorphParticlesParams, MorphParticlesObject>;
+export declare const useMorphParticles: ({ size, dpr, samples, isSizeUpdate, camera, geometry, positions, uvs, uniforms, onBeforeCompile, }: HooksProps3D & UseCreateMorphParticlesProps) => HooksReturn<MorphParticlesParams, MorphParticlesObject, CustomParams>;

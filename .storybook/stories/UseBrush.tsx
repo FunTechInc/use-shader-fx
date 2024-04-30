@@ -33,7 +33,10 @@ export const UseBrush = (args: BrushParams) => {
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
-   const [updateBrush] = useBrush({ size, dpr });
+   const [updateBrush] = useBrush({
+      size,
+      dpr,
+   });
    useFrame((props) => {
       const fx = updateBrush(props, setConfig());
       fxRef.current!.u_fx = fx;

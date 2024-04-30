@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Size, RootState } from "@react-three/fiber";
 import { InteractiveMesh, MorphParticlePoints } from "./utils/useCreateObject";
 import { MorphParticlesParams } from ".";
+import { CustomParams } from "../../../utils/setUniforms";
 import { Create3DHooksProps } from "../types";
 import { Dpr } from "../../types";
 export type UseCreateMorphParticlesProps = {
@@ -14,7 +15,7 @@ export type UseCreateMorphParticlesProps = {
     /** Array of textures to map to points. Mapped at random. */
     mapArray?: THREE.Texture[];
 };
-type UpdateUniform = (props: RootState | null, params?: MorphParticlesParams) => void;
+type UpdateUniform = (props: RootState | null, params?: MorphParticlesParams, customParams?: CustomParams) => void;
 type UseCreateMorphParticlesReturn = [
     UpdateUniform,
     {
@@ -24,5 +25,5 @@ type UseCreateMorphParticlesReturn = [
         uvs: Float32Array[];
     }
 ];
-export declare const useCreateMorphParticles: ({ size, dpr, scene, geometry, positions, uvs, mapArray, onBeforeCompile, }: Create3DHooksProps & UseCreateMorphParticlesProps) => UseCreateMorphParticlesReturn;
+export declare const useCreateMorphParticles: ({ size, dpr, scene, geometry, positions, uvs, mapArray, uniforms, onBeforeCompile, }: Create3DHooksProps & UseCreateMorphParticlesProps) => UseCreateMorphParticlesReturn;
 export {};

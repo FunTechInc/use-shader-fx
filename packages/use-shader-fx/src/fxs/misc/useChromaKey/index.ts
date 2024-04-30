@@ -4,10 +4,15 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type ChromaKeyParams = {
    /** Process this texture with chroma key , default : `THREE.Texture` */
@@ -40,7 +45,7 @@ export type ChromaKeyObject = {
 };
 
 export const CHROMAKEY_PARAMS: ChromaKeyParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    keyColor: new THREE.Color(0x00ff00),
    similarity: 0.2,
    smoothness: 0.1,
@@ -59,8 +64,9 @@ export const useChromaKey = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject> => {
+}: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -68,6 +74,7 @@ export const useChromaKey = ({
       scene,
       size,
       dpr: _dpr.shader,
+      uniforms,
       onBeforeCompile,
    });
    const camera = useCamera(size);
@@ -83,11 +90,16 @@ export const useChromaKey = ({
    const [params, setParams] = useParams<ChromaKeyParams>(CHROMAKEY_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: ChromaKeyParams) => {
+      (
+         props: RootState,
+         newParams?: ChromaKeyParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("u_texture", params.texture!);
          updateValue("u_keyColor", params.keyColor!);
@@ -99,9 +111,11 @@ export const useChromaKey = ({
          updateValue("u_brightness", params.brightness!);
          updateValue("u_gamma", params.gamma!);
 
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
    );
 
    return [

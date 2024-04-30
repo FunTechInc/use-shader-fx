@@ -74,7 +74,7 @@ export const Playground = () => {
 
    const [updateFluid, setFluid, { output: fluid }] = useFluid({
       size,
-      dpr: viewport.dpr,
+      dpr: 0.1,
    });
 
    const colorVec = new THREE.Vector3(0, 0, 0);

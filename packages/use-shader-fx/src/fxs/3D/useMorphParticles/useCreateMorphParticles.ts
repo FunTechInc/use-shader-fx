@@ -7,7 +7,11 @@ import {
 } from "./utils/useCreateObject";
 import { useMaterial } from "./utils/useMaterial";
 import { MorphParticlesParams } from ".";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   setUniform,
+   CustomParams,
+   setCustomUniform,
+} from "../../../utils/setUniforms";
 import { useCallback, useMemo } from "react";
 import { Create3DHooksProps } from "../types";
 import { Dpr } from "../../types";
@@ -26,7 +30,8 @@ export type UseCreateMorphParticlesProps = {
 
 type UpdateUniform = (
    props: RootState | null,
-   params?: MorphParticlesParams
+   params?: MorphParticlesParams,
+   customParams?: CustomParams
 ) => void;
 
 type UseCreateMorphParticlesReturn = [
@@ -47,6 +52,7 @@ export const useCreateMorphParticles = ({
    positions,
    uvs,
    mapArray,
+   uniforms,
    onBeforeCompile,
 }: Create3DHooksProps &
    UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
@@ -67,6 +73,7 @@ export const useCreateMorphParticles = ({
       positions,
       uvs,
       mapArray,
+      uniforms,
       onBeforeCompile,
    });
 
@@ -77,78 +84,85 @@ export const useCreateMorphParticles = ({
    });
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
+
    const updateUniform = useCallback<UpdateUniform>(
-      (props, params) => {
+      (props, newParams, customParams) => {
          if (props) {
-            updateValue("uTime", params?.beat || props.clock.getElapsedTime());
+            updateValue(
+               "uTime",
+               newParams?.beat || props.clock.getElapsedTime()
+            );
          }
-         if (params === undefined) {
+         if (newParams === undefined) {
             return;
          }
-         updateValue("uMorphProgress", params.morphProgress);
-         updateValue("uBlurAlpha", params.blurAlpha);
-         updateValue("uBlurRadius", params.blurRadius);
-         updateValue("uPointSize", params.pointSize);
-         updateValue("uPointAlpha", params.pointAlpha);
-         if (params.picture) {
-            updateValue("uPicture", params.picture);
+         updateValue("uMorphProgress", newParams.morphProgress);
+         updateValue("uBlurAlpha", newParams.blurAlpha);
+         updateValue("uBlurRadius", newParams.blurRadius);
+         updateValue("uPointSize", newParams.pointSize);
+         updateValue("uPointAlpha", newParams.pointAlpha);
+         if (newParams.picture) {
+            updateValue("uPicture", newParams.picture);
             updateValue("uIsPicture", true);
-         } else if (params.picture === false) {
+         } else if (newParams.picture === false) {
             updateValue("uIsPicture", false);
          }
-         if (params.alphaPicture) {
-            updateValue("uAlphaPicture", params.alphaPicture);
+         if (newParams.alphaPicture) {
+            updateValue("uAlphaPicture", newParams.alphaPicture);
             updateValue("uIsAlphaPicture", true);
-         } else if (params.alphaPicture === false) {
+         } else if (newParams.alphaPicture === false) {
             updateValue("uIsAlphaPicture", false);
          }
-         updateValue("uColor0", params.color0);
-         updateValue("uColor1", params.color1);
-         updateValue("uColor2", params.color2);
-         updateValue("uColor3", params.color3);
-         if (params.map) {
-            updateValue("uMap", params.map);
+         updateValue("uColor0", newParams.color0);
+         updateValue("uColor1", newParams.color1);
+         updateValue("uColor2", newParams.color2);
+         updateValue("uColor3", newParams.color3);
+         if (newParams.map) {
+            updateValue("uMap", newParams.map);
             updateValue("uIsMap", true);
-         } else if (params.map === false) {
+         } else if (newParams.map === false) {
             updateValue("uIsMap", false);
          }
-         if (params.alphaMap) {
-            updateValue("uAlphaMap", params.alphaMap);
+         if (newParams.alphaMap) {
+            updateValue("uAlphaMap", newParams.alphaMap);
             updateValue("uIsAlphaMap", true);
-         } else if (params.alphaMap === false) {
+         } else if (newParams.alphaMap === false) {
             updateValue("uIsAlphaMap", false);
          }
-         updateValue("uWobbleStrength", params.wobbleStrength);
+         updateValue("uWobbleStrength", newParams.wobbleStrength);
          updateValue(
             "uWobblePositionFrequency",
-            params.wobblePositionFrequency
+            newParams.wobblePositionFrequency
          );
-         updateValue("uWobbleTimeFrequency", params.wobbleTimeFrequency);
-         updateValue("uWarpStrength", params.warpStrength);
-         updateValue("uWarpPositionFrequency", params.warpPositionFrequency);
-         updateValue("uWarpTimeFrequency", params.warpTimeFrequency);
-         if (params.displacement) {
-            updateValue("uDisplacement", params.displacement);
+         updateValue("uWobbleTimeFrequency", newParams.wobbleTimeFrequency);
+         updateValue("uWarpStrength", newParams.warpStrength);
+         updateValue("uWarpPositionFrequency", newParams.warpPositionFrequency);
+         updateValue("uWarpTimeFrequency", newParams.warpTimeFrequency);
+         if (newParams.displacement) {
+            updateValue("uDisplacement", newParams.displacement);
             updateValue("uIsDisplacement", true);
-         } else if (params.displacement === false) {
+         } else if (newParams.displacement === false) {
             updateValue("uIsDisplacement", false);
          }
-         updateValue("uDisplacementIntensity", params.displacementIntensity);
+         updateValue("uDisplacementIntensity", newParams.displacementIntensity);
          updateValue(
             "uDisplacementColorIntensity",
-            params.displacementColorIntensity
+            newParams.displacementColorIntensity
          );
-         updateValue("uSizeRandomIntensity", params.sizeRandomIntensity);
+         updateValue("uSizeRandomIntensity", newParams.sizeRandomIntensity);
          updateValue(
             "uSizeRandomTimeFrequency",
-            params.sizeRandomTimeFrequency
+            newParams.sizeRandomTimeFrequency
          );
-         updateValue("uSizeRandomMin", params.sizeRandomMin);
-         updateValue("uSizeRandomMax", params.sizeRandomMax);
-         updateValue("uDivergence", params.divergence);
-         updateValue("uDivergencePoint", params.divergencePoint);
+         updateValue("uSizeRandomMin", newParams.sizeRandomMin);
+         updateValue("uSizeRandomMax", newParams.sizeRandomMax);
+         updateValue("uDivergence", newParams.divergence);
+         updateValue("uDivergencePoint", newParams.divergencePoint);
+
+         updateCustomValue(customParams);
       },
-      [updateValue]
+      [updateValue, updateCustomValue]
    );
 
    return [

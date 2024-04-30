@@ -4,10 +4,15 @@ import { DuoToneMaterial, useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type DuoToneParams = {
    /** Make this texture duotone , Default : `THREE.Texture()` */
@@ -27,11 +32,11 @@ export type DuoToneObject = {
    output: THREE.Texture;
 };
 
-export const DUOTONE_PARAMS: DuoToneParams = {
-   texture: new THREE.Texture(),
+export const DUOTONE_PARAMS: DuoToneParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
    color0: new THREE.Color(0xffffff),
    color1: new THREE.Color(0x000000),
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
@@ -41,12 +46,13 @@ export const useDuoTone = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<DuoToneParams, DuoToneObject> => {
+}: HooksProps): HooksReturn<DuoToneParams, DuoToneObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, onBeforeCompile });
+   const { material, mesh } = useMesh({ scene, uniforms, onBeforeCompile });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
@@ -60,20 +66,27 @@ export const useDuoTone = ({
    const [params, setParams] = useParams<DuoToneParams>(DUOTONE_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: DuoToneParams) => {
+      (
+         props: RootState,
+         newParams?: DuoToneParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uColor0", params.color0!);
          updateValue("uColor1", params.color1!);
 
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params]
+      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
    );
 
    return [

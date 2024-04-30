@@ -7,6 +7,11 @@ import { setUniform } from "../../../utils/setUniforms";
 import { useResolution } from "../../../utils/useResolution";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../libs/constants";
+import { CHROMAKEY_PARAMS } from ".";
 
 export class ChromaKeyMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -27,6 +32,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -37,25 +43,27 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            u_texture: { value: new THREE.Texture() },
+            u_texture: { value: DEFAULT_TEXTURE },
             u_resolution: { value: new THREE.Vector2() },
-            u_keyColor: { value: new THREE.Color() },
-            u_similarity: { value: 0 },
-            u_smoothness: { value: 0 },
-            u_spill: { value: 0 },
-            u_color: { value: new THREE.Vector4() },
-            u_contrast: { value: 0 },
-            u_brightness: { value: 0 },
-            u_gamma: { value: 0 },
+            u_keyColor: { value: CHROMAKEY_PARAMS.color },
+            u_similarity: { value: CHROMAKEY_PARAMS.similarity },
+            u_smoothness: { value: CHROMAKEY_PARAMS.smoothness },
+            u_spill: { value: CHROMAKEY_PARAMS.spill },
+            u_color: { value: CHROMAKEY_PARAMS.color },
+            u_contrast: { value: CHROMAKEY_PARAMS.contrast },
+            u_brightness: { value: CHROMAKEY_PARAMS.brightness },
+            u_gamma: { value: CHROMAKEY_PARAMS.gamma },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as ChromaKeyMaterial;
+   }, [onBeforeCompile, uniforms]) as ChromaKeyMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("u_resolution", resolution.clone());

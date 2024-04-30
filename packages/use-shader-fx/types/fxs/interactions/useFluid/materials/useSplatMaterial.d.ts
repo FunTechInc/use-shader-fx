@@ -22,4 +22,4 @@ export declare class SplatMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useSplatMaterial: ({ onBeforeCompile }: MaterialProps) => SplatMaterial;
+export declare const useSplatMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => SplatMaterial;

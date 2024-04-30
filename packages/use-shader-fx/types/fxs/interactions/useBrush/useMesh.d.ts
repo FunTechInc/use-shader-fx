@@ -22,7 +22,7 @@ export declare class BrushMaterial extends THREE.ShaderMaterial {
             value: number;
         };
         uResolution: {
-            value: THREE.Texture;
+            value: THREE.Vector2;
         };
         uRadius: {
             value: number;
@@ -62,7 +62,7 @@ export declare class BrushMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, onBeforeCompile, }: {
+export declare const useMesh: ({ scene, size, dpr, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;

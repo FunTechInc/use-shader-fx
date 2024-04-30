@@ -2,8 +2,10 @@
 import * as THREE from "three";
 import { DomSyncerParams } from "..";
 import { Size } from "@react-three/fiber";
-type UpdateDomRect = ({ params, size, resolutionRef, scene, isIntersectingRef, }: {
+import { CustomParams } from "../../../utils/setUniforms";
+type UpdateDomRect = ({ params, customParams, size, resolutionRef, scene, isIntersectingRef, }: {
     params: DomSyncerParams;
+    customParams?: CustomParams;
     size: Size;
     resolutionRef: React.MutableRefObject<THREE.Vector2>;
     scene: THREE.Scene;

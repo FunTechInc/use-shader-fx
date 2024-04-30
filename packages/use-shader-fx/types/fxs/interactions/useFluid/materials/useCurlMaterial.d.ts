@@ -10,4 +10,4 @@ export declare class CurlMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useCurlMaterial: ({ onBeforeCompile }: MaterialProps) => CurlMaterial;
+export declare const useCurlMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => CurlMaterial;

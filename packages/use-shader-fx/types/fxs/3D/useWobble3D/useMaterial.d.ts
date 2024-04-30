@@ -53,6 +53,12 @@ export declare class Wobble3DMaterial extends THREE.Material {
         uColorMix: {
             value: number;
         };
+        uEdgeThreshold: {
+            value: number;
+        };
+        uEdgeColor: {
+            value: THREE.Color;
+        };
         uChromaticAberration: {
             value: number;
         };
@@ -88,7 +94,7 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor> extend
      */
     depthOnBeforeCompile?: (shader: THREE.Shader, renderer: THREE.WebGLRenderer) => void;
 }
-export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, }: WobbleMaterialProps<T>) => {
+export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, uniforms, }: WobbleMaterialProps<T>) => {
     material: Wobble3DMaterial;
     depthMaterial: THREE.MeshDepthMaterial;
 };

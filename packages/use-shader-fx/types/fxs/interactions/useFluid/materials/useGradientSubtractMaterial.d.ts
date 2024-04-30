@@ -13,4 +13,4 @@ export declare class GradientSubtractMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useGradientSubtractMaterial: ({ onBeforeCompile, }: MaterialProps) => GradientSubtractMaterial;
+export declare const useGradientSubtractMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => GradientSubtractMaterial;

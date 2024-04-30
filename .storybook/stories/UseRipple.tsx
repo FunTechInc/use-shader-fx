@@ -35,9 +35,35 @@ export const UseRipple = (args: RippleParams) => {
       size,
       texture: ripple,
       dpr: viewport.dpr,
+      max: 20,
+      uniforms: React.useMemo(
+         () => ({
+            testtest: { value: 0 },
+         }),
+         []
+      ),
+      onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
+         shader.fragmentShader = shader.fragmentShader.replace(
+            "void main() {",
+            `
+      		uniform float testtest;
+      		void main() {
+      		`
+         );
+         shader.fragmentShader = shader.fragmentShader.replace(
+            "vec3 color = texture2D(uMap, uv).rgb",
+            `
+      		vec3 color = texture2D(uMap, uv).rgb;
+      		color.r *= sin(testtest)*.5+.5;
+      		color.g *= cos(testtest)*.5+.5;
+      		`
+         );
+      }, []),
    });
    useFrame((props) => {
-      const fx = updateRipple(props, setConfig());
+      const fx = updateRipple(props, setConfig(), {
+         testtest: props.clock.getElapsedTime(),
+      });
       fxRef.current!.u_fx = fx;
       updateGUI();
    });
@@ -61,7 +87,11 @@ export const UseRippleWithTexture = (args: RippleParams) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
    const [updateFxTexture] = useFxTexture({ size, dpr });
-   const [updateRipple] = useRipple({ size, dpr, texture: ripple });
+   const [updateRipple] = useRipple({
+      size,
+      dpr,
+      texture: ripple,
+   });
 
    useFrame((props) => {
       const fx = updateRipple(props, setConfig());

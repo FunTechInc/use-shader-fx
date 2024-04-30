@@ -1,6 +1,7 @@
 import * as THREE from "three";
-import { BlankMaterial, CustomUniforms } from "./useMesh";
+import { BlankMaterial } from "./useMesh";
 import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
+import { CustomParams } from "../../../utils/setUniforms";
 import type { HooksProps, HooksReturn } from "../../types";
 export type BlankParams = {
     /** texture, default : `THREE.Texture()` */
@@ -26,4 +27,4 @@ export declare const BLANK_PARAMS: BlankParams;
  * ※ `usf_Position` overrides `gl_Position`
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useBlank: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, uniforms, }: HooksProps & CustomUniforms) => HooksReturn<BlankParams, BlankObject>;
+export declare const useBlank: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<BlankParams, BlankObject, CustomParams>;

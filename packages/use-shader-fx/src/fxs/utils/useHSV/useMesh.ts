@@ -5,6 +5,11 @@ import { useMemo } from "react";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../libs/constants";
+import { HSV_PARAMS } from ".";
 
 export class HSVMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -16,7 +21,7 @@ export class HSVMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   size,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -26,18 +31,20 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            u_texture: { value: new THREE.Texture() },
-            u_brightness: { value: 1 },
-            u_saturation: { value: 1 },
+            u_texture: { value: DEFAULT_TEXTURE },
+            u_brightness: { value: HSV_PARAMS.brightness },
+            u_saturation: { value: HSV_PARAMS.saturation },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as HSVMaterial;
+   }, [onBeforeCompile, uniforms]) as HSVMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

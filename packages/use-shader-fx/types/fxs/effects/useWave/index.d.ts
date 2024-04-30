@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type WaveParams = {
     /** -1.0 ~ 1.0 , default : `vec2(0.0,0.0)` */
@@ -24,4 +25,4 @@ export declare const WAVE_PARAMS: WaveParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useWave: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<WaveParams, WaveObject>;
+export declare const useWave: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<WaveParams, WaveObject, CustomParams>;

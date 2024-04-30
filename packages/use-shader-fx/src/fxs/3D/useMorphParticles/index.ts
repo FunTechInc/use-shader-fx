@@ -10,6 +10,7 @@ import {
 import { HooksProps3D } from "../types";
 import { InteractiveMesh, MorphParticlePoints } from "./utils/useCreateObject";
 import { getDpr } from "../../../utils/getDpr";
+import { CustomParams } from "../../../utils/setUniforms";
 
 export type MorphParticlesParams = {
    /** progress value to morph vertices,0~1 */
@@ -112,10 +113,12 @@ export const useMorphParticles = ({
    geometry,
    positions,
    uvs,
+   uniforms,
    onBeforeCompile,
 }: HooksProps3D & UseCreateMorphParticlesProps): HooksReturn<
    MorphParticlesParams,
-   MorphParticlesObject
+   MorphParticlesObject,
+   CustomParams
 > => {
    const _dpr = getDpr(dpr);
 
@@ -136,6 +139,7 @@ export const useMorphParticles = ({
       geometry,
       positions,
       uvs,
+      uniforms,
       onBeforeCompile,
    });
 
@@ -150,16 +154,20 @@ export const useMorphParticles = ({
    });
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: MorphParticlesParams) => {
-         updateUniform(props, updateParams);
+      (
+         props: RootState,
+         newParams?: MorphParticlesParams,
+         customParams?: CustomParams
+      ) => {
+         updateUniform(props, newParams, customParams);
          return updateRenderTarget(props.gl);
       },
       [updateRenderTarget, updateUniform]
    );
 
    const setParams = useCallback(
-      (updateParams: MorphParticlesParams) => {
-         updateUniform(null, updateParams);
+      (newParams: MorphParticlesParams, customParams?: CustomParams) => {
+         updateUniform(null, newParams, customParams);
       },
       [updateUniform]
    );

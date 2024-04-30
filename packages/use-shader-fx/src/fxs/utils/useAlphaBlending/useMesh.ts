@@ -5,6 +5,10 @@ import { useMemo } from "react";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   DEFAULT_TEXTURE,
+   MATERIAL_BASIC_PARAMS,
+} from "../../../libs/constants";
 
 export class AlphaBlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -15,7 +19,7 @@ export class AlphaBlendingMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   size,
+   uniforms,
    onBeforeCompile,
 }: {
    scene: THREE.Scene;
@@ -25,17 +29,19 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uTexture: { value: new THREE.Texture() },
-            uMap: { value: new THREE.Texture() },
+            uTexture: { value: DEFAULT_TEXTURE },
+            uMap: { value: DEFAULT_TEXTURE },
+            ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }
       return mat;
-   }, [onBeforeCompile]) as AlphaBlendingMaterial;
+   }, [onBeforeCompile, uniforms]) as AlphaBlendingMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

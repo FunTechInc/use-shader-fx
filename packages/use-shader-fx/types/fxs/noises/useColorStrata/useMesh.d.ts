@@ -43,7 +43,7 @@ export declare class ColorStrataMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, onBeforeCompile, }: {
+export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
 } & MaterialProps) => {
     material: ColorStrataMaterial;

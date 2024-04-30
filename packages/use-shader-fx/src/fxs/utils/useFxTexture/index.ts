@@ -4,10 +4,15 @@ import { useMesh } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
 import { RootState } from "@react-three/fiber";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
-import { setUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type FxTextureParams = {
    /** 1st texture , default : `THREE.Texture()` */
@@ -39,17 +44,17 @@ export type FxTextureObject = {
    output: THREE.Texture;
 };
 
-export const FXTEXTURE_PARAMS: FxTextureParams = {
-   texture0: new THREE.Texture(),
-   texture1: new THREE.Texture(),
+export const FXTEXTURE_PARAMS: FxTextureParams = Object.freeze({
+   texture0: DEFAULT_TEXTURE,
+   texture1: DEFAULT_TEXTURE,
    padding: 0.0,
-   map: new THREE.Texture(),
+   map: DEFAULT_TEXTURE,
    mapIntensity: 0.0,
    edgeIntensity: 0.0,
    epicenter: new THREE.Vector2(0, 0),
    progress: 0.0,
    dir: new THREE.Vector2(0, 0),
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
@@ -59,8 +64,9 @@ export const useFxTexture = ({
    dpr,
    samples,
    isSizeUpdate,
+   uniforms,
    onBeforeCompile,
-}: HooksProps): HooksReturn<FxTextureParams, FxTextureObject> => {
+}: HooksProps): HooksReturn<FxTextureParams, FxTextureObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -68,6 +74,7 @@ export const useFxTexture = ({
       scene,
       size,
       dpr: _dpr.shader,
+      uniforms,
       onBeforeCompile,
    });
    const camera = useCamera(size);
@@ -83,12 +90,17 @@ export const useFxTexture = ({
    const [params, setParams] = useParams<FxTextureParams>(FXTEXTURE_PARAMS);
 
    const updateValue = setUniform(material);
+   const updateCustomValue = setCustomUniform(material);
 
    const updateFx = useCallback(
-      (props: RootState, updateParams?: FxTextureParams) => {
+      (
+         props: RootState,
+         newParams?: FxTextureParams,
+         customParams?: CustomParams
+      ) => {
          const { gl } = props;
 
-         updateParams && setParams(updateParams);
+         newParams && setParams(newParams);
 
          updateValue("uTexture0", params.texture0!);
          updateValue("uTexture1", params.texture1!);
@@ -117,9 +129,11 @@ export const useFxTexture = ({
          updateValue("dirX", params.dir!.x);
          updateValue("dirY", params.dir!.y);
 
+         updateCustomValue(customParams);
+
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, params, setParams]
+      [updateRenderTarget, updateValue, params, setParams, updateCustomValue]
    );
    return [
       updateFx,

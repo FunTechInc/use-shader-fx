@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type AlphaBlendingParams = {
     /** default : `THREE.Texture()` */
@@ -18,4 +19,4 @@ export declare const ALPHABLENDING_PARAMS: AlphaBlendingParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useAlphaBlending: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<AlphaBlendingParams, AlphaBlendingObject>;
+export declare const useAlphaBlending: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<AlphaBlendingParams, AlphaBlendingObject, CustomParams>;

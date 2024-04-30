@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type CosPaletteParams = {
     /** color1, default : `rgb(50%, 50%, 50%)` */
@@ -26,4 +27,4 @@ export declare const COSPALETTE_PARAMS: CosPaletteParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useCosPalette: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<CosPaletteParams, ColorPaletteObject>;
+export declare const useCosPalette: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<CosPaletteParams, ColorPaletteObject, CustomParams>;

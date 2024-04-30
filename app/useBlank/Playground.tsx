@@ -22,7 +22,7 @@ export const Playground = () => {
    setCover({
       texture: funkun_mov,
    });
-   const [updateBlank, setBlank, { output: blank, material }] = useBlank({
+   const [updateBlank, setBlank, { output: blank }] = useBlank({
       size,
       dpr: viewport.dpr,
       uniforms: {
@@ -45,11 +45,14 @@ export const Playground = () => {
       texture: cover,
    });
 
-   const mat = material as any;
-
    useFrame((props) => {
-      mat.uniforms.hoge.value = Math.sin(props.clock.getElapsedTime());
-      updateBlank(props);
+      updateBlank(
+         props,
+         {},
+         {
+            hoge: Math.sin(props.clock.getElapsedTime()),
+         }
+      );
       updateCover(props);
    });
 
