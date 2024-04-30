@@ -7,7 +7,11 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/main.frag";
 import getWobble from "../../../../libs/shaders/getWobble.glsl";
 import { MORPHPARTICLES_PARAMS } from "..";
-import { ISDEV } from "../../../../libs/constants";
+import {
+   DEFAULT_TEXTURE,
+   ISDEV,
+   MATERIAL_BASIC_PARAMS,
+} from "../../../../libs/constants";
 import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
 import { rewriteFragmentShader } from "./rewriteFragmentShader";
@@ -108,10 +112,10 @@ export const useMaterial = ({
       const mat = new THREE.ShaderMaterial({
          vertexShader: rewritedVertexShader,
          fragmentShader: rewritedFragmentShader,
-         depthTest: false,
-         depthWrite: false,
-         transparent: true,
          blending: THREE.AdditiveBlending,
+         ...MATERIAL_BASIC_PARAMS,
+         // Must be transparent
+         transparent: true,
          uniforms: {
             uResolution: { value: new THREE.Vector2(0, 0) },
             uMorphProgress: { value: MORPHPARTICLES_PARAMS.morphProgress },
@@ -119,17 +123,17 @@ export const useMaterial = ({
             uBlurRadius: { value: MORPHPARTICLES_PARAMS.blurRadius },
             uPointSize: { value: MORPHPARTICLES_PARAMS.pointSize },
             uPointAlpha: { value: MORPHPARTICLES_PARAMS.pointAlpha },
-            uPicture: { value: new THREE.Texture() },
+            uPicture: { value: DEFAULT_TEXTURE },
             uIsPicture: { value: false },
-            uAlphaPicture: { value: new THREE.Texture() },
+            uAlphaPicture: { value: DEFAULT_TEXTURE },
             uIsAlphaPicture: { value: false },
             uColor0: { value: MORPHPARTICLES_PARAMS.color0 },
             uColor1: { value: MORPHPARTICLES_PARAMS.color1 },
             uColor2: { value: MORPHPARTICLES_PARAMS.color2 },
             uColor3: { value: MORPHPARTICLES_PARAMS.color3 },
-            uMap: { value: new THREE.Texture() },
+            uMap: { value: DEFAULT_TEXTURE },
             uIsMap: { value: false },
-            uAlphaMap: { value: new THREE.Texture() },
+            uAlphaMap: { value: DEFAULT_TEXTURE },
             uIsAlphaMap: { value: false },
             uTime: { value: 0 },
             uWobblePositionFrequency: {
@@ -146,7 +150,7 @@ export const useMaterial = ({
                value: MORPHPARTICLES_PARAMS.warpTimeFrequency,
             },
             uWarpStrength: { value: MORPHPARTICLES_PARAMS.warpStrength },
-            uDisplacement: { value: new THREE.Texture() },
+            uDisplacement: { value: DEFAULT_TEXTURE },
             uIsDisplacement: { value: false },
             uDisplacementIntensity: {
                value: MORPHPARTICLES_PARAMS.displacementIntensity,

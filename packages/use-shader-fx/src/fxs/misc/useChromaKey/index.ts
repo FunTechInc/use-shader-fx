@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type ChromaKeyParams = {
    /** Process this texture with chroma key , default : `THREE.Texture` */
@@ -44,7 +45,7 @@ export type ChromaKeyObject = {
 };
 
 export const CHROMAKEY_PARAMS: ChromaKeyParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    keyColor: new THREE.Color(0x00ff00),
    similarity: 0.2,
    smoothness: 0.1,

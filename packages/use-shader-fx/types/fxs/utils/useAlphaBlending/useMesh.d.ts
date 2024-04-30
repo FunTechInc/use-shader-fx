@@ -11,7 +11,7 @@ export declare class AlphaBlendingMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, onBeforeCompile, }: {
+export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
 } & MaterialProps) => {

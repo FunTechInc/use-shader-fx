@@ -7,6 +7,10 @@ import { BLANK_PARAMS } from ".";
 import { MaterialProps } from "../../types";
 import { Size } from "@react-three/fiber";
 import { setUniform, useResolution } from "../../..";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../libs/constants";
 
 export class BlankMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -28,8 +32,8 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uTexture: { value: BLANK_PARAMS.texture },
-            uBackbuffer: { value: new THREE.Texture() },
+            uTexture: { value: DEFAULT_TEXTURE },
+            uBackbuffer: { value: DEFAULT_TEXTURE },
             uTime: { value: 0 },
             uPointer: { value: new THREE.Vector2() },
             uResolution: { value: new THREE.Vector2() },
@@ -37,6 +41,7 @@ export const useMesh = ({
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

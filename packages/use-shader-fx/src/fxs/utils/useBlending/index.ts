@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type BlendingParams = {
    /** Make this texture Blending , default : `THREE.Texture` */
@@ -41,16 +42,16 @@ export type BlendingObject = {
    output: THREE.Texture;
 };
 
-export const BLENDING_PARAMS: BlendingParams = {
-   texture: new THREE.Texture(),
-   map: new THREE.Texture(),
+export const BLENDING_PARAMS: BlendingParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
+   map: DEFAULT_TEXTURE,
    alphaMap: false,
    mapIntensity: 0.3,
    brightness: new THREE.Vector3(0.5, 0.5, 0.5),
    min: 0.0,
    max: 1.0,
    dodgeColor: false,
-};
+});
 
 /**
  * Blend map to texture. You can set the threshold for blending with brightness. You can set the dodge color by setting color. 

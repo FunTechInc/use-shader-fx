@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/curl.frag";
 import { MaterialProps } from "../../../types";
+import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
 
 export class CurlMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -24,6 +25,7 @@ export const useCurlMaterial = ({
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

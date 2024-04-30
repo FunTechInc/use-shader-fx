@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type CoverTextureParams = {
    /** Textures that you want to display exactly on the screen , default : `THREE.Texture()` */
@@ -27,9 +28,9 @@ export type CoverTextureObject = {
    output: THREE.Texture;
 };
 
-export const COVERTEXTURE_PARAMS: CoverTextureParams = {
-   texture: new THREE.Texture(),
-};
+export const COVERTEXTURE_PARAMS: CoverTextureParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

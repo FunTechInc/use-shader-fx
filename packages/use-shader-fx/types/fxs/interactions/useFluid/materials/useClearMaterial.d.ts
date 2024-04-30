@@ -13,4 +13,4 @@ export declare class ClearMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useClearMaterial: ({ onBeforeCompile }: MaterialProps) => ClearMaterial;
+export declare const useClearMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => ClearMaterial;

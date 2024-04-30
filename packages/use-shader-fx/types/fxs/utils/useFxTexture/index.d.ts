@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type FxTextureParams = {
     /** 1st texture , default : `THREE.Texture()` */
@@ -32,4 +33,4 @@ export declare const FXTEXTURE_PARAMS: FxTextureParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useFxTexture: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<FxTextureParams, FxTextureObject>;
+export declare const useFxTexture: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<FxTextureParams, FxTextureObject, CustomParams>;

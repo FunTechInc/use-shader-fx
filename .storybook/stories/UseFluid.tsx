@@ -35,7 +35,17 @@ export const UseFluid = (args: FluidParams) => {
    const { size, dpr } = useThree((state) => {
       return { size: state.size, dpr: state.viewport.dpr };
    });
-   const [updateFluid] = useFluid({ size, dpr });
+   const [updateFluid] = useFluid({
+      size,
+      dpr,
+      fluidOnBeforeCompile: {
+         curl: {
+            onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
+               console.log(shader.fragmentShader);
+            }, []),
+         },
+      },
+   });
 
    useFrame((props) => {
       const fx = updateFluid(props, setConfig());

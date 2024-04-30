@@ -12,6 +12,7 @@ import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type HSVParams = {
    /** default : `THREE.Texture()` */
@@ -31,11 +32,11 @@ export type HSVObject = {
    output: THREE.Texture;
 };
 
-export const HSV_PARAMS: HSVParams = {
-   texture: new THREE.Texture(),
+export const HSV_PARAMS: HSVParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
    brightness: 1,
    saturation: 1,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
+import { CustomParams } from "../../../utils/setUniforms";
 import type { HooksProps, HooksReturn } from "../../types";
 export type MotionBlurParams = {
     /** Make this texture blur, default : `THREE.Texture()` */
@@ -23,4 +24,4 @@ export declare const MOTIONBLUR_PARAMS: MotionBlurParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useMotionBlur: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<MotionBlurParams, MotionBlurObject>;
+export declare const useMotionBlur: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<MotionBlurParams, MotionBlurObject, CustomParams>;

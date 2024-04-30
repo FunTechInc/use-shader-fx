@@ -3,6 +3,10 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/advection.frag";
 import { MaterialProps } from "../../../types";
+import {
+   DEFAULT_TEXTURE,
+   MATERIAL_BASIC_PARAMS,
+} from "../../../../libs/constants";
 
 export class AdvectionMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -21,8 +25,8 @@ export const useAdvectionMaterial = ({
    const advectionMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uVelocity: { value: new THREE.Texture() },
-            uSource: { value: new THREE.Texture() },
+            uVelocity: { value: DEFAULT_TEXTURE },
+            uSource: { value: DEFAULT_TEXTURE },
             texelSize: { value: new THREE.Vector2() },
             dt: { value: 0.0 },
             dissipation: { value: 0.0 },
@@ -30,7 +34,9 @@ export const useAdvectionMaterial = ({
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
+
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }

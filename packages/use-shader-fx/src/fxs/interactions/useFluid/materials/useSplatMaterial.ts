@@ -3,6 +3,10 @@ import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/splat.frag";
 import { MaterialProps } from "../../../types";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../../libs/constants";
 
 export class SplatMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -22,7 +26,7 @@ export const useSplatMaterial = ({
    const splatMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uTarget: { value: new THREE.Texture() },
+            uTarget: { value: DEFAULT_TEXTURE },
             aspectRatio: { value: 0 },
             color: { value: new THREE.Vector3() },
             point: { value: new THREE.Vector2() },
@@ -32,7 +36,9 @@ export const useSplatMaterial = ({
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
+
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }

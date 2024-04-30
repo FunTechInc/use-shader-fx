@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type ChromaKeyParams = {
     /** Process this texture with chroma key , default : `THREE.Texture` */
@@ -32,4 +33,4 @@ export declare const CHROMAKEY_PARAMS: ChromaKeyParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useChromaKey: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<ChromaKeyParams, ChromaKeyObject>;
+export declare const useChromaKey: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<ChromaKeyParams, ChromaKeyObject, CustomParams>;

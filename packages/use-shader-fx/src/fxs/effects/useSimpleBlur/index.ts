@@ -10,10 +10,10 @@ import {
    setUniform,
 } from "../../../utils/setUniforms";
 import { useParams } from "../../../utils/useParams";
-
 import type { HooksProps, HooksReturn } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
 import { UseFboProps } from "../../..";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type SimpleBlurParams = {
    /** Make this texture blur , default : `THREE.Texture()` */
@@ -34,7 +34,7 @@ export type SimpleBlurObject = {
 };
 
 export const SIMPLEBLUR_PARAMS: SimpleBlurParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    blurSize: 3,
    blurPower: 5,
 });

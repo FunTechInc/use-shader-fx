@@ -13,6 +13,7 @@ import { useParams } from "../../../utils/useParams";
 import type { HooksProps, HooksReturn } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
 import { UseFboProps } from "../../..";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type BlankParams = {
    /** texture, default : `THREE.Texture()` */
@@ -34,7 +35,7 @@ export type BlankObject = {
 };
 
 export const BLANK_PARAMS: BlankParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    beat: false,
 });
 

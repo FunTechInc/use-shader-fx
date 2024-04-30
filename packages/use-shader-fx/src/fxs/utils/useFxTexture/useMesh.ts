@@ -7,6 +7,11 @@ import { setUniform } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../libs/constants";
+import { FXTEXTURE_PARAMS } from ".";
 
 export class FxTextureMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -42,20 +47,21 @@ export const useMesh = ({
          uniforms: {
             uResolution: { value: new THREE.Vector2() },
             uTextureResolution: { value: new THREE.Vector2() },
-            uTexture0: { value: new THREE.Texture() },
-            uTexture1: { value: new THREE.Texture() },
-            padding: { value: 0.0 },
-            uMap: { value: new THREE.Texture() },
-            edgeIntensity: { value: 0.0 },
-            mapIntensity: { value: 0.0 },
-            epicenter: { value: new THREE.Vector2(0.0, 0.0) },
-            progress: { value: 0.0 },
-            dirX: { value: 0.0 },
-            dirY: { value: 0.0 },
+            uTexture0: { value: DEFAULT_TEXTURE },
+            uTexture1: { value: DEFAULT_TEXTURE },
+            padding: { value: FXTEXTURE_PARAMS.padding },
+            uMap: { value: DEFAULT_TEXTURE },
+            edgeIntensity: { value: FXTEXTURE_PARAMS.edgeIntensity },
+            mapIntensity: { value: FXTEXTURE_PARAMS.mapIntensity },
+            epicenter: { value: FXTEXTURE_PARAMS.epicenter },
+            progress: { value: FXTEXTURE_PARAMS.progress },
+            dirX: { value: FXTEXTURE_PARAMS.dir?.x },
+            dirY: { value: FXTEXTURE_PARAMS.dir?.y },
             ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

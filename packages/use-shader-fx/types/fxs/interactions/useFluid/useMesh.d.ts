@@ -7,6 +7,7 @@ import { VorticityMaterial } from "./materials/useVorticityMaterial";
 import { ClearMaterial } from "./materials/useClearMaterial";
 import { GradientSubtractMaterial } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial } from "./materials/useSplatMaterial";
+import { CustomParams } from "../../../utils/setUniforms";
 import { Size } from "@react-three/fiber";
 import { MaterialProps } from "../../types";
 type TMaterials = AdvectionMaterial | DivergenceMaterial | CurlMaterial | PressureMaterial | ClearMaterial | GradientSubtractMaterial | SplatMaterial;
@@ -20,16 +21,12 @@ export type FluidMaterials = {
     gradientSubtractMaterial: GradientSubtractMaterial;
     splatMaterial: SplatMaterial;
 };
+export type CustomizableKeys = "advection" | "splat" | "curl" | "vorticity" | "divergence" | "clear" | "pressure" | "gradientSubtract";
 export type FluidOnBeforeCompile = {
-    initial?: MaterialProps;
-    curl?: MaterialProps;
-    vorticity?: MaterialProps;
-    advection?: MaterialProps;
-    divergence?: MaterialProps;
-    pressure?: MaterialProps;
-    clear?: MaterialProps;
-    gradientSubtract?: MaterialProps;
-    splat?: MaterialProps;
+    [K in CustomizableKeys]?: MaterialProps;
+};
+export type FluidCustomParams = {
+    [K in CustomizableKeys]?: CustomParams;
 };
 /**
  * Returns the material update function in the second argument

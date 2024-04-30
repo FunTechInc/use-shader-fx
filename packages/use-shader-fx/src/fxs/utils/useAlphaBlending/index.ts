@@ -12,6 +12,7 @@ import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { useSingleFBO } from "../../../utils/useSingleFBO";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type AlphaBlendingParams = {
    /** default : `THREE.Texture()` */
@@ -29,10 +30,10 @@ export type AlphaBlendingObject = {
    output: THREE.Texture;
 };
 
-export const ALPHABLENDING_PARAMS: AlphaBlendingParams = {
-   texture: new THREE.Texture(),
-   map: new THREE.Texture(),
-};
+export const ALPHABLENDING_PARAMS: AlphaBlendingParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
+   map: DEFAULT_TEXTURE,
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

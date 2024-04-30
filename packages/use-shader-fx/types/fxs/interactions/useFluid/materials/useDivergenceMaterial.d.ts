@@ -10,4 +10,4 @@ export declare class DivergenceMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useDivergenceMaterial: ({ onBeforeCompile }: MaterialProps) => DivergenceMaterial;
+export declare const useDivergenceMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => DivergenceMaterial;

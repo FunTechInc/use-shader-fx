@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type FxBlendingParams = {
    /** Make this texture Blending , default : `THREE.Texture` */
@@ -31,11 +32,11 @@ export type FxBlendingObject = {
    output: THREE.Texture;
 };
 
-export const FXBLENDING_PARAMS: FxBlendingParams = {
-   texture: new THREE.Texture(),
-   map: new THREE.Texture(),
+export const FXBLENDING_PARAMS: FxBlendingParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
+   map: DEFAULT_TEXTURE,
    mapIntensity: 0.3,
-};
+});
 
 /**
  * Blend map to texture. You can change the intensity of fx applied by the rg value of map. Unlike "useBlending", the map color is not reflected.

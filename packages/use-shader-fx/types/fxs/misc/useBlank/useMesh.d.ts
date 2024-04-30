@@ -20,16 +20,11 @@ export declare class BlankMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export type CustomUniforms = {
-    uniforms?: {
-        [uniform: string]: THREE.IUniform<any>;
-    };
-};
-export declare const useMesh: ({ scene, size, dpr, onBeforeCompile, uniforms, }: {
+export declare const useMesh: ({ scene, size, dpr, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;
-} & MaterialProps & CustomUniforms) => {
+} & MaterialProps) => {
     material: BlankMaterial;
     mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, BlankMaterial>;
 };

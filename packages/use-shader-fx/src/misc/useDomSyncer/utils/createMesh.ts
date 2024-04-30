@@ -4,6 +4,7 @@ import { Size } from "@react-three/fiber";
 import vertexShader from "../shader/main.vert";
 import fragmentShader from "../shader/main.frag";
 import { MaterialProps } from "../../../fxs/types";
+import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
 
 export class DomSyncerMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -36,9 +37,6 @@ export const createMesh = ({
 
    params.texture!.forEach((texture, i) => {
       const mat = new THREE.ShaderMaterial({
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
-         transparent: true,
          uniforms: {
             u_texture: { value: texture },
             u_textureResolution: {
@@ -50,6 +48,11 @@ export const createMesh = ({
             },
             ...uniforms,
          },
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
+         // Must be transparent.
+         transparent: true,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

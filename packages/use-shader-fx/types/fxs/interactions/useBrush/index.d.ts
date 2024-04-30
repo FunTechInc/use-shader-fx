@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { PointerValues } from "../../../misc/usePointer";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
 export type BrushParams = {
@@ -40,4 +41,4 @@ export declare const BRUSH_PARAMS: BrushParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useBrush: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<BrushParams, BrushObject>;
+export declare const useBrush: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<BrushParams, BrushObject, CustomParams>;

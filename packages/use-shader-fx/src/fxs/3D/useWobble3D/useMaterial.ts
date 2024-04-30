@@ -6,6 +6,7 @@ import transmission_pars_fragment from "./shaders/transmission_pars_fragment.gls
 import transmission_fragment from "./shaders/transmission_fragment.glsl";
 import { WOBBLE3D_PARAMS } from ".";
 import { MaterialProps } from "../../types";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -182,7 +183,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             uWarpStrength: { value: WOBBLE3D_PARAMS.warpStrength },
             uWobbleShine: { value: WOBBLE3D_PARAMS.wobbleShine },
             uIsWobbleMap: { value: false },
-            uWobbleMap: { value: new THREE.Texture() },
+            uWobbleMap: { value: DEFAULT_TEXTURE },
             uWobbleMapStrength: { value: WOBBLE3D_PARAMS.wobbleMapStrength },
             uWobbleMapDistortion: {
                value: WOBBLE3D_PARAMS.wobbleMapDistortion,

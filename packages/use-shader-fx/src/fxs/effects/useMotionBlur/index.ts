@@ -13,6 +13,7 @@ import { useParams } from "../../../utils/useParams";
 import type { HooksProps, HooksReturn } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
 import { UseFboProps } from "../../..";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type MotionBlurParams = {
    /** Make this texture blur, default : `THREE.Texture()` */
@@ -35,7 +36,7 @@ export type MotionBlurObject = {
 };
 
 export const MOTIONBLUR_PARAMS: MotionBlurParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    begin: new THREE.Vector2(0, 0),
    end: new THREE.Vector2(0, 0),
    strength: 0.9,

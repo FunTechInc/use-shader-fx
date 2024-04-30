@@ -8,7 +8,11 @@ import { usePointer, PointerValues } from "../../../misc/usePointer";
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
-import { CustomParams, setCustomUniform } from "../../../utils/setUniforms";
+import {
+   CustomParams,
+   setCustomUniform,
+   setUniform,
+} from "../../../utils/setUniforms";
 
 export type RippleParams = {
    /** How often ripples appear, default : `0.01` */
@@ -55,7 +59,7 @@ interface UseRippleProps extends HooksProps {
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export const useRipple = ({
-   texture = new THREE.Texture(),
+   texture,
    scale = 64,
    max = 100,
    size,
@@ -104,6 +108,7 @@ export const useRipple = ({
 
          if (params.frequency! < pointerValues.diffPointer.length()) {
             const mesh = meshArr[currentWave.current];
+            const material = mesh.material as THREE.ShaderMaterial;
             mesh.visible = true;
             mesh.position.set(
                pointerValues.currentPointer.x * (size.width / 2),
@@ -111,19 +116,24 @@ export const useRipple = ({
                0
             );
             mesh.scale.x = mesh.scale.y = 0.0;
-            (mesh.material as THREE.MeshBasicMaterial).opacity = params.alpha!;
+            setUniform(material)("uOpacity", params.alpha!);
             currentWave.current = (currentWave.current + 1) % max;
          }
          meshArr.forEach((mesh) => {
             if (mesh.visible) {
-               const material = mesh.material as THREE.MeshBasicMaterial;
+               const material = mesh.material as THREE.ShaderMaterial;
                mesh.rotation.z += params.rotation!;
-               material.opacity *= params.fadeout_speed!;
                mesh.scale.x =
                   params.fadeout_speed! * mesh.scale.x + params.scale!;
                mesh.scale.y = mesh.scale.x;
-               if (material.opacity < 0.002) mesh.visible = false;
-               setCustomUniform(material.userData)(customParams);
+               const opacity = material.uniforms.uOpacity.value;
+
+               setUniform(material)(
+                  "uOpacity",
+                  opacity * params.fadeout_speed!
+               );
+               if (opacity < 0.001) mesh.visible = false;
+               setCustomUniform(material)(customParams);
             }
          });
 

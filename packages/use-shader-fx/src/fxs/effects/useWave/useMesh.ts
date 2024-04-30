@@ -5,6 +5,7 @@ import fragmentShader from "./shader/main.frag";
 import { WAVE_PARAMS } from ".";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
 
 export class WaveMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -34,6 +35,7 @@ export const useMesh = ({
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

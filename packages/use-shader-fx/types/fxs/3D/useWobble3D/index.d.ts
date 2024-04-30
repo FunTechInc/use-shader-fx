@@ -3,6 +3,7 @@ import { HooksReturn } from "../../types";
 import { UseCreateWobble3DProps } from "./useCreateWobble3D";
 import { WobbleMaterialProps, WobbleMaterialConstructor } from "./useMaterial";
 import { HooksProps3D } from "../types";
+import { CustomParams } from "../../../utils/setUniforms";
 export type Wobble3DParams = {
     /** default : `0.3` */
     wobbleStrength?: number;
@@ -19,14 +20,16 @@ export type Wobble3DParams = {
     wobbleMapStrength?: number;
     /** Strength of distorting the 'normal' by wobbleMap, default : `0.0` */
     wobbleMapDistortion?: number;
-    /** Refraction samples, default : `6`  */
-    samples?: number;
     color0?: THREE.Color;
     color1?: THREE.Color;
     color2?: THREE.Color;
     color3?: THREE.Color;
     /** Mixing ratio with the material's original output color, 0~1 , defaulat : `1` */
     colorMix?: number;
+    /** Threshold of edge. 0 for edge disabled, default : `0` */
+    edgeThreshold?: number;
+    /** Color of edge. default : `0x000000` */
+    edgeColor?: THREE.Color;
     /** valid only for MeshPhysicalMaterial , default : `0.1` */
     chromaticAberration?: number;
     /** valid only for MeshPhysicalMaterial , default : `0.1` */
@@ -37,6 +40,8 @@ export type Wobble3DParams = {
     distortionScale?: number;
     /** valid only for MeshPhysicalMaterial , default : `0.0` */
     temporalDistortion?: number;
+    /** Refraction samples, default : `6`  */
+    samples?: number;
     /** you can get into the rhythm ♪ , default : `false` */
     beat?: number | false;
 };
@@ -51,4 +56,4 @@ export declare const WOBBLE3D_PARAMS: Wobble3DParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useWobble3D: <T extends WobbleMaterialConstructor>({ size, dpr, samples, isSizeUpdate, camera, geometry, baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>) => HooksReturn<Wobble3DParams, Wobble3DObject>;
+export declare const useWobble3D: <T extends WobbleMaterialConstructor>({ size, dpr, samples, isSizeUpdate, camera, geometry, baseMaterial, materialParameters, uniforms, onBeforeCompile, depthOnBeforeCompile, }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>) => HooksReturn<Wobble3DParams, Wobble3DObject, CustomParams>;

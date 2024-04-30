@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type MarbleParams = {
     /** You can add random patterns to noise by passing random numbers ,default : `0` */
@@ -28,4 +29,4 @@ export declare const MARBLE_PARAMS: MarbleParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useMarble: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<MarbleParams, MarbleObject>;
+export declare const useMarble: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<MarbleParams, MarbleObject, CustomParams>;

@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type FxTextureParams = {
    /** 1st texture , default : `THREE.Texture()` */
@@ -43,17 +44,17 @@ export type FxTextureObject = {
    output: THREE.Texture;
 };
 
-export const FXTEXTURE_PARAMS: FxTextureParams = {
-   texture0: new THREE.Texture(),
-   texture1: new THREE.Texture(),
+export const FXTEXTURE_PARAMS: FxTextureParams = Object.freeze({
+   texture0: DEFAULT_TEXTURE,
+   texture1: DEFAULT_TEXTURE,
    padding: 0.0,
-   map: new THREE.Texture(),
+   map: DEFAULT_TEXTURE,
    mapIntensity: 0.0,
    edgeIntensity: 0.0,
    epicenter: new THREE.Vector2(0, 0),
    progress: 0.0,
    dir: new THREE.Vector2(0, 0),
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

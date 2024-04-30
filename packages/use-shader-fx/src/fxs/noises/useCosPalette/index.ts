@@ -12,6 +12,7 @@ import {
 import { useParams } from "../../../utils/useParams";
 import { HooksProps, HooksReturn } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type CosPaletteParams = {
    /** color1, default : `rgb(50%, 50%, 50%)` */
@@ -38,7 +39,7 @@ export type ColorPaletteObject = {
 };
 
 export const COSPALETTE_PARAMS: CosPaletteParams = Object.freeze({
-   texture: new THREE.Texture(),
+   texture: DEFAULT_TEXTURE,
    color1: new THREE.Color().set(0.5, 0.5, 0.5),
    color2: new THREE.Color().set(0.5, 0.5, 0.5),
    color3: new THREE.Color().set(1, 1, 1),

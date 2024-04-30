@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type BrightnessPickerParams = {
    /** pick brightness from this texture , default : `THREE.Texture` */
@@ -33,12 +34,12 @@ export type BrightnessPickerObject = {
    output: THREE.Texture;
 };
 
-export const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams = {
-   texture: new THREE.Texture(),
+export const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
    brightness: new THREE.Vector3(0.5, 0.5, 0.5),
    min: 0.0,
    max: 1.0,
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

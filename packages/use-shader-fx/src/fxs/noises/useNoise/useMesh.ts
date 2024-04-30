@@ -4,6 +4,8 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
+import { NOISE_PARAMS } from ".";
 
 export class NoiseMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -28,19 +30,19 @@ export const useMesh = ({
       const mat = new THREE.ShaderMaterial({
          uniforms: {
             uTime: { value: 0.0 },
-            scale: { value: 0.0 },
-            timeStrength: { value: 0.0 },
-            noiseOctaves: { value: 0 },
-            fbmOctaves: { value: 0 },
-            warpOctaves: { value: 0 },
-            warpDirection: { value: new THREE.Vector2() },
-            warpStrength: { value: 0.0 },
+            scale: { value: NOISE_PARAMS.scale },
+            timeStrength: { value: NOISE_PARAMS.timeStrength },
+            noiseOctaves: { value: NOISE_PARAMS.noiseOctaves },
+            fbmOctaves: { value: NOISE_PARAMS.fbmOctaves },
+            warpOctaves: { value: NOISE_PARAMS.warpOctaves },
+            warpDirection: { value: NOISE_PARAMS.warpDirection },
+            warpStrength: { value: NOISE_PARAMS.warpStrength },
             ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
-
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;
       }

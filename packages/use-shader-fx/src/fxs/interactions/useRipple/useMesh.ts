@@ -1,12 +1,18 @@
-import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useEffect, useMemo } from "react";
+import vertexShader from "./shader/main.vert";
+import fragmentShader from "./shader/main.frag";
 import { MaterialProps } from "../../types";
+import {
+   DEFAULT_TEXTURE,
+   MATERIAL_BASIC_PARAMS,
+} from "../../../libs/constants";
 
 type UseMeshProps = {
    scale: number;
    max: number;
-   texture?: THREE.Texture;
    scene: THREE.Scene;
+   texture?: THREE.Texture;
 };
 
 export const useMesh = ({
@@ -17,46 +23,47 @@ export const useMesh = ({
    uniforms,
    onBeforeCompile,
 }: UseMeshProps & MaterialProps) => {
-   const meshArr = useRef<THREE.Mesh[]>([]);
    const geometry = useMemo(
       () => new THREE.PlaneGeometry(scale, scale),
       [scale]
    );
-   const material = useMemo(() => {
-      const mat = new THREE.MeshBasicMaterial({
-         map: texture,
-         transparent: true,
-         blending: THREE.AdditiveBlending,
-         depthTest: false,
-         depthWrite: false,
-      });
-      mat.onBeforeCompile = (shader, renderer) => {
-         if (uniforms) {
-            Object.assign(mat.userData, {
-               uniforms: uniforms,
-            });
-            Object.assign(shader.uniforms, mat.userData.uniforms);
-         }
-         if (onBeforeCompile) {
-            onBeforeCompile(shader, renderer);
-         }
-      };
-      return mat;
-   }, [texture, onBeforeCompile, uniforms]);
 
-   useEffect(() => {
+   const material = useMemo(() => {
+      const mat = new THREE.ShaderMaterial({
+         uniforms: {
+            uOpacity: { value: 0.0 },
+            uMap: { value: texture || DEFAULT_TEXTURE },
+            ...uniforms,
+         },
+         blending: THREE.AdditiveBlending,
+         vertexShader: vertexShader,
+         fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
+         // Must be transparent.
+         transparent: true,
+      });
+      return mat;
+   }, [texture, uniforms]);
+
+   const meshArr = useMemo(() => {
+      const temp = [];
       for (let i = 0; i < max; i++) {
-         const mesh = new THREE.Mesh(geometry.clone(), material.clone());
+         const clonedMat = material.clone();
+         if (onBeforeCompile) {
+            clonedMat.onBeforeCompile = onBeforeCompile;
+         }
+         const mesh = new THREE.Mesh(geometry.clone(), clonedMat);
          mesh.rotateZ(2 * Math.PI * Math.random());
          mesh.visible = false;
          scene.add(mesh);
-         meshArr.current.push(mesh);
+         temp.push(mesh);
       }
-   }, [geometry, material, scene, max]);
+      return temp;
+   }, [onBeforeCompile, geometry, material, scene, max]);
 
    useEffect(() => {
       return () => {
-         meshArr.current.forEach((mesh) => {
+         meshArr.forEach((mesh) => {
             mesh.geometry.dispose();
             if (Array.isArray(mesh.material)) {
                mesh.material.forEach((material) => material.dispose());
@@ -65,9 +72,8 @@ export const useMesh = ({
             }
             scene.remove(mesh);
          });
-         meshArr.current = [];
       };
-   }, [scene]);
+   }, [scene, meshArr]);
 
-   return meshArr.current;
+   return meshArr;
 };

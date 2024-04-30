@@ -12,6 +12,7 @@ import {
 import { HooksProps, HooksReturn } from "../../types";
 import { useParams } from "../../../utils/useParams";
 import { getDpr } from "../../../utils/getDpr";
+import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export type DuoToneParams = {
    /** Make this texture duotone , Default : `THREE.Texture()` */
@@ -31,11 +32,11 @@ export type DuoToneObject = {
    output: THREE.Texture;
 };
 
-export const DUOTONE_PARAMS: DuoToneParams = {
-   texture: new THREE.Texture(),
+export const DUOTONE_PARAMS: DuoToneParams = Object.freeze({
+   texture: DEFAULT_TEXTURE,
    color0: new THREE.Color(0xffffff),
    color1: new THREE.Color(0x000000),
-};
+});
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

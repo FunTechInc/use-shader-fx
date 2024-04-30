@@ -13,6 +13,7 @@ import { useIsIntersecting, IsIntersecting } from "./utils/useIsIntersecting";
 import { UseDomView, createUseDomView } from "./utils/createUseDomView";
 import { getDpr } from "../../utils/getDpr";
 import { CustomParams } from "../../utils/setUniforms";
+import { DEFAULT_TEXTURE } from "../../libs/constants";
 
 export type DomSyncerParams = {
    /** DOM array you want to synchronize */
@@ -97,7 +98,7 @@ export const useDomSyncer = (
 
    // If the dependencies have been updated but the key has not been updated, skip processing and return an empty texture
    const updateKey = useRef<Key | null>(null);
-   const emptyTexture = useMemo(() => new THREE.Texture(), []);
+   const emptyTexture = useMemo(() => DEFAULT_TEXTURE, []);
 
    // set intersection
    const intersectionHandler = useIntersectionHandler();

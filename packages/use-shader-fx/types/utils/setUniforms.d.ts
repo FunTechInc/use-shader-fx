@@ -7,4 +7,10 @@ type UniformObject = {
 export declare const setUniform: <T extends UniformObject>(material: {
     uniforms: T;
 }) => (key: keyof T, value: UniformValue) => void;
+export type CustomParams = {
+    [uniform: string]: UniformValue;
+};
+export declare const setCustomUniform: (material: {
+    uniforms: UniformObject;
+}) => (customParams: CustomParams | undefined) => void;
 export {};

@@ -4,6 +4,11 @@ import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
+import {
+   DEFAULT_TEXTURE,
+   MATERIAL_BASIC_PARAMS,
+} from "../../../libs/constants";
+import { BLENDING_PARAMS } from ".";
 
 export class BlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -29,20 +34,21 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            u_texture: { value: new THREE.Texture() },
-            u_map: { value: new THREE.Texture() },
-            u_alphaMap: { value: new THREE.Texture() },
+            u_texture: { value: DEFAULT_TEXTURE },
+            u_map: { value: DEFAULT_TEXTURE },
+            u_alphaMap: { value: DEFAULT_TEXTURE },
             u_isAlphaMap: { value: false },
-            u_mapIntensity: { value: 0.0 },
-            u_brightness: { value: new THREE.Vector3() },
-            u_min: { value: 0.0 },
-            u_max: { value: 0.9 },
-            u_dodgeColor: { value: new THREE.Color(0xffffff) },
+            u_mapIntensity: { value: BLENDING_PARAMS.mapIntensity },
+            u_brightness: { value: BLENDING_PARAMS.brightness },
+            u_min: { value: BLENDING_PARAMS.min },
+            u_max: { value: BLENDING_PARAMS.max },
+            u_dodgeColor: { value: BLENDING_PARAMS.dodgeColor },
             u_isDodgeColor: { value: false },
             ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

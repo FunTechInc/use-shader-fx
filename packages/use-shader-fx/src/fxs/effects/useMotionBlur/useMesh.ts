@@ -5,6 +5,10 @@ import fragmentShader from "./shader/main.frag";
 import { useAddObject } from "../../../utils/useAddObject";
 import { MOTIONBLUR_PARAMS } from ".";
 import { MaterialProps } from "../../types";
+import {
+   MATERIAL_BASIC_PARAMS,
+   DEFAULT_TEXTURE,
+} from "../../../libs/constants";
 
 export class MotionBlurMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -25,8 +29,8 @@ export const useMesh = ({
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uTexture: { value: MOTIONBLUR_PARAMS.texture },
-            uBackbuffer: { value: new THREE.Texture() },
+            uTexture: { value: DEFAULT_TEXTURE },
+            uBackbuffer: { value: DEFAULT_TEXTURE },
             uBegin: { value: MOTIONBLUR_PARAMS.begin },
             uEnd: { value: MOTIONBLUR_PARAMS.end },
             uStrength: { value: MOTIONBLUR_PARAMS.strength },
@@ -34,6 +38,7 @@ export const useMesh = ({
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
+         ...MATERIAL_BASIC_PARAMS,
       });
       if (onBeforeCompile) {
          mat.onBeforeCompile = onBeforeCompile;

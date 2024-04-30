@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { DuoToneMaterial } from "./useMesh";
+import { CustomParams } from "../../../utils/setUniforms";
 import { HooksProps, HooksReturn } from "../../types";
 export type DuoToneParams = {
     /** Make this texture duotone , Default : `THREE.Texture()` */
@@ -21,4 +22,4 @@ export declare const DUOTONE_PARAMS: DuoToneParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useDuoTone: ({ size, dpr, samples, isSizeUpdate, onBeforeCompile, }: HooksProps) => HooksReturn<DuoToneParams, DuoToneObject>;
+export declare const useDuoTone: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<DuoToneParams, DuoToneObject, CustomParams>;
