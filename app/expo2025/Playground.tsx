@@ -133,12 +133,12 @@ export const Playground = () => {
          <MyakuMyaku position={[6, 0, 0]} scale={[1.5, 1.5, 1.5]} />
          <MyakuMyaku position={[4, 4, 0]} scale={[1, 1, 1]} />
          <MyakuMyaku position={[-4, -4, 0]} scale={[1.3, 1.6, 1.6]} />
-         <MyakuMyaku position={[0, 5, 0]} scale={[1.2, 1.6, 1.2]} />
+         <MyakuMyaku position={[0, 5, 0]} scale={[1.2, 1.4, 1.2]} />
          <MyakuMyaku position={[0, -5, 0]} scale={[1, 0.8, 1.8]} />
          <MyakuMyaku
             position={[4, -4, 0]}
             rotation={[0, 0, 1]}
-            scale={[1, 1.5, 1]}
+            scale={[1.2, 1.4, 1.2]}
          />
       </mesh>
    );
