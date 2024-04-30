@@ -13,6 +13,7 @@ const Menu = () => {
       "/useMorphParticles",
       "/useWobble3D",
       "/useBlank",
+      "/expo2025",
    ];
    const pathname = usePathname();
    return (
