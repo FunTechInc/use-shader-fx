@@ -84,7 +84,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
 2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
 3. `fxObject` - An object that holds various FX components, such as scene, camera, material,renderTarget, and `output`(final rendered texture).
-4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`onBeforeCompile`but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
+4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`uniforms`,`onBeforeCompile`but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
 
 ```js
 const [updateFx, setParams, fxObject] = useSomeFx(HooksProps);
@@ -94,7 +94,7 @@ invoke `updateFx` in `useFrame`. The first argument receives the RootState from 
 
 ```js
 useFrame((props) => {
-   const texture = updateFx(props, HookPrams);
+   const texture = updateFx(props, HookPrams, customParams);
    const main = mainShaderRef.current;
    if (main) {
       main.u_bufferTexture = texture;
@@ -551,9 +551,16 @@ const [updateBlank, _, { output: blank, material }] = useBlank({
          "//#usf main",
          `usf_FragColor=vec4(vec3(1.,hoge,1.),1.);`
       );
-      console.log(shader.vertexShader);
-      console.log(shader.fragmentShader);
    }, []),
+});
+useFrame((props) => {
+   updateBlank(
+      props,
+      {},
+      {
+         hoge: Math.sin(props.clock.getElapsedTime()),
+      }
+   );
 });
 ```
 
