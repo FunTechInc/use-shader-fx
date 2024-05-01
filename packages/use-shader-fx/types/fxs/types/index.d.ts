@@ -40,14 +40,15 @@ export type HooksReturn<T, O, C> = [
     /**
      * An update function that returns THREE.Texture. Call it inside useFrame
      * @param props RootState
-     * @param params params of hooks
+     * @param newParams params of fxHooks
+     * @param customParams custom params, added to `uniforms` during initialisation
      */
     (props: RootState, newParams?: T, customParams?: C) => THREE.Texture,
     /**
      * Function to update params. No FBO rendering occurs.
-     * @param params params of hooks
+     * @param newParams params of fxHooks
      */
-    (params: T) => void,
+    (newParams: T) => void,
     /**
      * Contains each part of FX such as scene, camera, material, render target, etc.
      */
