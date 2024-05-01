@@ -17,7 +17,6 @@ export class Wobble3DMaterial extends THREE.Material {
       uWarpPositionFrequency: { value: number };
       uWarpTimeFrequency: { value: number };
       uWarpStrength: { value: number };
-      uWobbleShine: { value: number };
       uIsWobbleMap: { value: boolean };
       uWobbleMap: { value: THREE.Texture };
       uWobbleMapStrength: { value: number };
@@ -34,7 +33,7 @@ export class Wobble3DMaterial extends THREE.Material {
       uDistortion: { value: number };
       uDistortionScale: { value: number };
       uTemporalDistortion: { value: number };
-      uSamples: { value: number };
+      uRefractionSamples: { value: number };
    };
 }
 
@@ -78,7 +77,8 @@ const rewriteVertex = (vertex: string) => {
 		varying vec3 vEdgeNormal;
 		varying vec3 vEdgeViewPosition;
 		// #usf <getWobble>
-		void main() {`
+		void main() {
+		`
    );
 
    // wobble
@@ -147,6 +147,11 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
       shader: THREE.Shader,
       renderer: THREE.WebGLRenderer
    ) => void;
+   /**
+    * Whether to apply more advanced `transmission` or not. valid only for `MeshPhysicalMaterial`. This is a function referring to `drei/MeshTransmissionMaterial`, default : `false`
+    * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
+    * */
+   isCustomTransmission?: boolean;
 }
 
 export const useMaterial = <T extends WobbleMaterialConstructor>({
@@ -154,17 +159,13 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
    materialParameters,
    onBeforeCompile,
    depthOnBeforeCompile,
+   isCustomTransmission = false,
    uniforms,
 }: WobbleMaterialProps<T>) => {
    const { material, depthMaterial } = useMemo(() => {
       const mat = new (baseMaterial || THREE.MeshPhysicalMaterial)(
          materialParameters || {}
       );
-      const hasRoughness =
-         mat.type === "MeshPhysicalMaterial" ||
-         mat.type === "MeshStandardMaterial";
-
-      const hasTransmission = mat.type === "MeshPhysicalMaterial";
 
       Object.assign(mat.userData, {
          uniforms: {
@@ -181,7 +182,6 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             },
             uWarpTimeFrequency: { value: WOBBLE3D_PARAMS.warpTimeFrequency },
             uWarpStrength: { value: WOBBLE3D_PARAMS.warpStrength },
-            uWobbleShine: { value: WOBBLE3D_PARAMS.wobbleShine },
             uIsWobbleMap: { value: false },
             uWobbleMap: { value: DEFAULT_TEXTURE },
             uWobbleMapStrength: { value: WOBBLE3D_PARAMS.wobbleMapStrength },
@@ -202,7 +202,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             uDistortion: { value: WOBBLE3D_PARAMS.distortion },
             uDistortionScale: { value: WOBBLE3D_PARAMS.distortionScale },
             uTemporalDistortion: { value: WOBBLE3D_PARAMS.temporalDistortion },
-            uSamples: { value: WOBBLE3D_PARAMS.samples },
+            uRefractionSamples: { value: WOBBLE3D_PARAMS.refractionSamples },
             transmission: { value: 0 },
             _transmission: { value: 1 },
             transmissionMap: { value: null },
@@ -236,16 +236,6 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 				`
          );
 
-         // roughness
-         if (hasRoughness) {
-            shader.fragmentShader = shader.fragmentShader.replace(
-               "#include <roughnessmap_fragment>",
-               `
-					#include <roughnessmap_fragment>
-					roughnessFactor = usf_Roughness;`
-            );
-         }
-
          // frag
          shader.fragmentShader = shader.fragmentShader.replace(
             "void main() {",
@@ -257,7 +247,6 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 				uniform float uColorMix;
 				uniform float uEdgeThreshold;
 				uniform vec3 uEdgeColor;
-				uniform float uWobbleShine;
 				
 				// transmission
 				uniform float uChromaticAberration;         
@@ -266,7 +255,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 				uniform float uDistortion;
 				uniform float uDistortionScale;
 				uniform float uTemporalDistortion;
-				uniform float uSamples;
+				uniform float uRefractionSamples;
 				
 				float rand(float n){return fract(sin(n) * 43758.5453123);}
 				${snoise}
@@ -278,21 +267,15 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 				
 				void main(){
 					vec4 usf_DiffuseColor = vec4(1.0);
-					${hasRoughness ? "float usf_Roughness = roughness;" : ""}
 					float colorWobbleMix = smoothstep(-1.,1.,vWobble);
 					vec2 colorPosMix = vec2(smoothstep(-1.,1.,vPosition.x),smoothstep(-1.,1.,vPosition.y));
 				
 					usf_DiffuseColor.rgb = mix(mix(uColor0, uColor1, colorPosMix.x), mix(uColor2, uColor3, colorPosMix.y), colorWobbleMix);
-
-					${
-                  hasRoughness
-                     ? "usf_Roughness = max(roughness - colorWobbleMix * uWobbleShine,0.);"
-                     : ""
-               }`
+				`
          );
 
-         // transmission
-         if (hasTransmission) {
+         // custom transmission
+         if (mat.type === "MeshPhysicalMaterial" && isCustomTransmission) {
             shader.fragmentShader = shader.fragmentShader.replace(
                "#include <transmission_pars_fragment>",
                `${transmission_pars_fragment}`
@@ -328,6 +311,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       onBeforeCompile,
       depthOnBeforeCompile,
       uniforms,
+      isCustomTransmission,
    ]);
 
    return {

@@ -39,6 +39,7 @@ type UseCreateWobble3DReturn<T> = [
 export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    scene = false,
    geometry,
+   isCustomTransmission,
    baseMaterial,
    materialParameters,
    onBeforeCompile,
@@ -59,6 +60,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
       onBeforeCompile,
       depthOnBeforeCompile,
       uniforms,
+      isCustomTransmission,
    });
 
    const mesh = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
@@ -87,7 +89,6 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
          updateValue("uWarpStrength", newParams.warpStrength);
          updateValue("uWarpPositionFrequency", newParams.warpPositionFrequency);
          updateValue("uWarpTimeFrequency", newParams.warpTimeFrequency);
-         updateValue("uWobbleShine", newParams.wobbleShine);
          if (newParams.wobbleMap) {
             updateValue("uWobbleMap", newParams.wobbleMap);
             updateValue("uIsWobbleMap", true);
@@ -96,7 +97,6 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
          }
          updateValue("uWobbleMapStrength", newParams.wobbleMapStrength);
          updateValue("uWobbleMapDistortion", newParams.wobbleMapDistortion);
-         updateValue("uSamples", newParams.samples);
          updateValue("uColor0", newParams.color0);
          updateValue("uColor1", newParams.color1);
          updateValue("uColor2", newParams.color2);
@@ -108,6 +108,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
          updateValue("uAnisotropicBlur", newParams.anisotropicBlur);
          updateValue("uDistortion", newParams.distortion);
          updateValue("uDistortionScale", newParams.distortionScale);
+         updateValue("uRefractionSamples", newParams.refractionSamples);
          updateValue("uTemporalDistortion", newParams.temporalDistortion);
 
          updateCustomValue(customParams);

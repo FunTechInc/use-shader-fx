@@ -23,9 +23,6 @@ export declare class Wobble3DMaterial extends THREE.Material {
         uWarpStrength: {
             value: number;
         };
-        uWobbleShine: {
-            value: number;
-        };
         uIsWobbleMap: {
             value: boolean;
         };
@@ -74,7 +71,7 @@ export declare class Wobble3DMaterial extends THREE.Material {
         uTemporalDistortion: {
             value: number;
         };
-        uSamples: {
+        uRefractionSamples: {
             value: number;
         };
     };
@@ -93,8 +90,13 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor> extend
      * @param renderer — WebGLRenderer Context that is initializing the material
      */
     depthOnBeforeCompile?: (shader: THREE.Shader, renderer: THREE.WebGLRenderer) => void;
+    /**
+     * Whether to apply more advanced `transmission` or not. valid only for `MeshPhysicalMaterial`. This is a function referring to `drei/MeshTransmissionMaterial`, default : `false`
+     * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
+     * */
+    isCustomTransmission?: boolean;
 }
-export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, uniforms, }: WobbleMaterialProps<T>) => {
+export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, isCustomTransmission, uniforms, }: WobbleMaterialProps<T>) => {
     material: Wobble3DMaterial;
     depthMaterial: THREE.MeshDepthMaterial;
 };

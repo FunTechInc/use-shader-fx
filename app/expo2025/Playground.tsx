@@ -60,9 +60,9 @@ const MyakuMyaku = (props: MeshProps) => {
       ),
       onBeforeCompile: (shader) => {
          shader.fragmentShader = shader.fragmentShader.replace(
-            "uniform float uSamples;",
+            "uniform float uRefractionSamples;",
             `
-					uniform float uSamples;
+					uniform float uRefractionSamples;
 					uniform vec2 uEyeMoving;
 					uniform vec3 uEyeColor;
 				`

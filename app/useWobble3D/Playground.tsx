@@ -32,14 +32,15 @@ const CONFIG: Wobble3DParams = {
    distortion: 2,
    distortionScale: 0.8,
    temporalDistortion: 0.3,
+   refractionSamples: 6,
 };
 
 const MATERIAL_CONFIG: THREE.MeshPhysicalMaterialParameters = {
-   iridescence: 1,
+   iridescence: 0,
    metalness: 0.0,
    roughness: 0.0,
-   transmission: 2,
-   thickness: 1,
+   transmission: 0.99,
+   thickness: 0.2,
    transparent: true,
 };
 
@@ -54,8 +55,7 @@ const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "warpStrength", 0, 10, 0.01);
    gui.add(CONFIG, "warpPositionFrequency", 0, 10, 0.01);
    gui.add(CONFIG, "warpTimeFrequency", 0, 10, 0.01);
-   gui.add(CONFIG, "wobbleShine", 0, 5, 0.01);
-   gui.add(CONFIG, "samples", 0, 10, 1);
+   gui.add(CONFIG, "refractionSamples", 0, 10, 1);
    gui.add(CONFIG, "colorMix", 0, 1, 0.01);
    gui.add(CONFIG, "chromaticAberration", 0, 10, 0.01);
    gui.add(CONFIG, "anisotropicBlur", 0, 10, 0.01);
@@ -101,6 +101,7 @@ export const Playground = () => {
    const [updateWobble, wobble] = useCreateWobble3D({
       baseMaterial: THREE.MeshPhysicalMaterial,
       materialParameters: MATERIAL_CONFIG,
+      isCustomTransmission: true,
    });
 
    useEffect(() => {
