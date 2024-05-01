@@ -17,6 +17,7 @@ import {
    useMotionBlur,
    useSimpleBlur,
    usePointer,
+   useNoise,
 } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
 import { OrbitControls, useVideoTexture } from "@react-three/drei";
@@ -69,22 +70,28 @@ export const Playground = () => {
       blurPower: 5,
    });
 
+   const [updateNoise, , { output: noise }] = useNoise({
+      size,
+      dpr: 0.2,
+   });
+
    const updatePointer = usePointer();
    useFrame((props) => {
-      const pointer = updatePointer(props.pointer);
-      updateCover(props);
-      updateMotionBlur(props, {
-         begin: pointer.prevPointer.divideScalar(3),
-         end: pointer.currentPointer.divideScalar(3),
-      });
-      updateBlur(props);
+      // const pointer = updatePointer(props.pointer);
+      // updateCover(props);
+      // updateMotionBlur(props, {
+      //    begin: pointer.prevPointer.divideScalar(3),
+      //    end: pointer.currentPointer.divideScalar(3),
+      // });
+      // updateBlur(props);
+      updateNoise(props);
    });
 
    return (
       <>
          <mesh>
             <planeGeometry args={[2, 2]} />
-            <fxMaterial u_fx={blur} key={FxMaterial.key} />
+            <fxMaterial u_fx={noise} key={FxMaterial.key} />
          </mesh>
       </>
    );

@@ -43,22 +43,22 @@ if (uDistortion > 0.0) {
 	distortionNormal = uDistortion * vec3(snoiseFractal(vec3((pos * uDistortionScale + temporalOffset))), snoiseFractal(vec3(pos.zxy * uDistortionScale - temporalOffset)), snoiseFractal(vec3(pos.yxz * uDistortionScale + temporalOffset)));
 }
 
-for (float i = 0.0; i < uSamples; i ++) {
+for (float i = 0.0; i < uRefractionSamples; i ++) {
 	vec3 sampleNorm = normalize(n + roughnessFactor * roughnessFactor * 2.0 * normalize(vec3(rand(runningSeed++) - 0.5, rand(runningSeed++) - 0.5, rand(runningSeed++) - 0.5)) * pow(rand(runningSeed++), 0.33) + distortionNormal);
 	
 	transmissionR = getIBLVolumeRefraction(
 		sampleNorm, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
-		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior, material.thickness  + thickness_smear * (i + randomCoords) / uSamples,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior, material.thickness  + thickness_smear * (i + randomCoords) / uRefractionSamples,
 		material.attenuationColor, material.attenuationDistance
 	).r;
 	transmissionG = getIBLVolumeRefraction(
 		sampleNorm, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
-		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior  * (1.0 + uChromaticAberration * (i + randomCoords) / uSamples) , material.thickness + thickness_smear * (i + randomCoords) / uSamples,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior  * (1.0 + uChromaticAberration * (i + randomCoords) / uRefractionSamples) , material.thickness + thickness_smear * (i + randomCoords) / uRefractionSamples,
 		material.attenuationColor, material.attenuationDistance
 	).g;
 	transmissionB = getIBLVolumeRefraction(
 		sampleNorm, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
-		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior * (1.0 + 2.0 * uChromaticAberration * (i + randomCoords) / uSamples), material.thickness + thickness_smear * (i + randomCoords) / uSamples,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior * (1.0 + 2.0 * uChromaticAberration * (i + randomCoords) / uRefractionSamples), material.thickness + thickness_smear * (i + randomCoords) / uRefractionSamples,
 		material.attenuationColor, material.attenuationDistance
 	).b;
 	transmission.r += transmissionR;
@@ -66,7 +66,7 @@ for (float i = 0.0; i < uSamples; i ++) {
 	transmission.b += transmissionB;
 }
 
-transmission /= uSamples;
+transmission /= uRefractionSamples;
 // to here
 
 totalDiffuse = mix( totalDiffuse, transmission.rgb, material.transmission );

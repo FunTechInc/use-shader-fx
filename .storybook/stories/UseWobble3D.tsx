@@ -49,12 +49,11 @@ export const UseWobble3D = (args: Wobble3DParams) => {
    const [updateWobble, wobble] = useCreateWobble3D({
       baseMaterial: THREE.MeshPhysicalMaterial,
       materialParameters: {
-         iridescence: 1,
+         iridescence: 0.1,
          metalness: 0.0,
          roughness: 0.0,
-         transmission: 2,
-         thickness: 1,
-         transparent: true,
+         transmission: 0.8,
+         thickness: 0.8,
       },
    });
 
