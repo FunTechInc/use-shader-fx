@@ -22,12 +22,6 @@ export type Wobble3DParams = {
    warpPositionFrequency?: number;
    /** default : `0.3` */
    warpTimeFrequency?: number;
-   /** Manipulate the vertices using the color channels of this texture. The strength of the wobble changes depending on the g channel of this texture, default : `false` */
-   wobbleMap?: THREE.Texture | false;
-   /** Strength of wobbleMap, default : `0.03` */
-   wobbleMapStrength?: number;
-   /** Strength of distorting the 'normal' by wobbleMap, default : `0.0` */
-   wobbleMapDistortion?: number;
    color0?: THREE.Color;
    color1?: THREE.Color;
    color2?: THREE.Color;
@@ -69,9 +63,6 @@ export const WOBBLE3D_PARAMS: Wobble3DParams = Object.freeze({
    warpStrength: 0.3,
    warpPositionFrequency: 0.3,
    warpTimeFrequency: 0.3,
-   wobbleMap: false,
-   wobbleMapStrength: 0.03,
-   wobbleMapDistortion: 0.0,
    color0: new THREE.Color(0xff0000),
    color1: new THREE.Color(0x00ff00),
    color2: new THREE.Color(0x0000ff),

@@ -18,6 +18,7 @@ import {
    useSimpleBlur,
    usePointer,
    useNoise,
+   useCreateWobble3D,
 } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
 import { OrbitControls, useVideoTexture } from "@react-three/drei";
@@ -35,63 +36,49 @@ export const Playground = () => {
    });
    const [funkun] = useLoader(THREE.TextureLoader, ["/funkun.jpg"]);
 
-   const [updateCover, setCover, { output: cover }] = useCoverTexture({
-      size,
-      dpr: 0.01,
-   });
-   setCover({
-      texture: funkun_mov,
-   });
-
-   const [updateMotionBlur, setMotionBlur, { output: motionblur }] =
-      useMotionBlur({
-         size,
-         dpr: 0.1,
-         onBeforeCompile: useCallback((shader: THREE.Shader) => {
-            // shader.fragmentShader = shader.fragmentShader.replace(
-            //    "gl_FragColor = mixed;",
-            //    "gl_FragColor = vec4(0.2,1.,0.2,1.);"
-            // );
-            console.log(shader.fragmentShader);
-         }, []),
-      });
-   setMotionBlur({
-      texture: cover,
-      strength: 0.95,
-   });
-
-   const [updateBlur, setBlur, { output: blur }] = useSimpleBlur({
-      size,
-      dpr: 0.06,
-   });
-   setBlur({
-      texture: motionblur,
-      blurSize: 1,
-      blurPower: 5,
-   });
-
-   const [updateNoise, , { output: noise }] = useNoise({
+   const [updateNoise, setNoise, { output: noise }] = useNoise({
       size,
       dpr: 0.2,
    });
+   setNoise({
+      noiseOctaves: 1,
+      fbmOctaves: 1,
+      warpOctaves: 1,
+      timeStrength: 1,
+      scale: 2000,
+   });
 
-   const updatePointer = usePointer();
+   const [updateWobble, wobble] = useCreateWobble3D({
+      materialParameters: {
+         color: "hotpink",
+         // displacementMap: noise,
+         // displacementScale: 2,
+      },
+   });
+
+   updateWobble(null, {
+      // wobbleStrength: 0.0,
+      // colorMix: 0,
+   });
+
    useFrame((props) => {
-      // const pointer = updatePointer(props.pointer);
-      // updateCover(props);
-      // updateMotionBlur(props, {
-      //    begin: pointer.prevPointer.divideScalar(3),
-      //    end: pointer.currentPointer.divideScalar(3),
-      // });
-      // updateBlur(props);
-      updateNoise(props);
+      updateWobble(props);
+      // updateNoise(props);
    });
 
    return (
       <>
          <mesh>
-            <planeGeometry args={[2, 2]} />
-            <fxMaterial u_fx={noise} key={FxMaterial.key} />
+            <directionalLight
+               color={"white"}
+               position={[0.25, 2, 3]}
+               intensity={2}
+            />
+            <ambientLight intensity={1} />
+            <primitive object={wobble.mesh} />
+            {/* <icosahedronGeometry args={[2, 20]} />
+            <meshPhysicalMaterial color={"hotpink"} displacementMap={noise} /> */}
+            <OrbitControls />
          </mesh>
       </>
    );

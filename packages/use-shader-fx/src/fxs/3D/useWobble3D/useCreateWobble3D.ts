@@ -89,14 +89,6 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
          updateValue("uWarpStrength", newParams.warpStrength);
          updateValue("uWarpPositionFrequency", newParams.warpPositionFrequency);
          updateValue("uWarpTimeFrequency", newParams.warpTimeFrequency);
-         if (newParams.wobbleMap) {
-            updateValue("uWobbleMap", newParams.wobbleMap);
-            updateValue("uIsWobbleMap", true);
-         } else if (newParams.wobbleMap === false) {
-            updateValue("uIsWobbleMap", false);
-         }
-         updateValue("uWobbleMapStrength", newParams.wobbleMapStrength);
-         updateValue("uWobbleMapDistortion", newParams.wobbleMapDistortion);
          updateValue("uColor0", newParams.color0);
          updateValue("uColor1", newParams.color1);
          updateValue("uColor2", newParams.color2);

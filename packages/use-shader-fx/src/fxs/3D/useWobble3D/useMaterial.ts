@@ -17,10 +17,10 @@ export class Wobble3DMaterial extends THREE.Material {
       uWarpPositionFrequency: { value: number };
       uWarpTimeFrequency: { value: number };
       uWarpStrength: { value: number };
-      uIsWobbleMap: { value: boolean };
-      uWobbleMap: { value: THREE.Texture };
-      uWobbleMapStrength: { value: number };
-      uWobbleMapDistortion: { value: number };
+      // uIsWobbleMap: { value: boolean };
+      // uWobbleMap: { value: THREE.Texture };
+      // uWobbleMapStrength: { value: number };
+      // uWobbleMapDistortion: { value: number };
       uColor0: { value: THREE.Color };
       uColor1: { value: THREE.Color };
       uColor2: { value: THREE.Color };
@@ -66,10 +66,10 @@ const rewriteVertex = (vertex: string) => {
 		uniform float uWarpPositionFrequency;
 		uniform float uWarpTimeFrequency;
 		uniform float uWarpStrength;
-		uniform bool uIsWobbleMap;
-		uniform sampler2D uWobbleMap;
-		uniform float uWobbleMapStrength;
-		uniform float uWobbleMapDistortion;
+		// uniform bool uIsWobbleMap;
+		// uniform sampler2D uWobbleMap;
+		// uniform float uWobbleMapStrength;
+		// uniform float uWobbleMapDistortion;
 		attribute vec4 tangent;
 		varying float vWobble;
 		varying vec2 vPosition;
@@ -98,18 +98,14 @@ const rewriteVertex = (vertex: string) => {
 		vec3 positionA = usf_Position + tangent.xyz * shift;
 		vec3 positionB = usf_Position + biTangent * shift;
 		
-		// wobbleMap & wobble
-		float wobbleMap = uIsWobbleMap ? texture2D(uWobbleMap, uv).g : 0.0;
-		vec3 nWobbleMap = wobbleMap * normal * uWobbleMapStrength;
-		float wobbleMapDistortion = wobbleMap * uWobbleMapDistortion;
-
+		// wobble
 		float wobble = (uWobbleStrength > 0.) ? getWobble(usf_Position) : 0.0;
 		float wobblePositionA = (uWobbleStrength > 0.) ? getWobble(positionA) : 0.0;
 		float wobblePositionB = (uWobbleStrength > 0.) ? getWobble(positionB) : 0.0;
 		
-		usf_Position += nWobbleMap + (wobble * normal);
-		positionA += nWobbleMap + wobbleMapDistortion + (wobblePositionA * normal);
-		positionB += nWobbleMap + wobbleMapDistortion + (wobblePositionB * normal);
+		usf_Position += wobble * normal;
+		positionA += wobblePositionA * normal;
+		positionB += wobblePositionB * normal;
 
 		// Compute normal
 		vec3 toA = normalize(positionA - usf_Position);
@@ -182,12 +178,6 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             },
             uWarpTimeFrequency: { value: WOBBLE3D_PARAMS.warpTimeFrequency },
             uWarpStrength: { value: WOBBLE3D_PARAMS.warpStrength },
-            uIsWobbleMap: { value: false },
-            uWobbleMap: { value: DEFAULT_TEXTURE },
-            uWobbleMapStrength: { value: WOBBLE3D_PARAMS.wobbleMapStrength },
-            uWobbleMapDistortion: {
-               value: WOBBLE3D_PARAMS.wobbleMapDistortion,
-            },
             uColor0: { value: WOBBLE3D_PARAMS.color0 },
             uColor1: { value: WOBBLE3D_PARAMS.color1 },
             uColor2: { value: WOBBLE3D_PARAMS.color2 },
