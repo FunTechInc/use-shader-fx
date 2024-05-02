@@ -11,6 +11,7 @@ import {
 import { FxMaterial } from "./FxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
+import { Environment } from "@react-three/drei";
 
 extend({ FxMaterial });
 
@@ -20,8 +21,6 @@ const CONFIG: Wobble3DParams = {
    wobbleTimeFrequency: 0.2,
    warpStrength: 0.0,
    colorMix: 0,
-   edgeThreshold: 0.2,
-   edgeColor: new THREE.Color(0xff9286),
 };
 
 const setGUI = (gui: GUI) => {
@@ -31,8 +30,6 @@ const setGUI = (gui: GUI) => {
    gui.addColor(CONFIG, "color3");
    gui.add(CONFIG, "wobbleStrength", 0, 2, 0.01);
    gui.add(CONFIG, "colorMix", 0, 1, 0.01);
-   gui.add(CONFIG, "edgeThreshold", 0, 1, 0.01);
-   gui.addColor(CONFIG, "edgeColor");
    return gui;
 };
 const setConfig = () => {
@@ -43,11 +40,12 @@ const setConfig = () => {
 
 const MyakuMyaku = (props: MeshProps) => {
    const [updateWobble, wobble] = useCreateWobble3D({
-      geometry: useMemo(() => new THREE.SphereGeometry(2, 20, 20), []),
-      baseMaterial: THREE.MeshToonMaterial,
+      baseMaterial: THREE.MeshStandardMaterial,
       materialParameters: useMemo(
          () => ({
             color: new THREE.Color(0xd53220),
+            metalness: 0.16,
+            roughness: 0.16,
          }),
          []
       ),
@@ -123,7 +121,7 @@ export const Playground = () => {
 
    return (
       <mesh>
-         <directionalLight position={[0.25, 2, 3]} intensity={3} />
+         <Environment preset="warehouse" />
          <MyakuMyaku position={[-6, 0, 0]} scale={[1, 1, 1]} />
          <MyakuMyaku
             position={[-4, 3.5, 0]}

@@ -23,18 +23,6 @@ export declare class Wobble3DMaterial extends THREE.Material {
         uWarpStrength: {
             value: number;
         };
-        uIsWobbleMap: {
-            value: boolean;
-        };
-        uWobbleMap: {
-            value: THREE.Texture;
-        };
-        uWobbleMapStrength: {
-            value: number;
-        };
-        uWobbleMapDistortion: {
-            value: number;
-        };
         uColor0: {
             value: THREE.Color;
         };
