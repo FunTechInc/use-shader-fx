@@ -6,7 +6,6 @@ import transmission_pars_fragment from "./shaders/transmission_pars_fragment.gls
 import transmission_fragment from "./shaders/transmission_fragment.glsl";
 import { WOBBLE3D_PARAMS } from ".";
 import { MaterialProps } from "../../types";
-import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -17,10 +16,6 @@ export class Wobble3DMaterial extends THREE.Material {
       uWarpPositionFrequency: { value: number };
       uWarpTimeFrequency: { value: number };
       uWarpStrength: { value: number };
-      // uIsWobbleMap: { value: boolean };
-      // uWobbleMap: { value: THREE.Texture };
-      // uWobbleMapStrength: { value: number };
-      // uWobbleMapDistortion: { value: number };
       uColor0: { value: THREE.Color };
       uColor1: { value: THREE.Color };
       uColor2: { value: THREE.Color };
@@ -66,10 +61,6 @@ const rewriteVertex = (vertex: string) => {
 		uniform float uWarpPositionFrequency;
 		uniform float uWarpTimeFrequency;
 		uniform float uWarpStrength;
-		// uniform bool uIsWobbleMap;
-		// uniform sampler2D uWobbleMap;
-		// uniform float uWobbleMapStrength;
-		// uniform float uWobbleMapDistortion;
 		attribute vec4 tangent;
 		varying float vWobble;
 		varying vec2 vPosition;

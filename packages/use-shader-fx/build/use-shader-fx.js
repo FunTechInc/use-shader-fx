@@ -3942,10 +3942,6 @@ const Pe = (e) => {
 		uniform float uWarpPositionFrequency;
 		uniform float uWarpTimeFrequency;
 		uniform float uWarpStrength;
-		// uniform bool uIsWobbleMap;
-		// uniform sampler2D uWobbleMap;
-		// uniform float uWobbleMapStrength;
-		// uniform float uWobbleMapDistortion;
 		attribute vec4 tangent;
 		varying float vWobble;
 		varying vec2 vPosition;
