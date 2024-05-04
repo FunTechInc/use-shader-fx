@@ -43,9 +43,14 @@ export const useMesh = ({
          fragmentShader: fragmentShader,
          ...MATERIAL_BASIC_PARAMS,
       });
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = (shader, renderer) => {
+         onBeforeCompile && onBeforeCompile(shader, renderer);
+         shader.fragmentShader = shader.fragmentShader.replace(
+            /#usf[^\n]*\n/g,
+            ""
+         );
+         shader.vertexShader = shader.vertexShader.replace(/#usf[^\n]*\n/g, "");
+      };
       return mat;
    }, [onBeforeCompile, uniforms]) as BlankMaterial;
 
