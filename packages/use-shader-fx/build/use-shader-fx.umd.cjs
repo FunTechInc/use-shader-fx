@@ -916,17 +916,21 @@ void main() {
 }`;const Tt=({scene:e,size:n,dpr:t,uniforms:r,onBeforeCompile:o})=>{const m=v.useMemo(()=>new i.PlaneGeometry(2,2),[]),s=v.useMemo(()=>{const g=new i.ShaderMaterial({uniforms:{u_texture:{value:T},u_resolution:{value:new i.Vector2},u_keyColor:{value:X.color},u_similarity:{value:X.similarity},u_smoothness:{value:X.smoothness},u_spill:{value:X.spill},u_color:{value:X.color},u_contrast:{value:X.contrast},u_brightness:{value:X.brightness},u_gamma:{value:X.gamma},...r},vertexShader:_t,fragmentShader:Ct,...z});return o&&(g.onBeforeCompile=o),g},[o,r]),u=N(n,t);A(s)("u_resolution",u.clone());const c=B(e,m,s,i.Mesh);return{material:s,mesh:c}},X=Object.freeze({texture:T,keyColor:new i.Color(65280),similarity:.2,smoothness:.1,spill:.2,color:new i.Vector4(1,1,1,1),contrast:1,brightness:0,gamma:1}),wt=({size:e,dpr:n,samples:t,isSizeUpdate:r,uniforms:o,onBeforeCompile:m})=>{const s=O(n),u=v.useMemo(()=>new i.Scene,[]),{material:c,mesh:g}=Tt({scene:u,size:e,dpr:s.shader,uniforms:o,onBeforeCompile:m}),d=L(e),[x,h]=$({scene:u,camera:d,size:e,dpr:s.fbo,samples:t,isSizeUpdate:r}),[a,f]=k(X),l=A(c),p=V(c);return[v.useCallback((S,b,M)=>{const{gl:_}=S;return b&&f(b),l("u_texture",a.texture),l("u_keyColor",a.keyColor),l("u_similarity",a.similarity),l("u_smoothness",a.smoothness),l("u_spill",a.spill),l("u_color",a.color),l("u_contrast",a.contrast),l("u_brightness",a.brightness),l("u_gamma",a.gamma),p(M),h(_)},[h,l,f,a,p]),f,{scene:u,mesh:g,material:c,camera:d,renderTarget:x,output:x.texture}]};var Rt=`precision highp float;
 
 varying vec2 vUv;
+#usf varyings
+
+#usf uniforms
 
 void main() {
 	vec4 usf_Position = vec4(position,1.);
 	vUv = uv;
 
-	
+	#usf main
 	
 	gl_Position = usf_Position;
 }`,Dt=`precision highp float;
 
 varying vec2 vUv;
+#usf varyings
 
 uniform sampler2D uTexture;
 uniform sampler2D uBackbuffer;
@@ -934,13 +938,15 @@ uniform float uTime;
 uniform vec2 uPointer;
 uniform vec2 uResolution;
 
+#usf uniforms
+
 void main() {
 	vec4 usf_FragColor = vec4(1.);
 
-	
+	#usf main
 	
 	gl_FragColor = usf_FragColor;
-}`;const At=({scene:e,size:n,dpr:t,uniforms:r,onBeforeCompile:o})=>{const m=v.useMemo(()=>new i.PlaneGeometry(2,2),[]),s=v.useMemo(()=>{const g=new i.ShaderMaterial({uniforms:{uTexture:{value:T},uBackbuffer:{value:T},uTime:{value:0},uPointer:{value:new i.Vector2},uResolution:{value:new i.Vector2},...r},vertexShader:Rt,fragmentShader:Dt,...z});return o&&(g.onBeforeCompile=o),g},[o,r]),u=N(n,t);A(s)("uResolution",u.clone());const c=B(e,m,s,i.Mesh);return{material:s,mesh:c}},Ae=Object.freeze({texture:T,beat:!1}),Pt=({size:e,dpr:n,samples:t,isSizeUpdate:r,uniforms:o,onBeforeCompile:m})=>{const s=O(n),u=v.useMemo(()=>new i.Scene,[]),{material:c,mesh:g}=At({scene:u,size:e,dpr:s.shader,uniforms:o,onBeforeCompile:m}),d=L(e),x=v.useMemo(()=>({scene:u,camera:d,size:e,dpr:s.fbo,samples:t,isSizeUpdate:r}),[u,d,e,s.fbo,t,r]),[h,a]=ne(x),[f,l]=k(Ae),p=A(c),y=V(c);return[v.useCallback((b,M,_)=>{const{gl:w,clock:R,pointer:U}=b;return M&&l(M),p("uTexture",f.texture),p("uPointer",U),p("uTime",f.beat||R.getElapsedTime()),y(_),a(w,({read:F})=>{p("uBackbuffer",F)})},[a,p,l,f,y]),l,{scene:u,mesh:g,material:c,camera:d,renderTarget:h,output:h.read.texture}]},It=({scene:e,geometry:n,material:t})=>{const r=B(e,n,t,i.Points),o=B(e,v.useMemo(()=>n.clone(),[n]),v.useMemo(()=>t.clone(),[t]),i.Mesh);return o.visible=!1,{points:r,interactiveMesh:o}};var Ft=`uniform vec2 uResolution;
+}`;const At=({scene:e,size:n,dpr:t,uniforms:r,onBeforeCompile:o})=>{const m=v.useMemo(()=>new i.PlaneGeometry(2,2),[]),s=v.useMemo(()=>{const g=new i.ShaderMaterial({uniforms:{uTexture:{value:T},uBackbuffer:{value:T},uTime:{value:0},uPointer:{value:new i.Vector2},uResolution:{value:new i.Vector2},...r},vertexShader:Rt,fragmentShader:Dt,...z});return g.onBeforeCompile=(d,x)=>{o&&o(d,x),d.fragmentShader=d.fragmentShader.replace(/#usf[^\n]*\n/g,""),d.vertexShader=d.vertexShader.replace(/#usf[^\n]*\n/g,"")},g},[o,r]),u=N(n,t);A(s)("uResolution",u.clone());const c=B(e,m,s,i.Mesh);return{material:s,mesh:c}},Ae=Object.freeze({texture:T,beat:!1}),Pt=({size:e,dpr:n,samples:t,isSizeUpdate:r,uniforms:o,onBeforeCompile:m})=>{const s=O(n),u=v.useMemo(()=>new i.Scene,[]),{material:c,mesh:g}=At({scene:u,size:e,dpr:s.shader,uniforms:o,onBeforeCompile:m}),d=L(e),x=v.useMemo(()=>({scene:u,camera:d,size:e,dpr:s.fbo,samples:t,isSizeUpdate:r}),[u,d,e,s.fbo,t,r]),[h,a]=ne(x),[f,l]=k(Ae),p=A(c),y=V(c);return[v.useCallback((b,M,_)=>{const{gl:w,clock:R,pointer:U}=b;return M&&l(M),p("uTexture",f.texture),p("uPointer",U),p("uTime",f.beat||R.getElapsedTime()),y(_),a(w,({read:F})=>{p("uBackbuffer",F)})},[a,p,l,f,y]),l,{scene:u,mesh:g,material:c,camera:d,renderTarget:h,output:h.read.texture}]},It=({scene:e,geometry:n,material:t})=>{const r=B(e,n,t,i.Points),o=B(e,v.useMemo(()=>n.clone(),[n]),v.useMemo(()=>t.clone(),[t]),i.Mesh);return o.visible=!1,{points:r,interactiveMesh:o}};var Ft=`uniform vec2 uResolution;
 uniform float uMorphProgress;
 uniform float uPointSize;
 

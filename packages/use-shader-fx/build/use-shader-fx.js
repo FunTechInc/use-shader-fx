@@ -2864,17 +2864,21 @@ const ln = ({
 var cn = `precision highp float;
 
 varying vec2 vUv;
+#usf varyings
+
+#usf uniforms
 
 void main() {
 	vec4 usf_Position = vec4(position,1.);
 	vUv = uv;
 
-	
+	#usf main
 	
 	gl_Position = usf_Position;
 }`, vn = `precision highp float;
 
 varying vec2 vUv;
+#usf varyings
 
 uniform sampler2D uTexture;
 uniform sampler2D uBackbuffer;
@@ -2882,10 +2886,12 @@ uniform float uTime;
 uniform vec2 uPointer;
 uniform vec2 uResolution;
 
+#usf uniforms
+
 void main() {
 	vec4 usf_FragColor = vec4(1.);
 
-	
+	#usf main
 	
 	gl_FragColor = usf_FragColor;
 }`;
@@ -2910,7 +2916,12 @@ const mn = ({
       fragmentShader: vn,
       ...z
     });
-    return o && (f.onBeforeCompile = o), f;
+    return f.onBeforeCompile = (d, h) => {
+      o && o(d, h), d.fragmentShader = d.fragmentShader.replace(
+        /#usf[^\n]*\n/g,
+        ""
+      ), d.vertexShader = d.vertexShader.replace(/#usf[^\n]*\n/g, "");
+    }, f;
   }, [o, r]), u = K(t, n);
   P(s)("uResolution", u.clone());
   const c = L(e, v, s, i.Mesh);

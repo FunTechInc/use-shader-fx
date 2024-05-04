@@ -30,11 +30,11 @@ export const Playground = () => {
       },
       onBeforeCompile: useCallback((shader: THREE.Shader) => {
          shader.fragmentShader = shader.fragmentShader.replace(
-            "//#usf uniforms",
+            "#usf uniforms",
             "uniform float hoge;"
          );
          shader.fragmentShader = shader.fragmentShader.replace(
-            "//#usf main",
+            "#usf main",
             `float t=uTime,c;vec2 z,u,n=vec2(cos(t),sin(t));z=vUv*2.-1.;for(int i=0;i<12;i++){if(dot(z,z)>8.)discard;z=vec2(z.x*z.x-z.y*z.y,z.x*z.y)+n;}c=cos(length(z)+log(length(z)));u=vUv;u+=z*hoge;usf_FragColor=vec4(mix(vec3(c),texture2D(uTexture,u).rgb,1.-hoge),1.);`
          );
          console.log(shader.vertexShader);
