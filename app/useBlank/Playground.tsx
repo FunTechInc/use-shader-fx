@@ -10,7 +10,7 @@ import { useVideoTexture } from "@react-three/drei";
 extend({ FxMaterial });
 
 export const Playground = () => {
-   const { size, viewport } = useThree();
+   const { size, viewport, gl } = useThree();
    const funkun_mov = useVideoTexture("/FT_Ch02-comp.mp4", {
       width: 1280,
       height: 720,

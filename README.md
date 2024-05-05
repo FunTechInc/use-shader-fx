@@ -83,7 +83,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 
 1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
 2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
-3. `fxObject` - An object that holds various FX components, such as scene, camera, material,renderTarget, and `output`(final rendered texture).
+3. `fxObject` - An object that holds various FX components, such as scene, camera, mesh, renderTarget, and `output`(final rendered texture).
 4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`uniforms`,`onBeforeCompile`but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
 
 ```js

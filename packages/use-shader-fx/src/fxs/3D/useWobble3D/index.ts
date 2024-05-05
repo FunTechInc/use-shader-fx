@@ -138,7 +138,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
    );
 
    const setParams = useCallback(
-      (newParams: Wobble3DParams, customParams?: CustomParams) => {
+      (newParams?: Wobble3DParams, customParams?: CustomParams) => {
          updateUniform(null, newParams, customParams);
       },
       [updateUniform]

@@ -38,8 +38,8 @@ export interface HooksProps extends MaterialProps {
 
 /**
  * @returns {HooksReturn<T, O, C>}
- *  updateFx - A function to be called inside `useFrame` that returns a `THREE.Texture`.
- *  setParams - A function to update the parameters, useful for performance tuning, etc.
+ *  updateFx - Functions to update parameters and render.
+ *  updateParams - Function to update parameters only.
  *  fxObject - An object containing various FX components such as scene, camera, material, and render target.
  *
  * @template T The type for the parameters of the hooks.
@@ -48,17 +48,18 @@ export interface HooksProps extends MaterialProps {
  */
 export type HooksReturn<T, O, C> = [
    /**
-    * An update function that returns THREE.Texture. Call it inside useFrame
+    * Functions to update parameters and render.
     * @param props RootState
     * @param newParams params of fxHooks
     * @param customParams custom params, added to `uniforms` during initialisation
     */
    (props: RootState, newParams?: T, customParams?: C) => THREE.Texture,
    /**
-    * Function to update params. No FBO rendering occurs.
+    * Function to update parameters only.
     * @param newParams params of fxHooks
+    * @param customParams custom params, added to `uniforms` during initialisation
     */
-   (newParams: T) => void,
+   (newParams?: T, customParams?: C) => void,
    /**
     * Contains each part of FX such as scene, camera, material, render target, etc.
     */

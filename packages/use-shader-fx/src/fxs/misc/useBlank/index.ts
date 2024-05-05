@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { RootState } from "@react-three/fiber";
 import { BlankMaterial, useMesh } from "./useMesh";
@@ -87,6 +87,14 @@ export const useBlank = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: BlankParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -95,23 +103,22 @@ export const useBlank = ({
       ) => {
          const { gl, clock, pointer } = props;
 
-         newParams && setParams(newParams);
-         updateValue("uTexture", params.texture!);
-         updateValue("uPointer", pointer);
-         updateValue("uTime", params.beat || clock.getElapsedTime());
+         updateParams(newParams, customParams);
 
-         updateCustomValue(customParams);
+         updateValue("uPointer", pointer);
+         updateValue("uTexture", params.texture!);
+         updateValue("uTime", params.beat || clock.getElapsedTime());
 
          return updateRenderTarget(gl, ({ read }) => {
             updateValue("uBackbuffer", read);
          });
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,
