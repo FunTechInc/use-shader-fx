@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import { useBlank, useCoverTexture } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
@@ -25,9 +25,12 @@ export const Playground = () => {
    const [updateBlank, setBlank, { output: blank }] = useBlank({
       size,
       dpr: viewport.dpr,
-      uniforms: {
-         hoge: { value: 0 },
-      },
+      uniforms: useMemo(
+         () => ({
+            hoge: { value: 0 },
+         }),
+         []
+      ),
       onBeforeCompile: useCallback((shader: THREE.Shader) => {
          shader.fragmentShader = shader.fragmentShader.replace(
             "#usf uniforms",

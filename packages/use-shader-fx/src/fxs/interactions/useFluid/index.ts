@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import {
    CustomizableKeys,
-   FluidCustomParams,
    FluidMaterials,
-   FluidOnBeforeCompile,
+   CustomFluidProps,
+   CustomFluidParams,
    useMesh,
 } from "./useMesh";
 import { useCamera } from "../../../utils/useCamera";
@@ -21,6 +21,8 @@ import { useParams } from "../../../utils/useParams";
 import { UseFboProps } from "../../../utils/useSingleFBO";
 import { DoubleRenderTarget, useDoubleFBO } from "../../../utils/useDoubleFBO";
 import { getDpr } from "../../../utils/getDpr";
+
+export const DELTA_TIME = 0.016;
 
 export type FluidParams = {
    /** density disspation , default : `0.98` */
@@ -81,19 +83,22 @@ export const useFluid = ({
    dpr,
    samples,
    isSizeUpdate,
-   fluidOnBeforeCompile,
+   customFluidProps,
 }: {
    /** you can add `onBeforeComile` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat` 
 	 * ```ts
 	 * fluidOnBeforeCompile: {
          vorticity: {
             onBeforeCompile: (shader) => console.log(shader),
+				uniforms:{
+					hoge: { value: 0.0 },
+				}
          },
       },
 	 * ```
 	*/
-   fluidOnBeforeCompile?: FluidOnBeforeCompile;
-} & HooksProps): HooksReturn<FluidParams, FluidObject, FluidCustomParams> => {
+   customFluidProps?: CustomFluidProps;
+} & HooksProps): HooksReturn<FluidParams, FluidObject, CustomFluidParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -101,7 +106,7 @@ export const useFluid = ({
       scene,
       size,
       dpr: _dpr.shader,
-      fluidOnBeforeCompile,
+      customFluidProps,
    });
    const camera = useCamera(size);
    const updatePointer = usePointer();
@@ -123,14 +128,13 @@ export const useFluid = ({
    const [divergenceFBO, updateDivergenceFBO] = useSingleFBO(fboProps);
    const [pressureFBO, updatePressureFBO] = useDoubleFBO(fboProps);
 
-   const lastTime = useRef(0);
    const scaledDiffVec = useRef(new THREE.Vector2(0, 0));
    const spaltVec = useRef(new THREE.Vector3(0, 0, 0));
 
    const [params, setParams] = useParams<FluidParams>(FLUID_PARAMS);
 
    // setUniform
-   const updateParams = useMemo(
+   const updateParamsList = useMemo(
       () => ({
          advection: setUniform(materials.advectionMaterial),
          splat: setUniform(materials.splatMaterial),
@@ -144,7 +148,7 @@ export const useFluid = ({
       [materials]
    );
    // customSetUniform
-   const updateCustomParams = useMemo<{
+   const updateCustomParamsList = useMemo<{
       [K in CustomizableKeys]: (customParams: CustomParams | undefined) => void;
    }>(
       () => ({
@@ -160,131 +164,122 @@ export const useFluid = ({
       [materials]
    );
 
+   const updateParams = useCallback(
+      (newParams?: FluidParams, customParams?: CustomFluidParams) => {
+         newParams && setParams(newParams);
+         if (customParams) {
+            Object.keys(customParams).forEach((key) => {
+               updateCustomParamsList[key as CustomizableKeys](
+                  customParams[key as CustomizableKeys]
+               );
+            });
+         }
+      },
+      [setParams, updateCustomParamsList]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
          newParams?: FluidParams,
-         customParams?: FluidCustomParams
+         customParams?: CustomFluidParams
       ) => {
-         const { gl, pointer, clock, size } = props;
+         const { gl, pointer, size } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
-         if (lastTime.current === 0) {
-            lastTime.current = clock.getElapsedTime();
-         }
-         const dt = Math.min(
-            (clock.getElapsedTime() - lastTime.current) / 3,
-            0.02
-         );
-         lastTime.current = clock.getElapsedTime();
-
-         // update velocity
          const velocityTex = updateVelocityFBO(gl, ({ read }) => {
             setMeshMaterial(materials.advectionMaterial);
-            updateParams.advection("uVelocity", read);
-            updateParams.advection("uSource", read);
-            updateParams.advection("dt", dt);
-            updateParams.advection("dissipation", params.velocity_dissipation!);
+            updateParamsList.advection("uVelocity", read);
+            updateParamsList.advection("uSource", read);
+            updateParamsList.advection(
+               "dissipation",
+               params.velocity_dissipation!
+            );
          });
 
-         // update density
          const densityTex = updateDensityFBO(gl, ({ read }) => {
             setMeshMaterial(materials.advectionMaterial);
-            updateParams.advection("uVelocity", velocityTex);
-            updateParams.advection("uSource", read);
-            updateParams.advection("dissipation", params.density_dissipation!);
+            updateParamsList.advection("uVelocity", velocityTex);
+            updateParamsList.advection("uSource", read);
+            updateParamsList.advection(
+               "dissipation",
+               params.density_dissipation!
+            );
          });
 
-         // update splatting
          const pointerValues = params.pointerValues! || updatePointer(pointer);
 
          if (pointerValues.isVelocityUpdate) {
             updateVelocityFBO(gl, ({ read }) => {
                setMeshMaterial(materials.splatMaterial);
-               updateParams.splat("uTarget", read);
-               updateParams.splat("point", pointerValues.currentPointer);
+               updateParamsList.splat("uTarget", read);
+               updateParamsList.splat("point", pointerValues.currentPointer);
                const scaledDiff = pointerValues.diffPointer.multiply(
                   scaledDiffVec.current
                      .set(size.width, size.height)
                      .multiplyScalar(params.velocity_acceleration!)
                );
-               updateParams.splat(
+               updateParamsList.splat(
                   "color",
                   spaltVec.current.set(scaledDiff.x, scaledDiff.y, 1.0)
                );
-               updateParams.splat("radius", params.splat_radius!);
+               updateParamsList.splat("radius", params.splat_radius!);
             });
             updateDensityFBO(gl, ({ read }) => {
                setMeshMaterial(materials.splatMaterial);
-               updateParams.splat("uTarget", read);
+               updateParamsList.splat("uTarget", read);
                const color: THREE.Vector3 | THREE.Color =
                   typeof params.fluid_color === "function"
                      ? params.fluid_color(pointerValues.velocity)
                      : params.fluid_color!;
-               updateParams.splat("color", color);
+               updateParamsList.splat("color", color);
             });
          }
 
-         // update curl
          const curlTex = updateCurlFBO(gl, () => {
             setMeshMaterial(materials.curlMaterial);
-            updateParams.curl("uVelocity", velocityTex);
+            updateParamsList.curl("uVelocity", velocityTex);
          });
 
-         // update vorticity
          updateVelocityFBO(gl, ({ read }) => {
             setMeshMaterial(materials.vorticityMaterial);
-            updateParams.vorticity("uVelocity", read);
-            updateParams.vorticity("uCurl", curlTex);
-            updateParams.vorticity("curl", params.curl_strength!);
-            updateParams.vorticity("dt", dt);
+            updateParamsList.vorticity("uVelocity", read);
+            updateParamsList.vorticity("uCurl", curlTex);
+            updateParamsList.vorticity("curl", params.curl_strength!);
          });
 
-         // update divergence
          const divergenceTex = updateDivergenceFBO(gl, () => {
             setMeshMaterial(materials.divergenceMaterial);
-            updateParams.divergence("uVelocity", velocityTex);
+            updateParamsList.divergence("uVelocity", velocityTex);
          });
 
-         // update pressure
          updatePressureFBO(gl, ({ read }) => {
             setMeshMaterial(materials.clearMaterial);
-            updateParams.clear("uTexture", read);
-            updateParams.clear("value", params.pressure_dissipation!);
+            updateParamsList.clear("uTexture", read);
+            updateParamsList.clear("value", params.pressure_dissipation!);
          });
 
-         // solve pressure iterative (Gauss-Seidel)
          setMeshMaterial(materials.pressureMaterial);
-         updateParams.pressure("uDivergence", divergenceTex);
+         updateParamsList.pressure("uDivergence", divergenceTex);
          let pressureTexTemp: THREE.Texture;
          for (let i = 0; i < params.pressure_iterations!; i++) {
             pressureTexTemp = updatePressureFBO(gl, ({ read }) => {
-               updateParams.pressure("uPressure", read);
+               updateParamsList.pressure("uPressure", read);
             });
          }
 
-         // update gradienSubtract
          updateVelocityFBO(gl, ({ read }) => {
             setMeshMaterial(materials.gradientSubtractMaterial);
-            updateParams.gradientSubtract("uPressure", pressureTexTemp);
-            updateParams.gradientSubtract("uVelocity", read);
+            updateParamsList.gradientSubtract("uPressure", pressureTexTemp);
+            updateParamsList.gradientSubtract("uVelocity", read);
          });
-
-         // update custom params
-         if (customParams) {
-            Object.keys(customParams).forEach((key) => {
-               updateCustomParams[key as CustomizableKeys](
-                  customParams[key as CustomizableKeys]
-               );
-            });
-         }
 
          return densityTex;
       },
       [
          materials,
-         updateParams,
+         updateParamsList,
          setMeshMaterial,
          updateCurlFBO,
          updateDensityFBO,
@@ -292,14 +287,13 @@ export const useFluid = ({
          updatePointer,
          updatePressureFBO,
          updateVelocityFBO,
-         updateCustomParams,
-         setParams,
          params,
+         updateParams,
       ]
    );
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

@@ -77,6 +77,14 @@ export const useSimpleBlur = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: SimpleBlurParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -85,7 +93,7 @@ export const useSimpleBlur = ({
       ) => {
          const { gl } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uResolution", [
@@ -102,16 +110,14 @@ export const useSimpleBlur = ({
             _tempTexture = updateTempTexture(gl);
          }
 
-         updateCustomValue(customParams);
-
          return _tempTexture;
       },
-      [updateTempTexture, updateValue, setParams, params, updateCustomValue]
+      [updateTempTexture, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

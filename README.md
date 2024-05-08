@@ -81,24 +81,20 @@ npm install @funtech-inc/use-shader-fx
 
 From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in array format. `HooksProps` are objects that are different for each hook and contain values such as `size`, `dpr` ... etc.
 
-1. `updateFx` - A function to be invoked inside `useFrame`, returning a `THREE.Texture`.
-2. `setParams` - A function to refresh the parameters, beneficial for performance tweaking, etc.
+1. `updateFx` - Functions to update parameters and render.
+2. `updateParams` - Function to update parameters only.
 3. `fxObject` - An object that holds various FX components, such as scene, camera, mesh, renderTarget, and `output`(final rendered texture).
 4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`uniforms`,`onBeforeCompile`but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
 
 ```js
-const [updateFx, setParams, fxObject] = useSomeFx(HooksProps);
+const [updateFx, updateParams, fxObject] = useSomeFx(HooksProps);
 ```
 
-invoke `updateFx` in `useFrame`. The first argument receives the RootState from `useFrame`, and the second one takes `HookPrams`. Each fx has its `HookPrams`, and each type is exported.
+Call `updateFx` on `useFrame`. The first argument is the RootState of `useFrame` and the second argument is `HookParams`. The third argument can be `CustomParams` customised by the user. Each FX has `HookParams` and each type is exported.
 
 ```js
 useFrame((props) => {
-   const texture = updateFx(props, HookPrams, customParams);
-   const main = mainShaderRef.current;
-   if (main) {
-      main.u_bufferTexture = texture;
-   }
+   const texture = updateFx(props, HookParams, CustomParams);
 });
 ```
 
@@ -119,37 +115,13 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useFluid } from "@funtech-inc/use-shader-fx";
 
 export const Home = () => {
-   const ref = useRef<THREE.ShaderMaterial>(null);
-   const { size, viewport } = useThree();
-   const [updateFluid, , { output }] = useFluid({ size, dpr: viewport.dpr });
+   const { size } = useThree();
+   const [updateFluid, , { output }] = useFluid({ size, dpr: 1 });
    useFrame((props) => updateFluid(props));
-
    return (
       <mesh>
-         <planeGeometry args={[2, 2]} />
-         <shaderMaterial
-            ref={ref}
-            vertexShader={`
-					varying vec2 vUv;
-						void main() {
-							vUv = uv;
-							gl_Position = vec4(position, 1.0);
-						}
-						`}
-            fragmentShader={`
-						precision highp float;
-						varying vec2 vUv;
-						uniform sampler2D u_fx;
-
-						void main() {
-							vec2 uv = vUv;
-							gl_FragColor = texture2D(u_fx, uv);
-						}
-					`}
-            uniforms={{
-               u_fx: { value: output },
-            }}
-         />
+         <boxGeometry args={[3, 3, 3]} />
+         <meshStandardMaterial map={output} roughness={0.05} metalness={0.4} />
       </mesh>
    );
 };

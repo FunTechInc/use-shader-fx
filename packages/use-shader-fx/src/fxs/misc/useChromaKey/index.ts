@@ -92,6 +92,14 @@ export const useChromaKey = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: ChromaKeyParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -99,7 +107,8 @@ export const useChromaKey = ({
          customParams?: CustomParams
       ) => {
          const { gl } = props;
-         newParams && setParams(newParams);
+
+         updateParams(newParams, customParams);
 
          updateValue("u_texture", params.texture!);
          updateValue("u_keyColor", params.keyColor!);
@@ -111,16 +120,14 @@ export const useChromaKey = ({
          updateValue("u_brightness", params.brightness!);
          updateValue("u_gamma", params.gamma!);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

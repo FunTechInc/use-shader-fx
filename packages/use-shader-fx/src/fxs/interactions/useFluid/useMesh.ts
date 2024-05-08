@@ -59,21 +59,19 @@ export type CustomizableKeys =
    | "clear"
    | "pressure"
    | "gradientSubtract";
-export type FluidOnBeforeCompile = {
+
+export type CustomFluidProps = {
    [K in CustomizableKeys]?: MaterialProps;
 };
-export type FluidCustomParams = {
+export type CustomFluidParams = {
    [K in CustomizableKeys]?: CustomParams;
 };
 
 const useCustomMaterial = <T extends THREE.Material>(
-   materialHook: ({ onBeforeCompile }: MaterialProps) => T,
-   onBeforeCompileObj?: MaterialProps
+   materialHook: (materialProps: MaterialProps) => T,
+   materialProps?: MaterialProps
 ) => {
-   const onBeforeCompile = onBeforeCompileObj?.onBeforeCompile;
-   return materialHook({
-      onBeforeCompile,
-   });
+   return materialHook(materialProps ?? {});
 };
 
 /**
@@ -83,12 +81,12 @@ export const useMesh = ({
    scene,
    size,
    dpr,
-   fluidOnBeforeCompile,
+   customFluidProps,
 }: {
    scene: THREE.Scene;
    size: Size;
    dpr: number | false;
-   fluidOnBeforeCompile?: FluidOnBeforeCompile;
+   customFluidProps?: CustomFluidProps;
 }) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
 
@@ -101,7 +99,7 @@ export const useMesh = ({
       clear,
       gradientSubtract,
       splat,
-   } = fluidOnBeforeCompile ?? {};
+   } = customFluidProps ?? {};
 
    const initialMaterial = useCustomMaterial(useInitialMaterial);
    const updateMaterial = initialMaterial.clone();

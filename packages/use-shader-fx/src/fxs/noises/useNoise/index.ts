@@ -84,6 +84,14 @@ export const useNoise = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: NoiseParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -92,7 +100,7 @@ export const useNoise = ({
       ) => {
          const { gl, clock } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("scale", params.scale!);
          updateValue("timeStrength", params.timeStrength!);
@@ -103,16 +111,14 @@ export const useNoise = ({
          updateValue("warpStrength", params.warpStrength!);
          updateValue("uTime", params.beat || clock.getElapsedTime());
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

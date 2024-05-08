@@ -4,7 +4,11 @@ import { useFrame, extend, useThree, useLoader } from "@react-three/fiber";
 import { FxMaterial, FxMaterialProps } from "../../utils/fxMaterial";
 import GUI from "lil-gui";
 import { useGUI } from "../../utils/useGUI";
-import { useFluid, useFxTexture } from "../../packages/use-shader-fx/src";
+import {
+   useFPSLimiter,
+   useFluid,
+   useFxTexture,
+} from "../../packages/use-shader-fx/src";
 import {
    FLUID_PARAMS,
    FluidParams,
@@ -38,7 +42,7 @@ export const UseFluid = (args: FluidParams) => {
    const [updateFluid] = useFluid({
       size,
       dpr,
-      fluidOnBeforeCompile: {
+      customFluidProps: {
          curl: {
             onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
                console.log(shader.fragmentShader);

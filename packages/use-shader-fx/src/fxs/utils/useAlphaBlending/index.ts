@@ -76,6 +76,14 @@ export const useAlphaBlending = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: AlphaBlendingParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -84,21 +92,19 @@ export const useAlphaBlending = ({
       ) => {
          const { gl } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uMap", params.map!);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateValue, updateRenderTarget, params, setParams, updateCustomValue]
+      [updateValue, updateRenderTarget, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

@@ -137,7 +137,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       [updateRenderTarget, updateUniform]
    );
 
-   const setParams = useCallback(
+   const updateParams = useCallback(
       (newParams?: Wobble3DParams, customParams?: CustomParams) => {
          updateUniform(null, newParams, customParams);
       },
@@ -146,7 +146,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene,
          mesh,

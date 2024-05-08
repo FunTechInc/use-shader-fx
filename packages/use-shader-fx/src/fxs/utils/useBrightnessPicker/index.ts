@@ -76,6 +76,14 @@ export const useBrightnessPicker = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: BrightnessPickerParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -83,22 +91,22 @@ export const useBrightnessPicker = ({
          customParams?: CustomParams
       ) => {
          const { gl } = props;
-         newParams && setParams(newParams);
+
+         updateParams(newParams, customParams);
+
          updateValue("u_texture", params.texture!);
          updateValue("u_brightness", params.brightness!);
          updateValue("u_min", params.min!);
          updateValue("u_max", params.max!);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

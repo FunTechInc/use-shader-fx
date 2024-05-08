@@ -17,12 +17,6 @@ nav
    top: 16px;
    left: 16px;
    color: white;
-   display: flex;
-   align-items: baseline;
-   gap: 12px;
-   p {
-      line-height: 1;
-   }
    select {
       border-radius: 100vh;
       background-color: rgba(255, 255, 255, 0.24);
@@ -35,6 +29,7 @@ nav
          text-align: left;
          padding: 0 16px;
          width: 120px;
+         font-size: 14px;
       }
    }
 }

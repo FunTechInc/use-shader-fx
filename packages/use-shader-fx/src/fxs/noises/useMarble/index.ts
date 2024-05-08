@@ -78,6 +78,14 @@ export const useMarble = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: MarbleParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -85,7 +93,8 @@ export const useMarble = ({
          customParams?: CustomParams
       ) => {
          const { gl, clock } = props;
-         newParams && setParams(newParams);
+
+         updateParams(newParams, customParams);
 
          updateValue("u_pattern", params.pattern!);
          updateValue("u_complexity", params.complexity!);
@@ -93,19 +102,16 @@ export const useMarble = ({
          updateValue("u_iterations", params.iterations!);
          updateValue("u_timeStrength", params.timeStrength!);
          updateValue("u_scale", params.scale!);
-
          updateValue("u_time", params.beat || clock.getElapsedTime());
-
-         updateCustomValue(customParams);
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,
