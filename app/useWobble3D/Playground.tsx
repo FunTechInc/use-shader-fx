@@ -103,12 +103,9 @@ export const Playground = () => {
       materialParameters: MATERIAL_CONFIG,
       isCustomTransmission: true,
    });
-
-   useEffect(() => {
-      wobble.mesh.customDepthMaterial = wobble.depthMaterial;
-      wobble.mesh.receiveShadow = true;
-      wobble.mesh.castShadow = true;
-   }, [wobble]);
+   wobble.mesh.customDepthMaterial = wobble.depthMaterial;
+   wobble.mesh.receiveShadow = true;
+   wobble.mesh.castShadow = true;
 
    const beat = useBeat(140, "easeInOutBack");
 

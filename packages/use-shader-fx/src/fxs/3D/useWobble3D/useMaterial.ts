@@ -118,13 +118,13 @@ const rewriteVertex = (vertex: string) => {
 export type WobbleMaterialConstructor = new (opts: {
    [key: string]: any;
 }) => THREE.Material;
-type MaterialParams<T extends WobbleMaterialConstructor> =
+type WobbleMaterialParams<T extends WobbleMaterialConstructor> =
    ConstructorParameters<T>[0];
 export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
    extends MaterialProps {
    /** default:THREE.MeshPhysicalMaterial */
    baseMaterial?: T;
-   materialParameters?: MaterialParams<T>;
+   materialParameters?: WobbleMaterialParams<T>;
    /**
     * An optional callback that is executed immediately before the depth shader program is compiled.
     * @param shader — Source code of the shader

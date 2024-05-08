@@ -1,12 +1,12 @@
 import * as i from "three";
-import { BufferAttribute as we } from "three";
-import { useMemo as b, useEffect as re, useRef as O, useCallback as A, useState as Ee } from "react";
-var Le = `varying vec2 vUv;
+import { BufferAttribute as Te } from "three";
+import { useMemo as M, useEffect as oe, useRef as E, useCallback as D, useState as Be } from "react";
+var Ee = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, $e = `precision highp float;
+}`, Le = `precision highp float;
 
 uniform sampler2D uBuffer;
 uniform sampler2D uTexture;
@@ -116,13 +116,13 @@ void main() {
 
 	gl_FragColor = finalColor;
 }`;
-const K = (e, t = !1) => {
+const Y = (e, t = !1) => {
   const n = t ? e.width * t : e.width, r = t ? e.height * t : e.height;
-  return b(
+  return M(
     () => new i.Vector2(n, r),
     [n, r]
   );
-}, P = (e) => (t, n) => {
+}, A = (e) => (t, n) => {
   if (n === void 0)
     return;
   const r = e.uniforms;
@@ -133,73 +133,73 @@ const K = (e, t = !1) => {
     r && r[n] && (r[n].value = t[n]);
   });
 }, L = (e, t, n, r) => {
-  const o = b(() => {
+  const o = M(() => {
     const v = new r(t, n);
     return e && e.add(v), v;
   }, [t, n, r, e]);
-  return re(() => () => {
+  return oe(() => () => {
     e && e.remove(o), t.dispose(), n.dispose();
   }, [e, t, n, o]), o;
-}, Ae = process.env.NODE_ENV === "development", z = {
+}, Re = process.env.NODE_ENV === "development", z = {
   transparent: !1,
   depthTest: !1,
   depthWrite: !1
-}, C = new i.DataTexture(
+}, w = new i.DataTexture(
   new Uint8Array([0, 0, 0, 0]),
   1,
   1,
   i.RGBAFormat
-), We = ({
+), $e = ({
   scene: e,
   size: t,
   dpr: n,
   uniforms: r,
   onBeforeCompile: o
 }) => {
-  const v = b(() => new i.PlaneGeometry(2, 2), []), s = b(() => {
+  const v = M(() => new i.PlaneGeometry(2, 2), []), s = M(() => {
     const f = new i.ShaderMaterial({
       uniforms: {
-        uBuffer: { value: C },
+        uBuffer: { value: w },
         uResolution: { value: new i.Vector2(0, 0) },
-        uTexture: { value: C },
+        uTexture: { value: w },
         uIsTexture: { value: !1 },
-        uMap: { value: C },
+        uMap: { value: w },
         uIsMap: { value: !1 },
-        uMapIntensity: { value: ee.mapIntensity },
-        uRadius: { value: ee.radius },
-        uSmudge: { value: ee.smudge },
-        uDissipation: { value: ee.dissipation },
-        uMotionBlur: { value: ee.motionBlur },
-        uMotionSample: { value: ee.motionSample },
+        uMapIntensity: { value: te.mapIntensity },
+        uRadius: { value: te.radius },
+        uSmudge: { value: te.smudge },
+        uDissipation: { value: te.dissipation },
+        uMotionBlur: { value: te.motionBlur },
+        uMotionSample: { value: te.motionSample },
         uMouse: { value: new i.Vector2(-10, -10) },
         uPrevMouse: { value: new i.Vector2(-10, -10) },
         uVelocity: { value: new i.Vector2(0, 0) },
-        uColor: { value: ee.color },
+        uColor: { value: te.color },
         uIsCursor: { value: !1 },
         uPressureStart: { value: 1 },
         uPressureEnd: { value: 1 },
         ...r
       },
-      vertexShader: Le,
-      fragmentShader: $e,
+      vertexShader: Ee,
+      fragmentShader: Le,
       ...z,
       // Must be transparent
       transparent: !0
     });
     return o && (f.onBeforeCompile = o), f;
-  }, [o, r]), u = K(t, n);
-  P(s)("uResolution", u.clone());
+  }, [o, r]), u = Y(t, n);
+  A(s)("uResolution", u.clone());
   const c = L(e, v, s, i.Mesh);
   return { material: s, mesh: c };
-}, qe = (e, t) => {
+}, We = (e, t) => {
   const n = t, r = e / t, [o, v] = [n * r / 2, n / 2];
   return { width: o, height: v, near: -1e3, far: 1e3 };
 }, $ = (e, t = "OrthographicCamera") => {
-  const n = K(e), { width: r, height: o, near: v, far: s } = qe(
+  const n = Y(e), { width: r, height: o, near: v, far: s } = We(
     n.x,
     n.y
   );
-  return b(() => t === "OrthographicCamera" ? new i.OrthographicCamera(
+  return M(() => t === "OrthographicCamera" ? new i.OrthographicCamera(
     -r,
     r,
     o,
@@ -208,8 +208,8 @@ const K = (e, t = !1) => {
     s
   ) : new i.PerspectiveCamera(50, r / o), [r, o, v, s, t]);
 }, Me = (e = 0) => {
-  const t = O(new i.Vector2(0, 0)), n = O(new i.Vector2(0, 0)), r = O(new i.Vector2(0, 0)), o = O(0), v = O(new i.Vector2(0, 0)), s = O(!1);
-  return A(
+  const t = E(new i.Vector2(0, 0)), n = E(new i.Vector2(0, 0)), r = E(new i.Vector2(0, 0)), o = E(0), v = E(new i.Vector2(0, 0)), s = E(!1);
+  return D(
     (c) => {
       const f = performance.now();
       let d;
@@ -217,23 +217,23 @@ const K = (e, t = !1) => {
         c,
         1 - e
       ), d = r.current.clone()) : (d = c.clone(), r.current = d), o.current === 0 && (o.current = f, t.current = d);
-      const h = Math.max(1, f - o.current);
-      o.current = f, v.current.copy(d).sub(t.current).divideScalar(h);
-      const g = v.current.length() > 0, a = s.current ? t.current.clone() : d;
-      return !s.current && g && (s.current = !0), t.current = d, {
+      const y = Math.max(1, f - o.current);
+      o.current = f, v.current.copy(d).sub(t.current).divideScalar(y);
+      const x = v.current.length() > 0, a = s.current ? t.current.clone() : d;
+      return !s.current && x && (s.current = !0), t.current = d, {
         currentPointer: d,
         prevPointer: a,
         diffPointer: n.current.subVectors(d, a),
         velocity: v.current,
-        isVelocityUpdate: g
+        isVelocityUpdate: x
       };
     },
     [e]
   );
 }, W = (e) => {
-  const n = O(
+  const n = E(
     ((o) => Object.values(o).some((v) => typeof v == "function"))(e) ? e : structuredClone(e)
-  ), r = A((o) => {
+  ), r = D((o) => {
     for (const v in o) {
       const s = v;
       s in n.current && o[s] !== void 0 && o[s] !== null ? n.current[s] = o[s] : console.error(
@@ -270,11 +270,11 @@ const K = (e, t = !1) => {
   depthBuffer: s = !1,
   depthTexture: u = !1
 }) => {
-  var h;
-  const c = O(), f = K(n, r);
-  c.current = b(
+  var y;
+  const c = E(), f = Y(n, r);
+  c.current = M(
     () => {
-      const g = new i.WebGLRenderTarget(
+      const x = new i.WebGLRenderTarget(
         f.x,
         f.y,
         {
@@ -283,35 +283,35 @@ const K = (e, t = !1) => {
           depthBuffer: s
         }
       );
-      return u && (g.depthTexture = new i.DepthTexture(
+      return u && (x.depthTexture = new i.DepthTexture(
         f.x,
         f.y,
         i.FloatType
-      )), g;
+      )), x;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
-  ), o && ((h = c.current) == null || h.setSize(f.x, f.y)), re(() => {
-    const g = c.current;
+  ), o && ((y = c.current) == null || y.setSize(f.x, f.y)), oe(() => {
+    const x = c.current;
     return () => {
-      g == null || g.dispose();
+      x == null || x.dispose();
     };
   }, []);
-  const d = A(
-    (g, a) => {
-      const p = c.current;
+  const d = D(
+    (x, a) => {
+      const g = c.current;
       return Se({
-        gl: g,
-        fbo: p,
+        gl: x,
+        fbo: g,
         scene: e,
         camera: t,
-        onBeforeRender: () => a && a({ read: p.texture })
-      }), p.texture;
+        onBeforeRender: () => a && a({ read: g.texture })
+      }), g.texture;
     },
     [e, t]
   );
   return [c.current, d];
-}, ae = ({
+}, ue = ({
   scene: e,
   camera: t,
   size: n,
@@ -321,16 +321,16 @@ const K = (e, t = !1) => {
   depthBuffer: s = !1,
   depthTexture: u = !1
 }) => {
-  var g, a;
-  const c = O({
+  var x, a;
+  const c = E({
     read: null,
     write: null,
     swap: function() {
-      let p = this.read;
-      this.read = this.write, this.write = p;
+      let g = this.read;
+      this.read = this.write, this.write = g;
     }
-  }), f = K(n, r), d = b(() => {
-    const p = new i.WebGLRenderTarget(f.x, f.y, {
+  }), f = Y(n, r), d = M(() => {
+    const g = new i.WebGLRenderTarget(f.x, f.y, {
       ...ge,
       samples: v,
       depthBuffer: s
@@ -339,7 +339,7 @@ const K = (e, t = !1) => {
       samples: v,
       depthBuffer: s
     });
-    return u && (p.depthTexture = new i.DepthTexture(
+    return u && (g.depthTexture = new i.DepthTexture(
       f.x,
       f.y,
       i.FloatType
@@ -347,21 +347,21 @@ const K = (e, t = !1) => {
       f.x,
       f.y,
       i.FloatType
-    )), { read: p, write: l };
+    )), { read: g, write: l };
   }, []);
-  c.current.read = d.read, c.current.write = d.write, o && ((g = c.current.read) == null || g.setSize(f.x, f.y), (a = c.current.write) == null || a.setSize(f.x, f.y)), re(() => {
-    const p = c.current;
+  c.current.read = d.read, c.current.write = d.write, o && ((x = c.current.read) == null || x.setSize(f.x, f.y), (a = c.current.write) == null || a.setSize(f.x, f.y)), oe(() => {
+    const g = c.current;
     return () => {
       var l, m;
-      (l = p.read) == null || l.dispose(), (m = p.write) == null || m.dispose();
+      (l = g.read) == null || l.dispose(), (m = g.write) == null || m.dispose();
     };
   }, []);
-  const h = A(
-    (p, l) => {
-      var x;
+  const y = D(
+    (g, l) => {
+      var p;
       const m = c.current;
       return Se({
-        gl: p,
+        gl: g,
         scene: e,
         camera: t,
         fbo: m.write,
@@ -370,18 +370,18 @@ const K = (e, t = !1) => {
           write: m.write.texture
         }),
         onSwap: () => m.swap()
-      }), (x = m.read) == null ? void 0 : x.texture;
+      }), (p = m.read) == null ? void 0 : p.texture;
     },
     [e, t]
   );
   return [
     { read: c.current.read, write: c.current.write },
-    h
+    y
   ];
-}, B = (e) => typeof e == "number" ? { shader: e, fbo: e } : {
+}, O = (e) => typeof e == "number" ? { shader: e, fbo: e } : {
   shader: e.shader ?? !1,
   fbo: e.fbo ?? !1
-}, ee = Object.freeze({
+}, te = Object.freeze({
   texture: !1,
   map: !1,
   mapIntensity: 0.1,
@@ -394,7 +394,7 @@ const K = (e, t = !1) => {
   isCursor: !1,
   pressure: 1,
   pointerValues: !1
-}), En = ({
+}), Bn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -402,53 +402,51 @@ const K = (e, t = !1) => {
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = We({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = $e({
     scene: u,
     size: e,
     dpr: s.shader,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), h = Me(), [g, a] = ae({
+  }), d = $(e), y = Me(), [x, a] = ue({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [p, l] = W(ee), m = O(null), x = P(c), S = V(c);
+  }), [g, l] = W(te), m = E(null), p = A(c), C = V(c), b = D(
+    (S, _) => {
+      S && l(S), C(_);
+    },
+    [l, C]
+  );
   return [
-    A(
-      (y, _, T) => {
-        const { gl: w, pointer: U } = y;
-        _ && l(_), p.texture ? (x("uIsTexture", !0), x("uTexture", p.texture)) : x("uIsTexture", !1), p.map ? (x("uIsMap", !0), x("uMap", p.map), x("uMapIntensity", p.mapIntensity)) : x("uIsMap", !1), x("uRadius", p.radius), x("uSmudge", p.smudge), x("uDissipation", p.dissipation), x("uMotionBlur", p.motionBlur), x("uMotionSample", p.motionSample);
-        const F = p.pointerValues || h(U);
-        F.isVelocityUpdate && (x("uMouse", F.currentPointer), x("uPrevMouse", F.prevPointer)), x("uVelocity", F.velocity);
-        const I = typeof p.color == "function" ? p.color(F.velocity) : p.color;
-        return x("uColor", I), x("uIsCursor", p.isCursor), x("uPressureEnd", p.pressure), m.current === null && (m.current = p.pressure), x("uPressureStart", m.current), m.current = p.pressure, S(T), a(w, ({ read: R }) => {
-          x("uBuffer", R);
+    D(
+      (S, _, T) => {
+        const { gl: I, pointer: R } = S;
+        b(_, T), g.texture ? (p("uIsTexture", !0), p("uTexture", g.texture)) : p("uIsTexture", !1), g.map ? (p("uIsMap", !0), p("uMap", g.map), p("uMapIntensity", g.mapIntensity)) : p("uIsMap", !1), p("uRadius", g.radius), p("uSmudge", g.smudge), p("uDissipation", g.dissipation), p("uMotionBlur", g.motionBlur), p("uMotionSample", g.motionSample);
+        const F = g.pointerValues || y(R);
+        F.isVelocityUpdate && (p("uMouse", F.currentPointer), p("uPrevMouse", F.prevPointer)), p("uVelocity", F.velocity);
+        const P = typeof g.color == "function" ? g.color(F.velocity) : g.color;
+        return p("uColor", P), p("uIsCursor", g.isCursor), p("uPressureEnd", g.pressure), m.current === null && (m.current = g.pressure), p("uPressureStart", m.current), m.current = g.pressure, a(I, ({ read: U }) => {
+          p("uBuffer", U);
         });
       },
-      [
-        x,
-        h,
-        a,
-        p,
-        l,
-        S
-      ]
+      [p, y, a, g, b]
     ),
-    l,
+    b,
     {
       scene: u,
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: g,
-      output: g.read.texture
+      renderTarget: x,
+      output: x.read.texture
     }
   ];
 };
-var Z = `varying vec2 vUv;
+var J = `varying vec2 vUv;
 varying vec2 vL;
 varying vec2 vR;
 varying vec2 vT;
@@ -467,19 +465,12 @@ void main () {
 void main(){
 	gl_FragColor = vec4(0.0);
 }`;
-const Ne = ({
-  onBeforeCompile: e,
-  uniforms: t
-}) => b(() => {
-  const r = new i.ShaderMaterial({
-    uniforms: t,
-    vertexShader: Z,
-    fragmentShader: je,
-    ...z
-  });
-  return e && (r.onBeforeCompile = e), r;
-}, [e, t]);
-var ke = `precision highp float;
+const qe = () => M(() => new i.ShaderMaterial({
+  vertexShader: J,
+  fragmentShader: je,
+  ...z
+}), []);
+var Ne = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uVelocity;
@@ -490,29 +481,28 @@ uniform float dissipation;
 
 void main () {
 	vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
-	gl_FragColor = dissipation * texture2D(uSource, coord);
-	gl_FragColor.a = 1.0;
+	gl_FragColor = vec4(dissipation * texture2D(uSource, coord).rgb,1.);
 }`;
-const Ge = ({
+const ke = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
-      uVelocity: { value: C },
-      uSource: { value: C },
+      uVelocity: { value: w },
+      uSource: { value: w },
       texelSize: { value: new i.Vector2() },
-      dt: { value: 0 },
+      dt: { value: Ae },
       dissipation: { value: 0 },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: ke,
+    vertexShader: J,
+    fragmentShader: Ne,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var Ke = `precision highp float;
+var Ge = `precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -521,13 +511,12 @@ varying vec2 vT;
 varying vec2 vB;
 uniform sampler2D uVelocity;
 
-vec2 sampleVelocity (in vec2 uv) {
+vec2 sampleVelocity(in vec2 uv) {
+	vec2 clampedUV = clamp(uv, 0.0, 1.0);
 	vec2 multiplier = vec2(1.0, 1.0);
-	if (uv.x < 0.0) { uv.x = 0.0; multiplier.x = -1.0; }
-	if (uv.x > 1.0) { uv.x = 1.0; multiplier.x = -1.0; }
-	if (uv.y < 0.0) { uv.y = 0.0; multiplier.y = -1.0; }
-	if (uv.y > 1.0) { uv.y = 1.0; multiplier.y = -1.0; }
-	return multiplier * texture2D(uVelocity, uv).xy;
+	multiplier.x = uv.x < 0.0 || uv.x > 1.0 ? -1.0 : 1.0;
+	multiplier.y = uv.y < 0.0 || uv.y > 1.0 ? -1.0 : 1.0;
+	return multiplier * texture2D(uVelocity, clampedUV).xy;
 }
 
 void main () {
@@ -538,23 +527,23 @@ void main () {
 	float div = 0.5 * (R - L + T - B);
 	gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
 }`;
-const Xe = ({
+const Ke = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
       uVelocity: { value: null },
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: Ke,
+    vertexShader: J,
+    fragmentShader: Ge,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var Ye = `precision highp float;
+var Xe = `precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -564,25 +553,20 @@ varying vec2 vB;
 uniform sampler2D uPressure;
 uniform sampler2D uDivergence;
 
-vec2 boundary (in vec2 uv) {
-	uv = min(max(uv, 0.0), 1.0);
-	return uv;
-}
-
 void main () {
-	float L = texture2D(uPressure, boundary(vL)).x;
-	float R = texture2D(uPressure, boundary(vR)).x;
-	float T = texture2D(uPressure, boundary(vT)).x;
-	float B = texture2D(uPressure, boundary(vB)).x;
+	float L = texture2D(uPressure, clamp(vL,0.,1.)).x;
+	float R = texture2D(uPressure, clamp(vR,0.,1.)).x;
+	float T = texture2D(uPressure, clamp(vT,0.,1.)).x;
+	float B = texture2D(uPressure, clamp(vB,0.,1.)).x;
 	float C = texture2D(uPressure, vUv).x;
 	float divergence = texture2D(uDivergence, vUv).x;
 	float pressure = (L + R + B + T - divergence) * 0.25;
 	gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
 }`;
-const He = ({
+const Ye = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
       uPressure: { value: null },
@@ -590,13 +574,13 @@ const He = ({
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: Ye,
+    vertexShader: J,
+    fragmentShader: Xe,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var Qe = `precision highp float;
+var He = `precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -613,23 +597,23 @@ void main () {
 	float vorticity = R - L - T + B;
 	gl_FragColor = vec4(vorticity, 0.0, 0.0, 1.0);
 }`;
-const Ze = ({
+const Qe = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
       uVelocity: { value: null },
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: Qe,
+    vertexShader: J,
+    fragmentShader: He,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var Je = `precision highp float;
+var Ze = `precision highp float;
 
 varying vec2 vUv;
 varying vec2 vT;
@@ -648,26 +632,26 @@ void main () {
 	vec2 vel = texture2D(uVelocity, vUv).xy;
 	gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
 }`;
-const et = ({
+const Je = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
       uVelocity: { value: null },
       uCurl: { value: null },
       curl: { value: 0 },
-      dt: { value: 0 },
+      dt: { value: Ae },
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: Je,
+    vertexShader: J,
+    fragmentShader: Ze,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var tt = `precision highp float;
+var et = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -676,24 +660,24 @@ uniform float value;
 void main () {
 	gl_FragColor = value * texture2D(uTexture, vUv);
 }`;
-const nt = ({
+const tt = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
-      uTexture: { value: C },
+      uTexture: { value: w },
       value: { value: 0 },
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: tt,
+    vertexShader: J,
+    fragmentShader: et,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var rt = `precision highp float;
+var nt = `precision highp float;
 
 varying vec2 vUv;
 varying vec2 vL;
@@ -703,38 +687,33 @@ varying vec2 vB;
 uniform sampler2D uPressure;
 uniform sampler2D uVelocity;
 
-vec2 boundary (in vec2 uv) {
-	uv = min(max(uv, 0.0), 1.0);
-	return uv;
-}
-
 void main () {
-	float L = texture2D(uPressure, boundary(vL)).x;
-	float R = texture2D(uPressure, boundary(vR)).x;
-	float T = texture2D(uPressure, boundary(vT)).x;
-	float B = texture2D(uPressure, boundary(vB)).x;
+	float L = texture2D(uPressure, clamp(vL,0.,1.)).x;
+	float R = texture2D(uPressure, clamp(vR,0.,1.)).x;
+	float T = texture2D(uPressure, clamp(vT,0.,1.)).x;
+	float B = texture2D(uPressure, clamp(vB,0.,1.)).x;
 	vec2 velocity = texture2D(uVelocity, vUv).xy;
 	velocity.xy -= vec2(R - L, T - B);
 	gl_FragColor = vec4(velocity, 0.0, 1.0);
 }`;
-const ot = ({
+const rt = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
-      uPressure: { value: C },
-      uVelocity: { value: C },
+      uPressure: { value: w },
+      uVelocity: { value: w },
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: rt,
+    vertexShader: J,
+    fragmentShader: nt,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
 }, [e, t]);
-var at = `precision highp float;
+var ot = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTarget;
@@ -751,13 +730,13 @@ void main () {
 	vec3 base = texture2D(uTarget, vUv).xyz;
 	gl_FragColor = vec4(base + splat, 1.0);
 }`;
-const it = ({
+const at = ({
   onBeforeCompile: e,
   uniforms: t
-}) => b(() => {
+}) => M(() => {
   const r = new i.ShaderMaterial({
     uniforms: {
-      uTarget: { value: C },
+      uTarget: { value: w },
       aspectRatio: { value: 0 },
       color: { value: new i.Vector3() },
       point: { value: new i.Vector2() },
@@ -765,85 +744,80 @@ const it = ({
       texelSize: { value: new i.Vector2() },
       ...t
     },
-    vertexShader: Z,
-    fragmentShader: at,
+    vertexShader: J,
+    fragmentShader: ot,
     ...z
   });
   return e && (r.onBeforeCompile = e), r;
-}, [e, t]), Y = (e, t) => {
-  const n = t == null ? void 0 : t.onBeforeCompile;
-  return e({
-    onBeforeCompile: n
-  });
-}, ut = ({
+}, [e, t]), H = (e, t) => e(t ?? {}), it = ({
   scene: e,
   size: t,
   dpr: n,
-  fluidOnBeforeCompile: r
+  customFluidProps: r
 }) => {
-  const o = b(() => new i.PlaneGeometry(2, 2), []), {
+  const o = M(() => new i.PlaneGeometry(2, 2), []), {
     curl: v,
     vorticity: s,
     advection: u,
     divergence: c,
     pressure: f,
     clear: d,
-    gradientSubtract: h,
-    splat: g
-  } = r ?? {}, a = Y(Ne), p = a.clone(), l = Y(Ze, v), m = Y(et, s), x = Y(Ge, u), S = Y(
-    Xe,
+    gradientSubtract: y,
+    splat: x
+  } = r ?? {}, a = H(qe), g = a.clone(), l = H(Qe, v), m = H(Je, s), p = H(ke, u), C = H(
+    Ke,
     c
-  ), M = Y(He, f), y = Y(nt, d), _ = Y(
-    ot,
-    h
-  ), T = Y(it, g), w = b(
+  ), b = H(Ye, f), h = H(tt, d), S = H(
+    rt,
+    y
+  ), _ = H(at, x), T = M(
     () => ({
       vorticityMaterial: m,
       curlMaterial: l,
-      advectionMaterial: x,
-      divergenceMaterial: S,
-      pressureMaterial: M,
-      clearMaterial: y,
-      gradientSubtractMaterial: _,
-      splatMaterial: T
+      advectionMaterial: p,
+      divergenceMaterial: C,
+      pressureMaterial: b,
+      clearMaterial: h,
+      gradientSubtractMaterial: S,
+      splatMaterial: _
     }),
     [
       m,
       l,
-      x,
+      p,
+      C,
+      b,
+      h,
       S,
-      M,
-      y,
-      _,
-      T
+      _
     ]
-  ), U = K(t, n);
-  b(() => {
-    P(w.splatMaterial)(
+  ), I = Y(t, n);
+  M(() => {
+    A(T.splatMaterial)(
       "aspectRatio",
-      U.x / U.y
+      I.x / I.y
     );
-    for (const R of Object.values(w))
-      P(R)(
+    for (const P of Object.values(T))
+      A(P)(
         "texelSize",
-        new i.Vector2(1 / U.x, 1 / U.y)
+        new i.Vector2(1 / I.x, 1 / I.y)
       );
-  }, [U, w]);
-  const F = L(e, o, a, i.Mesh);
-  b(() => {
-    a.dispose(), F.material = p;
-  }, [a, F, p]), re(() => () => {
-    for (const R of Object.values(w))
-      R.dispose();
-  }, [w]);
-  const I = A(
-    (R) => {
-      F.material = R, F.material.needsUpdate = !0;
+  }, [I, T]);
+  const R = L(e, o, a, i.Mesh);
+  M(() => {
+    a.dispose(), R.material = g;
+  }, [a, R, g]), oe(() => () => {
+    for (const P of Object.values(T))
+      P.dispose();
+  }, [T]);
+  const F = D(
+    (P) => {
+      R.material = P, R.material.needsUpdate = !0;
     },
-    [F]
+    [R]
   );
-  return { materials: w, setMeshMaterial: I, mesh: F };
-}, st = Object.freeze({
+  return { materials: T, setMeshMaterial: F, mesh: R };
+}, Ae = 0.016, ut = Object.freeze({
   density_dissipation: 0.98,
   velocity_dissipation: 0.99,
   velocity_acceleration: 10,
@@ -853,19 +827,19 @@ const it = ({
   splat_radius: 2e-3,
   fluid_color: new i.Vector3(1, 1, 1),
   pointerValues: !1
-}), Ln = ({
+}), En = ({
   size: e,
   dpr: t,
   samples: n,
   isSizeUpdate: r,
-  fluidOnBeforeCompile: o
+  customFluidProps: o
 }) => {
-  const v = B(t), s = b(() => new i.Scene(), []), { materials: u, setMeshMaterial: c, mesh: f } = ut({
+  const v = O(t), s = M(() => new i.Scene(), []), { materials: u, setMeshMaterial: c, mesh: f } = it({
     scene: s,
     size: e,
     dpr: v.shader,
-    fluidOnBeforeCompile: o
-  }), d = $(e), h = Me(), g = b(
+    customFluidProps: o
+  }), d = $(e), y = Me(), x = M(
     () => ({
       scene: s,
       camera: d,
@@ -875,19 +849,19 @@ const it = ({
       isSizeUpdate: r
     }),
     [s, d, e, n, v.fbo, r]
-  ), [a, p] = ae(g), [l, m] = ae(g), [x, S] = j(g), [M, y] = j(g), [_, T] = ae(g), w = O(0), U = O(new i.Vector2(0, 0)), F = O(new i.Vector3(0, 0, 0)), [I, R] = W(st), D = b(
+  ), [a, g] = ue(x), [l, m] = ue(x), [p, C] = j(x), [b, h] = j(x), [S, _] = ue(x), T = E(new i.Vector2(0, 0)), I = E(new i.Vector3(0, 0, 0)), [R, F] = W(ut), P = M(
     () => ({
-      advection: P(u.advectionMaterial),
-      splat: P(u.splatMaterial),
-      curl: P(u.curlMaterial),
-      vorticity: P(u.vorticityMaterial),
-      divergence: P(u.divergenceMaterial),
-      clear: P(u.clearMaterial),
-      pressure: P(u.pressureMaterial),
-      gradientSubtract: P(u.gradientSubtractMaterial)
+      advection: A(u.advectionMaterial),
+      splat: A(u.splatMaterial),
+      curl: A(u.curlMaterial),
+      vorticity: A(u.vorticityMaterial),
+      divergence: A(u.divergenceMaterial),
+      clear: A(u.clearMaterial),
+      pressure: A(u.pressureMaterial),
+      gradientSubtract: A(u.gradientSubtractMaterial)
     }),
     [u]
-  ), k = b(
+  ), U = M(
     () => ({
       advection: V(u.advectionMaterial),
       splat: V(u.splatMaterial),
@@ -899,77 +873,82 @@ const it = ({
       gradientSubtract: V(u.gradientSubtractMaterial)
     }),
     [u]
+  ), N = D(
+    (X, G) => {
+      X && F(X), G && Object.keys(G).forEach((ae) => {
+        U[ae](
+          G[ae]
+        );
+      });
+    },
+    [F, U]
   );
   return [
-    A(
-      (X, ce, ie) => {
-        const { gl: G, pointer: ze, clock: he, size: _e } = X;
-        ce && R(ce), w.current === 0 && (w.current = he.getElapsedTime());
-        const Ce = Math.min(
-          (he.getElapsedTime() - w.current) / 3,
-          0.02
-        );
-        w.current = he.getElapsedTime();
-        const xe = p(G, ({ read: q }) => {
-          c(u.advectionMaterial), D.advection("uVelocity", q), D.advection("uSource", q), D.advection("dt", Ce), D.advection("dissipation", I.velocity_dissipation);
-        }), Ue = m(G, ({ read: q }) => {
-          c(u.advectionMaterial), D.advection("uVelocity", xe), D.advection("uSource", q), D.advection("dissipation", I.density_dissipation);
-        }), me = I.pointerValues || h(ze);
-        me.isVelocityUpdate && (p(G, ({ read: q }) => {
-          c(u.splatMaterial), D.splat("uTarget", q), D.splat("point", me.currentPointer);
-          const ue = me.diffPointer.multiply(
-            U.current.set(_e.width, _e.height).multiplyScalar(I.velocity_acceleration)
+    D(
+      (X, G, ae) => {
+        const { gl: K, pointer: he, size: _e } = X;
+        N(G, ae);
+        const xe = g(K, ({ read: k }) => {
+          c(u.advectionMaterial), P.advection("uVelocity", k), P.advection("uSource", k), P.advection(
+            "dissipation",
+            R.velocity_dissipation
           );
-          D.splat(
+        }), ze = m(K, ({ read: k }) => {
+          c(u.advectionMaterial), P.advection("uVelocity", xe), P.advection("uSource", k), P.advection(
+            "dissipation",
+            R.density_dissipation
+          );
+        }), me = R.pointerValues || y(he);
+        me.isVelocityUpdate && (g(K, ({ read: k }) => {
+          c(u.splatMaterial), P.splat("uTarget", k), P.splat("point", me.currentPointer);
+          const se = me.diffPointer.multiply(
+            T.current.set(_e.width, _e.height).multiplyScalar(R.velocity_acceleration)
+          );
+          P.splat(
             "color",
-            F.current.set(ue.x, ue.y, 1)
-          ), D.splat("radius", I.splat_radius);
-        }), m(G, ({ read: q }) => {
-          c(u.splatMaterial), D.splat("uTarget", q);
-          const ue = typeof I.fluid_color == "function" ? I.fluid_color(me.velocity) : I.fluid_color;
-          D.splat("color", ue);
+            I.current.set(se.x, se.y, 1)
+          ), P.splat("radius", R.splat_radius);
+        }), m(K, ({ read: k }) => {
+          c(u.splatMaterial), P.splat("uTarget", k);
+          const se = typeof R.fluid_color == "function" ? R.fluid_color(me.velocity) : R.fluid_color;
+          P.splat("color", se);
         }));
-        const Oe = S(G, () => {
-          c(u.curlMaterial), D.curl("uVelocity", xe);
+        const Ue = C(K, () => {
+          c(u.curlMaterial), P.curl("uVelocity", xe);
         });
-        p(G, ({ read: q }) => {
-          c(u.vorticityMaterial), D.vorticity("uVelocity", q), D.vorticity("uCurl", Oe), D.vorticity("curl", I.curl_strength), D.vorticity("dt", Ce);
+        g(K, ({ read: k }) => {
+          c(u.vorticityMaterial), P.vorticity("uVelocity", k), P.vorticity("uCurl", Ue), P.vorticity("curl", R.curl_strength);
         });
-        const Be = y(G, () => {
-          c(u.divergenceMaterial), D.divergence("uVelocity", xe);
+        const Oe = h(K, () => {
+          c(u.divergenceMaterial), P.divergence("uVelocity", xe);
         });
-        T(G, ({ read: q }) => {
-          c(u.clearMaterial), D.clear("uTexture", q), D.clear("value", I.pressure_dissipation);
-        }), c(u.pressureMaterial), D.pressure("uDivergence", Be);
-        let Te;
-        for (let q = 0; q < I.pressure_iterations; q++)
-          Te = T(G, ({ read: ue }) => {
-            D.pressure("uPressure", ue);
+        _(K, ({ read: k }) => {
+          c(u.clearMaterial), P.clear("uTexture", k), P.clear("value", R.pressure_dissipation);
+        }), c(u.pressureMaterial), P.pressure("uDivergence", Oe);
+        let Ce;
+        for (let k = 0; k < R.pressure_iterations; k++)
+          Ce = _(K, ({ read: se }) => {
+            P.pressure("uPressure", se);
           });
-        return p(G, ({ read: q }) => {
-          c(u.gradientSubtractMaterial), D.gradientSubtract("uPressure", Te), D.gradientSubtract("uVelocity", q);
-        }), ie && Object.keys(ie).forEach((q) => {
-          k[q](
-            ie[q]
-          );
-        }), Ue;
+        return g(K, ({ read: k }) => {
+          c(u.gradientSubtractMaterial), P.gradientSubtract("uPressure", Ce), P.gradientSubtract("uVelocity", k);
+        }), ze;
       },
       [
         u,
-        D,
+        P,
         c,
-        S,
+        C,
         m,
-        y,
         h,
-        T,
-        p,
-        k,
+        y,
+        _,
+        g,
         R,
-        I
+        N
       ]
     ),
-    R,
+    N,
     {
       scene: s,
       mesh: f,
@@ -978,20 +957,20 @@ const it = ({
       renderTarget: {
         velocity: a,
         density: l,
-        curl: x,
-        divergence: M,
-        pressure: _
+        curl: p,
+        divergence: b,
+        pressure: S
       },
       output: l.read.texture
     }
   ];
 };
-var lt = `varying vec2 vUv;
+var st = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}`, ct = `precision highp float;
+}`, lt = `precision highp float;
 
 uniform sampler2D uMap;
 uniform float uOpacity;
@@ -1003,7 +982,7 @@ void main() {
 	vec3 color = texture2D(uMap, uv).rgb;
 	gl_FragColor = vec4(color,uOpacity);
 }`;
-const vt = ({
+const ct = ({
   scale: e,
   max: t,
   texture: n,
@@ -1011,44 +990,44 @@ const vt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = b(
+  const s = M(
     () => new i.PlaneGeometry(e, e),
     [e]
-  ), u = b(() => new i.ShaderMaterial({
+  ), u = M(() => new i.ShaderMaterial({
     uniforms: {
       uOpacity: { value: 0 },
-      uMap: { value: n || C },
+      uMap: { value: n || w },
       ...o
     },
     blending: i.AdditiveBlending,
-    vertexShader: lt,
-    fragmentShader: ct,
+    vertexShader: st,
+    fragmentShader: lt,
     ...z,
     // Must be transparent.
     transparent: !0
-  }), [n, o]), c = b(() => {
+  }), [n, o]), c = M(() => {
     const f = [];
     for (let d = 0; d < t; d++) {
-      const h = u.clone();
-      v && (h.onBeforeCompile = v);
-      const g = new i.Mesh(s.clone(), h);
-      g.rotateZ(2 * Math.PI * Math.random()), g.visible = !1, r.add(g), f.push(g);
+      const y = u.clone();
+      v && (y.onBeforeCompile = v);
+      const x = new i.Mesh(s.clone(), y);
+      x.rotateZ(2 * Math.PI * Math.random()), x.visible = !1, r.add(x), f.push(x);
     }
     return f;
   }, [v, s, u, r, t]);
-  return re(() => () => {
+  return oe(() => () => {
     c.forEach((f) => {
       f.geometry.dispose(), Array.isArray(f.material) ? f.material.forEach((d) => d.dispose()) : f.material.dispose(), r.remove(f);
     });
   }, [r, c]), c;
-}, mt = Object.freeze({
+}, vt = Object.freeze({
   frequency: 0.01,
   rotation: 0.05,
   fadeout_speed: 0.9,
   scale: 0.3,
   alpha: 0.6,
   pointerValues: !1
-}), $n = ({
+}), Ln = ({
   texture: e,
   scale: t = 64,
   max: n = 100,
@@ -1059,65 +1038,68 @@ const vt = ({
   uniforms: u,
   onBeforeCompile: c
 }) => {
-  const f = B(o), d = b(() => new i.Scene(), []), h = vt({
+  const f = O(o), d = M(() => new i.Scene(), []), y = ct({
     scale: t,
     max: n,
     texture: e,
     scene: d,
     uniforms: u,
     onBeforeCompile: c
-  }), g = $(r), a = Me(), [p, l] = j({
+  }), x = $(r), a = Me(), [g, l] = j({
     scene: d,
-    camera: g,
+    camera: x,
     size: r,
     dpr: f.fbo,
     samples: v,
     isSizeUpdate: s
-  }), [m, x] = W(mt), S = O(0);
+  }), [m, p] = W(vt), C = E(0), b = M(() => (S, _) => {
+    S && p(S), y.forEach((T) => {
+      if (T.visible) {
+        const I = T.material;
+        T.rotation.z += m.rotation, T.scale.x = m.fadeout_speed * T.scale.x + m.scale, T.scale.y = T.scale.x;
+        const R = I.uniforms.uOpacity.value;
+        A(I)(
+          "uOpacity",
+          R * m.fadeout_speed
+        ), R < 1e-3 && (T.visible = !1);
+      }
+      V(T.material)(_);
+    });
+  }, [y, m, p]);
   return [
-    A(
-      (y, _, T) => {
-        const { gl: w, pointer: U, size: F } = y;
-        _ && x(_);
-        const I = m.pointerValues || a(U);
-        if (m.frequency < I.diffPointer.length()) {
-          const R = h[S.current], D = R.material;
-          R.visible = !0, R.position.set(
-            I.currentPointer.x * (F.width / 2),
-            I.currentPointer.y * (F.height / 2),
+    D(
+      (S, _, T) => {
+        const { gl: I, pointer: R, size: F } = S;
+        b(_, T);
+        const P = m.pointerValues || a(R);
+        if (m.frequency < P.diffPointer.length()) {
+          const U = y[C.current], N = U.material;
+          U.visible = !0, U.position.set(
+            P.currentPointer.x * (F.width / 2),
+            P.currentPointer.y * (F.height / 2),
             0
-          ), R.scale.x = R.scale.y = 0, P(D)("uOpacity", m.alpha), S.current = (S.current + 1) % n;
+          ), U.scale.x = U.scale.y = 0, A(N)("uOpacity", m.alpha), C.current = (C.current + 1) % n;
         }
-        return h.forEach((R) => {
-          if (R.visible) {
-            const D = R.material;
-            R.rotation.z += m.rotation, R.scale.x = m.fadeout_speed * R.scale.x + m.scale, R.scale.y = R.scale.x;
-            const k = D.uniforms.uOpacity.value;
-            P(D)(
-              "uOpacity",
-              k * m.fadeout_speed
-            ), k < 1e-3 && (R.visible = !1), V(D)(T);
-          }
-        }), l(w);
+        return l(I);
       },
-      [l, h, a, n, m, x]
+      [l, y, a, n, m, b]
     ),
-    x,
+    b,
     {
       scene: d,
-      camera: g,
-      meshArr: h,
-      renderTarget: p,
-      output: p.texture
+      camera: x,
+      meshArr: y,
+      renderTarget: g,
+      output: g.texture
     }
   ];
 };
-var pt = `varying vec2 vUv;
+var mt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, dt = `precision highp float;
+}`, pt = `precision highp float;
 precision highp int;
 
 varying vec2 vUv;
@@ -1191,32 +1173,32 @@ void main() {
 	float noise = warp(gl_FragCoord.xy * scale ,warpStrength,uTime * timeStrength);
 	gl_FragColor = vec4(vec3(noise),1.0);
 }`;
-const ft = ({
+const dt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        scale: { value: te.scale },
-        timeStrength: { value: te.timeStrength },
-        noiseOctaves: { value: te.noiseOctaves },
-        fbmOctaves: { value: te.fbmOctaves },
-        warpOctaves: { value: te.warpOctaves },
-        warpDirection: { value: te.warpDirection },
-        warpStrength: { value: te.warpStrength },
+        scale: { value: ne.scale },
+        timeStrength: { value: ne.timeStrength },
+        noiseOctaves: { value: ne.noiseOctaves },
+        fbmOctaves: { value: ne.fbmOctaves },
+        warpOctaves: { value: ne.warpOctaves },
+        warpDirection: { value: ne.warpDirection },
+        warpStrength: { value: ne.warpStrength },
         ...t
       },
-      vertexShader: pt,
-      fragmentShader: dt,
+      vertexShader: mt,
+      fragmentShader: pt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
-}, te = Object.freeze({
+}, ne = Object.freeze({
   scale: 4e-3,
   timeStrength: 0.3,
   noiseOctaves: 2,
@@ -1225,7 +1207,7 @@ const ft = ({
   warpDirection: new i.Vector2(2, 2),
   warpStrength: 8,
   beat: !1
-}), Wn = ({
+}), $n = ({
   size: e,
   dpr: t,
   samples: n,
@@ -1233,21 +1215,26 @@ const ft = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = ft({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = dt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(te), l = P(c), m = V(c);
+  }), [a, g] = W(ne), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _, clock: T } = S;
-        return M && p(M), l("scale", a.scale), l("timeStrength", a.timeStrength), l("noiseOctaves", a.noiseOctaves), l("fbmOctaves", a.fbmOctaves), l("warpOctaves", a.warpOctaves), l("warpDirection", a.warpDirection), l("warpStrength", a.warpStrength), l("uTime", a.beat || T.getElapsedTime()), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _, clock: T } = b;
+        return p(h, S), l("scale", a.scale), l("timeStrength", a.timeStrength), l("noiseOctaves", a.noiseOctaves), l("fbmOctaves", a.fbmOctaves), l("warpOctaves", a.warpOctaves), l("warpDirection", a.warpDirection), l("warpStrength", a.warpStrength), l("uTime", a.beat || T.getElapsedTime()), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1255,17 +1242,17 @@ const ft = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var gt = `varying vec2 vUv;
+var ft = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, ht = `precision highp float;
+}`, gt = `precision highp float;
 varying vec2 vUv;
 
 uniform sampler2D uTexture;
@@ -1308,37 +1295,37 @@ void main() {
 	
 	gl_FragColor = vec4(col, alpha);
 }`;
-const xt = ({
+const ht = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
+        uTexture: { value: w },
         isTexture: { value: !1 },
-        scale: { value: H.scale },
-        noise: { value: C },
-        noiseStrength: { value: H.noiseStrength },
+        scale: { value: Q.scale },
+        noise: { value: w },
+        noiseStrength: { value: Q.noiseStrength },
         isNoise: { value: !1 },
-        laminateLayer: { value: H.laminateLayer },
-        laminateInterval: { value: H.laminateInterval },
-        laminateDetail: { value: H.laminateDetail },
-        distortion: { value: H.distortion },
-        colorFactor: { value: H.colorFactor },
+        laminateLayer: { value: Q.laminateLayer },
+        laminateInterval: { value: Q.laminateInterval },
+        laminateDetail: { value: Q.laminateDetail },
+        distortion: { value: Q.distortion },
+        colorFactor: { value: Q.colorFactor },
         uTime: { value: 0 },
-        timeStrength: { value: H.timeStrength },
+        timeStrength: { value: Q.timeStrength },
         ...t
       },
-      vertexShader: gt,
-      fragmentShader: ht,
+      vertexShader: ft,
+      fragmentShader: gt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
-}, H = Object.freeze({
+}, Q = Object.freeze({
   texture: !1,
   scale: 1,
   laminateLayer: 1,
@@ -1350,7 +1337,7 @@ const xt = ({
   noise: !1,
   noiseStrength: new i.Vector2(0, 0),
   beat: !1
-}), qn = ({
+}), Wn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -1358,21 +1345,26 @@ const xt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = xt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = ht({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(H), l = P(c), m = V(c);
+  }), [a, g] = W(Q), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _, clock: T } = S;
-        return M && p(M), a.texture ? (l("uTexture", a.texture), l("isTexture", !0)) : (l("isTexture", !1), l("scale", a.scale)), a.noise ? (l("noise", a.noise), l("isNoise", !0), l("noiseStrength", a.noiseStrength)) : l("isNoise", !1), l("uTime", a.beat || T.getElapsedTime()), l("laminateLayer", a.laminateLayer), l("laminateInterval", a.laminateInterval), l("laminateDetail", a.laminateDetail), l("distortion", a.distortion), l("colorFactor", a.colorFactor), l("timeStrength", a.timeStrength), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _, clock: T } = b;
+        return p(h, S), a.texture ? (l("uTexture", a.texture), l("isTexture", !0)) : (l("isTexture", !1), l("scale", a.scale)), a.noise ? (l("noise", a.noise), l("isNoise", !0), l("noiseStrength", a.noiseStrength)) : l("isNoise", !1), l("uTime", a.beat || T.getElapsedTime()), l("laminateLayer", a.laminateLayer), l("laminateInterval", a.laminateInterval), l("laminateDetail", a.laminateDetail), l("distortion", a.distortion), l("colorFactor", a.colorFactor), l("timeStrength", a.timeStrength), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1380,17 +1372,17 @@ const xt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var yt = `varying vec2 vUv;
+var xt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, bt = `precision highp float;
+}`, yt = `precision highp float;
 
 varying vec2 vUv;
 uniform float u_time;
@@ -1416,33 +1408,33 @@ void main() {
 	vec3 color = clamp(marble(vec3(gl_FragCoord.xy*u_scale,time)),0.,1.);
 	gl_FragColor = vec4(color,1.);
 }`;
-const Mt = ({
+const bt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
         u_time: { value: 0 },
-        u_pattern: { value: oe.pattern },
-        u_complexity: { value: oe.complexity },
+        u_pattern: { value: ie.pattern },
+        u_complexity: { value: ie.complexity },
         u_complexityAttenuation: {
-          value: oe.complexityAttenuation
+          value: ie.complexityAttenuation
         },
-        u_iterations: { value: oe.iterations },
-        u_timeStrength: { value: oe.timeStrength },
-        u_scale: { value: oe.scale },
+        u_iterations: { value: ie.iterations },
+        u_timeStrength: { value: ie.timeStrength },
+        u_scale: { value: ie.scale },
         ...t
       },
-      vertexShader: yt,
-      fragmentShader: bt,
+      vertexShader: xt,
+      fragmentShader: yt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
-}, oe = Object.freeze({
+}, ie = Object.freeze({
   pattern: 0,
   complexity: 2,
   complexityAttenuation: 0.2,
@@ -1458,21 +1450,26 @@ const Mt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Mt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = bt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(oe), l = P(c), m = V(c);
+  }), [a, g] = W(ie), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _, clock: T } = S;
-        return M && p(M), l("u_pattern", a.pattern), l("u_complexity", a.complexity), l("u_complexityAttenuation", a.complexityAttenuation), l("u_iterations", a.iterations), l("u_timeStrength", a.timeStrength), l("u_scale", a.scale), l("u_time", a.beat || T.getElapsedTime()), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _, clock: T } = b;
+        return p(h, S), l("u_pattern", a.pattern), l("u_complexity", a.complexity), l("u_complexityAttenuation", a.complexityAttenuation), l("u_iterations", a.iterations), l("u_timeStrength", a.timeStrength), l("u_scale", a.scale), l("u_time", a.beat || T.getElapsedTime()), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1480,17 +1477,17 @@ const Mt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var St = `varying vec2 vUv;
+var Mt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, _t = `precision highp float;
+}`, St = `precision highp float;
 precision highp int;
 
 varying vec2 vUv;
@@ -1520,37 +1517,37 @@ void main() {
 
 	gl_FragColor = vec4(outColor, tex.a);
 }`;
-const Ct = ({
+const _t = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
-        uRgbWeight: { value: se.rgbWeight },
-        uColor1: { value: se.color1 },
-        uColor2: { value: se.color2 },
-        uColor3: { value: se.color3 },
-        uColor4: { value: se.color4 },
+        uTexture: { value: w },
+        uRgbWeight: { value: le.rgbWeight },
+        uColor1: { value: le.color1 },
+        uColor2: { value: le.color2 },
+        uColor3: { value: le.color3 },
+        uColor4: { value: le.color4 },
         ...t
       },
-      vertexShader: St,
-      fragmentShader: _t,
+      vertexShader: Mt,
+      fragmentShader: St,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
-}, se = Object.freeze({
-  texture: C,
+}, le = Object.freeze({
+  texture: w,
   color1: new i.Color().set(0.5, 0.5, 0.5),
   color2: new i.Color().set(0.5, 0.5, 0.5),
   color3: new i.Color().set(1, 1, 1),
   color4: new i.Color().set(0, 0.1, 0.2),
   rgbWeight: new i.Vector3(0.299, 0.587, 0.114)
-}), Nn = ({
+}), qn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -1558,21 +1555,26 @@ const Ct = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Ct({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = _t({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(se), l = P(c), m = V(c);
+  }), [a, g] = W(le), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("uTexture", a.texture), l("uColor1", a.color1), l("uColor2", a.color2), l("uColor3", a.color3), l("uColor4", a.color4), l("uRgbWeight", a.rgbWeight), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("uTexture", a.texture), l("uColor1", a.color1), l("uColor2", a.color2), l("uColor3", a.color3), l("uColor4", a.color4), l("uRgbWeight", a.rgbWeight), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1580,17 +1582,17 @@ const Ct = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var Tt = `varying vec2 vUv;
+var Ct = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, wt = `precision highp float;
+}`, Tt = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -1605,31 +1607,31 @@ void main() {
 	vec3 duotone = mix(uColor0, uColor1, grayscale);
 	gl_FragColor = vec4(duotone, texColor.a);
 }`;
-const Dt = ({
+const wt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
+        uTexture: { value: w },
         uColor0: { value: ye.color0 },
         uColor1: { value: ye.color1 },
         ...t
       },
-      vertexShader: Tt,
-      fragmentShader: wt,
+      vertexShader: Ct,
+      fragmentShader: Tt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, ye = Object.freeze({
-  texture: C,
+  texture: w,
   color0: new i.Color(16777215),
   color1: new i.Color(0)
-}), kn = ({
+}), Nn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -1637,21 +1639,26 @@ const Dt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Dt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = wt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(ye), l = P(c), m = V(c);
+  }), [a, g] = W(ye), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("uTexture", a.texture), l("uColor0", a.color0), l("uColor1", a.color1), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("uTexture", a.texture), l("uColor0", a.color0), l("uColor1", a.color1), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1659,12 +1666,12 @@ const Dt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var Rt = `varying vec2 vUv;
+var Dt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
@@ -1710,43 +1717,43 @@ void main() {
 
 	gl_FragColor = vec4(alphColor, alpha);
 }`;
-const At = ({
+const Rt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        u_texture: { value: C },
-        u_map: { value: C },
-        u_alphaMap: { value: C },
+        u_texture: { value: w },
+        u_map: { value: w },
+        u_alphaMap: { value: w },
         u_isAlphaMap: { value: !1 },
-        u_mapIntensity: { value: le.mapIntensity },
-        u_brightness: { value: le.brightness },
-        u_min: { value: le.min },
-        u_max: { value: le.max },
-        u_dodgeColor: { value: le.dodgeColor },
+        u_mapIntensity: { value: ce.mapIntensity },
+        u_brightness: { value: ce.brightness },
+        u_min: { value: ce.min },
+        u_max: { value: ce.max },
+        u_dodgeColor: { value: ce.dodgeColor },
         u_isDodgeColor: { value: !1 },
         ...t
       },
-      vertexShader: Rt,
+      vertexShader: Dt,
       fragmentShader: Pt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
-}, le = Object.freeze({
-  texture: C,
-  map: C,
+}, ce = Object.freeze({
+  texture: w,
+  map: w,
   alphaMap: !1,
   mapIntensity: 0.3,
   brightness: new i.Vector3(0.5, 0.5, 0.5),
   min: 0,
   max: 1,
   dodgeColor: !1
-}), Gn = ({
+}), kn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -1754,21 +1761,26 @@ const At = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = At({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Rt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(le), l = P(c), m = V(c);
+  }), [a, g] = W(ce), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("u_texture", a.texture), l("u_map", a.map), l("u_mapIntensity", a.mapIntensity), a.alphaMap ? (l("u_alphaMap", a.alphaMap), l("u_isAlphaMap", !0)) : l("u_isAlphaMap", !1), l("u_brightness", a.brightness), l("u_min", a.min), l("u_max", a.max), a.dodgeColor ? (l("u_dodgeColor", a.dodgeColor), l("u_isDodgeColor", !0)) : l("u_isDodgeColor", !1), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("u_texture", a.texture), l("u_map", a.map), l("u_mapIntensity", a.mapIntensity), a.alphaMap ? (l("u_alphaMap", a.alphaMap), l("u_isAlphaMap", !0)) : l("u_isAlphaMap", !1), l("u_brightness", a.brightness), l("u_min", a.min), l("u_max", a.max), a.dodgeColor ? (l("u_dodgeColor", a.dodgeColor), l("u_isDodgeColor", !0)) : l("u_isDodgeColor", !1), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1776,17 +1788,17 @@ const At = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var It = `varying vec2 vUv;
+var At = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, Ft = `precision highp float;
+}`, It = `precision highp float;
 
 varying vec2 vUv;
 uniform vec2 uResolution;
@@ -1853,51 +1865,51 @@ void main() {
 	gl_FragColor = mix(color0, color1, progress);
 
 }`;
-const Vt = ({
+const Ft = ({
   scene: e,
   size: t,
   dpr: n,
   uniforms: r,
   onBeforeCompile: o
 }) => {
-  const v = b(() => new i.PlaneGeometry(2, 2), []), s = b(() => {
-    var d, h;
+  const v = M(() => new i.PlaneGeometry(2, 2), []), s = M(() => {
+    var d, y;
     const f = new i.ShaderMaterial({
       uniforms: {
         uResolution: { value: new i.Vector2() },
         uTextureResolution: { value: new i.Vector2() },
-        uTexture0: { value: C },
-        uTexture1: { value: C },
-        padding: { value: ne.padding },
-        uMap: { value: C },
-        edgeIntensity: { value: ne.edgeIntensity },
-        mapIntensity: { value: ne.mapIntensity },
-        epicenter: { value: ne.epicenter },
-        progress: { value: ne.progress },
-        dirX: { value: (d = ne.dir) == null ? void 0 : d.x },
-        dirY: { value: (h = ne.dir) == null ? void 0 : h.y },
+        uTexture0: { value: w },
+        uTexture1: { value: w },
+        padding: { value: re.padding },
+        uMap: { value: w },
+        edgeIntensity: { value: re.edgeIntensity },
+        mapIntensity: { value: re.mapIntensity },
+        epicenter: { value: re.epicenter },
+        progress: { value: re.progress },
+        dirX: { value: (d = re.dir) == null ? void 0 : d.x },
+        dirY: { value: (y = re.dir) == null ? void 0 : y.y },
         ...r
       },
-      vertexShader: It,
-      fragmentShader: Ft,
+      vertexShader: At,
+      fragmentShader: It,
       ...z
     });
     return o && (f.onBeforeCompile = o), f;
-  }, [o, r]), u = K(t, n);
-  P(s)("uResolution", u.clone());
+  }, [o, r]), u = Y(t, n);
+  A(s)("uResolution", u.clone());
   const c = L(e, v, s, i.Mesh);
   return { material: s, mesh: c };
-}, ne = Object.freeze({
-  texture0: C,
-  texture1: C,
+}, re = Object.freeze({
+  texture0: w,
+  texture1: w,
   padding: 0,
-  map: C,
+  map: w,
   mapIntensity: 0,
   edgeIntensity: 0,
   epicenter: new i.Vector2(0, 0),
   progress: 0,
   dir: new i.Vector2(0, 0)
-}), Kn = ({
+}), Gn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -1905,36 +1917,41 @@ const Vt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Vt({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Ft({
     scene: u,
     size: e,
     dpr: s.shader,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), [h, g] = j({
+  }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     dpr: s.fbo,
     size: e,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(ne), l = P(c), m = V(c);
+  }), [a, g] = W(re), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        var F, I, R, D, k, J, X, ce;
-        const { gl: _ } = S;
-        M && p(M), l("uTexture0", a.texture0), l("uTexture1", a.texture1), l("progress", a.progress);
+    D(
+      (b, h, S) => {
+        var F, P, U, N, ee, X, G, ae;
+        const { gl: _ } = b;
+        p(h, S), l("uTexture0", a.texture0), l("uTexture1", a.texture1), l("progress", a.progress);
         const T = [
-          ((I = (F = a.texture0) == null ? void 0 : F.image) == null ? void 0 : I.width) || 0,
-          ((D = (R = a.texture0) == null ? void 0 : R.image) == null ? void 0 : D.height) || 0
-        ], w = [
-          ((J = (k = a.texture1) == null ? void 0 : k.image) == null ? void 0 : J.width) || 0,
-          ((ce = (X = a.texture1) == null ? void 0 : X.image) == null ? void 0 : ce.height) || 0
-        ], U = T.map((ie, G) => ie + (w[G] - ie) * a.progress);
-        return l("uTextureResolution", U), l("padding", a.padding), l("uMap", a.map), l("mapIntensity", a.mapIntensity), l("edgeIntensity", a.edgeIntensity), l("epicenter", a.epicenter), l("dirX", a.dir.x), l("dirY", a.dir.y), m(y), g(_);
+          ((P = (F = a.texture0) == null ? void 0 : F.image) == null ? void 0 : P.width) || 0,
+          ((N = (U = a.texture0) == null ? void 0 : U.image) == null ? void 0 : N.height) || 0
+        ], I = [
+          ((X = (ee = a.texture1) == null ? void 0 : ee.image) == null ? void 0 : X.width) || 0,
+          ((ae = (G = a.texture1) == null ? void 0 : G.image) == null ? void 0 : ae.height) || 0
+        ], R = T.map((K, he) => K + (I[he] - K) * a.progress);
+        return l("uTextureResolution", R), l("padding", a.padding), l("uMap", a.map), l("mapIntensity", a.mapIntensity), l("edgeIntensity", a.edgeIntensity), l("epicenter", a.epicenter), l("dirX", a.dir.x), l("dirY", a.dir.y), x(_);
       },
-      [g, l, a, p, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -1942,17 +1959,17 @@ const Vt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var zt = `varying vec2 vUv;
+var Vt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, Ut = `precision highp float;
+}`, zt = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -1967,33 +1984,33 @@ void main() {
 	float alpha = clamp(smoothstep(u_min, u_max, brightness),0.0,1.0);
 	gl_FragColor = vec4(color, alpha);
 }`;
-const Ot = ({
+const Ut = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        u_texture: { value: C },
+        u_texture: { value: w },
         u_brightness: { value: pe.brightness },
         u_min: { value: pe.min },
         u_max: { value: pe.max },
         ...t
       },
-      vertexShader: zt,
-      fragmentShader: Ut,
+      vertexShader: Vt,
+      fragmentShader: zt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, pe = Object.freeze({
-  texture: C,
+  texture: w,
   brightness: new i.Vector3(0.5, 0.5, 0.5),
   min: 0,
   max: 1
-}), Xn = ({
+}), Kn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2001,23 +2018,28 @@ const Ot = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Ot({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Ut({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(
+  }), [a, g] = W(
     pe
-  ), l = P(c), m = V(c);
+  ), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("u_texture", a.texture), l("u_brightness", a.brightness), l("u_min", a.min), l("u_max", a.max), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("u_texture", a.texture), l("u_brightness", a.brightness), l("u_min", a.min), l("u_max", a.max), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -2025,17 +2047,17 @@ const Ot = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var Bt = `varying vec2 vUv;
+var Ot = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, Et = `precision highp float;
+}`, Bt = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -2054,31 +2076,31 @@ void main() {
 
 	gl_FragColor = texture2D(u_texture, uv);
 }`;
-const Lt = ({
+const Et = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        u_texture: { value: C },
-        u_map: { value: C },
+        u_texture: { value: w },
+        u_map: { value: w },
         u_mapIntensity: { value: Ie.mapIntensity },
         ...t
       },
-      vertexShader: Bt,
-      fragmentShader: Et,
+      vertexShader: Ot,
+      fragmentShader: Bt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, Ie = Object.freeze({
-  texture: C,
-  map: C,
+  texture: w,
+  map: w,
   mapIntensity: 0.3
-}), Yn = ({
+}), Xn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2086,21 +2108,26 @@ const Lt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Lt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Et({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(Ie), l = P(c), m = V(c);
+  }), [a, g] = W(Ie), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("u_texture", a.texture), l("u_map", a.map), l("u_mapIntensity", a.mapIntensity), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("u_texture", a.texture), l("u_map", a.map), l("u_mapIntensity", a.mapIntensity), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -2108,17 +2135,17 @@ const Lt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var $t = `varying vec2 vUv;
+var Lt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, Wt = `precision highp float;
+}`, $t = `precision highp float;
 
 uniform sampler2D uTexture;
 uniform sampler2D uMap;
@@ -2131,29 +2158,29 @@ void main() {
 	vec4 map = texture2D(uMap, uv);
 	gl_FragColor = mix(tex,map,map.a);
 }`;
-const qt = ({
+const Wt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
-        uMap: { value: C },
+        uTexture: { value: w },
+        uMap: { value: w },
         ...t
       },
-      vertexShader: $t,
-      fragmentShader: Wt,
+      vertexShader: Lt,
+      fragmentShader: $t,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, jt = Object.freeze({
-  texture: C,
-  map: C
-}), Hn = ({
+  texture: w,
+  map: w
+}), Yn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2161,26 +2188,31 @@ const qt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = qt({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Wt({
     scene: u,
     size: e,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), [h, g] = j({
+  }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(jt), l = P(c), m = V(c);
+  }), [a, g] = W(jt), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("uTexture", a.texture), l("uMap", a.map), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("uTexture", a.texture), l("uMap", a.map), x(_);
       },
-      [l, g, a, p, m]
+      [l, x, a, p]
     ),
     p,
     {
@@ -2188,17 +2220,17 @@ const qt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var Nt = `varying vec2 vUv;
+var qt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, kt = `precision highp float;
+}`, Nt = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D u_texture;
@@ -2231,31 +2263,31 @@ void main() {
 	vec3 final = hsv2rgb(hsv);
 	gl_FragColor = vec4(final, tex.a);
 }`;
-const Gt = ({
+const kt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        u_texture: { value: C },
+        u_texture: { value: w },
         u_brightness: { value: be.brightness },
         u_saturation: { value: be.saturation },
         ...t
       },
-      vertexShader: Nt,
-      fragmentShader: kt,
+      vertexShader: qt,
+      fragmentShader: Nt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, be = Object.freeze({
-  texture: C,
+  texture: w,
   brightness: 1,
   saturation: 1
-}), Qn = ({
+}), Hn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2263,26 +2295,31 @@ const Gt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Gt({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = kt({
     scene: u,
     size: e,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), [h, g] = j({
+  }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(be), l = P(c), m = V(c);
+  }), [a, g] = W(be), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("u_texture", a.texture), l("u_brightness", a.brightness), l("u_saturation", a.saturation), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("u_texture", a.texture), l("u_brightness", a.brightness), l("u_saturation", a.saturation), x(_);
       },
-      [l, g, a, p, m]
+      [l, x, a, p]
     ),
     p,
     {
@@ -2290,17 +2327,17 @@ const Gt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var Kt = `varying vec2 vUv;
+var Gt = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, Xt = `precision highp float;
+}`, Kt = `precision highp float;
 
 varying vec2 vUv;
 uniform vec2 uResolution;
@@ -2319,33 +2356,33 @@ void main() {
 	gl_FragColor = texture2D(uTexture, uv);
 
 }`;
-const Yt = ({
+const Xt = ({
   scene: e,
   size: t,
   dpr: n,
   uniforms: r,
   onBeforeCompile: o
 }) => {
-  const v = b(() => new i.PlaneGeometry(2, 2), []), s = b(() => {
+  const v = M(() => new i.PlaneGeometry(2, 2), []), s = M(() => {
     const f = new i.ShaderMaterial({
       uniforms: {
         uResolution: { value: new i.Vector2() },
         uTextureResolution: { value: new i.Vector2() },
-        uTexture: { value: C },
+        uTexture: { value: w },
         ...r
       },
-      vertexShader: Kt,
-      fragmentShader: Xt,
+      vertexShader: Gt,
+      fragmentShader: Kt,
       ...z
     });
     return o && (f.onBeforeCompile = o), f;
-  }, [o, r]), u = K(t, n);
-  P(s)("uResolution", u.clone());
+  }, [o, r]), u = Y(t, n);
+  A(s)("uResolution", u.clone());
   const c = L(e, v, s, i.Mesh);
   return { material: s, mesh: c };
-}, Ht = Object.freeze({
-  texture: C
-}), Zn = ({
+}, Yt = Object.freeze({
+  texture: w
+}), Qn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2353,31 +2390,36 @@ const Yt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Yt({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Xt({
     scene: u,
     size: e,
     dpr: s.shader,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), [h, g] = j({
+  }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     dpr: s.fbo,
     size: e,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(Ht), l = P(c), m = V(c);
+  }), [a, g] = W(Yt), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        var T, w, U, F, I, R;
-        const { gl: _ } = S;
-        return M && p(M), l("uTexture", a.texture), l("uTextureResolution", [
-          ((U = (w = (T = a.texture) == null ? void 0 : T.source) == null ? void 0 : w.data) == null ? void 0 : U.width) || 0,
-          ((R = (I = (F = a.texture) == null ? void 0 : F.source) == null ? void 0 : I.data) == null ? void 0 : R.height) || 0
-        ]), m(y), g(_);
+    D(
+      (b, h, S) => {
+        var T, I, R, F, P, U;
+        const { gl: _ } = b;
+        return p(h, S), l("uTexture", a.texture), l("uTextureResolution", [
+          ((R = (I = (T = a.texture) == null ? void 0 : T.source) == null ? void 0 : I.data) == null ? void 0 : R.width) || 0,
+          ((U = (P = (F = a.texture) == null ? void 0 : F.source) == null ? void 0 : P.data) == null ? void 0 : U.height) || 0
+        ]), x(_);
       },
-      [g, l, a, p, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -2385,19 +2427,19 @@ const Yt = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var Qt = `precision highp float;
+var Ht = `precision highp float;
 
 varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, Zt = `precision highp float;
+}`, Qt = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -2423,31 +2465,31 @@ void main() {
 	
 	gl_FragColor = outColor;
 }`;
-const Jt = ({
+const Zt = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
+        uTexture: { value: w },
         uResolution: { value: new i.Vector2(0, 0) },
         uBlurSize: { value: Fe.blurSize },
         ...t
       },
-      vertexShader: Qt,
-      fragmentShader: Zt,
+      vertexShader: Ht,
+      fragmentShader: Qt,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, Fe = Object.freeze({
-  texture: C,
+  texture: w,
   blurSize: 3,
   blurPower: 5
-}), Jn = ({
+}), Zn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2455,7 +2497,7 @@ const Jt = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = Jt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), h = b(
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = Zt({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), y = M(
     () => ({
       scene: u,
       camera: d,
@@ -2465,43 +2507,48 @@ const Jt = ({
       isSizeUpdate: r
     }),
     [u, d, e, s.fbo, n, r]
-  ), [g, a] = ae(h), [p, l] = W(Fe), m = P(c), x = V(c);
+  ), [x, a] = ue(y), [g, l] = W(Fe), m = A(c), p = V(c), C = D(
+    (h, S) => {
+      h && l(h), p(S);
+    },
+    [l, p]
+  );
   return [
-    A(
-      (M, y, _) => {
-        var F, I, R, D, k, J;
-        const { gl: T } = M;
-        y && l(y), m("uTexture", p.texture), m("uResolution", [
-          ((R = (I = (F = p.texture) == null ? void 0 : F.source) == null ? void 0 : I.data) == null ? void 0 : R.width) || 0,
-          ((J = (k = (D = p.texture) == null ? void 0 : D.source) == null ? void 0 : k.data) == null ? void 0 : J.height) || 0
-        ]), m("uBlurSize", p.blurSize);
-        let w = a(T);
-        const U = p.blurPower;
-        for (let X = 0; X < U; X++)
-          m("uTexture", w), w = a(T);
-        return x(_), w;
+    D(
+      (h, S, _) => {
+        var F, P, U, N, ee, X;
+        const { gl: T } = h;
+        C(S, _), m("uTexture", g.texture), m("uResolution", [
+          ((U = (P = (F = g.texture) == null ? void 0 : F.source) == null ? void 0 : P.data) == null ? void 0 : U.width) || 0,
+          ((X = (ee = (N = g.texture) == null ? void 0 : N.source) == null ? void 0 : ee.data) == null ? void 0 : X.height) || 0
+        ]), m("uBlurSize", g.blurSize);
+        let I = a(T);
+        const R = g.blurPower;
+        for (let G = 0; G < R; G++)
+          m("uTexture", I), I = a(T);
+        return I;
       },
-      [a, m, l, p, x]
+      [a, m, g, C]
     ),
-    l,
+    C,
     {
       scene: u,
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: g,
-      output: g.read.texture
+      renderTarget: x,
+      output: x.read.texture
     }
   ];
 };
-var en = `precision highp float;
+var Jt = `precision highp float;
 
 varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, tn = `precision highp float;
+}`, en = `precision highp float;
 
 varying vec2 vUv;
 uniform sampler2D uTexture;
@@ -2517,34 +2564,34 @@ void main() {
 	vec4 mixed = mix(current,back,uStrength);
 	gl_FragColor = mixed;
 }`;
-const nn = ({
+const tn = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
-        uBackbuffer: { value: C },
+        uTexture: { value: w },
+        uBackbuffer: { value: w },
         uBegin: { value: de.begin },
         uEnd: { value: de.end },
         uStrength: { value: de.strength },
         ...t
       },
-      vertexShader: en,
-      fragmentShader: tn,
+      vertexShader: Jt,
+      fragmentShader: en,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
   }, [n, t]), v = L(e, r, o, i.Mesh);
   return { material: o, mesh: v };
 }, de = Object.freeze({
-  texture: C,
+  texture: w,
   begin: new i.Vector2(0, 0),
   end: new i.Vector2(0, 0),
   strength: 0.9
-}), er = ({
+}), Jn = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2552,7 +2599,7 @@ const nn = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = nn({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), h = b(
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = tn({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), y = M(
     () => ({
       scene: u,
       camera: d,
@@ -2562,34 +2609,39 @@ const nn = ({
       isSizeUpdate: r
     }),
     [u, d, e, s.fbo, n, r]
-  ), [g, a] = ae(h), [p, l] = W(de), m = P(c), x = V(c);
+  ), [x, a] = ue(y), [g, l] = W(de), m = A(c), p = V(c), C = D(
+    (h, S) => {
+      h && l(h), p(S);
+    },
+    [l, p]
+  );
   return [
-    A(
-      (M, y, _) => {
-        const { gl: T } = M;
-        return y && l(y), m("uTexture", p.texture), m("uBegin", p.begin), m("uEnd", p.end), m("uStrength", p.strength), x(_), a(T, ({ read: w }) => {
-          m("uBackbuffer", w);
+    D(
+      (h, S, _) => {
+        const { gl: T } = h;
+        return C(S, _), m("uTexture", g.texture), m("uBegin", g.begin), m("uEnd", g.end), m("uStrength", g.strength), a(T, ({ read: I }) => {
+          m("uBackbuffer", I);
         });
       },
-      [a, m, l, p, x]
+      [a, m, C, g]
     ),
-    l,
+    C,
     {
       scene: u,
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: g,
-      output: g.read.texture
+      renderTarget: x,
+      output: x.read.texture
     }
   ];
 };
-var rn = `varying vec2 vUv;
+var nn = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, on = `precision highp float;
+}`, rn = `precision highp float;
 
 varying vec2 vUv;
 uniform float uProgress;
@@ -2639,12 +2691,12 @@ void main() {
 
 	gl_FragColor = vec4(color, 1.0);
 }`;
-const an = ({
+const on = ({
   scene: e,
   uniforms: t,
   onBeforeCompile: n
 }) => {
-  const r = b(() => new i.PlaneGeometry(2, 2), []), o = b(() => {
+  const r = M(() => new i.PlaneGeometry(2, 2), []), o = M(() => {
     const s = new i.ShaderMaterial({
       uniforms: {
         uEpicenter: { value: ve.epicenter },
@@ -2654,8 +2706,8 @@ const an = ({
         uMode: { value: 0 },
         ...t
       },
-      vertexShader: rn,
-      fragmentShader: on,
+      vertexShader: nn,
+      fragmentShader: rn,
       ...z
     });
     return n && (s.onBeforeCompile = n), s;
@@ -2667,7 +2719,7 @@ const an = ({
   width: 0,
   strength: 0,
   mode: "center"
-}), tr = ({
+}), er = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2675,24 +2727,29 @@ const an = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = an({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [h, g] = j({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = on({ scene: u, uniforms: o, onBeforeCompile: v }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(ve), l = P(c), m = V(c);
+  }), [a, g] = W(ve), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("uEpicenter", a.epicenter), l("uProgress", a.progress), l("uWidth", a.width), l("uStrength", a.strength), l(
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("uEpicenter", a.epicenter), l("uProgress", a.progress), l("uWidth", a.width), l("uStrength", a.strength), l(
           "uMode",
           a.mode === "center" ? 0 : a.mode === "horizontal" ? 1 : 2
-        ), m(y), g(_);
+        ), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -2700,17 +2757,17 @@ const an = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var un = `varying vec2 vUv;
+var an = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
 	gl_Position = vec4(position, 1.0);
-}`, sn = `precision highp float;
+}`, un = `precision highp float;
 varying vec2 vUv;
 
 uniform sampler2D u_texture;
@@ -2779,39 +2836,39 @@ void main() {
 
 	gl_FragColor = finColor;
 }`;
-const ln = ({
+const sn = ({
   scene: e,
   size: t,
   dpr: n,
   uniforms: r,
   onBeforeCompile: o
 }) => {
-  const v = b(() => new i.PlaneGeometry(2, 2), []), s = b(() => {
+  const v = M(() => new i.PlaneGeometry(2, 2), []), s = M(() => {
     const f = new i.ShaderMaterial({
       uniforms: {
-        u_texture: { value: C },
+        u_texture: { value: w },
         u_resolution: { value: new i.Vector2() },
-        u_keyColor: { value: Q.color },
-        u_similarity: { value: Q.similarity },
-        u_smoothness: { value: Q.smoothness },
-        u_spill: { value: Q.spill },
-        u_color: { value: Q.color },
-        u_contrast: { value: Q.contrast },
-        u_brightness: { value: Q.brightness },
-        u_gamma: { value: Q.gamma },
+        u_keyColor: { value: Z.color },
+        u_similarity: { value: Z.similarity },
+        u_smoothness: { value: Z.smoothness },
+        u_spill: { value: Z.spill },
+        u_color: { value: Z.color },
+        u_contrast: { value: Z.contrast },
+        u_brightness: { value: Z.brightness },
+        u_gamma: { value: Z.gamma },
         ...r
       },
-      vertexShader: un,
-      fragmentShader: sn,
+      vertexShader: an,
+      fragmentShader: un,
       ...z
     });
     return o && (f.onBeforeCompile = o), f;
-  }, [o, r]), u = K(t, n);
-  P(s)("u_resolution", u.clone());
+  }, [o, r]), u = Y(t, n);
+  A(s)("u_resolution", u.clone());
   const c = L(e, v, s, i.Mesh);
   return { material: s, mesh: c };
-}, Q = Object.freeze({
-  texture: C,
+}, Z = Object.freeze({
+  texture: w,
   keyColor: new i.Color(65280),
   similarity: 0.2,
   smoothness: 0.1,
@@ -2820,7 +2877,7 @@ const ln = ({
   contrast: 1,
   brightness: 0,
   gamma: 1
-}), nr = ({
+}), tr = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2828,27 +2885,32 @@ const ln = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = ln({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = sn({
     scene: u,
     size: e,
     dpr: s.shader,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), [h, g] = j({
+  }), d = $(e), [y, x] = j({
     scene: u,
     camera: d,
     size: e,
     dpr: s.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [a, p] = W(Q), l = P(c), m = V(c);
+  }), [a, g] = W(Z), l = A(c), m = V(c), p = D(
+    (b, h) => {
+      b && g(b), m(h);
+    },
+    [g, m]
+  );
   return [
-    A(
-      (S, M, y) => {
-        const { gl: _ } = S;
-        return M && p(M), l("u_texture", a.texture), l("u_keyColor", a.keyColor), l("u_similarity", a.similarity), l("u_smoothness", a.smoothness), l("u_spill", a.spill), l("u_color", a.color), l("u_contrast", a.contrast), l("u_brightness", a.brightness), l("u_gamma", a.gamma), m(y), g(_);
+    D(
+      (b, h, S) => {
+        const { gl: _ } = b;
+        return p(h, S), l("u_texture", a.texture), l("u_keyColor", a.keyColor), l("u_similarity", a.similarity), l("u_smoothness", a.smoothness), l("u_spill", a.spill), l("u_color", a.color), l("u_contrast", a.contrast), l("u_brightness", a.brightness), l("u_gamma", a.gamma), x(_);
       },
-      [g, l, p, a, m]
+      [x, l, a, p]
     ),
     p,
     {
@@ -2856,12 +2918,12 @@ const ln = ({
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: h,
-      output: h.texture
+      renderTarget: y,
+      output: y.texture
     }
   ];
 };
-var cn = `precision highp float;
+var ln = `precision highp float;
 
 varying vec2 vUv;
 #usf varyings
@@ -2875,7 +2937,7 @@ void main() {
 	#usf main
 	
 	gl_Position = usf_Position;
-}`, vn = `precision highp float;
+}`, cn = `precision highp float;
 
 varying vec2 vUv;
 #usf varyings
@@ -2895,41 +2957,41 @@ void main() {
 	
 	gl_FragColor = usf_FragColor;
 }`;
-const mn = ({
+const vn = ({
   scene: e,
   size: t,
   dpr: n,
   uniforms: r,
   onBeforeCompile: o
 }) => {
-  const v = b(() => new i.PlaneGeometry(2, 2), []), s = b(() => {
+  const v = M(() => new i.PlaneGeometry(2, 2), []), s = M(() => {
     const f = new i.ShaderMaterial({
       uniforms: {
-        uTexture: { value: C },
-        uBackbuffer: { value: C },
+        uTexture: { value: w },
+        uBackbuffer: { value: w },
         uTime: { value: 0 },
         uPointer: { value: new i.Vector2() },
         uResolution: { value: new i.Vector2() },
         ...r
       },
-      vertexShader: cn,
-      fragmentShader: vn,
+      vertexShader: ln,
+      fragmentShader: cn,
       ...z
     });
-    return f.onBeforeCompile = (d, h) => {
-      o && o(d, h), d.fragmentShader = d.fragmentShader.replace(
+    return f.onBeforeCompile = (d, y) => {
+      o && o(d, y), d.fragmentShader = d.fragmentShader.replace(
         /#usf[^\n]*\n/g,
         ""
       ), d.vertexShader = d.vertexShader.replace(/#usf[^\n]*\n/g, "");
     }, f;
-  }, [o, r]), u = K(t, n);
-  P(s)("uResolution", u.clone());
+  }, [o, r]), u = Y(t, n);
+  A(s)("uResolution", u.clone());
   const c = L(e, v, s, i.Mesh);
   return { material: s, mesh: c };
-}, pn = Object.freeze({
-  texture: C,
+}, mn = Object.freeze({
+  texture: w,
   beat: !1
-}), rr = ({
+}), nr = ({
   size: e,
   dpr: t,
   samples: n,
@@ -2937,13 +2999,13 @@ const mn = ({
   uniforms: o,
   onBeforeCompile: v
 }) => {
-  const s = B(t), u = b(() => new i.Scene(), []), { material: c, mesh: f } = mn({
+  const s = O(t), u = M(() => new i.Scene(), []), { material: c, mesh: f } = vn({
     scene: u,
     size: e,
     dpr: s.shader,
     uniforms: o,
     onBeforeCompile: v
-  }), d = $(e), h = b(
+  }), d = $(e), y = M(
     () => ({
       scene: u,
       camera: d,
@@ -2953,28 +3015,33 @@ const mn = ({
       isSizeUpdate: r
     }),
     [u, d, e, s.fbo, n, r]
-  ), [g, a] = ae(h), [p, l] = W(pn), m = P(c), x = V(c);
+  ), [x, a] = ue(y), [g, l] = W(mn), m = A(c), p = V(c), C = D(
+    (h, S) => {
+      h && l(h), p(S);
+    },
+    [l, p]
+  );
   return [
-    A(
-      (M, y, _) => {
-        const { gl: T, clock: w, pointer: U } = M;
-        return y && l(y), m("uTexture", p.texture), m("uPointer", U), m("uTime", p.beat || w.getElapsedTime()), x(_), a(T, ({ read: F }) => {
+    D(
+      (h, S, _) => {
+        const { gl: T, clock: I, pointer: R } = h;
+        return C(S, _), m("uPointer", R), m("uTexture", g.texture), m("uTime", g.beat || I.getElapsedTime()), a(T, ({ read: F }) => {
           m("uBackbuffer", F);
         });
       },
-      [a, m, l, p, x]
+      [a, m, g, C]
     ),
-    l,
+    C,
     {
       scene: u,
       mesh: f,
       material: c,
       camera: d,
-      renderTarget: g,
-      output: g.read.texture
+      renderTarget: x,
+      output: x.read.texture
     }
   ];
-}, dn = ({
+}, pn = ({
   scene: e,
   geometry: t,
   material: n
@@ -2986,8 +3053,8 @@ const mn = ({
     i.Points
   ), o = L(
     e,
-    b(() => t.clone(), [t]),
-    b(() => n.clone(), [n]),
+    M(() => t.clone(), [t]),
+    M(() => n.clone(), [n]),
     i.Mesh
   );
   return o.visible = !1, {
@@ -2995,7 +3062,7 @@ const mn = ({
     interactiveMesh: o
   };
 };
-var fn = `uniform vec2 uResolution;
+var dn = `uniform vec2 uResolution;
 uniform float uMorphProgress;
 uniform float uPointSize;
 
@@ -3097,7 +3164,7 @@ void main() {
 
 	
 	vMapArrayIndex = uMapArrayLength > 0. ? floor(random3D(position) * uMapArrayLength) : 0.;
-}`, gn = `precision highp float;
+}`, fn = `precision highp float;
 precision highp int;
 
 varying vec3 vColor;
@@ -3247,7 +3314,7 @@ float getWobble(vec3 position)
 		uTime * uWobbleTimeFrequency          
 	)) * uWobbleStrength;
 }`;
-const De = (e, t, n, r, o) => {
+const we = (e, t, n, r, o) => {
   var d;
   const v = n === "position" ? "positionTarget" : "uvTarget", s = n === "position" ? "#usf <morphPositions>" : "#usf <morphUvs>", u = n === "position" ? "#usf <morphPositionTransition>" : "#usf <morphUvTransition>", c = n === "position" ? "positionsList" : "uvsList", f = n === "position" ? `
 				float scaledProgress = uMorphProgress * ${e.length - 1}.;
@@ -3262,28 +3329,28 @@ const De = (e, t, n, r, o) => {
       n,
       new i.BufferAttribute(e[0], o)
     );
-    let h = "", g = "";
-    e.forEach((a, p) => {
+    let y = "", x = "";
+    e.forEach((a, g) => {
       t.setAttribute(
-        `${v}${p}`,
+        `${v}${g}`,
         new i.BufferAttribute(a, o)
-      ), h += `attribute vec${o} ${v}${p};
-`, p === 0 ? g += `${v}${p}` : g += `,${v}${p}`;
+      ), y += `attribute vec${o} ${v}${g};
+`, g === 0 ? x += `${v}${g}` : x += `,${v}${g}`;
     }), r = r.replace(
       `${s}`,
-      h
+      y
     ), r = r.replace(
       `${u}`,
-      `vec${o} ${c}[${e.length}] = vec${o}[](${g});
+      `vec${o} ${c}[${e.length}] = vec${o}[](${x});
 				${f}
 			`
     );
   } else
-    r = r.replace(`${s}`, ""), r = r.replace(`${u}`, ""), (d = t == null ? void 0 : t.attributes[n]) != null && d.array || Ae && console.error(
+    r = r.replace(`${s}`, ""), r = r.replace(`${u}`, ""), (d = t == null ? void 0 : t.attributes[n]) != null && d.array || Re && console.error(
       `use-shader-fx:geometry.attributes.${n}.array is not found`
     );
   return r;
-}, Re = (e, t, n, r) => {
+}, De = (e, t, n, r) => {
   var v;
   let o = [];
   if (e && e.length > 0) {
@@ -3294,18 +3361,18 @@ const De = (e, t, n, r, o) => {
     const s = Math.max(...o.map((u) => u.length));
     o.forEach((u, c) => {
       if (u.length < s) {
-        const f = (s - u.length) / r, d = [], h = Array.from(u);
-        for (let g = 0; g < f; g++) {
+        const f = (s - u.length) / r, d = [], y = Array.from(u);
+        for (let x = 0; x < f; x++) {
           const a = Math.floor(u.length / r * Math.random()) * r;
-          for (let p = 0; p < r; p++)
-            d.push(h[a + p]);
+          for (let g = 0; g < r; g++)
+            d.push(y[a + g]);
         }
-        o[c] = new Float32Array([...h, ...d]);
+        o[c] = new Float32Array([...y, ...d]);
       }
     });
   }
   return o;
-}, hn = (e, t) => {
+}, gn = (e, t) => {
   let n = "";
   const r = {};
   let o = "mapArrayColor = ";
@@ -3315,7 +3382,7 @@ const De = (e, t, n, r, o) => {
         uniform sampler2D uMapArray${u};
       `, r[`uMapArray${u}`] = { value: s };
   }), o += "vec4(1.);", n += "bool isMapArray = true;", r.uMapArrayLength = { value: e.length }) : (o += "vec4(1.0);", n += "bool isMapArray = false;", r.uMapArrayLength = { value: 0 }), { rewritedFragmentShader: t.replace("#usf <mapArraySwitcher>", o).replace("#usf <mapArrayUniforms>", n), mapArrayUniforms: r };
-}, xn = ({
+}, hn = ({
   size: e,
   dpr: t,
   geometry: n,
@@ -3325,28 +3392,28 @@ const De = (e, t, n, r, o) => {
   uniforms: s,
   onBeforeCompile: u
 }) => {
-  const c = b(
-    () => Re(r, n, "position", 3),
+  const c = M(
+    () => De(r, n, "position", 3),
     [r, n]
-  ), f = b(
-    () => Re(o, n, "uv", 2),
+  ), f = M(
+    () => De(o, n, "uv", 2),
     [o, n]
-  ), d = b(() => {
-    c.length !== f.length && Ae && console.log("use-shader-fx:positions and uvs are not matched");
-    const g = De(
+  ), d = M(() => {
+    c.length !== f.length && Re && console.log("use-shader-fx:positions and uvs are not matched");
+    const x = we(
       f,
       n,
       "uv",
-      De(
+      we(
         c,
         n,
         "position",
-        fn,
+        dn,
         3
       ),
       2
-    ).replace("#usf <getWobble>", Ve), { rewritedFragmentShader: a, mapArrayUniforms: p } = hn(v, gn), l = new i.ShaderMaterial({
-      vertexShader: g,
+    ).replace("#usf <getWobble>", Ve), { rewritedFragmentShader: a, mapArrayUniforms: g } = gn(v, fn), l = new i.ShaderMaterial({
+      vertexShader: x,
       fragmentShader: a,
       blending: i.AdditiveBlending,
       ...z,
@@ -3354,57 +3421,57 @@ const De = (e, t, n, r, o) => {
       transparent: !0,
       uniforms: {
         uResolution: { value: new i.Vector2(0, 0) },
-        uMorphProgress: { value: E.morphProgress },
-        uBlurAlpha: { value: E.blurAlpha },
-        uBlurRadius: { value: E.blurRadius },
-        uPointSize: { value: E.pointSize },
-        uPointAlpha: { value: E.pointAlpha },
-        uPicture: { value: C },
+        uMorphProgress: { value: B.morphProgress },
+        uBlurAlpha: { value: B.blurAlpha },
+        uBlurRadius: { value: B.blurRadius },
+        uPointSize: { value: B.pointSize },
+        uPointAlpha: { value: B.pointAlpha },
+        uPicture: { value: w },
         uIsPicture: { value: !1 },
-        uAlphaPicture: { value: C },
+        uAlphaPicture: { value: w },
         uIsAlphaPicture: { value: !1 },
-        uColor0: { value: E.color0 },
-        uColor1: { value: E.color1 },
-        uColor2: { value: E.color2 },
-        uColor3: { value: E.color3 },
-        uMap: { value: C },
+        uColor0: { value: B.color0 },
+        uColor1: { value: B.color1 },
+        uColor2: { value: B.color2 },
+        uColor3: { value: B.color3 },
+        uMap: { value: w },
         uIsMap: { value: !1 },
-        uAlphaMap: { value: C },
+        uAlphaMap: { value: w },
         uIsAlphaMap: { value: !1 },
         uTime: { value: 0 },
         uWobblePositionFrequency: {
-          value: E.wobblePositionFrequency
+          value: B.wobblePositionFrequency
         },
         uWobbleTimeFrequency: {
-          value: E.wobbleTimeFrequency
+          value: B.wobbleTimeFrequency
         },
-        uWobbleStrength: { value: E.wobbleStrength },
+        uWobbleStrength: { value: B.wobbleStrength },
         uWarpPositionFrequency: {
-          value: E.warpPositionFrequency
+          value: B.warpPositionFrequency
         },
         uWarpTimeFrequency: {
-          value: E.warpTimeFrequency
+          value: B.warpTimeFrequency
         },
-        uWarpStrength: { value: E.warpStrength },
-        uDisplacement: { value: C },
+        uWarpStrength: { value: B.warpStrength },
+        uDisplacement: { value: w },
         uIsDisplacement: { value: !1 },
         uDisplacementIntensity: {
-          value: E.displacementIntensity
+          value: B.displacementIntensity
         },
         uDisplacementColorIntensity: {
-          value: E.displacementColorIntensity
+          value: B.displacementColorIntensity
         },
         uSizeRandomIntensity: {
-          value: E.sizeRandomIntensity
+          value: B.sizeRandomIntensity
         },
         uSizeRandomTimeFrequency: {
-          value: E.sizeRandomTimeFrequency
+          value: B.sizeRandomTimeFrequency
         },
-        uSizeRandomMin: { value: E.sizeRandomMin },
-        uSizeRandomMax: { value: E.sizeRandomMax },
-        uDivergence: { value: E.divergence },
-        uDivergencePoint: { value: E.divergencePoint },
-        ...p,
+        uSizeRandomMin: { value: B.sizeRandomMin },
+        uSizeRandomMax: { value: B.sizeRandomMax },
+        uDivergence: { value: B.divergence },
+        uDivergencePoint: { value: B.divergencePoint },
+        ...g,
         ...s
       }
     });
@@ -3416,9 +3483,9 @@ const De = (e, t, n, r, o) => {
     v,
     u,
     s
-  ]), h = K(e, t);
-  return P(d)("uResolution", h.clone()), { material: d, modifiedPositions: c, modifiedUvs: f };
-}, yn = ({
+  ]), y = Y(e, t);
+  return A(d)("uResolution", y.clone()), { material: d, modifiedPositions: c, modifiedUvs: f };
+}, xn = ({
   size: e,
   dpr: t,
   scene: n = !1,
@@ -3429,10 +3496,10 @@ const De = (e, t, n, r, o) => {
   uniforms: u,
   onBeforeCompile: c
 }) => {
-  const f = B(t), d = b(() => {
-    const M = r || new i.SphereGeometry(1, 32, 32);
-    return M.setIndex(null), M.deleteAttribute("normal"), M;
-  }, [r]), { material: h, modifiedPositions: g, modifiedUvs: a } = xn({
+  const f = O(t), d = M(() => {
+    const b = r || new i.SphereGeometry(1, 32, 32);
+    return b.setIndex(null), b.deleteAttribute("normal"), b;
+  }, [r]), { material: y, modifiedPositions: x, modifiedUvs: a } = hn({
     size: e,
     dpr: f.shader,
     geometry: d,
@@ -3441,38 +3508,38 @@ const De = (e, t, n, r, o) => {
     mapArray: s,
     uniforms: u,
     onBeforeCompile: c
-  }), { points: p, interactiveMesh: l } = dn({
+  }), { points: g, interactiveMesh: l } = pn({
     scene: n,
     geometry: d,
-    material: h
-  }), m = P(h), x = V(h);
+    material: y
+  }), m = A(y), p = V(y);
   return [
-    A(
-      (M, y, _) => {
-        M && m(
+    D(
+      (b, h, S) => {
+        b && m(
           "uTime",
-          (y == null ? void 0 : y.beat) || M.clock.getElapsedTime()
-        ), y !== void 0 && (m("uMorphProgress", y.morphProgress), m("uBlurAlpha", y.blurAlpha), m("uBlurRadius", y.blurRadius), m("uPointSize", y.pointSize), m("uPointAlpha", y.pointAlpha), y.picture ? (m("uPicture", y.picture), m("uIsPicture", !0)) : y.picture === !1 && m("uIsPicture", !1), y.alphaPicture ? (m("uAlphaPicture", y.alphaPicture), m("uIsAlphaPicture", !0)) : y.alphaPicture === !1 && m("uIsAlphaPicture", !1), m("uColor0", y.color0), m("uColor1", y.color1), m("uColor2", y.color2), m("uColor3", y.color3), y.map ? (m("uMap", y.map), m("uIsMap", !0)) : y.map === !1 && m("uIsMap", !1), y.alphaMap ? (m("uAlphaMap", y.alphaMap), m("uIsAlphaMap", !0)) : y.alphaMap === !1 && m("uIsAlphaMap", !1), m("uWobbleStrength", y.wobbleStrength), m(
+          (h == null ? void 0 : h.beat) || b.clock.getElapsedTime()
+        ), h !== void 0 && (m("uMorphProgress", h.morphProgress), m("uBlurAlpha", h.blurAlpha), m("uBlurRadius", h.blurRadius), m("uPointSize", h.pointSize), m("uPointAlpha", h.pointAlpha), h.picture ? (m("uPicture", h.picture), m("uIsPicture", !0)) : h.picture === !1 && m("uIsPicture", !1), h.alphaPicture ? (m("uAlphaPicture", h.alphaPicture), m("uIsAlphaPicture", !0)) : h.alphaPicture === !1 && m("uIsAlphaPicture", !1), m("uColor0", h.color0), m("uColor1", h.color1), m("uColor2", h.color2), m("uColor3", h.color3), h.map ? (m("uMap", h.map), m("uIsMap", !0)) : h.map === !1 && m("uIsMap", !1), h.alphaMap ? (m("uAlphaMap", h.alphaMap), m("uIsAlphaMap", !0)) : h.alphaMap === !1 && m("uIsAlphaMap", !1), m("uWobbleStrength", h.wobbleStrength), m(
           "uWobblePositionFrequency",
-          y.wobblePositionFrequency
-        ), m("uWobbleTimeFrequency", y.wobbleTimeFrequency), m("uWarpStrength", y.warpStrength), m("uWarpPositionFrequency", y.warpPositionFrequency), m("uWarpTimeFrequency", y.warpTimeFrequency), y.displacement ? (m("uDisplacement", y.displacement), m("uIsDisplacement", !0)) : y.displacement === !1 && m("uIsDisplacement", !1), m("uDisplacementIntensity", y.displacementIntensity), m(
+          h.wobblePositionFrequency
+        ), m("uWobbleTimeFrequency", h.wobbleTimeFrequency), m("uWarpStrength", h.warpStrength), m("uWarpPositionFrequency", h.warpPositionFrequency), m("uWarpTimeFrequency", h.warpTimeFrequency), h.displacement ? (m("uDisplacement", h.displacement), m("uIsDisplacement", !0)) : h.displacement === !1 && m("uIsDisplacement", !1), m("uDisplacementIntensity", h.displacementIntensity), m(
           "uDisplacementColorIntensity",
-          y.displacementColorIntensity
-        ), m("uSizeRandomIntensity", y.sizeRandomIntensity), m(
+          h.displacementColorIntensity
+        ), m("uSizeRandomIntensity", h.sizeRandomIntensity), m(
           "uSizeRandomTimeFrequency",
-          y.sizeRandomTimeFrequency
-        ), m("uSizeRandomMin", y.sizeRandomMin), m("uSizeRandomMax", y.sizeRandomMax), m("uDivergence", y.divergence), m("uDivergencePoint", y.divergencePoint), x(_));
+          h.sizeRandomTimeFrequency
+        ), m("uSizeRandomMin", h.sizeRandomMin), m("uSizeRandomMax", h.sizeRandomMax), m("uDivergence", h.divergence), m("uDivergencePoint", h.divergencePoint), p(S));
       },
-      [m, x]
+      [m, p]
     ),
     {
-      points: p,
+      points: g,
       interactiveMesh: l,
-      positions: g,
+      positions: x,
       uvs: a
     }
   ];
-}, E = Object.freeze({
+}, B = Object.freeze({
   morphProgress: 0,
   blurAlpha: 0.9,
   blurRadius: 0.05,
@@ -3502,7 +3569,7 @@ const De = (e, t, n, r, o) => {
   divergence: 0,
   divergencePoint: new i.Vector3(0),
   beat: !1
-}), or = ({
+}), rr = ({
   size: e,
   dpr: t,
   samples: n,
@@ -3514,16 +3581,16 @@ const De = (e, t, n, r, o) => {
   uniforms: c,
   onBeforeCompile: f
 }) => {
-  const d = B(t), h = b(() => new i.Scene(), []), [
-    g,
+  const d = O(t), y = M(() => new i.Scene(), []), [
+    x,
     {
       points: a,
-      interactiveMesh: p,
+      interactiveMesh: g,
       positions: l,
       uvs: m
     }
-  ] = yn({
-    scene: h,
+  ] = xn({
+    scene: y,
     size: e,
     dpr: t,
     geometry: v,
@@ -3531,84 +3598,84 @@ const De = (e, t, n, r, o) => {
     uvs: u,
     uniforms: c,
     onBeforeCompile: f
-  }), [x, S] = j({
-    scene: h,
+  }), [p, C] = j({
+    scene: y,
     camera: o,
     size: e,
     dpr: d.fbo,
     samples: n,
     isSizeUpdate: r,
     depthBuffer: !0
-  }), M = A(
-    (_, T, w) => (g(_, T, w), S(_.gl)),
-    [S, g]
-  ), y = A(
-    (_, T) => {
-      g(null, _, T);
+  }), b = D(
+    (S, _, T) => (x(S, _, T), C(S.gl)),
+    [C, x]
+  ), h = D(
+    (S, _) => {
+      x(null, S, _);
     },
-    [g]
+    [x]
   );
   return [
-    M,
-    y,
+    b,
+    h,
     {
-      scene: h,
+      scene: y,
       points: a,
-      interactiveMesh: p,
-      renderTarget: x,
-      output: x.texture,
+      interactiveMesh: g,
+      renderTarget: p,
+      output: p.texture,
       positions: l,
       uvs: m
     }
   ];
 };
-function bn(e, t = 1e-4) {
+function yn(e, t = 1e-4) {
   t = Math.max(t, Number.EPSILON);
   const n = {}, r = e.getIndex(), o = e.getAttribute("position"), v = r ? r.count : o.count;
   let s = 0;
-  const u = Object.keys(e.attributes), c = {}, f = {}, d = [], h = ["getX", "getY", "getZ", "getW"];
+  const u = Object.keys(e.attributes), c = {}, f = {}, d = [], y = ["getX", "getY", "getZ", "getW"];
   for (let l = 0, m = u.length; l < m; l++) {
-    const x = u[l];
-    c[x] = [];
-    const S = e.morphAttributes[x];
-    S && (f[x] = new Array(S.length).fill(0).map(() => []));
+    const p = u[l];
+    c[p] = [];
+    const C = e.morphAttributes[p];
+    C && (f[p] = new Array(C.length).fill(0).map(() => []));
   }
-  const g = Math.log10(1 / t), a = Math.pow(10, g);
+  const x = Math.log10(1 / t), a = Math.pow(10, x);
   for (let l = 0; l < v; l++) {
     const m = r ? r.getX(l) : l;
-    let x = "";
-    for (let S = 0, M = u.length; S < M; S++) {
-      const y = u[S], _ = e.getAttribute(y), T = _.itemSize;
-      for (let w = 0; w < T; w++)
-        x += `${~~(_[h[w]](m) * a)},`;
+    let p = "";
+    for (let C = 0, b = u.length; C < b; C++) {
+      const h = u[C], S = e.getAttribute(h), _ = S.itemSize;
+      for (let T = 0; T < _; T++)
+        p += `${~~(S[y[T]](m) * a)},`;
     }
-    if (x in n)
-      d.push(n[x]);
+    if (p in n)
+      d.push(n[p]);
     else {
-      for (let S = 0, M = u.length; S < M; S++) {
-        const y = u[S], _ = e.getAttribute(y), T = e.morphAttributes[y], w = _.itemSize, U = c[y], F = f[y];
-        for (let I = 0; I < w; I++) {
-          const R = h[I];
-          if (U.push(_[R](m)), T)
-            for (let D = 0, k = T.length; D < k; D++)
-              F[D].push(T[D][R](m));
+      for (let C = 0, b = u.length; C < b; C++) {
+        const h = u[C], S = e.getAttribute(h), _ = e.morphAttributes[h], T = S.itemSize, I = c[h], R = f[h];
+        for (let F = 0; F < T; F++) {
+          const P = y[F];
+          if (I.push(S[P](m)), _)
+            for (let U = 0, N = _.length; U < N; U++)
+              R[U].push(_[U][P](m));
         }
       }
-      n[x] = s, d.push(s), s++;
+      n[p] = s, d.push(s), s++;
     }
   }
-  const p = e.clone();
+  const g = e.clone();
   for (let l = 0, m = u.length; l < m; l++) {
-    const x = u[l], S = e.getAttribute(x), M = new S.array.constructor(c[x]), y = new we(M, S.itemSize, S.normalized);
-    if (p.setAttribute(x, y), x in f)
-      for (let _ = 0; _ < f[x].length; _++) {
-        const T = e.morphAttributes[x][_], w = new T.array.constructor(f[x][_]), U = new we(w, T.itemSize, T.normalized);
-        p.morphAttributes[x][_] = U;
+    const p = u[l], C = e.getAttribute(p), b = new C.array.constructor(c[p]), h = new Te(b, C.itemSize, C.normalized);
+    if (g.setAttribute(p, h), p in f)
+      for (let S = 0; S < f[p].length; S++) {
+        const _ = e.morphAttributes[p][S], T = new _.array.constructor(f[p][S]), I = new Te(T, _.itemSize, _.normalized);
+        g.morphAttributes[p][S] = I;
       }
   }
-  return p.setIndex(d), p;
+  return g.setIndex(d), g;
 }
-var Mn = `vec3 random3(vec3 c) {
+var bn = `vec3 random3(vec3 c) {
 	float j = 4096.0*sin(dot(c,vec3(17.0, 59.4, 15.0)));
 	vec3 r;
 	r.z = fract(512.0*j);
@@ -3660,7 +3727,7 @@ float snoiseFractal(vec3 m) {
 				+0.2666667* snoise(2.0*m)
 				+0.1333333* snoise(4.0*m)
 				+0.0666667* snoise(8.0*m);
-}`, Sn = `#ifdef USE_TRANSMISSION
+}`, Mn = `#ifdef USE_TRANSMISSION
 
 	
 	
@@ -3858,7 +3925,7 @@ float snoiseFractal(vec3 m) {
 		return vec4( ( 1.0 - F ) * attenuatedColor, 1.0 - ( 1.0 - transmittedLight.a ) * transmittanceFactor );
 
 	}
-#endif`, _n = `#ifdef USE_TRANSMISSION
+#endif`, Sn = `#ifdef USE_TRANSMISSION
 
 material.transmission = _transmission;
 material.transmissionAlpha = 1.0;
@@ -3998,7 +4065,7 @@ const Pe = (e) => {
 		vEdgeViewPosition = normalize(viewPosition.xyz);
 		`
   ), t;
-}, Cn = ({
+}, _n = ({
   baseMaterial: e,
   materialParameters: t,
   onBeforeCompile: n,
@@ -4006,7 +4073,7 @@ const Pe = (e) => {
   isCustomTransmission: o = !1,
   uniforms: v
 }) => {
-  const { material: s, depthMaterial: u } = b(() => {
+  const { material: s, depthMaterial: u } = M(() => {
     const c = new (e || i.MeshPhysicalMaterial)(
       t || {}
     );
@@ -4014,38 +4081,38 @@ const Pe = (e) => {
       uniforms: {
         uTime: { value: 0 },
         uWobblePositionFrequency: {
-          value: N.wobblePositionFrequency
+          value: q.wobblePositionFrequency
         },
         uWobbleTimeFrequency: {
-          value: N.wobbleTimeFrequency
+          value: q.wobbleTimeFrequency
         },
-        uWobbleStrength: { value: N.wobbleStrength },
+        uWobbleStrength: { value: q.wobbleStrength },
         uWarpPositionFrequency: {
-          value: N.warpPositionFrequency
+          value: q.warpPositionFrequency
         },
-        uWarpTimeFrequency: { value: N.warpTimeFrequency },
-        uWarpStrength: { value: N.warpStrength },
-        uColor0: { value: N.color0 },
-        uColor1: { value: N.color1 },
-        uColor2: { value: N.color2 },
-        uColor3: { value: N.color3 },
-        uColorMix: { value: N.colorMix },
-        uEdgeThreshold: { value: N.edgeThreshold },
-        uEdgeColor: { value: N.edgeColor },
+        uWarpTimeFrequency: { value: q.warpTimeFrequency },
+        uWarpStrength: { value: q.warpStrength },
+        uColor0: { value: q.color0 },
+        uColor1: { value: q.color1 },
+        uColor2: { value: q.color2 },
+        uColor3: { value: q.color3 },
+        uColorMix: { value: q.colorMix },
+        uEdgeThreshold: { value: q.edgeThreshold },
+        uEdgeColor: { value: q.edgeColor },
         uChromaticAberration: {
-          value: N.chromaticAberration
+          value: q.chromaticAberration
         },
-        uAnisotropicBlur: { value: N.anisotropicBlur },
-        uDistortion: { value: N.distortion },
-        uDistortionScale: { value: N.distortionScale },
-        uTemporalDistortion: { value: N.temporalDistortion },
-        uRefractionSamples: { value: N.refractionSamples },
+        uAnisotropicBlur: { value: q.anisotropicBlur },
+        uDistortion: { value: q.distortion },
+        uDistortionScale: { value: q.distortionScale },
+        uTemporalDistortion: { value: q.temporalDistortion },
+        uRefractionSamples: { value: q.refractionSamples },
         transmission: { value: 0 },
         _transmission: { value: 1 },
         transmissionMap: { value: null },
         ...v
       }
-    }), c.onBeforeCompile = (d, h) => {
+    }), c.onBeforeCompile = (d, y) => {
       Object.assign(d.uniforms, c.userData.uniforms), d.vertexShader = Pe(d.vertexShader), d.fragmentShader = d.fragmentShader.replace(
         "#include <color_fragment>",
         `
@@ -4079,7 +4146,7 @@ const Pe = (e) => {
 				uniform float uRefractionSamples;
 				
 				float rand(float n){return fract(sin(n) * 43758.5453123);}
-				${Mn}
+				${bn}
 
 				varying float vWobble;
 				varying vec2 vPosition;
@@ -4095,17 +4162,17 @@ const Pe = (e) => {
 				`
       ), c.type === "MeshPhysicalMaterial" && o && (d.fragmentShader = d.fragmentShader.replace(
         "#include <transmission_pars_fragment>",
-        `${Sn}`
+        `${Mn}`
       ), d.fragmentShader = d.fragmentShader.replace(
         "#include <transmission_fragment>",
-        `${_n}`
-      )), n && n(d, h);
+        `${Sn}`
+      )), n && n(d, y);
     }, c.needsUpdate = !0;
     const f = new i.MeshDepthMaterial({
       depthPacking: i.RGBADepthPacking
     });
-    return f.onBeforeCompile = (d, h) => {
-      Object.assign(d.uniforms, c.userData.uniforms), d.vertexShader = Pe(d.vertexShader), r && r(d, h);
+    return f.onBeforeCompile = (d, y) => {
+      Object.assign(d.uniforms, c.userData.uniforms), d.vertexShader = Pe(d.vertexShader), r && r(d, y);
     }, f.needsUpdate = !0, { material: c, depthMaterial: f };
   }, [
     t,
@@ -4119,7 +4186,7 @@ const Pe = (e) => {
     material: s,
     depthMaterial: u
   };
-}, Tn = ({
+}, Cn = ({
   scene: e = !1,
   geometry: t,
   isCustomTransmission: n,
@@ -4129,36 +4196,36 @@ const Pe = (e) => {
   depthOnBeforeCompile: s,
   uniforms: u
 }) => {
-  const c = b(() => {
+  const c = M(() => {
     let m = t || new i.IcosahedronGeometry(2, 20);
-    return m = bn(m), m.computeTangents(), m;
-  }, [t]), { material: f, depthMaterial: d } = Cn({
+    return m = yn(m), m.computeTangents(), m;
+  }, [t]), { material: f, depthMaterial: d } = _n({
     baseMaterial: r,
     materialParameters: o,
     onBeforeCompile: v,
     depthOnBeforeCompile: s,
     uniforms: u,
     isCustomTransmission: n
-  }), h = L(e, c, f, i.Mesh), g = f.userData, a = P(g), p = V(g);
+  }), y = L(e, c, f, i.Mesh), x = f.userData, a = A(x), g = V(x);
   return [
-    A(
-      (m, x, S) => {
+    D(
+      (m, p, C) => {
         m && a(
           "uTime",
-          (x == null ? void 0 : x.beat) || m.clock.getElapsedTime()
-        ), x !== void 0 && (a("uWobbleStrength", x.wobbleStrength), a(
+          (p == null ? void 0 : p.beat) || m.clock.getElapsedTime()
+        ), p !== void 0 && (a("uWobbleStrength", p.wobbleStrength), a(
           "uWobblePositionFrequency",
-          x.wobblePositionFrequency
-        ), a("uWobbleTimeFrequency", x.wobbleTimeFrequency), a("uWarpStrength", x.warpStrength), a("uWarpPositionFrequency", x.warpPositionFrequency), a("uWarpTimeFrequency", x.warpTimeFrequency), a("uColor0", x.color0), a("uColor1", x.color1), a("uColor2", x.color2), a("uColor3", x.color3), a("uColorMix", x.colorMix), a("uEdgeThreshold", x.edgeThreshold), a("uEdgeColor", x.edgeColor), a("uChromaticAberration", x.chromaticAberration), a("uAnisotropicBlur", x.anisotropicBlur), a("uDistortion", x.distortion), a("uDistortionScale", x.distortionScale), a("uRefractionSamples", x.refractionSamples), a("uTemporalDistortion", x.temporalDistortion), p(S));
+          p.wobblePositionFrequency
+        ), a("uWobbleTimeFrequency", p.wobbleTimeFrequency), a("uWarpStrength", p.warpStrength), a("uWarpPositionFrequency", p.warpPositionFrequency), a("uWarpTimeFrequency", p.warpTimeFrequency), a("uColor0", p.color0), a("uColor1", p.color1), a("uColor2", p.color2), a("uColor3", p.color3), a("uColorMix", p.colorMix), a("uEdgeThreshold", p.edgeThreshold), a("uEdgeColor", p.edgeColor), a("uChromaticAberration", p.chromaticAberration), a("uAnisotropicBlur", p.anisotropicBlur), a("uDistortion", p.distortion), a("uDistortionScale", p.distortionScale), a("uRefractionSamples", p.refractionSamples), a("uTemporalDistortion", p.temporalDistortion), g(C));
       },
-      [a, p]
+      [a, g]
     ),
     {
-      mesh: h,
+      mesh: y,
       depthMaterial: d
     }
   ];
-}, N = Object.freeze({
+}, q = Object.freeze({
   wobbleStrength: 0.3,
   wobblePositionFrequency: 0.3,
   wobbleTimeFrequency: 0.3,
@@ -4179,7 +4246,7 @@ const Pe = (e) => {
   temporalDistortion: 0,
   refractionSamples: 6,
   beat: !1
-}), ar = ({
+}), or = ({
   size: e,
   dpr: t,
   samples: n,
@@ -4191,9 +4258,9 @@ const Pe = (e) => {
   uniforms: c,
   onBeforeCompile: f,
   depthOnBeforeCompile: d,
-  isCustomTransmission: h
+  isCustomTransmission: y
 }) => {
-  const g = B(t), a = b(() => new i.Scene(), []), [p, { mesh: l, depthMaterial: m }] = Tn({
+  const x = O(t), a = M(() => new i.Scene(), []), [g, { mesh: l, depthMaterial: m }] = Cn({
     baseMaterial: s,
     materialParameters: u,
     scene: a,
@@ -4201,41 +4268,41 @@ const Pe = (e) => {
     uniforms: c,
     onBeforeCompile: f,
     depthOnBeforeCompile: d,
-    isCustomTransmission: h
-  }), [x, S] = j({
+    isCustomTransmission: y
+  }), [p, C] = j({
     scene: a,
     camera: o,
     size: e,
-    dpr: g.fbo,
+    dpr: x.fbo,
     samples: n,
     isSizeUpdate: r,
     depthBuffer: !0
-  }), M = A(
-    (_, T, w) => (p(_, T, w), S(_.gl)),
-    [S, p]
-  ), y = A(
-    (_, T) => {
-      p(null, _, T);
+  }), b = D(
+    (S, _, T) => (g(S, _, T), C(S.gl)),
+    [C, g]
+  ), h = D(
+    (S, _) => {
+      g(null, S, _);
     },
-    [p]
+    [g]
   );
   return [
-    M,
-    y,
+    b,
+    h,
     {
       scene: a,
       mesh: l,
       depthMaterial: m,
-      renderTarget: x,
-      output: x.texture
+      renderTarget: p,
+      output: p.texture
     }
   ];
-}, ir = (e, t, n) => {
-  const r = b(() => {
+}, ar = (e, t, n) => {
+  const r = M(() => {
     const o = new i.Mesh(t, n);
     return e.add(o), o;
   }, [t, n, e]);
-  return re(() => () => {
+  return oe(() => () => {
     e.remove(r), t.dispose(), n.dispose();
   }, [e, t, n, r]), r;
 }, fe = Object.freeze({
@@ -4334,18 +4401,18 @@ const Pe = (e) => {
     return e < 0.5 ? (1 - fe.easeOutBounce(1 - 2 * e)) / 2 : (1 + fe.easeOutBounce(2 * e - 1)) / 2;
   }
 });
-function wn(e) {
+function Tn(e) {
   let t = Math.sin(e * 12.9898) * 43758.5453;
   return t - Math.floor(t);
 }
-const ur = (e, t = "easeOutQuart") => {
+const ir = (e, t = "easeOutQuart") => {
   const n = e / 60, r = fe[t];
-  return A(
+  return D(
     (v) => {
       let s = v.getElapsedTime() * n;
       const u = Math.floor(s), c = r(s - u);
       s = c + u;
-      const f = wn(u);
+      const f = Tn(u);
       return {
         beat: s,
         floor: u,
@@ -4355,21 +4422,21 @@ const ur = (e, t = "easeOutQuart") => {
     },
     [n, r]
   );
-}, sr = (e = 60) => {
-  const t = b(() => 1 / Math.max(Math.min(e, 60), 1), [e]), n = O(null);
-  return A(
+}, ur = (e = 60) => {
+  const t = M(() => 1 / Math.max(Math.min(e, 60), 1), [e]), n = E(null);
+  return D(
     (o) => {
       const v = o.getElapsedTime();
       return n.current === null || v - n.current >= t ? (n.current = v, !0) : !1;
     },
     [t]
   );
-}, Dn = (e) => {
+}, wn = (e) => {
   var r, o;
   const t = (r = e.dom) == null ? void 0 : r.length, n = (o = e.texture) == null ? void 0 : o.length;
   return !t || !n || t !== n;
 };
-var Rn = `varying vec2 vUv;
+var Dn = `varying vec2 vUv;
 
 void main() {
 	vUv = uv;
@@ -4418,7 +4485,7 @@ void main() {
 
 	gl_FragColor = vec4(textureColor, alpha);
 }`;
-const An = ({
+const Rn = ({
   params: e,
   scene: t,
   uniforms: n,
@@ -4439,7 +4506,7 @@ const An = ({
         },
         ...n
       },
-      vertexShader: Rn,
+      vertexShader: Dn,
       fragmentShader: Pn,
       ...z,
       // Must be transparent.
@@ -4449,9 +4516,9 @@ const An = ({
     const u = new i.Mesh(new i.PlaneGeometry(1, 1), s);
     t.add(u);
   });
-}, In = () => {
-  const e = O([]), t = O([]);
-  return A(
+}, An = () => {
+  const e = E([]), t = E([]);
+  return D(
     ({
       isIntersectingRef: r,
       isIntersectingOnceRef: o,
@@ -4462,9 +4529,9 @@ const An = ({
       }), t.current = [], e.current = [];
       const s = new Array(v.dom.length).fill(!1);
       r.current = [...s], o.current = [...s], v.dom.forEach((u, c) => {
-        const f = (h) => {
-          h.forEach((g) => {
-            v.onIntersect[c] && v.onIntersect[c](g), r.current[c] = g.isIntersecting;
+        const f = (y) => {
+          y.forEach((x) => {
+            v.onIntersect[c] && v.onIntersect[c](x), r.current[c] = x.isIntersecting;
           });
         }, d = new IntersectionObserver(f, {
           rootMargin: "0px",
@@ -4475,8 +4542,8 @@ const An = ({
     },
     []
   );
-}, Fn = () => {
-  const e = O([]), t = A(
+}, In = () => {
+  const e = E([]), t = D(
     ({
       params: n,
       customParams: r,
@@ -4486,35 +4553,35 @@ const An = ({
       isIntersectingRef: u
     }) => {
       s.children.length !== e.current.length && (e.current = new Array(s.children.length)), s.children.forEach((c, f) => {
-        var g, a, p, l, m, x;
+        var x, a, g, l, m, p;
         const d = n.dom[f];
         if (!d)
           return;
-        const h = d.getBoundingClientRect();
-        if (e.current[f] = h, c.scale.set(h.width, h.height, 1), c.position.set(
-          h.left + h.width * 0.5 - o.width * 0.5,
-          -h.top - h.height * 0.5 + o.height * 0.5,
+        const y = d.getBoundingClientRect();
+        if (e.current[f] = y, c.scale.set(y.width, y.height, 1), c.position.set(
+          y.left + y.width * 0.5 - o.width * 0.5,
+          -y.top - y.height * 0.5 + o.height * 0.5,
           0
         ), u.current[f] && (n.rotation[f] && c.rotation.copy(n.rotation[f]), c instanceof i.Mesh)) {
-          const S = c.material, M = P(S), y = V(S);
-          M("u_texture", n.texture[f]), M("u_textureResolution", [
-            ((p = (a = (g = n.texture[f]) == null ? void 0 : g.source) == null ? void 0 : a.data) == null ? void 0 : p.width) || 0,
-            ((x = (m = (l = n.texture[f]) == null ? void 0 : l.source) == null ? void 0 : m.data) == null ? void 0 : x.height) || 0
-          ]), M(
+          const C = c.material, b = A(C), h = V(C);
+          b("u_texture", n.texture[f]), b("u_textureResolution", [
+            ((g = (a = (x = n.texture[f]) == null ? void 0 : x.source) == null ? void 0 : a.data) == null ? void 0 : g.width) || 0,
+            ((p = (m = (l = n.texture[f]) == null ? void 0 : l.source) == null ? void 0 : m.data) == null ? void 0 : p.height) || 0
+          ]), b(
             "u_resolution",
-            v.current.set(h.width, h.height)
-          ), M(
+            v.current.set(y.width, y.height)
+          ), b(
             "u_borderRadius",
             n.boderRadius[f] ? n.boderRadius[f] : 0
-          ), y(r);
+          ), h(r);
         }
       });
     },
     []
   );
   return [e.current, t];
-}, Vn = () => {
-  const e = O([]), t = O([]), n = A((r, o = !1) => {
+}, Fn = () => {
+  const e = E([]), t = E([]), n = D((r, o = !1) => {
     e.current.forEach((s, u) => {
       s && (t.current[u] = !0);
     });
@@ -4526,9 +4593,9 @@ const An = ({
     isIntersectingOnceRef: t,
     isIntersecting: n
   };
-}, zn = (e) => ({ onView: n, onHidden: r }) => {
-  const o = O(!1);
-  re(() => {
+}, Vn = (e) => ({ onView: n, onHidden: r }) => {
+  const o = E(!1);
+  oe(() => {
     let v;
     const s = () => {
       e.current.some((u) => u) ? o.current || (n && n(), o.current = !0) : o.current && (r && r(), o.current = !1), v = requestAnimationFrame(s);
@@ -4537,88 +4604,89 @@ const An = ({
       cancelAnimationFrame(v);
     };
   }, [n, r]);
-}, Un = {
+}, zn = {
   texture: [],
   dom: [],
   boderRadius: [],
   rotation: [],
   onIntersect: []
-}, lr = ({ size: e, dpr: t, samples: n, isSizeUpdate: r, uniforms: o, onBeforeCompile: v }, s = []) => {
-  const u = B(t), c = b(() => new i.Scene(), []), f = $(e), [d, h] = j({
+}, sr = ({ size: e, dpr: t, samples: n, isSizeUpdate: r, uniforms: o, onBeforeCompile: v }, s = []) => {
+  const u = O(t), c = M(() => new i.Scene(), []), f = $(e), [d, y] = j({
     scene: c,
     camera: f,
     size: e,
     dpr: u.fbo,
     samples: n,
     isSizeUpdate: r
-  }), [g, a] = W({
-    ...Un,
+  }), [x, a] = W({
+    ...zn,
     updateKey: performance.now()
-  }), [p, l] = Fn(), m = O(new i.Vector2(0, 0)), [x, S] = Ee(!0);
-  b(
-    () => S(!0),
+  }), [g, l] = In(), m = E(new i.Vector2(0, 0)), [p, C] = Be(!0);
+  M(
+    () => C(!0),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     s
   );
-  const M = O(null), y = b(() => C, []), _ = In(), { isIntersectingOnceRef: T, isIntersectingRef: w, isIntersecting: U } = Vn(), F = zn(w);
+  const b = E(null), h = M(() => w, []), S = An(), { isIntersectingOnceRef: _, isIntersectingRef: T, isIntersecting: I } = Fn(), R = Vn(T), F = M(() => (U, N) => {
+    U && a(U), l({
+      params: x,
+      customParams: N,
+      size: e,
+      resolutionRef: m,
+      scene: c,
+      isIntersectingRef: T
+    });
+  }, [T, a, l, e, c, x]);
   return [
-    A(
-      (R, D, k) => {
-        const { gl: J, size: X } = R;
-        if (D && a(D), Dn(g))
-          return y;
-        if (x) {
-          if (M.current === g.updateKey)
-            return y;
-          M.current = g.updateKey;
+    D(
+      (U, N, ee) => {
+        const { gl: X, size: G } = U;
+        if (F(N, ee), wn(x))
+          return h;
+        if (p) {
+          if (b.current === x.updateKey)
+            return h;
+          b.current = x.updateKey;
         }
-        return x && (An({
-          params: g,
-          size: X,
+        return p && (Rn({
+          params: x,
+          size: G,
           scene: c,
           uniforms: o,
           onBeforeCompile: v
-        }), _({
-          isIntersectingRef: w,
-          isIntersectingOnceRef: T,
-          params: g
-        }), S(!1)), l({
-          params: g,
-          customParams: k,
-          size: X,
-          resolutionRef: m,
-          scene: c,
-          isIntersectingRef: w
-        }), h(J);
+        }), S({
+          isIntersectingRef: T,
+          isIntersectingOnceRef: _,
+          params: x
+        }), C(!1)), y(X);
       },
       [
-        h,
+        y,
         o,
-        a,
-        _,
-        l,
+        S,
         v,
-        x,
+        p,
         c,
-        g,
+        x,
+        _,
         T,
-        w,
-        y
+        h,
+        F
       ]
     ),
-    a,
+    F,
     {
       scene: c,
       camera: f,
       renderTarget: d,
       output: d.texture,
-      isIntersecting: U,
-      DOMRects: p,
-      intersections: w.current,
-      useDomView: F
+      isIntersecting: I,
+      DOMRects: g,
+      intersections: T.current,
+      useDomView: R
     }
   ];
-}, cr = ({
+}, lr = ({
   scene: e,
   camera: t,
   size: n,
@@ -4628,9 +4696,9 @@ const An = ({
   depthBuffer: s = !1,
   depthTexture: u = !1
 }, c) => {
-  const f = O([]), d = K(n, r);
-  f.current = b(() => Array.from({ length: c }, () => {
-    const g = new i.WebGLRenderTarget(
+  const f = E([]), d = Y(n, r);
+  f.current = M(() => Array.from({ length: c }, () => {
+    const x = new i.WebGLRenderTarget(
       d.x,
       d.y,
       {
@@ -4639,97 +4707,98 @@ const An = ({
         depthBuffer: s
       }
     );
-    return u && (g.depthTexture = new i.DepthTexture(
+    return u && (x.depthTexture = new i.DepthTexture(
       d.x,
       d.y,
       i.FloatType
-    )), g;
+    )), x;
   }), [c]), o && f.current.forEach(
-    (g) => g.setSize(d.x, d.y)
-  ), re(() => {
-    const g = f.current;
+    (x) => x.setSize(d.x, d.y)
+  ), oe(() => {
+    const x = f.current;
     return () => {
-      g.forEach((a) => a.dispose());
+      x.forEach((a) => a.dispose());
     };
   }, [c]);
-  const h = A(
-    (g, a, p) => {
+  const y = D(
+    (x, a, g) => {
       const l = f.current[a];
       return Se({
-        gl: g,
+        gl: x,
         scene: e,
         camera: t,
         fbo: l,
-        onBeforeRender: () => p && p({ read: l.texture })
+        onBeforeRender: () => g && g({ read: l.texture })
       }), l.texture;
     },
     [e, t]
   );
-  return [f.current, h];
+  return [f.current, y];
 };
 export {
   jt as ALPHABLENDING_PARAMS,
-  pn as BLANK_PARAMS,
-  le as BLENDING_PARAMS,
+  mn as BLANK_PARAMS,
+  ce as BLENDING_PARAMS,
   pe as BRIGHTNESSPICKER_PARAMS,
-  ee as BRUSH_PARAMS,
-  Q as CHROMAKEY_PARAMS,
-  H as COLORSTRATA_PARAMS,
-  se as COSPALETTE_PARAMS,
-  Ht as COVERTEXTURE_PARAMS,
-  Un as DOMSYNCER_PARAMS,
+  te as BRUSH_PARAMS,
+  Z as CHROMAKEY_PARAMS,
+  Q as COLORSTRATA_PARAMS,
+  le as COSPALETTE_PARAMS,
+  Yt as COVERTEXTURE_PARAMS,
+  Ae as DELTA_TIME,
+  zn as DOMSYNCER_PARAMS,
   ye as DUOTONE_PARAMS,
   fe as Easing,
   ge as FBO_OPTION,
-  st as FLUID_PARAMS,
+  ut as FLUID_PARAMS,
   Ie as FXBLENDING_PARAMS,
-  ne as FXTEXTURE_PARAMS,
+  re as FXTEXTURE_PARAMS,
   be as HSV_PARAMS,
-  oe as MARBLE_PARAMS,
-  E as MORPHPARTICLES_PARAMS,
+  ie as MARBLE_PARAMS,
+  B as MORPHPARTICLES_PARAMS,
   de as MOTIONBLUR_PARAMS,
-  te as NOISE_PARAMS,
-  mt as RIPPLE_PARAMS,
+  ne as NOISE_PARAMS,
+  vt as RIPPLE_PARAMS,
   Fe as SIMPLEBLUR_PARAMS,
   ve as WAVE_PARAMS,
-  N as WOBBLE3D_PARAMS,
+  q as WOBBLE3D_PARAMS,
   Se as renderFBO,
   V as setCustomUniform,
-  P as setUniform,
-  ir as useAddMesh,
-  Hn as useAlphaBlending,
-  ur as useBeat,
-  rr as useBlank,
-  Gn as useBlending,
-  Xn as useBrightnessPicker,
-  En as useBrush,
+  A as setUniform,
+  ar as useAddMesh,
+  Yn as useAlphaBlending,
+  ir as useBeat,
+  nr as useBlank,
+  kn as useBlending,
+  Kn as useBrightnessPicker,
+  Bn as useBrush,
   $ as useCamera,
-  nr as useChromaKey,
-  qn as useColorStrata,
-  cr as useCopyTexture,
-  Nn as useCosPalette,
-  Zn as useCoverTexture,
-  yn as useCreateMorphParticles,
-  Tn as useCreateWobble3D,
-  lr as useDomSyncer,
-  ae as useDoubleFBO,
-  kn as useDuoTone,
-  sr as useFPSLimiter,
-  Ln as useFluid,
-  Yn as useFxBlending,
-  Kn as useFxTexture,
-  Qn as useHSV,
+  tr as useChromaKey,
+  Wn as useColorStrata,
+  lr as useCopyTexture,
+  qn as useCosPalette,
+  Qn as useCoverTexture,
+  xn as useCreateMorphParticles,
+  Cn as useCreateWobble3D,
+  sr as useDomSyncer,
+  ue as useDoubleFBO,
+  Nn as useDuoTone,
+  ur as useFPSLimiter,
+  En as useFluid,
+  Xn as useFxBlending,
+  Gn as useFxTexture,
+  Hn as useHSV,
   jn as useMarble,
-  or as useMorphParticles,
-  er as useMotionBlur,
-  Wn as useNoise,
+  rr as useMorphParticles,
+  Jn as useMotionBlur,
+  $n as useNoise,
   W as useParams,
   Me as usePointer,
-  K as useResolution,
-  $n as useRipple,
-  Jn as useSimpleBlur,
+  Y as useResolution,
+  Ln as useRipple,
+  Zn as useSimpleBlur,
   j as useSingleFBO,
-  tr as useWave,
-  ar as useWobble3D
+  er as useWave,
+  or as useWobble3D
 };
 //# sourceMappingURL=use-shader-fx.js.map

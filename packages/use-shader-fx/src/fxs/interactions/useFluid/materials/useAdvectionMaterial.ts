@@ -7,6 +7,7 @@ import {
    DEFAULT_TEXTURE,
    MATERIAL_BASIC_PARAMS,
 } from "../../../../libs/constants";
+import { DELTA_TIME } from "..";
 
 export class AdvectionMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -28,7 +29,7 @@ export const useAdvectionMaterial = ({
             uVelocity: { value: DEFAULT_TEXTURE },
             uSource: { value: DEFAULT_TEXTURE },
             texelSize: { value: new THREE.Vector2() },
-            dt: { value: 0.0 },
+            dt: { value: DELTA_TIME },
             dissipation: { value: 0.0 },
             ...uniforms,
          },

@@ -82,6 +82,14 @@ export const useMotionBlur = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: MotionBlurParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -90,25 +98,23 @@ export const useMotionBlur = ({
       ) => {
          const { gl } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uBegin", params.begin!);
          updateValue("uEnd", params.end!);
          updateValue("uStrength", params.strength!);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl, ({ read }) => {
             updateValue("uBackbuffer", read);
          });
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, updateParams, params]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

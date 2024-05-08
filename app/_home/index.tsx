@@ -29,7 +29,7 @@ export default function Page() {
       null
    ) as React.MutableRefObject<HTMLDivElement>;
    const [bpm, setBpm] = useState(120);
-   const [easing, setEasing] = useState<EasingTypes>("easeOutQuad");
+   const [easing, setEasing] = useState<EasingTypes>("easeInOutBack");
 
    const easingTypes: EasingTypes[] = [
       "easeInSine",
@@ -67,7 +67,7 @@ export default function Page() {
    return (
       <>
          <div className={s.canvas}>
-            <ShaderFx eventSource={wrapper}>
+            <ShaderFx eventSource={wrapper} isDprUpdate={false}>
                <Playground bpm={bpm} easing={easing} />
             </ShaderFx>
          </div>

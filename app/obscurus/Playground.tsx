@@ -76,8 +76,8 @@ const setGUI = (gui: GUI) => {
    wobble.add(WOBBLE_CONFIG, "warpStrength", 0, 10, 0.01);
    wobble.add(WOBBLE_CONFIG, "warpPositionFrequency", 0, 10, 0.01);
    wobble.add(WOBBLE_CONFIG, "warpTimeFrequency", 0, 10, 0.01);
-   wobble.add(WOBBLE_CONFIG, "wobbleShine", 0, 5, 0.01);
-   wobble.add(WOBBLE_CONFIG, "samples", 0, 10, 1);
+   // wobble.add(WOBBLE_CONFIG, "wobbleShine", 0, 5, 0.01);
+   // wobble.add(WOBBLE_CONFIG, "samples", 0, 10, 1);
    wobble.add(WOBBLE_CONFIG, "colorMix", 0, 1, 0.01);
    wobble.add(WOBBLE_CONFIG, "chromaticAberration", 0, 10, 0.01);
    wobble.add(WOBBLE_CONFIG, "anisotropicBlur", 0, 10, 0.01);
@@ -133,6 +133,7 @@ export const Playground = () => {
    const [updateWobble, wobble] = useCreateWobble3D({
       geometry: useMemo(() => new THREE.IcosahedronGeometry(2.4, 10), []),
       materialParameters: MATERIAL_CONFIG,
+      isCustomTransmission: true,
    });
    const [updateParticle, particles] = useCreateMorphParticles({
       size,

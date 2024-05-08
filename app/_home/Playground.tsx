@@ -1,24 +1,20 @@
 import * as THREE from "three";
-import { useMemo, useRef } from "react";
-import { useFrame, useThree, extend } from "@react-three/fiber";
+import { useCallback, useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import {
    useColorStrata,
    useMarble,
    useHSV,
    useBeat,
-   useCoverTexture,
    useFPSLimiter,
    EasingTypes,
    ColorStrataParams,
    HSVParams,
    MarbleParams,
-   useFluid,
+   useBlank,
 } from "@/packages/use-shader-fx/src";
 
-import { FxMaterial, FxMaterialProps } from "./FxMaterial";
-import { useVideoTexture } from "@react-three/drei";
-
-extend({ FxMaterial });
+import { Environment, OrbitControls } from "@react-three/drei";
 
 export const CONFIG = {
    marble: {
@@ -86,19 +82,9 @@ export const Playground = ({
    bpm: number;
    easing: EasingTypes;
 }) => {
-   const ref = useRef<FxMaterialProps>();
    const { size, viewport } = useThree();
 
-   const funkun = useVideoTexture("/FT_Ch02-comp.mp4", {
-      width: 1280,
-      height: 780,
-   });
-   const [updateCover, setCover, { output: cover }] = useCoverTexture({
-      size,
-      dpr: viewport.dpr,
-   });
-   setCover({ texture: funkun });
-
+   // init fxs
    const [updateColorStrata, setColorStrata, { output: colorStrata }] =
       useColorStrata({ size, dpr: viewport.dpr });
    const [updateMarble, setMarble, { output: marble }] = useMarble({
@@ -109,47 +95,78 @@ export const Playground = ({
       size,
       dpr: viewport.dpr,
    });
-   const [updateFluid, setFluid, { output: brush }] = useFluid({
+   const [updateBlank, _, { output: blank }] = useBlank({
       size,
-      dpr: 0.06,
+      dpr: viewport.dpr,
+      uniforms: useMemo(
+         () => ({
+            u_noise: {
+               value: marble,
+            },
+            u_noiseIntensity: {
+               value: CONFIG.noiseIntensity,
+            },
+            u_colorStrata: {
+               value: hsv,
+            },
+         }),
+         [hsv, marble]
+      ),
+      onBeforeCompile: useCallback((shader: THREE.Shader) => {
+         shader.fragmentShader = shader.fragmentShader.replace(
+            "#usf uniforms",
+            `
+					uniform sampler2D u_noise;
+					uniform float u_noiseIntensity;
+					uniform sampler2D u_colorStrata;
+					float rand(vec2 n) { 
+						return fract(sin(dot(n ,vec2(12.9898,78.233))) * 43758.5453);
+					}
+			`
+         );
+         shader.fragmentShader = shader.fragmentShader.replace(
+            "#usf main",
+            `
+					vec2 uv = vUv;
+					float grain=rand(uv+sin(uTime))*.4;
+					grain=grain*.5+.5;
+					vec4 noise = texture2D(u_noise, uv);
+					uv += noise.rg * u_noiseIntensity;
+					vec4 colorStrata = texture2D(u_colorStrata,uv);
+					usf_FragColor = colorStrata*grain;
+			`
+         );
+      }, []),
+   });
+
+   // set fxs
+   setMarble({
+      ...setConfig("marble"),
+      timeStrength: 0.5,
+   });
+   setColorStrata({
+      ...setConfig("colorStrata"),
+      timeStrength: new THREE.Vector2(0, 0),
+   });
+   setHSV({
+      ...setConfig("hsv"),
+      texture: colorStrata,
    });
 
    useMemo(() => {
       CONFIG.random();
-
-      setMarble({
-         ...setConfig("marble"),
-         timeStrength: 0.5,
-      });
-
-      setColorStrata({
-         ...setConfig("colorStrata"),
-         timeStrength: new THREE.Vector2(0, 0),
-      });
-
-      setHSV({
-         ...setConfig("hsv"),
-         texture: colorStrata,
-      });
-
-      setFluid({
-         density_dissipation: 0.96,
-         velocity_dissipation: 0.96,
-         splat_radius: 0.001,
-         pressure_iterations: 2,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
    const beting = useBeat(bpm, easing);
    const limiter = useFPSLimiter(40);
    const hashMemo = useRef(0);
+   const meshRef = useRef<THREE.Mesh>(null);
 
    useFrame((props) => {
       if (!limiter(props.clock)) {
          return;
       }
-      const { beat, hash } = beting(props.clock);
+      const { beat, hash, fract } = beting(props.clock);
       if (hash !== hashMemo.current) {
          hashMemo.current = hash;
          CONFIG.random();
@@ -164,23 +181,31 @@ export const Playground = ({
          ...(setConfig("marble") as MarbleParams),
          beat: beat,
       });
-      updateFluid(props);
-      updateCover(props);
-      ref.current!.u_noiseIntensity = CONFIG.noiseIntensity;
-      ref.current!.u_time = props.clock.getElapsedTime();
+      updateBlank(
+         props,
+         {},
+         {
+            u_noiseIntensity: CONFIG.noiseIntensity,
+         }
+      );
+      meshRef.current!.rotation.x += 0.03 * fract;
+      meshRef.current!.rotation.y += 0.04 * fract;
+      meshRef.current!.rotation.z += 0.05 * fract;
+      meshRef.current!.position.z = Math.sin(fract) * 0.08;
    });
 
    return (
       <mesh>
-         <planeGeometry args={[2, 2]} />
-         <fxMaterial
-            key={FxMaterial.key}
-            u_noise={marble}
-            u_colorStrata={hsv}
-            u_brush={brush}
-            u_funkun={cover}
-            ref={ref}
-         />
+         <mesh ref={meshRef}>
+            <boxGeometry args={[3, 3, 3]} />
+            <meshStandardMaterial
+               map={blank}
+               roughness={0.05}
+               metalness={0.4}
+            />
+         </mesh>
+         <Environment preset="warehouse" environmentIntensity={0.1} />
+         <OrbitControls />
       </mesh>
    );
 };

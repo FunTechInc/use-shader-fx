@@ -1,4 +1,5 @@
 import "the-new-css-reset/css/reset.css";
+import "./main.css";
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
 import { UI } from "./_ui";

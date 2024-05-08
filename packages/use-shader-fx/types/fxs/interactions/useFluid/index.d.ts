@@ -1,8 +1,9 @@
 import * as THREE from "three";
-import { FluidCustomParams, FluidMaterials, FluidOnBeforeCompile } from "./useMesh";
+import { FluidMaterials, CustomFluidProps, CustomFluidParams } from "./useMesh";
 import { PointerValues } from "../../../misc/usePointer";
 import { HooksProps, HooksReturn } from "../../types";
 import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
+export declare const DELTA_TIME = 0.016;
 export type FluidParams = {
     /** density disspation , default : `0.98` */
     density_dissipation?: number;
@@ -41,15 +42,18 @@ export declare const FLUID_PARAMS: FluidParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useFluid: ({ size, dpr, samples, isSizeUpdate, fluidOnBeforeCompile, }: {
+export declare const useFluid: ({ size, dpr, samples, isSizeUpdate, customFluidProps, }: {
     /** you can add `onBeforeComile` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat`
       * ```ts
       * fluidOnBeforeCompile: {
           vorticity: {
              onBeforeCompile: (shader) => console.log(shader),
+                 uniforms:{
+                     hoge: { value: 0.0 },
+                 }
           },
        },
       * ```
      */
-    fluidOnBeforeCompile?: FluidOnBeforeCompile | undefined;
-} & HooksProps) => HooksReturn<FluidParams, FluidObject, FluidCustomParams>;
+    customFluidProps?: CustomFluidProps | undefined;
+} & HooksProps) => HooksReturn<FluidParams, FluidObject, CustomFluidParams>;

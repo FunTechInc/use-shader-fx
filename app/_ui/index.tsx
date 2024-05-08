@@ -14,11 +14,11 @@ const Menu = () => {
       "/useWobble3D",
       "/useBlank",
       "/expo2025",
+      "/shoasakawa-0",
    ];
    const pathname = usePathname();
    return (
       <nav className={s.nav}>
-         <p>samples:</p>
          <select
             value={pathname}
             onChange={(e) => {
@@ -46,14 +46,14 @@ export const UI = () => {
                   <Image
                      src="github-logo.svg"
                      alt="GitHub"
-                     width={28}
-                     height={28}
+                     width={98}
+                     height={96}
                   />
                </a>
             </li>
             <li>
                <a href="https://twitter.com/tkm_hmng8" target={"_blank"}>
-                  <Image src="x-logo.svg" alt="X" width={24} height={24} />
+                  <Image src="x-logo.svg" alt="X" width={1200} height={1227} />
                </a>
             </li>
          </ul>

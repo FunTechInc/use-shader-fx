@@ -31,11 +31,11 @@ export const UseRipple = (args: RippleParams) => {
    const updateGUI = useGUI(setGUI);
    const fxRef = React.useRef<FxMaterialProps>();
    const { size, viewport } = useThree();
-   const [updateRipple] = useRipple({
+   const [updateRipple, setRipple] = useRipple({
       size,
       texture: ripple,
       dpr: viewport.dpr,
-      max: 20,
+      max: 80,
       uniforms: React.useMemo(
          () => ({
             testtest: { value: 0 },
@@ -60,6 +60,7 @@ export const UseRipple = (args: RippleParams) => {
          );
       }, []),
    });
+
    useFrame((props) => {
       const fx = updateRipple(props, setConfig(), {
          testtest: props.clock.getElapsedTime(),

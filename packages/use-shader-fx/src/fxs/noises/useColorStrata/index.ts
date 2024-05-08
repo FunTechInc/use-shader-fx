@@ -95,6 +95,14 @@ export const useColorStrata = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: ColorStrataParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -102,7 +110,8 @@ export const useColorStrata = ({
          customParams?: CustomParams
       ) => {
          const { gl, clock } = props;
-         newParams && setParams(newParams);
+
+         updateParams(newParams, customParams);
 
          if (params.texture) {
             updateValue("uTexture", params.texture);
@@ -129,16 +138,14 @@ export const useColorStrata = ({
          updateValue("colorFactor", params.colorFactor!);
          updateValue("timeStrength", params.timeStrength!);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

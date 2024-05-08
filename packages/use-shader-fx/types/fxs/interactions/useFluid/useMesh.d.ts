@@ -22,20 +22,20 @@ export type FluidMaterials = {
     splatMaterial: SplatMaterial;
 };
 export type CustomizableKeys = "advection" | "splat" | "curl" | "vorticity" | "divergence" | "clear" | "pressure" | "gradientSubtract";
-export type FluidOnBeforeCompile = {
+export type CustomFluidProps = {
     [K in CustomizableKeys]?: MaterialProps;
 };
-export type FluidCustomParams = {
+export type CustomFluidParams = {
     [K in CustomizableKeys]?: CustomParams;
 };
 /**
  * Returns the material update function in the second argument
  */
-export declare const useMesh: ({ scene, size, dpr, fluidOnBeforeCompile, }: {
+export declare const useMesh: ({ scene, size, dpr, customFluidProps, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;
-    fluidOnBeforeCompile?: FluidOnBeforeCompile | undefined;
+    customFluidProps?: CustomFluidProps | undefined;
 }) => {
     materials: {
         vorticityMaterial: VorticityMaterial;

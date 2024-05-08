@@ -92,6 +92,14 @@ export const useFxTexture = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: FxTextureParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -100,13 +108,11 @@ export const useFxTexture = ({
       ) => {
          const { gl } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("uTexture0", params.texture0!);
          updateValue("uTexture1", params.texture1!);
-
          updateValue("progress", params.progress!);
-
          // calculate resolution by linear interpolation.
          const tex0Res = [
             params.texture0!?.image?.width || 0,
@@ -120,7 +126,6 @@ export const useFxTexture = ({
             return value + (tex1Res[index] - value) * params.progress!;
          });
          updateValue("uTextureResolution", interpolatedResolution);
-
          updateValue("padding", params.padding!);
          updateValue("uMap", params.map!);
          updateValue("mapIntensity", params.mapIntensity!);
@@ -129,15 +134,13 @@ export const useFxTexture = ({
          updateValue("dirX", params.dir!.x);
          updateValue("dirY", params.dir!.y);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, params, setParams, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

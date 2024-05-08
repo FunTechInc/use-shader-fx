@@ -165,8 +165,8 @@ export const useMorphParticles = ({
       [updateRenderTarget, updateUniform]
    );
 
-   const setParams = useCallback(
-      (newParams: MorphParticlesParams, customParams?: CustomParams) => {
+   const updateParams = useCallback(
+      (newParams?: MorphParticlesParams, customParams?: CustomParams) => {
          updateUniform(null, newParams, customParams);
       },
       [updateUniform]
@@ -174,7 +174,7 @@ export const useMorphParticles = ({
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene,
          points,

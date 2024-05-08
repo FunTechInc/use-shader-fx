@@ -94,6 +94,28 @@ export const useRipple = ({
 
    const currentWave = useRef(0);
 
+   const updateParams = useMemo(() => {
+      return (newParams?: RippleParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         meshArr.forEach((mesh) => {
+            if (mesh.visible) {
+               const material = mesh.material as THREE.ShaderMaterial;
+               mesh.rotation.z += params.rotation!;
+               mesh.scale.x =
+                  params.fadeout_speed! * mesh.scale.x + params.scale!;
+               mesh.scale.y = mesh.scale.x;
+               const opacity = material.uniforms.uOpacity.value;
+               setUniform(material)(
+                  "uOpacity",
+                  opacity * params.fadeout_speed!
+               );
+               if (opacity < 0.001) mesh.visible = false;
+            }
+            setCustomUniform(mesh.material)(customParams);
+         });
+      };
+   }, [meshArr, params, setParams]);
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -102,7 +124,7 @@ export const useRipple = ({
       ) => {
          const { gl, pointer, size } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          const pointerValues = params.pointerValues! || updatePointer(pointer);
 
@@ -119,31 +141,14 @@ export const useRipple = ({
             setUniform(material)("uOpacity", params.alpha!);
             currentWave.current = (currentWave.current + 1) % max;
          }
-         meshArr.forEach((mesh) => {
-            if (mesh.visible) {
-               const material = mesh.material as THREE.ShaderMaterial;
-               mesh.rotation.z += params.rotation!;
-               mesh.scale.x =
-                  params.fadeout_speed! * mesh.scale.x + params.scale!;
-               mesh.scale.y = mesh.scale.x;
-               const opacity = material.uniforms.uOpacity.value;
-
-               setUniform(material)(
-                  "uOpacity",
-                  opacity * params.fadeout_speed!
-               );
-               if (opacity < 0.001) mesh.visible = false;
-               setCustomUniform(material)(customParams);
-            }
-         });
 
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, meshArr, updatePointer, max, params, setParams]
+      [updateRenderTarget, meshArr, updatePointer, max, params, updateParams]
    );
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          camera: camera,

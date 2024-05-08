@@ -73,6 +73,14 @@ export const useCoverTexture = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: CoverTextureParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -81,7 +89,7 @@ export const useCoverTexture = ({
       ) => {
          const { gl } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uTextureResolution", [
@@ -89,15 +97,13 @@ export const useCoverTexture = ({
             params.texture!?.source?.data?.height || 0,
          ]);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, params, setParams, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

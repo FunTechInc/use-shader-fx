@@ -85,6 +85,14 @@ export const useBlending = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: BlendingParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -92,18 +100,18 @@ export const useBlending = ({
          customParams?: CustomParams
       ) => {
          const { gl } = props;
-         newParams && setParams(newParams);
+
+         updateParams(newParams, customParams);
+
          updateValue("u_texture", params.texture!);
          updateValue("u_map", params.map!);
          updateValue("u_mapIntensity", params.mapIntensity!);
-
          if (params.alphaMap) {
             updateValue("u_alphaMap", params.alphaMap!);
             updateValue("u_isAlphaMap", true);
          } else {
             updateValue("u_isAlphaMap", false);
          }
-
          updateValue("u_brightness", params.brightness!);
          updateValue("u_min", params.min!);
          updateValue("u_max", params.max!);
@@ -114,16 +122,14 @@ export const useBlending = ({
             updateValue("u_isDodgeColor", false);
          }
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

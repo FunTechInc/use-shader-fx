@@ -81,6 +81,14 @@ export const useCosPalette = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: CosPaletteParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -89,7 +97,7 @@ export const useCosPalette = ({
       ) => {
          const { gl } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          updateValue("uTexture", params.texture!);
          updateValue("uColor1", params.color1!);
@@ -98,16 +106,14 @@ export const useCosPalette = ({
          updateValue("uColor4", params.color4!);
          updateValue("uRgbWeight", params.rgbWeight!);
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl);
       },
-      [updateRenderTarget, updateValue, setParams, params, updateCustomValue]
+      [updateRenderTarget, updateValue, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

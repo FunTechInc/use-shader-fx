@@ -108,6 +108,20 @@ export const useDomSyncer = (
    // create useDomView
    const useDomView = createUseDomView(isIntersectingRef);
 
+   const updateParams = useMemo(() => {
+      return (newParams?: DomSyncerParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateDomRects({
+            params,
+            customParams,
+            size,
+            resolutionRef,
+            scene,
+            isIntersectingRef,
+         });
+      };
+   }, [isIntersectingRef, setParams, updateDomRects, size, scene, params]);
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -116,7 +130,7 @@ export const useDomSyncer = (
       ) => {
          const { gl, size } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          if (errorHandler(params)) {
             return emptyTexture;
@@ -148,23 +162,12 @@ export const useDomSyncer = (
             setRefreshTrigger(false);
          }
 
-         updateDomRects({
-            params,
-            customParams,
-            size,
-            resolutionRef,
-            scene,
-            isIntersectingRef,
-         });
-
          return updateRenderTarget(gl);
       },
       [
          updateRenderTarget,
          uniforms,
-         setParams,
          intersectionHandler,
-         updateDomRects,
          onBeforeCompile,
          refreshTrigger,
          scene,
@@ -172,12 +175,13 @@ export const useDomSyncer = (
          isIntersectingOnceRef,
          isIntersectingRef,
          emptyTexture,
+         updateParams,
       ]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene,
          camera,

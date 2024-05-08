@@ -107,6 +107,14 @@ export const useBrush = ({
    const updateValue = setUniform(material);
    const updateCustomValue = setCustomUniform(material);
 
+   const updateParams = useCallback(
+      (newParams?: BrushParams, customParams?: CustomParams) => {
+         newParams && setParams(newParams);
+         updateCustomValue(customParams);
+      },
+      [setParams, updateCustomValue]
+   );
+
    const updateFx = useCallback(
       (
          props: RootState,
@@ -115,7 +123,7 @@ export const useBrush = ({
       ) => {
          const { gl, pointer } = props;
 
-         newParams && setParams(newParams);
+         updateParams(newParams, customParams);
 
          if (params.texture!) {
             updateValue("uIsTexture", true);
@@ -162,25 +170,16 @@ export const useBrush = ({
          updateValue("uPressureStart", pressureEnd.current);
          pressureEnd.current = params.pressure!;
 
-         updateCustomValue(customParams);
-
          return updateRenderTarget(gl, ({ read }) => {
             updateValue("uBuffer", read);
          });
       },
-      [
-         updateValue,
-         updatePointer,
-         updateRenderTarget,
-         params,
-         setParams,
-         updateCustomValue,
-      ]
+      [updateValue, updatePointer, updateRenderTarget, params, updateParams]
    );
 
    return [
       updateFx,
-      setParams,
+      updateParams,
       {
          scene: scene,
          mesh: mesh,

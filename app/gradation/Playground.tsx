@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    useNoise,
@@ -40,7 +40,7 @@ export const Playground = () => {
 
    const saveImage = useDownloadCanvas();
 
-   useEffect(() => {
+   useMemo(() => {
       CONFIG.save = saveImage;
       CONFIG.random();
    }, [saveImage]);
