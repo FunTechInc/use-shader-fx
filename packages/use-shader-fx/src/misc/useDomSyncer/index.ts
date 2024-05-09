@@ -110,7 +110,7 @@ export const useDomSyncer = (
 
    const updateParams = useMemo(() => {
       return (newParams?: DomSyncerParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateDomRects({
             params,
             customParams,
@@ -124,11 +124,11 @@ export const useDomSyncer = (
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: DomSyncerParams,
          customParams?: CustomParams
       ) => {
-         const { gl, size } = props;
+         const { gl, size } = rootState;
 
          updateParams(newParams, customParams);
 

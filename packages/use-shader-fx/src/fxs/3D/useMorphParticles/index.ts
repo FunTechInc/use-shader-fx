@@ -155,12 +155,12 @@ export const useMorphParticles = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: MorphParticlesParams,
          customParams?: CustomParams
       ) => {
-         updateUniform(props, newParams, customParams);
-         return updateRenderTarget(props.gl);
+         updateUniform(rootState, newParams, customParams);
+         return updateRenderTarget(rootState.gl);
       },
       [updateRenderTarget, updateUniform]
    );

@@ -78,7 +78,7 @@ export const useAlphaBlending = ({
 
    const updateParams = useCallback(
       (newParams?: AlphaBlendingParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -86,11 +86,11 @@ export const useAlphaBlending = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: AlphaBlendingParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

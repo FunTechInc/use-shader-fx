@@ -49,11 +49,11 @@ export interface HooksProps extends MaterialProps {
 export type HooksReturn<T, O, C> = [
    /**
     * Functions to update parameters and render.
-    * @param props RootState
+    * @param rootState RootState
     * @param newParams params of fxHooks
     * @param customParams custom params, added to `uniforms` during initialisation
     */
-   (props: RootState, newParams?: T, customParams?: C) => THREE.Texture,
+   (rootState: RootState, newParams?: T, customParams?: C) => THREE.Texture,
    /**
     * Function to update parameters only.
     * @param newParams params of fxHooks

@@ -93,8 +93,8 @@ const [updateFx, updateParams, fxObject] = useSomeFx(HooksProps);
 Call `updateFx` on `useFrame`. The first argument is the RootState of `useFrame` and the second argument is `HookParams`. The third argument can be `CustomParams` customised by the user. Each FX has `HookParams` and each type is exported.
 
 ```js
-useFrame((props) => {
-   const texture = updateFx(props, HookParams, CustomParams);
+useFrame((rootState) => {
+   const texture = updateFx(rootState, HookParams, CustomParams);
 });
 ```
 
@@ -117,7 +117,7 @@ import { useFluid } from "@funtech-inc/use-shader-fx";
 export const Home = () => {
    const { size } = useThree();
    const [updateFluid, , { output }] = useFluid({ size, dpr: 1 });
-   useFrame((props) => updateFluid(props));
+   useFrame((rootState) => updateFluid(rootState));
    return (
       <mesh>
          <boxGeometry args={[3, 3, 3]} />
@@ -183,9 +183,9 @@ export const Home = () => {
       samples: 4,
    });
 
-   useFrame((props) => {
-      updateNoise(props);
-      updateRenderTarget(props.gl);
+   useFrame((rootState) => {
+      updateNoise(rootState);
+      updateRenderTarget(rootState.gl);
    });
 
    return (
@@ -343,15 +343,15 @@ const [, copyTexture] = useCopyTexture(
    domArr.current.length
 );
 
-useFrame((props) => {
-   const syncedTexture = updateDomSyncer(props, {
+useFrame((rootState) => {
+   const syncedTexture = updateDomSyncer(rootState, {
       texture: [...Array(domArr.current.length)].map((_, i) => {
          if (domSyncerObj.isIntersecting(i, false)) {
-            textureRef.current = updateFxTexture(props, {
+            textureRef.current = updateFxTexture(rootState, {
                map: someFx,
                texture0: someTexture,
             });
-            return copyTexture(props.gl, i);
+            return copyTexture(rootState.gl, i);
          }
       }),
    });
@@ -419,9 +419,9 @@ const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
 You can override the pointer process by passing `pointerValues` to `updateFx` in the `useFrame`.
 
 ```ts
-useFrame((props) => {
-   const pointerValues = updatePointer(props.pointer);
-   updateBrush(props, {
+useFrame((rootState) => {
+   const pointerValues = updatePointer(rootState.pointer);
+   updateBrush(rootState, {
       pointerValues: pointerValues,
    });
 });
@@ -435,9 +435,9 @@ easing functions are referenced from https://github.com/ai/easings.net , default
 
 ```ts
 const beting = useBeat(bpm, "easeOutQuad");
-useFrame((props) => {
-   const { beat, hash } = beting(props.clock);
-   updateMarble(props, {
+useFrame((rootState) => {
+   const { beat, hash } = beting(rootState.clock);
+   updateMarble(rootState, {
       beat: beat,
    });
 });
@@ -459,8 +459,8 @@ Allows you to skip FX that do not need to be processed at 60 FPS.
 
 ```ts
 const limiter = useFPSLimiter(30);
-useFrame((props) => {
-   if (!limiter(props.clock)) {
+useFrame((rootState) => {
+   if (!limiter(rootState.clock)) {
       return;
    }
 });
@@ -488,7 +488,7 @@ const [updateWobble, wobble] = useCreateWobble3D({
       thickness: 1,
    },
 });
-useFrame((props) => updateWobble(props));
+useFrame((rootState) => updateWobble(rootState));
 return (
    <mesh>
       <Environment preset="warehouse" background />
@@ -525,12 +525,12 @@ const [updateBlank, _, { output: blank, material }] = useBlank({
       );
    }, []),
 });
-useFrame((props) => {
+useFrame((rootState) => {
    updateBlank(
-      props,
+      rootState,
       {},
       {
-         hoge: Math.sin(props.clock.getElapsedTime()),
+         hoge: Math.sin(rootState.clock.getElapsedTime()),
       }
    );
 });

@@ -85,15 +85,15 @@ export const Playground = () => {
       texture: colorStrata,
    });
 
-   useFrame((props) => {
-      updateNoise(props);
-      updateColorStrata(props, {
+   useFrame((state) => {
+      updateNoise(state);
+      updateColorStrata(state, {
          ...(setConfig("colorStrata") as ColorStrataParams),
       });
-      updateHSV(props, {
+      updateHSV(state, {
          ...(setConfig("hsv") as HSVParams),
       });
-      updateMarble(props, {
+      updateMarble(state, {
          ...(setConfig("marble") as MarbleParams),
       });
       ref.current!.u_noiseIntensity = CONFIG.noiseIntensity;

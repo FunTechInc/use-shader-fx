@@ -144,8 +144,8 @@ export const Playground = () => {
       particles.points.material.blending = THREE.NormalBlending;
       camera.position.z = 8;
    }, [particles.points.material, camera]);
-   useFrame((props) => {
-      updateWobble(props, {
+   useFrame((state) => {
+      updateWobble(state, {
          ...setWobbleConfig(),
       });
       const mat = wobble.mesh.material as THREE.MeshPhysicalMaterial;
@@ -154,7 +154,7 @@ export const Playground = () => {
       mat.roughness = MATERIAL_CONFIG.roughness!;
       mat.transmission = MATERIAL_CONFIG.transmission!;
       mat.thickness = MATERIAL_CONFIG.thickness!;
-      updateParticle(props, {
+      updateParticle(state, {
          ...setParticleConfig(),
          alphaMap: noise,
       });

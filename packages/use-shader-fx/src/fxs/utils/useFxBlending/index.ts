@@ -75,7 +75,7 @@ export const useFxBlending = ({
 
    const updateParams = useCallback(
       (newParams?: FxBlendingParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -83,11 +83,11 @@ export const useFxBlending = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: FxBlendingParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

@@ -137,16 +137,16 @@ export const Playground = () => {
    CONFIG.box = () => setIsBox((prev) => !prev);
 
    const meshRef = useRef<THREE.Mesh>(null);
-   useFrame((props) => {
-      const { beat } = beater(props.clock);
+   useFrame((state) => {
+      const { beat } = beater(state.clock);
       updateBlank(
-         props,
+         state,
          {
             beat: beat,
          },
          {
             tileSize: CONFIG.scale,
-            lerpPointer: pointerVec.lerp(props.pointer, 0.1),
+            lerpPointer: pointerVec.lerp(state.pointer, 0.1),
             isBox,
          }
       );

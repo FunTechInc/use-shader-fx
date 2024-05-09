@@ -75,7 +75,7 @@ export const useCoverTexture = ({
 
    const updateParams = useCallback(
       (newParams?: CoverTextureParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -83,11 +83,11 @@ export const useCoverTexture = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: CoverTextureParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

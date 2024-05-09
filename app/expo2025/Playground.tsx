@@ -83,16 +83,16 @@ const MyakuMyaku = (props: MeshProps) => {
    });
    const pointerVector = useRef(new THREE.Vector2(0, 0));
    const randomness = useMemo(() => Math.random() + 1, []);
-   useFrame((props) => {
+   useFrame((rootState) => {
       updateWobble(
-         props,
+         rootState,
          {
             ...setConfig(),
             wobbleStrength: CONFIG.wobbleStrength! * randomness,
             wobbleTimeFrequency: CONFIG.wobbleTimeFrequency! * randomness,
          },
          {
-            uEyeMoving: pointerVector.current.lerp(props.pointer, 0.24),
+            uEyeMoving: pointerVector.current.lerp(rootState.pointer, 0.24),
          }
       );
    });

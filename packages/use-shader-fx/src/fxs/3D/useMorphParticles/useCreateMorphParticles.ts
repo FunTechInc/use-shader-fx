@@ -29,8 +29,8 @@ export type UseCreateMorphParticlesProps = {
 };
 
 type UpdateUniform = (
-   props: RootState | null,
-   params?: MorphParticlesParams,
+   rootState: RootState | null,
+   newParams?: MorphParticlesParams,
    customParams?: CustomParams
 ) => void;
 
@@ -87,11 +87,11 @@ export const useCreateMorphParticles = ({
    const updateCustomValue = setCustomUniform(material);
 
    const updateUniform = useCallback<UpdateUniform>(
-      (props, newParams, customParams) => {
-         if (props) {
+      (rootState, newParams, customParams) => {
+         if (rootState) {
             updateValue(
                "uTime",
-               newParams?.beat || props.clock.getElapsedTime()
+               newParams?.beat || rootState.clock.getElapsedTime()
             );
          }
          if (newParams === undefined) {

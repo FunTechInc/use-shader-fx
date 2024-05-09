@@ -45,14 +45,14 @@ export const UseFluid = (args: FluidParams) => {
       customFluidProps: {
          curl: {
             onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
-               console.log(shader.fragmentShader);
+               // console.log(shader.fragmentShader);
             }, []),
          },
       },
    });
 
-   useFrame((props) => {
-      const fx = updateFluid(props, setConfig());
+   useFrame((state) => {
+      const fx = updateFluid(state, setConfig());
       fxRef.current!.u_fx = fx;
       updateGUI();
    });

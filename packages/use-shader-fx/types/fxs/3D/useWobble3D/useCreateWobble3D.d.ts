@@ -8,7 +8,7 @@ export type UseCreateWobble3DProps = {
     /** default : `THREE.IcosahedronGeometry(2,20)` */
     geometry?: THREE.BufferGeometry;
 };
-type UpdateUniform = (props: RootState | null, params?: Wobble3DParams, customParams?: CustomParams) => void;
+type UpdateUniform = (rootState: RootState | null, newParams?: Wobble3DParams, customParams?: CustomParams) => void;
 type UseCreateWobble3DReturn<T> = [
     UpdateUniform,
     {

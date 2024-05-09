@@ -78,7 +78,7 @@ export const useBrightnessPicker = ({
 
    const updateParams = useCallback(
       (newParams?: BrightnessPickerParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -86,11 +86,11 @@ export const useBrightnessPicker = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: BrightnessPickerParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 
