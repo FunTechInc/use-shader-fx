@@ -24,8 +24,8 @@ export const Playground = () => {
       splat_radius: 0.001,
    });
 
-   useFrame((props) => {
-      updateFluid(props);
+   useFrame((state) => {
+      updateFluid(state);
    });
 
    return (

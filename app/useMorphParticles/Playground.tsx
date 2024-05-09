@@ -114,12 +114,12 @@ export const Playground = () => {
       refPointer.current = e.pointer;
    };
 
-   useFrame((props) => {
-      const b = beat(props.clock);
-      updateFluid(props, {
+   useFrame((state) => {
+      const b = beat(state.clock);
+      updateFluid(state, {
          pointerValues: updatePointer(refPointer.current),
       });
-      updatePoints(props, {
+      updatePoints(state, {
          ...setConfig(),
          displacement: fluid,
          picture: funkun,
@@ -127,7 +127,7 @@ export const Playground = () => {
          // map: funkun,
          // alphaMap: funkunAlpha,
          beat: b.beat,
-         morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
+         morphProgress: Math.max(Math.sin(state.clock.getElapsedTime() / 2), 0),
          // morphProgress: 0.5,
       });
       updateGUI();
@@ -171,14 +171,14 @@ you can also use useMorphParticles (FBO)
 //       refPointer.current = e.pointer;
 //    };
 
-//    useFrame((props) => {
-//       const b = beat(props.clock);
-//       updatePoints(props, {
+//    useFrame((state) => {
+//       const b = beat(state.clock);
+//       updatePoints(state, {
 //          ...setConfig(),
 //          // map: funkun,
 //          // alphaMap: funkunAlpha,
 //          beat: b.beat,
-//          morphProgress: Math.max(Math.sin(props.clock.getElapsedTime() / 2), 0),
+//          morphProgress: Math.max(Math.sin(state.clock.getElapsedTime() / 2), 0),
 //          // morphProgress: 0.5,
 //       });
 //    });

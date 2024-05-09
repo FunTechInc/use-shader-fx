@@ -117,13 +117,13 @@ export const DomSyncer = ({ state }: { state: number }) => {
       domArr.current.length
    );
 
-   useFrame((props) => {
-      const syncedTexture = updateDomSyncer(props, {
+   useFrame((state) => {
+      const syncedTexture = updateDomSyncer(state, {
          texture: [...Array(domArr.current.length)].map((_, i) => {
             if (domSyncerObj.isIntersecting(i, false)) {
-               updateFxTexture(props, {
+               updateFxTexture(state, {
                   padding: 0.0,
-                  map: updateWave(props, {
+                  map: updateWave(state, {
                      epicenter: CONFIG.waveArr[i].epicenter,
                      progress: CONFIG.waveArr[i].progress,
                      strength: CONFIG.waveArr[i].strength,
@@ -133,7 +133,7 @@ export const DomSyncer = ({ state }: { state: number }) => {
                   texture0: momo,
                });
 
-               return copyTexture(props.gl, i);
+               return copyTexture(state.gl, i);
             }
             return textureRef.current;
          }),

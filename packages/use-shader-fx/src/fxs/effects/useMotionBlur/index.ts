@@ -84,7 +84,7 @@ export const useMotionBlur = ({
 
    const updateParams = useCallback(
       (newParams?: MotionBlurParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -92,11 +92,11 @@ export const useMotionBlur = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: MotionBlurParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

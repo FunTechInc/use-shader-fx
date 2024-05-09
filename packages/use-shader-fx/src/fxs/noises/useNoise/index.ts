@@ -86,7 +86,7 @@ export const useNoise = ({
 
    const updateParams = useCallback(
       (newParams?: NoiseParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -94,11 +94,11 @@ export const useNoise = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: NoiseParams,
          customParams?: CustomParams
       ) => {
-         const { gl, clock } = props;
+         const { gl, clock } = rootState;
 
          updateParams(newParams, customParams);
 

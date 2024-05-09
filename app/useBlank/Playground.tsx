@@ -48,15 +48,15 @@ export const Playground = () => {
       texture: cover,
    });
 
-   useFrame((props) => {
+   useFrame((state) => {
       updateBlank(
-         props,
+         state,
          {},
          {
-            hoge: Math.sin(props.clock.getElapsedTime()),
+            hoge: Math.sin(state.clock.getElapsedTime()),
          }
       );
-      updateCover(props);
+      updateCover(state);
    });
 
    return (

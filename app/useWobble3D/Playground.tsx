@@ -109,10 +109,10 @@ export const Playground = () => {
 
    const beat = useBeat(140, "easeInOutBack");
 
-   useFrame((props) => {
-      updateWobble(props, {
+   useFrame((state) => {
+      updateWobble(state, {
          ...setConfig(),
-         beat: beat(props.clock).beat,
+         beat: beat(state.clock).beat,
       });
       const mat = wobble.mesh.material as THREE.MeshPhysicalMaterial;
       mat.iridescence = MATERIAL_CONFIG.iridescence!;
@@ -157,7 +157,7 @@ simpler example
 //          thickness: 1,
 //       },
 //    });
-//    useFrame((props) => updateWobble(props));
+//    useFrame((state) => updateWobble(state));
 //    return (
 //       <mesh>
 //          <Environment preset="warehouse" background />

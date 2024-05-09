@@ -80,7 +80,7 @@ export const useMarble = ({
 
    const updateParams = useCallback(
       (newParams?: MarbleParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -88,11 +88,11 @@ export const useMarble = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: MarbleParams,
          customParams?: CustomParams
       ) => {
-         const { gl, clock } = props;
+         const { gl, clock } = rootState;
 
          updateParams(newParams, customParams);
 

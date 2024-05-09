@@ -79,7 +79,7 @@ export const useSimpleBlur = ({
 
    const updateParams = useCallback(
       (newParams?: SimpleBlurParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -87,11 +87,11 @@ export const useSimpleBlur = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: SimpleBlurParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 
-type UseParamsReturn<T> = [T, (newParams: Partial<T>) => void];
+type SetParams<T> = (newParams?: Partial<T>) => void;
+type UseParamsReturn<T> = [T, SetParams<T>];
 
 /**
  * @param params Receives an initial value object. With structuredClone, deep copy and set, but if the object contains a function, just set it.
@@ -12,7 +13,10 @@ export const useParams = <T extends object>(params: T): UseParamsReturn<T> => {
       isContainsFunctions(params) ? params : structuredClone(params)
    );
 
-   const setParams = useCallback((newParams: Partial<T>) => {
+   const setParams = useCallback<SetParams<T>>((newParams) => {
+      if (newParams === undefined) {
+         return;
+      }
       for (const key in newParams) {
          const paramKey = key as keyof T;
          if (

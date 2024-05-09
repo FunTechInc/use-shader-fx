@@ -94,7 +94,7 @@ export const useChromaKey = ({
 
    const updateParams = useCallback(
       (newParams?: ChromaKeyParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -102,11 +102,11 @@ export const useChromaKey = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: ChromaKeyParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

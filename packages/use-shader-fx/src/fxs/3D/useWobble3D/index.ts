@@ -127,12 +127,12 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         RootState: RootState,
          newParams?: Wobble3DParams,
          customParams?: CustomParams
       ) => {
-         updateUniform(props, newParams, customParams);
-         return updateRenderTarget(props.gl);
+         updateUniform(RootState, newParams, customParams);
+         return updateRenderTarget(RootState.gl);
       },
       [updateRenderTarget, updateUniform]
    );

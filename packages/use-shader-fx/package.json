@@ -1,6 +1,6 @@
 {
    "name": "@funtech-inc/use-shader-fx",
-   "version": "1.1.24",
+   "version": "1.1.25",
    "description": "⚡️ More FXs, Less GLSL",
    "main": "./build/use-shader-fx.umd.cjs",
    "module": "./build/use-shader-fx.js",

@@ -15,7 +15,7 @@ export type UseCreateMorphParticlesProps = {
     /** Array of textures to map to points. Mapped at random. */
     mapArray?: THREE.Texture[];
 };
-type UpdateUniform = (props: RootState | null, params?: MorphParticlesParams, customParams?: CustomParams) => void;
+type UpdateUniform = (rootState: RootState | null, newParams?: MorphParticlesParams, customParams?: CustomParams) => void;
 type UseCreateMorphParticlesReturn = [
     UpdateUniform,
     {

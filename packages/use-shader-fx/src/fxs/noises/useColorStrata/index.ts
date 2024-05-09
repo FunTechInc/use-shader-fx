@@ -97,7 +97,7 @@ export const useColorStrata = ({
 
    const updateParams = useCallback(
       (newParams?: ColorStrataParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -105,11 +105,11 @@ export const useColorStrata = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: ColorStrataParams,
          customParams?: CustomParams
       ) => {
-         const { gl, clock } = props;
+         const { gl, clock } = rootState;
 
          updateParams(newParams, customParams);
 

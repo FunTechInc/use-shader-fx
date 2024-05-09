@@ -109,7 +109,7 @@ export const useBrush = ({
 
    const updateParams = useCallback(
       (newParams?: BrushParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -117,11 +117,11 @@ export const useBrush = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: BrushParams,
          customParams?: CustomParams
       ) => {
-         const { gl, pointer } = props;
+         const { gl, pointer } = rootState;
 
          updateParams(newParams, customParams);
 

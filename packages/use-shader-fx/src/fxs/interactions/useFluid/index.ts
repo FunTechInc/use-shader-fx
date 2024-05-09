@@ -166,7 +166,7 @@ export const useFluid = ({
 
    const updateParams = useCallback(
       (newParams?: FluidParams, customParams?: CustomFluidParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          if (customParams) {
             Object.keys(customParams).forEach((key) => {
                updateCustomParamsList[key as CustomizableKeys](
@@ -180,11 +180,11 @@ export const useFluid = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: FluidParams,
          customParams?: CustomFluidParams
       ) => {
-         const { gl, pointer, size } = props;
+         const { gl, pointer, size } = rootState;
 
          updateParams(newParams, customParams);
 

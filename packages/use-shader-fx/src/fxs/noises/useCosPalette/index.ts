@@ -83,7 +83,7 @@ export const useCosPalette = ({
 
    const updateParams = useCallback(
       (newParams?: CosPaletteParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -91,11 +91,11 @@ export const useCosPalette = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: CosPaletteParams,
          customParams?: CustomParams
       ) => {
-         const { gl } = props;
+         const { gl } = rootState;
 
          updateParams(newParams, customParams);
 

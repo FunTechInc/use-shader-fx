@@ -89,7 +89,7 @@ export const useBlank = ({
 
    const updateParams = useCallback(
       (newParams?: BlankParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          updateCustomValue(customParams);
       },
       [setParams, updateCustomValue]
@@ -97,11 +97,11 @@ export const useBlank = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: BlankParams,
          customParams?: CustomParams
       ) => {
-         const { gl, clock, pointer } = props;
+         const { gl, clock, pointer } = rootState;
 
          updateParams(newParams, customParams);
 

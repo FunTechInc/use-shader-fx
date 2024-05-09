@@ -23,8 +23,8 @@ export type UseCreateWobble3DProps = {
 };
 
 type UpdateUniform = (
-   props: RootState | null,
-   params?: Wobble3DParams,
+   rootState: RootState | null,
+   newParams?: Wobble3DParams,
    customParams?: CustomParams
 ) => void;
 
@@ -70,11 +70,11 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    const updateCustomValue = setCustomUniform(userData);
 
    const updateUniform = useCallback<UpdateUniform>(
-      (props, newParams, customParams) => {
-         if (props) {
+      (rootState, newParams, customParams) => {
+         if (rootState) {
             updateValue(
                "uTime",
-               newParams?.beat || props.clock.getElapsedTime()
+               newParams?.beat || rootState.clock.getElapsedTime()
             );
          }
          if (newParams === undefined) {

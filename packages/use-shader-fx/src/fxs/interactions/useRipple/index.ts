@@ -96,7 +96,7 @@ export const useRipple = ({
 
    const updateParams = useMemo(() => {
       return (newParams?: RippleParams, customParams?: CustomParams) => {
-         newParams && setParams(newParams);
+         setParams(newParams);
          meshArr.forEach((mesh) => {
             if (mesh.visible) {
                const material = mesh.material as THREE.ShaderMaterial;
@@ -118,11 +118,11 @@ export const useRipple = ({
 
    const updateFx = useCallback(
       (
-         props: RootState,
+         rootState: RootState,
          newParams?: RippleParams,
          customParams?: CustomParams
       ) => {
-         const { gl, pointer, size } = props;
+         const { gl, pointer, size } = rootState;
 
          updateParams(newParams, customParams);
 

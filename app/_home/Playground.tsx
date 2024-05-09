@@ -162,27 +162,27 @@ export const Playground = ({
    const hashMemo = useRef(0);
    const meshRef = useRef<THREE.Mesh>(null);
 
-   useFrame((props) => {
-      if (!limiter(props.clock)) {
+   useFrame((state) => {
+      if (!limiter(state.clock)) {
          return;
       }
-      const { beat, hash, fract } = beting(props.clock);
+      const { beat, hash, fract } = beting(state.clock);
       if (hash !== hashMemo.current) {
          hashMemo.current = hash;
          CONFIG.random();
       }
-      updateColorStrata(props, {
+      updateColorStrata(state, {
          ...(setConfig("colorStrata") as ColorStrataParams),
       });
-      updateHSV(props, {
+      updateHSV(state, {
          ...(setConfig("hsv") as HSVParams),
       });
-      updateMarble(props, {
+      updateMarble(state, {
          ...(setConfig("marble") as MarbleParams),
          beat: beat,
       });
       updateBlank(
-         props,
+         state,
          {},
          {
             u_noiseIntensity: CONFIG.noiseIntensity,

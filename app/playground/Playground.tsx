@@ -61,9 +61,9 @@ export const Playground = () => {
       // colorMix: 0,
    });
 
-   useFrame((props) => {
-      updateWobble(props);
-      // updateNoise(props);
+   useFrame((state) => {
+      updateWobble(state);
+      // updateNoise(state);
    });
 
    return (
