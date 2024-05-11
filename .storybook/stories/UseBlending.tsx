@@ -45,8 +45,7 @@ export const UseBlending = (args: BlendingParams) => {
       size,
       dpr,
    });
-   const [updateBlending, setBlending] = useBlending({ size, dpr });
-   const [updateBrightnessPicker] = useBrightnessPicker({ size, dpr });
+   const [updateBlending] = useBlending({ size, dpr });
 
    const colorVec = React.useMemo(() => new THREE.Vector3(), []);
 
@@ -69,13 +68,11 @@ export const UseBlending = (args: BlendingParams) => {
       const bgTexture = updateCover(props, {
          texture: bg,
       });
-      const fluid = updateFluid(props);
-      const picked = updateBrightnessPicker(props, { texture: fluid });
+      updateFluid(props);
       const fx = updateBlending(props, {
          ...setConfig(),
          texture: bgTexture,
          map: fluid,
-         alphaMap: false,
       });
       fxRef.current!.u_fx = fx;
       fxRef.current!.u_alpha = 0.0;

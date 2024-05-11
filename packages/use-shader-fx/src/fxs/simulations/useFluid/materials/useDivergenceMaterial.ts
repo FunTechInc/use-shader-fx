@@ -1,27 +1,26 @@
 import * as THREE from "three";
 import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
-import fragmentShader from "../shaders/pressure.frag";
+import fragmentShader from "../shaders/divergence.frag";
 import { MaterialProps } from "../../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
+import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
 
-export class PressureMaterial extends THREE.ShaderMaterial {
+export class DivergenceMaterial extends THREE.ShaderMaterial {
    uniforms!: {
-      uPressure: { value: THREE.Texture };
-      uDivergence: { value: THREE.Texture };
+      uVelocity: { value: THREE.Texture };
       texelSize: { value: THREE.Vector2 };
    };
 }
 
-export const usePressureMaterial = ({
+export const useDivergenceMaterial = ({
    onBeforeCompile,
    uniforms,
 }: MaterialProps) => {
-   const pressureMaterial = useMemo(() => {
+   const divergenceMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uPressure: { value: null },
-            uDivergence: { value: null },
+            uVelocity: { value: null },
             texelSize: { value: new THREE.Vector2() },
             ...uniforms,
          },
@@ -30,11 +29,10 @@ export const usePressureMaterial = ({
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]);
 
-   return pressureMaterial as PressureMaterial;
+   return divergenceMaterial as DivergenceMaterial;
 };

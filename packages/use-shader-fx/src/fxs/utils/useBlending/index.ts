@@ -104,8 +104,8 @@ export const useBlending = ({
          updateParams(newParams, customParams);
 
          updateValue("u_texture", params.texture!);
-         updateValue("u_map", params.map!);
-         updateValue("u_mapIntensity", params.mapIntensity!);
+         updateValue("uMap", params.map!);
+         updateValue("uMapIntensity", params.mapIntensity!);
          if (params.alphaMap) {
             updateValue("u_alphaMap", params.alphaMap!);
             updateValue("u_isAlphaMap", true);

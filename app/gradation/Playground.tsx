@@ -4,7 +4,6 @@ import * as THREE from "three";
 import { useMemo, useRef } from "react";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
-   useNoise,
    useColorStrata,
    useMarble,
    useHSV,
@@ -47,10 +46,7 @@ export const Playground = () => {
    useGUI(setGUI);
 
    const { size, viewport } = useThree();
-   const [updateNoise, setNoise, { output: noise }] = useNoise({
-      size,
-      dpr: viewport.dpr,
-   });
+
    const [updateColorStrata, setColorStrata, { output: colorStrata }] =
       useColorStrata({ size, dpr: viewport.dpr });
    const [updateMarble, setMarble, { output: marble }] = useMarble({
@@ -60,14 +56,6 @@ export const Playground = () => {
    const [updateHSV, setHSV, { output: hsv }] = useHSV({
       size,
       dpr: viewport.dpr,
-   });
-
-   setNoise({
-      scale: 1000,
-      warpOctaves: 1,
-      noiseOctaves: 1,
-      fbmOctaves: 1,
-      timeStrength: 0,
    });
 
    setMarble({
@@ -86,7 +74,6 @@ export const Playground = () => {
    });
 
    useFrame((state) => {
-      updateNoise(state);
       updateColorStrata(state, {
          ...(setConfig("colorStrata") as ColorStrataParams),
       });
@@ -105,7 +92,6 @@ export const Playground = () => {
          <fxMaterial
             key={FxMaterial.key}
             u_noise={marble}
-            u_grain={noise}
             u_colorStrata={hsv}
             ref={ref}
          />

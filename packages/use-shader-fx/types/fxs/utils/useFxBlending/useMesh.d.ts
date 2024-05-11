@@ -5,10 +5,10 @@ export declare class FxBlendingMaterial extends THREE.ShaderMaterial {
         u_texture: {
             value: THREE.Texture;
         };
-        u_map: {
+        uMap: {
             value: THREE.Texture;
         };
-        u_mapIntensity: {
+        uMapIntensity: {
             value: number;
         };
     };

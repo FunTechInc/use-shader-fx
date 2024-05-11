@@ -9,6 +9,7 @@ import {
    DEFAULT_TEXTURE,
    MATERIAL_BASIC_PARAMS,
 } from "../../../libs/constants";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class AlphaBlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -37,9 +38,9 @@ export const useMesh = ({
          fragmentShader: fragmentShader,
          ...MATERIAL_BASIC_PARAMS,
       });
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]) as AlphaBlendingMaterial;
 

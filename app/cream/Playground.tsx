@@ -13,8 +13,8 @@ export const Playground = () => {
    const [updateFluid, setFluid, { output: fluid }] = useFluid({
       size,
       dpr: {
-         shader: 0.08,
-         fbo: 0.2,
+         shader: 0.2,
+         fbo: 0.8,
       },
    });
 
@@ -22,6 +22,7 @@ export const Playground = () => {
       density_dissipation: 0.99,
       velocity_dissipation: 0.99,
       splat_radius: 0.001,
+      pressure_iterations: 1,
    });
 
    useFrame((state) => {

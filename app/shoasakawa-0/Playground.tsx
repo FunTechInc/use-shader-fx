@@ -49,7 +49,7 @@ export const Playground = () => {
       ),
       onBeforeCompile: useCallback((shader: THREE.Shader) => {
          shader.fragmentShader = shader.fragmentShader.replace(
-            "#usf uniforms",
+            "#usf <uniforms>",
             `
 					uniform float tileSize;
 					uniform float bigRadius;
@@ -73,7 +73,7 @@ export const Playground = () => {
 				`
          );
          shader.fragmentShader = shader.fragmentShader.replace(
-            "#usf main",
+            "#usf <main>",
             `
 					vec2 uv = vUv;
 					float aspect = uResolution.x / uResolution.y;

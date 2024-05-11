@@ -5,6 +5,7 @@ import fragmentShader from "../shaders/vorticity.frag";
 import { MaterialProps } from "../../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
 import { DELTA_TIME } from "..";
+import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
 
 export class VorticityMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -35,9 +36,8 @@ export const useVorticityMaterial = ({
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]);
 

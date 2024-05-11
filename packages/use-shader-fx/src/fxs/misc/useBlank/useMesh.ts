@@ -3,7 +3,6 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddObject } from "../../../utils/useAddObject";
-import { BLANK_PARAMS } from ".";
 import { MaterialProps } from "../../types";
 import { Size } from "@react-three/fiber";
 import { setUniform, useResolution } from "../../..";
@@ -11,6 +10,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class BlankMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -43,14 +43,9 @@ export const useMesh = ({
          fragmentShader: fragmentShader,
          ...MATERIAL_BASIC_PARAMS,
       });
-      mat.onBeforeCompile = (shader, renderer) => {
-         onBeforeCompile && onBeforeCompile(shader, renderer);
-         shader.fragmentShader = shader.fragmentShader.replace(
-            /#usf[^\n]*\n/g,
-            ""
-         );
-         shader.vertexShader = shader.vertexShader.replace(/#usf[^\n]*\n/g, "");
-      };
+
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]) as BlankMaterial;
 

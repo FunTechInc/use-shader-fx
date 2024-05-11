@@ -92,8 +92,8 @@ export const useFxBlending = ({
          updateParams(newParams, customParams);
 
          updateValue("u_texture", params.texture!);
-         updateValue("u_map", params.map!);
-         updateValue("u_mapIntensity", params.mapIntensity!);
+         updateValue("uMap", params.map!);
+         updateValue("uMapIntensity", params.mapIntensity!);
 
          return updateRenderTarget(gl);
       },

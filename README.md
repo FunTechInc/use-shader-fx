@@ -516,11 +516,11 @@ const [updateBlank, _, { output: blank, material }] = useBlank({
    },
    onBeforeCompile: useCallback((shader: THREE.Shader) => {
       shader.fragmentShader = shader.fragmentShader.replace(
-         "#usf uniforms",
+         "#usf <uniforms>",
          "uniform float hoge;"
       );
       shader.fragmentShader = shader.fragmentShader.replace(
-         "#usf main",
+         "#usf <main>",
          `usf_FragColor=vec4(vec3(1.,hoge,1.),1.);`
       );
    }, []),

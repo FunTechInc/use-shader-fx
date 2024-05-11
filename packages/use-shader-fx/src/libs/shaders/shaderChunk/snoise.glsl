@@ -15,6 +15,7 @@ vec3 random3(vec3 c) {
 
 const float F3 =  0.3333333;
 const float G3 =  0.1666667;
+
 float snoise(vec3 p) {
 
 	vec3 s = floor(p + dot(p, vec3(F3)));

@@ -7,6 +7,7 @@ import {
    DEFAULT_TEXTURE,
    MATERIAL_BASIC_PARAMS,
 } from "../../../libs/constants";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 type UseMeshProps = {
    scale: number;
@@ -49,9 +50,9 @@ export const useMesh = ({
       const temp = [];
       for (let i = 0; i < max; i++) {
          const clonedMat = material.clone();
-         if (onBeforeCompile) {
-            clonedMat.onBeforeCompile = onBeforeCompile;
-         }
+
+         clonedMat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
          const mesh = new THREE.Mesh(geometry.clone(), clonedMat);
          mesh.rotateZ(2 * Math.PI * Math.random());
          mesh.visible = false;

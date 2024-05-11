@@ -28,8 +28,6 @@ const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "warpStrength", 0, 10, 0.01);
    gui.add(CONFIG, "warpPositionFrequency", 0, 10, 0.01);
    gui.add(CONFIG, "warpTimeFrequency", 0, 10, 0.01);
-   gui.add(CONFIG, "wobbleShine", 0, 5, 0.01);
-   gui.add(CONFIG, "samples", 0, 10, 1);
    gui.add(CONFIG, "colorMix", 0, 1, 0.01);
    gui.add(CONFIG, "chromaticAberration", 0, 10, 0.01);
    gui.add(CONFIG, "anisotropicBlur", 0, 10, 0.01);

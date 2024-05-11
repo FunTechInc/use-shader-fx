@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import * as THREE from "three";
 import { RootState } from "@react-three/fiber";
 import { BlankMaterial, useMesh } from "./useMesh";
