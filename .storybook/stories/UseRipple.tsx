@@ -8,7 +8,7 @@ import { useRipple, useFxTexture } from "../../packages/use-shader-fx/src";
 import {
    RippleParams,
    RIPPLE_PARAMS,
-} from "../../packages/use-shader-fx/src/fxs/interactions/useRipple";
+} from "../../packages/use-shader-fx/src/fxs/simulations/useRipple";
 
 extend({ FxMaterial });
 

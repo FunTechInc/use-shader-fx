@@ -5,7 +5,7 @@ export declare class BlendingMaterial extends THREE.ShaderMaterial {
         u_texture: {
             value: THREE.Texture;
         };
-        u_map: {
+        uMap: {
             value: THREE.Texture;
         };
         u_alphaMap: {
@@ -14,7 +14,7 @@ export declare class BlendingMaterial extends THREE.ShaderMaterial {
         u_isAlphaMap: {
             value: boolean;
         };
-        u_mapIntensity: {
+        uMapIntensity: {
             value: number;
         };
         u_brightness: {

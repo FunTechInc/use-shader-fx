@@ -13,7 +13,6 @@ declare global {
 export type FxMaterialProps = {
    u_noise: THREE.Texture;
    u_colorStrata: THREE.Texture;
-   u_grain: THREE.Texture;
    u_noiseIntensity: number;
 };
 
@@ -21,7 +20,6 @@ export const FxMaterial = shaderMaterial(
    {
       u_noise: new THREE.Texture(),
       u_colorStrata: new THREE.Texture(),
-      u_grain: new THREE.Texture(),
       u_noiseIntensity: 1,
    },
 

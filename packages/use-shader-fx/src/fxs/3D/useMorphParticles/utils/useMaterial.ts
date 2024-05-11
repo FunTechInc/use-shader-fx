@@ -5,7 +5,6 @@ import { useResolution } from "../../../../utils/useResolution";
 import { setUniform } from "../../../../utils/setUniforms";
 import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/main.frag";
-import getWobble from "../../../../libs/shaders/getWobble.glsl";
 import { MORPHPARTICLES_PARAMS } from "..";
 import {
    DEFAULT_TEXTURE,
@@ -16,6 +15,7 @@ import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
 import { rewriteFragmentShader } from "./rewriteFragmentShader";
 import { MaterialProps } from "../../../types";
+import { resolveShaders } from "../../../../libs/shaders/resolveShaders";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -103,7 +103,7 @@ export const useMaterial = ({
             3
          ),
          2
-      ).replace(`#usf <getWobble>`, getWobble);
+      );
 
       // fragment
       const { rewritedFragmentShader, mapArrayUniforms } =
@@ -173,9 +173,10 @@ export const useMaterial = ({
          },
       });
 
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = (shader, renderer) => {
+         onBeforeCompile && onBeforeCompile(shader, renderer);
+         resolveShaders(shader);
+      };
 
       return mat;
    }, [

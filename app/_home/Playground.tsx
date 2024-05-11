@@ -114,7 +114,7 @@ export const Playground = ({
       ),
       onBeforeCompile: useCallback((shader: THREE.Shader) => {
          shader.fragmentShader = shader.fragmentShader.replace(
-            "#usf uniforms",
+            "#usf <uniforms>",
             `
 					uniform sampler2D u_noise;
 					uniform float u_noiseIntensity;
@@ -125,7 +125,7 @@ export const Playground = ({
 			`
          );
          shader.fragmentShader = shader.fragmentShader.replace(
-            "#usf main",
+            "#usf <main>",
             `
 					vec2 uv = vUv;
 					float grain=rand(uv+sin(uTime))*.4;

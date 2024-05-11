@@ -45,7 +45,7 @@ varying float vMapArrayIndex;
 
 #usf <morphUvs>
 
-#usf <getWobble>
+#usf <wobble3D>
 
 
 float random3D(vec3 co) {

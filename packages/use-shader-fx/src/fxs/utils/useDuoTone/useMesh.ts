@@ -9,6 +9,7 @@ import {
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
 import { DUOTONE_PARAMS } from ".";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class DuoToneMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -36,9 +37,9 @@ export const useMesh = ({
          fragmentShader: fragmentShader,
          ...MATERIAL_BASIC_PARAMS,
       });
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]) as DuoToneMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);

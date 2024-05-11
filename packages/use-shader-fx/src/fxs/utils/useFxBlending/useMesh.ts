@@ -9,12 +9,13 @@ import {
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
 import { FXBLENDING_PARAMS } from ".";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class FxBlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
       u_texture: { value: THREE.Texture };
-      u_map: { value: THREE.Texture };
-      u_mapIntensity: { value: number };
+      uMap: { value: THREE.Texture };
+      uMapIntensity: { value: number };
    };
 }
 
@@ -28,17 +29,17 @@ export const useMesh = ({
       const mat = new THREE.ShaderMaterial({
          uniforms: {
             u_texture: { value: DEFAULT_TEXTURE },
-            u_map: { value: DEFAULT_TEXTURE },
-            u_mapIntensity: { value: FXBLENDING_PARAMS.mapIntensity },
+            uMap: { value: DEFAULT_TEXTURE },
+            uMapIntensity: { value: FXBLENDING_PARAMS.mapIntensity },
             ...uniforms,
          },
          vertexShader: vertexShader,
          fragmentShader: fragmentShader,
          ...MATERIAL_BASIC_PARAMS,
       });
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]) as FxBlendingMaterial;
 

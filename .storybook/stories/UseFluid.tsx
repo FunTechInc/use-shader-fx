@@ -12,7 +12,7 @@ import {
 import {
    FLUID_PARAMS,
    FluidParams,
-} from "../../packages/use-shader-fx/src/fxs/interactions/useFluid";
+} from "../../packages/use-shader-fx/src/fxs/simulations/useFluid";
 
 extend({ FxMaterial });
 

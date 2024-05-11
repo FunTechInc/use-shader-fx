@@ -5,6 +5,7 @@ import vertexShader from "../shader/main.vert";
 import fragmentShader from "../shader/main.frag";
 import { MaterialProps } from "../../../fxs/types";
 import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class DomSyncerMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -54,9 +55,9 @@ export const createMesh = ({
          // Must be transparent.
          transparent: true,
       });
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
       scene.add(mesh);
    });

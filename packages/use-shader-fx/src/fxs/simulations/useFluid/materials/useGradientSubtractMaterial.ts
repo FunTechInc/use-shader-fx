@@ -1,30 +1,31 @@
 import * as THREE from "three";
 import { useMemo } from "react";
 import vertexShader from "../shaders/main.vert";
-import fragmentShader from "../shaders/clear.frag";
+import fragmentShader from "../shaders/gradientSubtract.frag";
 import { MaterialProps } from "../../../types";
 import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../../libs/constants";
+import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
 
-export class ClearMaterial extends THREE.ShaderMaterial {
+export class GradientSubtractMaterial extends THREE.ShaderMaterial {
    uniforms!: {
-      uTexture: { value: THREE.Texture };
-      value: { value: number };
+      uPressure: { value: THREE.Texture };
+      uVelocity: { value: THREE.Texture };
       texelSize: { value: THREE.Vector2 };
    };
 }
 
-export const useClearMaterial = ({
+export const useGradientSubtractMaterial = ({
    onBeforeCompile,
    uniforms,
 }: MaterialProps) => {
-   const advectionMaterial = useMemo(() => {
+   const gradientSubtractMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
          uniforms: {
-            uTexture: { value: DEFAULT_TEXTURE },
-            value: { value: 0.0 },
+            uPressure: { value: DEFAULT_TEXTURE },
+            uVelocity: { value: DEFAULT_TEXTURE },
             texelSize: { value: new THREE.Vector2() },
             ...uniforms,
          },
@@ -33,11 +34,10 @@ export const useClearMaterial = ({
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]);
 
-   return advectionMaterial as ClearMaterial;
+   return gradientSubtractMaterial as GradientSubtractMaterial;
 };

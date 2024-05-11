@@ -1,11 +1,10 @@
 import * as THREE from "three";
 import { useMemo } from "react";
-import getWobble from "../../../libs/shaders/getWobble.glsl";
-import snoise from "../../../libs/shaders/snoise.glsl";
 import transmission_pars_fragment from "./shaders/transmission_pars_fragment.glsl";
 import transmission_fragment from "./shaders/transmission_fragment.glsl";
 import { WOBBLE3D_PARAMS } from ".";
 import { MaterialProps } from "../../types";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -67,13 +66,10 @@ const rewriteVertex = (vertex: string) => {
 		// edge
 		varying vec3 vEdgeNormal;
 		varying vec3 vEdgeViewPosition;
-		// #usf <getWobble>
+		#usf <wobble3D>
 		void main() {
 		`
    );
-
-   // wobble
-   shader = shader.replace("// #usf <getWobble>", `${getWobble}`);
 
    // vert
    shader = shader.replace(
@@ -239,7 +235,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 				uniform float uRefractionSamples;
 				
 				float rand(float n){return fract(sin(n) * 43758.5453123);}
-				${snoise}
+				#usf <snoise>
 
 				varying float vWobble;
 				varying vec2 vPosition;
@@ -268,7 +264,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             );
          }
 
-         onBeforeCompile && onBeforeCompile(shader, renderer);
+         setOnBeforeCompile(onBeforeCompile)(shader, renderer);
       };
       mat.needsUpdate = true;
 
@@ -281,7 +277,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       depthMat.onBeforeCompile = (shader, renderer) => {
          Object.assign(shader.uniforms, mat.userData.uniforms);
          shader.vertexShader = rewriteVertex(shader.vertexShader);
-         depthOnBeforeCompile && depthOnBeforeCompile(shader, renderer);
+         setOnBeforeCompile(depthOnBeforeCompile)(shader, renderer);
       };
       depthMat.needsUpdate = true;
 

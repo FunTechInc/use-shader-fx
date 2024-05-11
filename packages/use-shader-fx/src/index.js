@@ -3,8 +3,10 @@ FXs
 ===============================================*/
 // interactions
 export * from "./fxs/interactions/useBrush";
-export * from "./fxs/interactions/useFluid";
-export * from "./fxs/interactions/useRipple";
+
+// simulations
+export * from "./fxs/simulations/useFluid";
+export * from "./fxs/simulations/useRipple";
 
 // noises
 export * from "./fxs/noises/useNoise";

@@ -12,6 +12,7 @@ import {
    MATERIAL_BASIC_PARAMS,
 } from "../../../libs/constants";
 import { BRUSH_PARAMS } from ".";
+import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
 
 export class BrushMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -80,9 +81,8 @@ export const useMesh = ({
          transparent: true,
       });
 
-      if (onBeforeCompile) {
-         mat.onBeforeCompile = onBeforeCompile;
-      }
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
+
       return mat;
    }, [onBeforeCompile, uniforms]) as BrushMaterial;
 
