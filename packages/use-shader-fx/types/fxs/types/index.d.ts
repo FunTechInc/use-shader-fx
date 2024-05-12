@@ -12,7 +12,7 @@ export type MaterialProps = {
         [uniform: string]: THREE.IUniform<any>;
     };
     /**
-     * An optional callback that is executed immediately before the shader program is compiled.
+     * An optional callback that is executed immediately before the shader program is compiled. `use-shader-fx` already defines `onBeforeCompile`, so pass the function to this props instead of redefining it in material.
      * @param shader — Source code of the shader
      * @param renderer — WebGLRenderer Context that is initializing the material
      */
