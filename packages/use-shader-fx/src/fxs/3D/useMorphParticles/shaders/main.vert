@@ -47,14 +47,14 @@ varying float vMapArrayIndex;
 
 #usf <wobble3D>
 
-
 float random3D(vec3 co) {
-    return fract(sin(dot(co.xyz ,vec3(12.9898, 78.233, 45.764))) * 43758.5453);
+	return fract(sin(dot(co.xyz ,vec3(12.9898, 78.233, 45.764))) * 43758.5453);
 }
 
 void main() {
 	vec3 newPosition = position;
 	vec2 newUv = uv;
+	
 	#usf <morphPositionTransition>
 	#usf <morphUvTransition>
 

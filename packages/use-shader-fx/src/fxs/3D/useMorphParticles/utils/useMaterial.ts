@@ -15,7 +15,7 @@ import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
 import { rewriteFragmentShader } from "./rewriteFragmentShader";
 import { MaterialProps } from "../../../types";
-import { resolveShaders } from "../../../../libs/shaders/resolveShaders";
+import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -173,10 +173,7 @@ export const useMaterial = ({
          },
       });
 
-      mat.onBeforeCompile = (shader, renderer) => {
-         onBeforeCompile && onBeforeCompile(shader, renderer);
-         resolveShaders(shader);
-      };
+      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
 
       return mat;
    }, [
