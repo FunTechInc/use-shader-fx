@@ -25,7 +25,9 @@ function resolveIncludes(string: string) {
    return string.replace(includePattern, includeReplacer);
 }
 
-export const resolveShaders = (shader: THREE.Shader) => {
-   shader.vertexShader = resolveIncludes(shader.vertexShader);
-   shader.fragmentShader = resolveIncludes(shader.fragmentShader);
+export const resolveShaders = (
+   parameters: THREE.WebGLProgramParametersWithUniforms
+) => {
+   parameters.vertexShader = resolveIncludes(parameters.vertexShader);
+   parameters.fragmentShader = resolveIncludes(parameters.fragmentShader);
 };

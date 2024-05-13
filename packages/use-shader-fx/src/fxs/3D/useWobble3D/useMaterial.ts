@@ -127,7 +127,7 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
     * @param renderer — WebGLRenderer Context that is initializing the material
     */
    depthOnBeforeCompile?: (
-      shader: THREE.Shader,
+      shader: THREE.WebGLProgramParametersWithUniforms,
       renderer: THREE.WebGLRenderer
    ) => void;
    /**
