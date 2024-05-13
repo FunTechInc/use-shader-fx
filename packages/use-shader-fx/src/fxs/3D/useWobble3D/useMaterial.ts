@@ -122,12 +122,12 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
    baseMaterial?: T;
    materialParameters?: WobbleMaterialParams<T>;
    /**
-    * An optional callback that is executed immediately before the depth shader program is compiled.
-    * @param shader — Source code of the shader
+    * depthMaterial's onBeforeCompile
+    * @param parameters — WebGL program parameters
     * @param renderer — WebGLRenderer Context that is initializing the material
     */
    depthOnBeforeCompile?: (
-      shader: THREE.WebGLProgramParametersWithUniforms,
+      parameters: THREE.WebGLProgramParametersWithUniforms,
       renderer: THREE.WebGLRenderer
    ) => void;
    /**
@@ -187,19 +187,19 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
          },
       });
 
-      mat.onBeforeCompile = (shader, renderer) => {
-         Object.assign(shader.uniforms, mat.userData.uniforms);
+      mat.onBeforeCompile = (parameters, renderer) => {
+         Object.assign(parameters.uniforms, mat.userData.uniforms);
 
          /********************
 			vert
 			********************/
-         shader.vertexShader = rewriteVertex(shader.vertexShader);
+         parameters.vertexShader = rewriteVertex(parameters.vertexShader);
 
          /********************
 			frag
 			********************/
          // diffuse color , Manipulate color mixing ratio with `uColorMix`
-         shader.fragmentShader = shader.fragmentShader.replace(
+         parameters.fragmentShader = parameters.fragmentShader.replace(
             "#include <color_fragment>",
             `
 					#include <color_fragment>
@@ -214,7 +214,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
          );
 
          // frag
-         shader.fragmentShader = shader.fragmentShader.replace(
+         parameters.fragmentShader = parameters.fragmentShader.replace(
             "void main() {",
             `
 				uniform vec3 uColor0;
@@ -253,18 +253,18 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
 
          // custom transmission
          if (mat.type === "MeshPhysicalMaterial" && isCustomTransmission) {
-            shader.fragmentShader = shader.fragmentShader.replace(
+            parameters.fragmentShader = parameters.fragmentShader.replace(
                "#include <transmission_pars_fragment>",
                `${transmission_pars_fragment}`
             );
 
-            shader.fragmentShader = shader.fragmentShader.replace(
+            parameters.fragmentShader = parameters.fragmentShader.replace(
                "#include <transmission_fragment>",
                `${transmission_fragment}`
             );
          }
 
-         setOnBeforeCompile(onBeforeCompile)(shader, renderer);
+         setOnBeforeCompile(onBeforeCompile)(parameters, renderer);
       };
       mat.needsUpdate = true;
 
@@ -274,10 +274,10 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       const depthMat = new THREE.MeshDepthMaterial({
          depthPacking: THREE.RGBADepthPacking,
       });
-      depthMat.onBeforeCompile = (shader, renderer) => {
-         Object.assign(shader.uniforms, mat.userData.uniforms);
-         shader.vertexShader = rewriteVertex(shader.vertexShader);
-         setOnBeforeCompile(depthOnBeforeCompile)(shader, renderer);
+      depthMat.onBeforeCompile = (parameters, renderer) => {
+         Object.assign(parameters.uniforms, mat.userData.uniforms);
+         parameters.vertexShader = rewriteVertex(parameters.vertexShader);
+         setOnBeforeCompile(depthOnBeforeCompile)(parameters, renderer);
       };
       depthMat.needsUpdate = true;
 
