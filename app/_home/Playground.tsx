@@ -112,7 +112,7 @@ export const Playground = ({
          }),
          [hsv, marble]
       ),
-      onBeforeCompile: useCallback((shader: THREE.Shader) => {
+      onBeforeCompile: useCallback((shader: any) => {
          shader.fragmentShader = shader.fragmentShader.replace(
             "#usf <uniforms>",
             `
