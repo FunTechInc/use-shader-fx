@@ -1,2 +1,2 @@
 import * as THREE from "three";
-export declare const resolveShaders: (shader: THREE.Shader) => void;
+export declare const resolveShaders: (parameters: THREE.WebGLProgramParametersWithUniforms) => void;

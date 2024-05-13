@@ -19,5 +19,5 @@ export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     size: Size;
 } & MaterialProps) => {
     material: HSVMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, HSVMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, HSVMaterial, THREE.Object3DEventMap>;
 };

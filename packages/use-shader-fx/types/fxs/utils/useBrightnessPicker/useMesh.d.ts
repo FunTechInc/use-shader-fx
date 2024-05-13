@@ -20,5 +20,5 @@ export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
 } & MaterialProps) => {
     material: BrightnessPickerMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, BrightnessPickerMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, BrightnessPickerMaterial, THREE.Object3DEventMap>;
 };

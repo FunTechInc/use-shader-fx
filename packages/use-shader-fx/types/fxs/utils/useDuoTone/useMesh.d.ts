@@ -17,5 +17,5 @@ export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
 } & MaterialProps) => {
     material: DuoToneMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, DuoToneMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, DuoToneMaterial, THREE.Object3DEventMap>;
 };

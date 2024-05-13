@@ -1,6 +1,6 @@
 {
    "name": "@funtech-inc/use-shader-fx",
-   "version": "1.1.27",
+   "version": "1.1.29",
    "description": "⚡️ More FXs, Less GLSL",
    "main": "./build/use-shader-fx.umd.cjs",
    "module": "./build/use-shader-fx.js",
@@ -37,10 +37,10 @@
       "@types/node": "20.5.6",
       "@types/react": "18.2.21",
       "@types/react-dom": "18.2.7",
-      "@types/three": "^0.155.1",
+      "@types/three": "^0.164.0",
       "eslint": "8.47.0",
       "raw-loader": "^4.0.2",
-      "typescript": "5.2.2",
+      "typescript": "^5.2.2",
       "vite": "^4.5.0",
       "vite-plugin-glsl": "^1.1.2"
    },

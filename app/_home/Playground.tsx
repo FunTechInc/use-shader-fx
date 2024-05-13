@@ -112,10 +112,11 @@ export const Playground = ({
          }),
          [hsv, marble]
       ),
-      onBeforeCompile: useCallback((shader: THREE.Shader) => {
-         shader.fragmentShader = shader.fragmentShader.replace(
-            "#usf <uniforms>",
-            `
+      onBeforeCompile: useCallback(
+         (shader: THREE.WebGLProgramParametersWithUniforms) => {
+            shader.fragmentShader = shader.fragmentShader.replace(
+               "#usf <uniforms>",
+               `
 					uniform sampler2D u_noise;
 					uniform float u_noiseIntensity;
 					uniform sampler2D u_colorStrata;
@@ -123,10 +124,10 @@ export const Playground = ({
 						return fract(sin(dot(n ,vec2(12.9898,78.233))) * 43758.5453);
 					}
 			`
-         );
-         shader.fragmentShader = shader.fragmentShader.replace(
-            "#usf <main>",
-            `
+            );
+            shader.fragmentShader = shader.fragmentShader.replace(
+               "#usf <main>",
+               `
 					vec2 uv = vUv;
 					float grain=rand(uv+sin(uTime))*.4;
 					grain=grain*.5+.5;
@@ -135,8 +136,10 @@ export const Playground = ({
 					vec4 colorStrata = texture2D(u_colorStrata,uv);
 					usf_FragColor = colorStrata*grain;
 			`
-         );
-      }, []),
+            );
+         },
+         []
+      ),
    });
 
    // set fxs

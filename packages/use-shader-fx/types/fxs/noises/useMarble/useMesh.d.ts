@@ -29,5 +29,5 @@ export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
 } & MaterialProps) => {
     material: MarbleMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, MarbleMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, MarbleMaterial, THREE.Object3DEventMap>;
 };

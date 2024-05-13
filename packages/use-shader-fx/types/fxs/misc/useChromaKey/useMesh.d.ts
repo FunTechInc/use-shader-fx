@@ -41,5 +41,5 @@ export declare const useMesh: ({ scene, size, dpr, uniforms, onBeforeCompile, }:
     dpr: number | false;
 } & MaterialProps) => {
     material: ChromaKeyMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, ChromaKeyMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, ChromaKeyMaterial, THREE.Object3DEventMap>;
 };

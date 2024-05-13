@@ -17,5 +17,5 @@ export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
     scene: THREE.Scene;
 } & MaterialProps) => {
     material: FxBlendingMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxBlendingMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxBlendingMaterial, THREE.Object3DEventMap>;
 };

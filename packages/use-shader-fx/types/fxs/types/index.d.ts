@@ -13,10 +13,10 @@ export type MaterialProps = {
     };
     /**
      * An optional callback that is executed immediately before the shader program is compiled. `use-shader-fx` already defines `onBeforeCompile`, so pass the function to this props instead of redefining it in material.
-     * @param shader — Source code of the shader
+     * @param parameters — WebGL program parameters
      * @param renderer — WebGLRenderer Context that is initializing the material
      */
-    onBeforeCompile?: (shader: THREE.Shader, renderer: THREE.WebGLRenderer) => void;
+    onBeforeCompile?: (parameters: THREE.WebGLProgramParametersWithUniforms, renderer: THREE.WebGLRenderer) => void;
 };
 export interface HooksProps extends MaterialProps {
     size: Size;

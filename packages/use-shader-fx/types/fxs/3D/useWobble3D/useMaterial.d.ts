@@ -73,11 +73,11 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor> extend
     baseMaterial?: T;
     materialParameters?: WobbleMaterialParams<T>;
     /**
-     * An optional callback that is executed immediately before the depth shader program is compiled.
-     * @param shader — Source code of the shader
+     * depthMaterial's onBeforeCompile
+     * @param parameters — WebGL program parameters
      * @param renderer — WebGLRenderer Context that is initializing the material
      */
-    depthOnBeforeCompile?: (shader: THREE.Shader, renderer: THREE.WebGLRenderer) => void;
+    depthOnBeforeCompile?: (parameters: THREE.WebGLProgramParametersWithUniforms, renderer: THREE.WebGLRenderer) => void;
     /**
      * Whether to apply more advanced `transmission` or not. valid only for `MeshPhysicalMaterial`. This is a function referring to `drei/MeshTransmissionMaterial`, default : `false`
      * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial

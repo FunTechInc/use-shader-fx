@@ -47,5 +47,5 @@ export declare const useMesh: ({ scene, size, dpr, uniforms, onBeforeCompile, }:
     dpr: number | false;
 } & MaterialProps) => {
     material: FxTextureMaterial;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxTextureMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, FxTextureMaterial, THREE.Object3DEventMap>;
 };

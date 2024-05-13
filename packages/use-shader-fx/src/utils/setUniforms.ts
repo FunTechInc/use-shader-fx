@@ -1,3 +1,4 @@
+import * as THREE from "three";
 type UniformValue =
    | THREE.CubeTexture
    | THREE.Texture

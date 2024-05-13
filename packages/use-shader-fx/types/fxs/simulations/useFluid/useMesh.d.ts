@@ -48,6 +48,6 @@ export declare const useMesh: ({ scene, size, dpr, customFluidProps, }: {
         splatMaterial: SplatMaterial;
     };
     setMeshMaterial: (material: TMaterials) => void;
-    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.ShaderMaterial>;
+    mesh: THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.ShaderMaterial, THREE.Object3DEventMap>;
 };
 export {};

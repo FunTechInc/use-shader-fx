@@ -1,15 +1,16 @@
+import * as THREE from "three";
 import { resolveShaders } from "../libs/shaders/resolveShaders";
 
 type OnBeforeCompile = (
-   shader: THREE.Shader,
+   parameters: THREE.WebGLProgramParametersWithUniforms,
    renderer: THREE.WebGLRenderer
 ) => void;
 
 export const setOnBeforeCompile = (
    onBeforeCompile?: OnBeforeCompile
 ): OnBeforeCompile => {
-   return (shader, renderer) => {
-      onBeforeCompile && onBeforeCompile(shader, renderer);
-      resolveShaders(shader);
+   return (parameters, renderer) => {
+      onBeforeCompile && onBeforeCompile(parameters, renderer);
+      resolveShaders(parameters);
    };
 };
