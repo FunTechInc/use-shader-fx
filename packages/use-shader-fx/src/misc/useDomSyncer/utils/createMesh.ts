@@ -5,7 +5,7 @@ import vertexShader from "../shader/main.vert";
 import fragmentShader from "../shader/main.frag";
 import { MaterialProps } from "../../../fxs/types";
 import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class DomSyncerMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -19,8 +19,7 @@ export class DomSyncerMaterial extends THREE.ShaderMaterial {
 export const createMesh = ({
    params,
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: {
    params: DomSyncerParams;
    size: Size;
@@ -38,25 +37,29 @@ export const createMesh = ({
 
    params.texture!.forEach((texture, i) => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            u_texture: { value: texture },
-            u_textureResolution: {
-               value: new THREE.Vector2(0, 0),
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  u_texture: { value: texture },
+                  u_textureResolution: {
+                     value: new THREE.Vector2(0, 0),
+                  },
+                  u_resolution: { value: new THREE.Vector2(0, 0) },
+                  u_borderRadius: {
+                     value: params.boderRadius![i]
+                        ? params.boderRadius![i]
+                        : 0.0,
+                  },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
             },
-            u_resolution: { value: new THREE.Vector2(0, 0) },
-            u_borderRadius: {
-               value: params.boderRadius![i] ? params.boderRadius![i] : 0.0,
-            },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
          // Must be transparent.
          transparent: true,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
 
       const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
       scene.add(mesh);

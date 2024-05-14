@@ -62,13 +62,12 @@ export const useNoise = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<NoiseParams, NoiseObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, uniforms, onBeforeCompile });
+   const { material, mesh } = useMesh({ scene, onBeforeInit });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,

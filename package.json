@@ -30,7 +30,7 @@
       "react-dom": "18.2.0",
       "sass": "^1.66.1",
       "the-new-css-reset": "^1.9.0",
-      "three": "^0.162.0",
+      "three": "^0.164.1",
       "three-custom-shader-material": "^5.4.0",
       "three-stdlib": "^2.26.6",
       "typescript": "5.2.2",

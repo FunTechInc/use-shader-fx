@@ -1,13 +1,14 @@
 "use client";
 
 import * as THREE from "three";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useFrame, useThree, extend, useLoader } from "@react-three/fiber";
 import { useBeat, useBlank } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
 import { Environment, OrbitControls } from "@react-three/drei";
 import GUI from "lil-gui";
 import { useGUI } from "@/utils/useGUI";
+import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
 
 extend({ FxMaterial });
 
@@ -31,8 +32,8 @@ export const Playground = () => {
    const [updateBlank, setBlank, { output: blank }] = useBlank({
       size,
       dpr: viewport.dpr,
-      uniforms: useMemo(
-         () => ({
+      onBeforeInit: useCallback((params: OnBeforeInitParameters) => {
+         Object.assign(params.uniforms, {
             lerpPointer: { value: new THREE.Vector2(0) },
             tileSize: { value: CONFIG.scale },
             bigRadius: { value: 0.34 },
@@ -44,11 +45,8 @@ export const Playground = () => {
             innerColor1: { value: new THREE.Color("#FF0038") },
             innerColor2: { value: new THREE.Color("#008CFF") },
             isBox: { value: false },
-         }),
-         []
-      ),
-      onBeforeCompile: useCallback((shader: THREE.Shader) => {
-         shader.fragmentShader = shader.fragmentShader.replace(
+         });
+         params.fragmentShader = params.fragmentShader.replace(
             "#usf <uniforms>",
             `
 					uniform float tileSize;
@@ -72,7 +70,7 @@ export const Playground = () => {
 					}
 				`
          );
-         shader.fragmentShader = shader.fragmentShader.replace(
+         params.fragmentShader = params.fragmentShader.replace(
             "#usf <main>",
             `
 					vec2 uv = vUv;

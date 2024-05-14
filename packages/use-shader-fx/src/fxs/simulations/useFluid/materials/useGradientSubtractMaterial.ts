@@ -7,7 +7,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../../libs/constants";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class GradientSubtractMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -18,26 +18,27 @@ export class GradientSubtractMaterial extends THREE.ShaderMaterial {
 }
 
 export const useGradientSubtractMaterial = ({
-   onBeforeCompile,
-   uniforms,
+   onBeforeInit,
 }: MaterialProps) => {
    const gradientSubtractMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uPressure: { value: DEFAULT_TEXTURE },
-            uVelocity: { value: DEFAULT_TEXTURE },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uPressure: { value: DEFAULT_TEXTURE },
+                  uVelocity: { value: DEFAULT_TEXTURE },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return gradientSubtractMaterial as GradientSubtractMaterial;
 };

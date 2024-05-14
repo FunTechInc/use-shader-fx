@@ -10,7 +10,7 @@ import {
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
 import { HSV_PARAMS } from ".";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class HSVMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -22,8 +22,7 @@ export class HSVMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: {
    scene: THREE.Scene;
    size: Size;
@@ -31,21 +30,22 @@ export const useMesh = ({
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            u_texture: { value: DEFAULT_TEXTURE },
-            u_brightness: { value: HSV_PARAMS.brightness },
-            u_saturation: { value: HSV_PARAMS.saturation },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  u_texture: { value: DEFAULT_TEXTURE },
+                  u_brightness: { value: HSV_PARAMS.brightness },
+                  u_saturation: { value: HSV_PARAMS.saturation },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as HSVMaterial;
+   }, [onBeforeInit]) as HSVMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

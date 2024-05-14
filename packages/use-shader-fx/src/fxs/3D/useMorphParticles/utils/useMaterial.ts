@@ -15,7 +15,7 @@ import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
 import { rewriteFragmentShader } from "./rewriteFragmentShader";
 import { MaterialProps } from "../../../types";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -64,8 +64,7 @@ export const useMaterial = ({
    positions,
    uvs,
    mapArray,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: {
    size: Size;
    dpr: number | false;
@@ -110,70 +109,82 @@ export const useMaterial = ({
          rewriteFragmentShader(mapArray, fragmentShader);
 
       const mat = new THREE.ShaderMaterial({
-         vertexShader: rewritedVertexShader,
-         fragmentShader: rewritedFragmentShader,
-         blending: THREE.AdditiveBlending,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uResolution: { value: new THREE.Vector2(0, 0) },
+                  uMorphProgress: {
+                     value: MORPHPARTICLES_PARAMS.morphProgress,
+                  },
+                  uBlurAlpha: { value: MORPHPARTICLES_PARAMS.blurAlpha },
+                  uBlurRadius: { value: MORPHPARTICLES_PARAMS.blurRadius },
+                  uPointSize: { value: MORPHPARTICLES_PARAMS.pointSize },
+                  uPointAlpha: { value: MORPHPARTICLES_PARAMS.pointAlpha },
+                  uPicture: { value: DEFAULT_TEXTURE },
+                  uIsPicture: { value: false },
+                  uAlphaPicture: { value: DEFAULT_TEXTURE },
+                  uIsAlphaPicture: { value: false },
+                  uColor0: { value: MORPHPARTICLES_PARAMS.color0 },
+                  uColor1: { value: MORPHPARTICLES_PARAMS.color1 },
+                  uColor2: { value: MORPHPARTICLES_PARAMS.color2 },
+                  uColor3: { value: MORPHPARTICLES_PARAMS.color3 },
+                  uMap: { value: DEFAULT_TEXTURE },
+                  uIsMap: { value: false },
+                  uAlphaMap: { value: DEFAULT_TEXTURE },
+                  uIsAlphaMap: { value: false },
+                  uTime: { value: 0 },
+                  uWobblePositionFrequency: {
+                     value: MORPHPARTICLES_PARAMS.wobblePositionFrequency,
+                  },
+                  uWobbleTimeFrequency: {
+                     value: MORPHPARTICLES_PARAMS.wobbleTimeFrequency,
+                  },
+                  uWobbleStrength: {
+                     value: MORPHPARTICLES_PARAMS.wobbleStrength,
+                  },
+                  uWarpPositionFrequency: {
+                     value: MORPHPARTICLES_PARAMS.warpPositionFrequency,
+                  },
+                  uWarpTimeFrequency: {
+                     value: MORPHPARTICLES_PARAMS.warpTimeFrequency,
+                  },
+                  uWarpStrength: { value: MORPHPARTICLES_PARAMS.warpStrength },
+                  uDisplacement: { value: DEFAULT_TEXTURE },
+                  uIsDisplacement: { value: false },
+                  uDisplacementIntensity: {
+                     value: MORPHPARTICLES_PARAMS.displacementIntensity,
+                  },
+                  uDisplacementColorIntensity: {
+                     value: MORPHPARTICLES_PARAMS.displacementColorIntensity,
+                  },
+                  uSizeRandomIntensity: {
+                     value: MORPHPARTICLES_PARAMS.sizeRandomIntensity,
+                  },
+                  uSizeRandomTimeFrequency: {
+                     value: MORPHPARTICLES_PARAMS.sizeRandomTimeFrequency,
+                  },
+                  uSizeRandomMin: {
+                     value: MORPHPARTICLES_PARAMS.sizeRandomMin,
+                  },
+                  uSizeRandomMax: {
+                     value: MORPHPARTICLES_PARAMS.sizeRandomMax,
+                  },
+                  uDivergence: { value: MORPHPARTICLES_PARAMS.divergence },
+                  uDivergencePoint: {
+                     value: MORPHPARTICLES_PARAMS.divergencePoint,
+                  },
+                  ...mapArrayUniforms,
+               },
+               vertexShader: rewritedVertexShader,
+               fragmentShader: rewritedFragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
+         blending: THREE.AdditiveBlending,
          // Must be transparent
          transparent: true,
-         uniforms: {
-            uResolution: { value: new THREE.Vector2(0, 0) },
-            uMorphProgress: { value: MORPHPARTICLES_PARAMS.morphProgress },
-            uBlurAlpha: { value: MORPHPARTICLES_PARAMS.blurAlpha },
-            uBlurRadius: { value: MORPHPARTICLES_PARAMS.blurRadius },
-            uPointSize: { value: MORPHPARTICLES_PARAMS.pointSize },
-            uPointAlpha: { value: MORPHPARTICLES_PARAMS.pointAlpha },
-            uPicture: { value: DEFAULT_TEXTURE },
-            uIsPicture: { value: false },
-            uAlphaPicture: { value: DEFAULT_TEXTURE },
-            uIsAlphaPicture: { value: false },
-            uColor0: { value: MORPHPARTICLES_PARAMS.color0 },
-            uColor1: { value: MORPHPARTICLES_PARAMS.color1 },
-            uColor2: { value: MORPHPARTICLES_PARAMS.color2 },
-            uColor3: { value: MORPHPARTICLES_PARAMS.color3 },
-            uMap: { value: DEFAULT_TEXTURE },
-            uIsMap: { value: false },
-            uAlphaMap: { value: DEFAULT_TEXTURE },
-            uIsAlphaMap: { value: false },
-            uTime: { value: 0 },
-            uWobblePositionFrequency: {
-               value: MORPHPARTICLES_PARAMS.wobblePositionFrequency,
-            },
-            uWobbleTimeFrequency: {
-               value: MORPHPARTICLES_PARAMS.wobbleTimeFrequency,
-            },
-            uWobbleStrength: { value: MORPHPARTICLES_PARAMS.wobbleStrength },
-            uWarpPositionFrequency: {
-               value: MORPHPARTICLES_PARAMS.warpPositionFrequency,
-            },
-            uWarpTimeFrequency: {
-               value: MORPHPARTICLES_PARAMS.warpTimeFrequency,
-            },
-            uWarpStrength: { value: MORPHPARTICLES_PARAMS.warpStrength },
-            uDisplacement: { value: DEFAULT_TEXTURE },
-            uIsDisplacement: { value: false },
-            uDisplacementIntensity: {
-               value: MORPHPARTICLES_PARAMS.displacementIntensity,
-            },
-            uDisplacementColorIntensity: {
-               value: MORPHPARTICLES_PARAMS.displacementColorIntensity,
-            },
-            uSizeRandomIntensity: {
-               value: MORPHPARTICLES_PARAMS.sizeRandomIntensity,
-            },
-            uSizeRandomTimeFrequency: {
-               value: MORPHPARTICLES_PARAMS.sizeRandomTimeFrequency,
-            },
-            uSizeRandomMin: { value: MORPHPARTICLES_PARAMS.sizeRandomMin },
-            uSizeRandomMax: { value: MORPHPARTICLES_PARAMS.sizeRandomMax },
-            uDivergence: { value: MORPHPARTICLES_PARAMS.divergence },
-            uDivergencePoint: { value: MORPHPARTICLES_PARAMS.divergencePoint },
-            ...mapArrayUniforms,
-            ...uniforms,
-         },
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
 
       return mat;
    }, [
@@ -181,8 +192,7 @@ export const useMaterial = ({
       modifiedPositions,
       modifiedUvs,
       mapArray,
-      onBeforeCompile,
-      uniforms,
+      onBeforeInit,
    ]) as MorphParticlesMaterial;
 
    const resolution = useResolution(size, dpr);

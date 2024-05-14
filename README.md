@@ -84,7 +84,7 @@ From each `fxHooks`, you can receive [`updateFx`, `setParams`, `fxObject`] in ar
 1. `updateFx` - Functions to update parameters and render.
 2. `updateParams` - Function to update parameters only.
 3. `fxObject` - An object that holds various FX components, such as scene, camera, mesh, renderTarget, and `output`(final rendered texture).
-4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`uniforms`,`onBeforeCompile`but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
+4. `HooksProps` - `size`,`dpr`,`samples`,`isSizeUpdate`,`onBeforeInit` but may also be hook specific. ※ `isSizeUpdate` : Whether to `setSize` the FBO when updating size or dpr(default : `false`).
 
 ```js
 const [updateFx, updateParams, fxObject] = useSomeFx(HooksProps);
@@ -503,7 +503,7 @@ return (
 
 # useBlank
 
-By default, it is a blank canvas with nothing drawn on it. You can customise the shaders using `onBeforeCompile`.
+By default, it is a blank canvas with nothing drawn on it. You can customise the shaders using `onBeforeInit`.
 
 Fragment shaders have `uTexture`,`uBackbuffer`,`uTime`,`uPointer` and `uResolution` as default uniforms.
 
@@ -511,10 +511,10 @@ Fragment shaders have `uTexture`,`uBackbuffer`,`uTime`,`uPointer` and `uResoluti
 const [updateBlank, _, { output: blank, material }] = useBlank({
    size,
    dpr: viewport.dpr,
-   uniforms: {
-      hoge: { value: 0 },
-   },
-   onBeforeCompile: useCallback((shader: THREE.Shader) => {
+   onBeforeInit: useCallback((shader: OnBeforeInitParameters) => {
+      Object.assign(shader.uniforms, {
+         hoge: { value: 0 },
+      });
       shader.fragmentShader = shader.fragmentShader.replace(
          "#usf <uniforms>",
          "uniform float hoge;"

@@ -26,21 +26,21 @@ export const DELTA_TIME = 0.016;
 
 export type FluidParams = {
    /** density disspation , default : `0.98` */
-   density_dissipation?: number;
+   densityDissipation?: number;
    /** velocity dissipation , default : `0.99` */
-   velocity_dissipation?: number;
+   velocityDissipation?: number;
    /** velocity acceleration , default : `10.0` */
-   velocity_acceleration?: number;
+   velocityAcceleration?: number;
    /** pressure dissipation , default : `0.9` */
-   pressure_dissipation?: number;
+   pressureDissipation?: number;
    /** pressure iterations. affects performance , default : `20` */
-   pressure_iterations?: number;
+   pressureIterations?: number;
    /** curl_strength , default : `35` */
-   curl_strength?: number;
+   curlStrength?: number;
    /** splat radius , default : `0.002` */
-   splat_radius?: number;
+   splatRadius?: number;
    /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default : `THREE.Vector3(1.0, 1.0, 1.0)` */
-   fluid_color?:
+   fluidColor?:
       | ((velocity: THREE.Vector2) => THREE.Vector3)
       | THREE.Vector3
       | THREE.Color;
@@ -64,14 +64,14 @@ export type FluidObject = {
 };
 
 export const FLUID_PARAMS: FluidParams = Object.freeze({
-   density_dissipation: 0.98,
-   velocity_dissipation: 0.99,
-   velocity_acceleration: 10.0,
-   pressure_dissipation: 0.9,
-   pressure_iterations: 20,
-   curl_strength: 35,
-   splat_radius: 0.002,
-   fluid_color: new THREE.Vector3(1.0, 1.0, 1.0),
+   densityDissipation: 0.98,
+   velocityDissipation: 0.99,
+   velocityAcceleration: 10.0,
+   pressureDissipation: 0.9,
+   pressureIterations: 20,
+   curlStrength: 35,
+   splatRadius: 0.002,
+   fluidColor: new THREE.Vector3(1.0, 1.0, 1.0),
    pointerValues: false,
 });
 
@@ -85,14 +85,11 @@ export const useFluid = ({
    isSizeUpdate,
    customFluidProps,
 }: {
-   /** you can add `onBeforeComile` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat` 
+   /** you can add `onBeforeInit` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat` 
 	 * ```ts
-	 * fluidOnBeforeCompile: {
+	 * customFluidProps: {
          vorticity: {
-            onBeforeCompile: (shader) => console.log(shader),
-				uniforms:{
-					hoge: { value: 0.0 },
-				}
+            onBeforeInit: (parameters) => console.log(parameters),
          },
       },
 	 * ```
@@ -194,7 +191,7 @@ export const useFluid = ({
             updateParamsList.advection("uSource", read);
             updateParamsList.advection(
                "dissipation",
-               params.velocity_dissipation!
+               params.velocityDissipation!
             );
          });
 
@@ -204,7 +201,7 @@ export const useFluid = ({
             updateParamsList.advection("uSource", read);
             updateParamsList.advection(
                "dissipation",
-               params.density_dissipation!
+               params.densityDissipation!
             );
          });
 
@@ -218,21 +215,21 @@ export const useFluid = ({
                const scaledDiff = pointerValues.diffPointer.multiply(
                   scaledDiffVec.current
                      .set(size.width, size.height)
-                     .multiplyScalar(params.velocity_acceleration!)
+                     .multiplyScalar(params.velocityAcceleration!)
                );
                updateParamsList.splat(
                   "color",
                   spaltVec.current.set(scaledDiff.x, scaledDiff.y, 1.0)
                );
-               updateParamsList.splat("radius", params.splat_radius!);
+               updateParamsList.splat("radius", params.splatRadius!);
             });
             updateDensityFBO(gl, ({ read }) => {
                setMeshMaterial(materials.splatMaterial);
                updateParamsList.splat("uTarget", read);
                const color: THREE.Vector3 | THREE.Color =
-                  typeof params.fluid_color === "function"
-                     ? params.fluid_color(pointerValues.velocity)
-                     : params.fluid_color!;
+                  typeof params.fluidColor === "function"
+                     ? params.fluidColor(pointerValues.velocity)
+                     : params.fluidColor!;
                updateParamsList.splat("color", color);
             });
          }
@@ -246,7 +243,7 @@ export const useFluid = ({
             setMeshMaterial(materials.vorticityMaterial);
             updateParamsList.vorticity("uVelocity", read);
             updateParamsList.vorticity("uCurl", curlTex);
-            updateParamsList.vorticity("curl", params.curl_strength!);
+            updateParamsList.vorticity("curl", params.curlStrength!);
          });
 
          const divergenceTex = updateDivergenceFBO(gl, () => {
@@ -257,13 +254,13 @@ export const useFluid = ({
          updatePressureFBO(gl, ({ read }) => {
             setMeshMaterial(materials.clearMaterial);
             updateParamsList.clear("uTexture", read);
-            updateParamsList.clear("value", params.pressure_dissipation!);
+            updateParamsList.clear("value", params.pressureDissipation!);
          });
 
          setMeshMaterial(materials.pressureMaterial);
          updateParamsList.pressure("uDivergence", divergenceTex);
          let pressureTexTemp: THREE.Texture;
-         for (let i = 0; i < params.pressure_iterations!; i++) {
+         for (let i = 0; i < params.pressureIterations!; i++) {
             pressureTexTemp = updatePressureFBO(gl, ({ read }) => {
                updateParamsList.pressure("uPressure", read);
             });

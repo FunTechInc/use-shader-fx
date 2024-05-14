@@ -76,8 +76,7 @@ export const useBrush = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<BrushParams, BrushObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
@@ -86,8 +85,7 @@ export const useBrush = ({
       scene,
       size,
       dpr: _dpr.shader,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
    const camera = useCamera(size);
    const updatePointer = usePointer();

@@ -79,7 +79,7 @@ export const Playground = () => {
 
    const colorVec = new THREE.Vector3(0, 0, 0);
    setFluid({
-      fluid_color: (velocity: THREE.Vector2) => {
+      fluidColor: (velocity: THREE.Vector2) => {
          const rCol = Math.max(0.0, Math.abs(velocity.x) * 200);
          const gCol = Math.max(0.0, Math.abs(velocity.y) * 100);
          const bCol = Math.max(0.0, (rCol + gCol) / 2);

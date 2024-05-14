@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import * as THREE from "three";
 import { useResolution } from "../../../utils/useResolution";
 import vertexShader from "./shader/main.vert";
@@ -12,7 +12,7 @@ import {
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
 import { FXTEXTURE_PARAMS } from ".";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class FxTextureMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -35,8 +35,7 @@ export const useMesh = ({
    scene,
    size,
    dpr,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: {
    scene: THREE.Scene;
    size: Size;
@@ -45,30 +44,31 @@ export const useMesh = ({
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uResolution: { value: new THREE.Vector2() },
-            uTextureResolution: { value: new THREE.Vector2() },
-            uTexture0: { value: DEFAULT_TEXTURE },
-            uTexture1: { value: DEFAULT_TEXTURE },
-            padding: { value: FXTEXTURE_PARAMS.padding },
-            uMap: { value: DEFAULT_TEXTURE },
-            edgeIntensity: { value: FXTEXTURE_PARAMS.edgeIntensity },
-            mapIntensity: { value: FXTEXTURE_PARAMS.mapIntensity },
-            epicenter: { value: FXTEXTURE_PARAMS.epicenter },
-            progress: { value: FXTEXTURE_PARAMS.progress },
-            dirX: { value: FXTEXTURE_PARAMS.dir?.x },
-            dirY: { value: FXTEXTURE_PARAMS.dir?.y },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uResolution: { value: new THREE.Vector2() },
+                  uTextureResolution: { value: new THREE.Vector2() },
+                  uTexture0: { value: DEFAULT_TEXTURE },
+                  uTexture1: { value: DEFAULT_TEXTURE },
+                  padding: { value: FXTEXTURE_PARAMS.padding },
+                  uMap: { value: DEFAULT_TEXTURE },
+                  edgeIntensity: { value: FXTEXTURE_PARAMS.edgeIntensity },
+                  mapIntensity: { value: FXTEXTURE_PARAMS.mapIntensity },
+                  epicenter: { value: FXTEXTURE_PARAMS.epicenter },
+                  progress: { value: FXTEXTURE_PARAMS.progress },
+                  dirX: { value: FXTEXTURE_PARAMS.dir?.x },
+                  dirY: { value: FXTEXTURE_PARAMS.dir?.y },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as FxTextureMaterial;
+   }, [onBeforeInit]) as FxTextureMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("uResolution", resolution.clone());

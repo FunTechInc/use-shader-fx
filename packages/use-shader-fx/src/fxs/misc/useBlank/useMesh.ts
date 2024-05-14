@@ -10,7 +10,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class BlankMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -25,29 +25,33 @@ export const useMesh = ({
    scene,
    size,
    dpr,
-   uniforms,
-   onBeforeCompile,
-}: { scene: THREE.Scene; size: Size; dpr: number | false } & MaterialProps) => {
+   onBeforeInit,
+}: {
+   scene: THREE.Scene;
+   size: Size;
+   dpr: number | false;
+} & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uTexture: { value: DEFAULT_TEXTURE },
-            uBackbuffer: { value: DEFAULT_TEXTURE },
-            uTime: { value: 0 },
-            uPointer: { value: new THREE.Vector2() },
-            uResolution: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uTexture: { value: DEFAULT_TEXTURE },
+                  uBackbuffer: { value: DEFAULT_TEXTURE },
+                  uTime: { value: 0 },
+                  uPointer: { value: new THREE.Vector2() },
+                  uResolution: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as BlankMaterial;
+   }, [onBeforeInit]) as BlankMaterial;
 
    const resolution = useResolution(size, dpr);
    setUniform(material)("uResolution", resolution.clone());

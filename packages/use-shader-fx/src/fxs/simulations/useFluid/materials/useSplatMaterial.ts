@@ -7,7 +7,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../../libs/constants";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class SplatMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -20,30 +20,29 @@ export class SplatMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useSplatMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const useSplatMaterial = ({ onBeforeInit }: MaterialProps) => {
    const splatMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uTarget: { value: DEFAULT_TEXTURE },
-            aspectRatio: { value: 0 },
-            color: { value: new THREE.Vector3() },
-            point: { value: new THREE.Vector2() },
-            radius: { value: 0.0 },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uTarget: { value: DEFAULT_TEXTURE },
+                  aspectRatio: { value: 0 },
+                  color: { value: new THREE.Vector3() },
+                  point: { value: new THREE.Vector2() },
+                  radius: { value: 0.0 },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return splatMaterial as SplatMaterial;
 };

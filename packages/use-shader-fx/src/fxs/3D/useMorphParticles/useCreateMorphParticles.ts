@@ -52,8 +52,7 @@ export const useCreateMorphParticles = ({
    positions,
    uvs,
    mapArray,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: Create3DHooksProps &
    UseCreateMorphParticlesProps): UseCreateMorphParticlesReturn => {
    const _dpr = getDpr(dpr);
@@ -73,8 +72,7 @@ export const useCreateMorphParticles = ({
       positions,
       uvs,
       mapArray,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
 
    const { points, interactiveMesh } = useCreateObject({

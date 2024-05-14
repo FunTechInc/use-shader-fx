@@ -8,7 +8,7 @@ import {
    MATERIAL_BASIC_PARAMS,
 } from "../../../../libs/constants";
 import { DELTA_TIME } from "..";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class AdvectionMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -20,29 +20,28 @@ export class AdvectionMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useAdvectionMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const useAdvectionMaterial = ({ onBeforeInit }: MaterialProps) => {
    const advectionMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uVelocity: { value: DEFAULT_TEXTURE },
-            uSource: { value: DEFAULT_TEXTURE },
-            texelSize: { value: new THREE.Vector2() },
-            dt: { value: DELTA_TIME },
-            dissipation: { value: 0.0 },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uVelocity: { value: DEFAULT_TEXTURE },
+                  uSource: { value: DEFAULT_TEXTURE },
+                  texelSize: { value: new THREE.Vector2() },
+                  dt: { value: DELTA_TIME },
+                  dissipation: { value: 0.0 },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return advectionMaterial as AdvectionMaterial;
 };

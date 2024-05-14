@@ -43,8 +43,7 @@ export const useAlphaBlending = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<
    AlphaBlendingParams,
    AlphaBlendingObject,
@@ -56,8 +55,7 @@ export const useAlphaBlending = ({
    const { material, mesh } = useMesh({
       scene,
       size,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
    const camera = useCamera(size);
 

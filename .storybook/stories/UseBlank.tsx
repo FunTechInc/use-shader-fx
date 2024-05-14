@@ -1,10 +1,9 @@
 import * as React from "react";
-import * as THREE from "three";
 import { useFrame, extend, useThree } from "@react-three/fiber";
 import { FxMaterial } from "../../utils/fxMaterial";
-
 import { useBlank } from "../../packages/use-shader-fx/src";
 import { BlankParams } from "../../packages/use-shader-fx/src/fxs/misc/useBlank";
+import { OnBeforeInitParameters } from "../../packages/use-shader-fx/src/fxs/types";
 
 extend({ FxMaterial });
 
@@ -25,7 +24,7 @@ export const UseBlank = (args: BlankParams) => {
    const [updateBlank, _, { output: blank }] = useBlank({
       size,
       dpr: dpr,
-      onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
+      onBeforeInit: React.useCallback((shader: OnBeforeInitParameters) => {
          shader.fragmentShader = shader.fragmentShader.replace(
             "#usf <main>",
             `float t=uTime,c;vec2 z,n=vec2(cos(t),sin(t));z=vUv*2.-1.;for(int i=0;i<12;i++){if(dot(z,z)>8.)discard;z=vec2(z.x*z.x-z.y*z.y,z.x*z.y)+n;}c=cos(length(z)+log(length(z)));usf_FragColor=vec4(vec3(c),1.);`

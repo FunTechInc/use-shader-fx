@@ -3,8 +3,8 @@ import { useMemo } from "react";
 import transmission_pars_fragment from "./shaders/transmission_pars_fragment.glsl";
 import transmission_fragment from "./shaders/transmission_fragment.glsl";
 import { WOBBLE3D_PARAMS } from ".";
-import { MaterialProps } from "../../types";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { MaterialProps, OnBeforeInitParameters } from "../../types";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -121,15 +121,7 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
    /** default:THREE.MeshPhysicalMaterial */
    baseMaterial?: T;
    materialParameters?: WobbleMaterialParams<T>;
-   /**
-    * depthMaterial's onBeforeCompile
-    * @param parameters — WebGL program parameters
-    * @param renderer — WebGLRenderer Context that is initializing the material
-    */
-   depthOnBeforeCompile?: (
-      parameters: THREE.WebGLProgramParametersWithUniforms,
-      renderer: THREE.WebGLRenderer
-   ) => void;
+   depthOnBeforeInit?: (parameters: OnBeforeInitParameters) => void;
    /**
     * Whether to apply more advanced `transmission` or not. valid only for `MeshPhysicalMaterial`. This is a function referring to `drei/MeshTransmissionMaterial`, default : `false`
     * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
@@ -140,10 +132,9 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
 export const useMaterial = <T extends WobbleMaterialConstructor>({
    baseMaterial,
    materialParameters,
-   onBeforeCompile,
-   depthOnBeforeCompile,
    isCustomTransmission = false,
-   uniforms,
+   onBeforeInit,
+   depthOnBeforeInit,
 }: WobbleMaterialProps<T>) => {
    const { material, depthMaterial } = useMemo(() => {
       const mat = new (baseMaterial || THREE.MeshPhysicalMaterial)(
@@ -183,11 +174,10 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             transmission: { value: 0 },
             _transmission: { value: 1 },
             transmissionMap: { value: null },
-            ...uniforms,
          },
       });
 
-      mat.onBeforeCompile = (parameters, renderer) => {
+      mat.onBeforeCompile = (parameters) => {
          Object.assign(parameters.uniforms, mat.userData.uniforms);
 
          /********************
@@ -264,7 +254,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             );
          }
 
-         setOnBeforeCompile(onBeforeCompile)(parameters, renderer);
+         createMaterialParameters(parameters, onBeforeInit);
       };
       mat.needsUpdate = true;
 
@@ -274,10 +264,10 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       const depthMat = new THREE.MeshDepthMaterial({
          depthPacking: THREE.RGBADepthPacking,
       });
-      depthMat.onBeforeCompile = (parameters, renderer) => {
+      depthMat.onBeforeCompile = (parameters) => {
          Object.assign(parameters.uniforms, mat.userData.uniforms);
          parameters.vertexShader = rewriteVertex(parameters.vertexShader);
-         setOnBeforeCompile(depthOnBeforeCompile)(parameters, renderer);
+         createMaterialParameters(parameters, depthOnBeforeInit);
       };
       depthMat.needsUpdate = true;
 
@@ -285,9 +275,8 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
    }, [
       materialParameters,
       baseMaterial,
-      onBeforeCompile,
-      depthOnBeforeCompile,
-      uniforms,
+      onBeforeInit,
+      depthOnBeforeInit,
       isCustomTransmission,
    ]);
 

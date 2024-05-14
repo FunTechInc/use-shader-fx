@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 import wobble3D from "./shaderChunk/wobble3D.glsl";
 import snoise from "./shaderChunk/snoise.glsl";
 import coverTexture from "./shaderChunk/coverTexture.glsl";
@@ -16,18 +14,12 @@ const SHADER_CHUNK: { [key: string]: string } = {
 
 const includePattern = /^[ \t]*#usf +<([\w\d./]+)>/gm;
 
-function includeReplacer(match: string, include: string) {
-   let string = SHADER_CHUNK[include] || "";
-   return resolveIncludes(string);
+function includeReplacer(match: string, include: string): string {
+   return resolveIncludes(SHADER_CHUNK[include] || "");
 }
 
-function resolveIncludes(string: string) {
+function resolveIncludes(string: string): string {
    return string.replace(includePattern, includeReplacer);
 }
 
-export const resolveShaders = (
-   parameters: THREE.WebGLProgramParametersWithUniforms
-) => {
-   parameters.vertexShader = resolveIncludes(parameters.vertexShader);
-   parameters.fragmentShader = resolveIncludes(parameters.fragmentShader);
-};
+export { resolveIncludes };

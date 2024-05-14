@@ -50,8 +50,7 @@ export const useMotionBlur = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<
    MotionBlurParams,
    MotionBlurObject,
@@ -60,7 +59,7 @@ export const useMotionBlur = ({
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
-   const { material, mesh } = useMesh({ scene, uniforms, onBeforeCompile });
+   const { material, mesh } = useMesh({ scene, onBeforeInit });
    const camera = useCamera(size);
 
    const fboProps = useMemo(

@@ -40,8 +40,7 @@ export const useCoverTexture = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<
    CoverTextureParams,
    CoverTextureObject,
@@ -54,8 +53,7 @@ export const useCoverTexture = ({
       scene,
       size,
       dpr: _dpr.shader,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({

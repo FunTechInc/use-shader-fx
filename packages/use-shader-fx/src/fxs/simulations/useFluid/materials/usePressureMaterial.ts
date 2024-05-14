@@ -4,7 +4,7 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/pressure.frag";
 import { MaterialProps } from "../../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class PressureMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -14,27 +14,26 @@ export class PressureMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const usePressureMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const usePressureMaterial = ({ onBeforeInit }: MaterialProps) => {
    const pressureMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uPressure: { value: null },
-            uDivergence: { value: null },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uPressure: { value: null },
+                  uDivergence: { value: null },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return pressureMaterial as PressureMaterial;
 };

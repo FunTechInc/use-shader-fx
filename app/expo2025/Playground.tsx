@@ -49,15 +49,12 @@ const MyakuMyaku = (props: MeshProps) => {
          }),
          []
       ),
-      uniforms: useMemo(
-         () => ({
+      onBeforeInit: (params) => {
+         Object.assign(params.uniforms, {
             uEyeColor: { value: new THREE.Color(0x2469b3) },
             uEyeMoving: { value: new THREE.Vector2(0, 0) },
-         }),
-         []
-      ),
-      onBeforeCompile: (shader) => {
-         shader.fragmentShader = shader.fragmentShader.replace(
+         });
+         params.fragmentShader = params.fragmentShader.replace(
             "uniform float uRefractionSamples;",
             `
 					uniform float uRefractionSamples;
@@ -65,7 +62,7 @@ const MyakuMyaku = (props: MeshProps) => {
 					uniform vec3 uEyeColor;
 				`
          );
-         shader.fragmentShader = shader.fragmentShader.replace(
+         params.fragmentShader = params.fragmentShader.replace(
             "#include <alphamap_fragment>",
             `
 					float whiteDist = distance(uEyeMoving * 0.4,vPosition);
@@ -121,7 +118,6 @@ export const Playground = () => {
 
    return (
       <mesh>
-         {/* <Environment preset="warehouse" /> */}
          <ambientLight intensity={0.4} />
          <spotLight
             position={[10, 10, 10]}

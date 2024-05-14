@@ -6,7 +6,7 @@ import { useAddObject } from "../../../utils/useAddObject";
 import { MaterialProps } from "../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
 import { MARBLE_PARAMS } from ".";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class MarbleMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -22,33 +22,34 @@ export class MarbleMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            u_time: { value: 0 },
-            u_pattern: { value: MARBLE_PARAMS.pattern },
-            u_complexity: { value: MARBLE_PARAMS.complexity },
-            u_complexityAttenuation: {
-               value: MARBLE_PARAMS.complexityAttenuation,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  u_time: { value: 0 },
+                  u_pattern: { value: MARBLE_PARAMS.pattern },
+                  u_complexity: { value: MARBLE_PARAMS.complexity },
+                  u_complexityAttenuation: {
+                     value: MARBLE_PARAMS.complexityAttenuation,
+                  },
+                  u_iterations: { value: MARBLE_PARAMS.iterations },
+                  u_timeStrength: { value: MARBLE_PARAMS.timeStrength },
+                  u_scale: { value: MARBLE_PARAMS.scale },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
             },
-            u_iterations: { value: MARBLE_PARAMS.iterations },
-            u_timeStrength: { value: MARBLE_PARAMS.timeStrength },
-            u_scale: { value: MARBLE_PARAMS.scale },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as MarbleMaterial;
+   }, [onBeforeInit]) as MarbleMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

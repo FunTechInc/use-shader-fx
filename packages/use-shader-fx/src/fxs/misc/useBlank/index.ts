@@ -53,19 +53,19 @@ export const useBlank = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<BlankParams, BlankObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
    const scene = useMemo(() => new THREE.Scene(), []);
+
    const { material, mesh } = useMesh({
       scene,
       size,
       dpr: _dpr.shader,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
+
    const camera = useCamera(size);
 
    const fboProps = useMemo(
