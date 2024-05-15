@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { ShaderFx } from "../ShaderFx";
 import { Playground } from "./Playground";
+import { CursorUI } from "./CursorUI";
 
 export default function Page() {
    return (
@@ -14,6 +15,7 @@ export default function Page() {
          <ShaderFx isDprUpdate={false}>
             <Playground />
          </ShaderFx>
+         <CursorUI />
       </div>
    );
 }
