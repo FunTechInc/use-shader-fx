@@ -64,6 +64,7 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    const mesh = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
 
    const userData = material.userData as Wobble3DMaterial;
+
    const updateValue = setUniform(userData);
    const updateCustomValue = setCustomUniform(userData);
 

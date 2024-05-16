@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 export class CanvasState {
    private static instance: CanvasState;
+
    public static getInstance(): CanvasState {
       if (!CanvasState.instance) {
          CanvasState.instance = new CanvasState();
@@ -23,7 +24,13 @@ export class CanvasState {
    }
 
    private getNextStickerIndex() {
-      return Math.floor(Math.random() * this.textures.stickers.length);
+      const prevIndex = this.stickerState.nextStickerIndex;
+      let nextIndex;
+      // 重複しないように次のステッカーを選ぶ
+      do {
+         nextIndex = Math.floor(Math.random() * this.textures.stickers.length);
+      } while (nextIndex === prevIndex);
+      return nextIndex;
    }
 
    public textures: {
@@ -39,9 +46,16 @@ export class CanvasState {
       point: new THREE.Vector2(0, 0),
    };
 
-   public state: {
+   public cameraState: {
+      point: THREE.Vector3;
+   } = {
+      point: new THREE.Vector3(0, 0, 4),
+   };
+
+   public stickerState: {
+      isNotSticked: boolean;
+      wobbleStrength: number;
       point: THREE.Vector2;
-      cameraPoint: THREE.Vector3;
       sticker: THREE.Texture | null;
       nextStickerIndex: number;
       wrinkle: THREE.Texture | null;
@@ -50,10 +64,11 @@ export class CanvasState {
       angle: number;
       count: number;
    } = {
+      isNotSticked: true,
+      wobbleStrength: 0,
       point: new THREE.Vector2(0, 0),
-      cameraPoint: new THREE.Vector3(0, 0, 4),
       sticker: null,
-      nextStickerIndex: this.getNextStickerIndex(),
+      nextStickerIndex: 0,
       wrinkle: null,
       wrinkleIntensity: Math.random(),
       size: this.getRandomSize(),
@@ -61,15 +76,12 @@ export class CanvasState {
       count: 0,
    };
 
-   public setState(point: THREE.Vector2, cameraPoint: THREE.Vector3) {
-      this.state = {
+   public setStickerState(point: THREE.Vector2) {
+      this.stickerState = {
+         isNotSticked: false,
+         wobbleStrength: 0.4,
          point: point,
-         cameraPoint: this.state.cameraPoint.set(
-            cameraPoint.x,
-            cameraPoint.y,
-            3.5
-         ),
-         sticker: this.textures.stickers[this.state.nextStickerIndex],
+         sticker: this.textures.stickers[this.stickerState.nextStickerIndex],
          nextStickerIndex: this.getNextStickerIndex(),
          wrinkle:
             this.textures.wrinkles[
@@ -78,7 +90,7 @@ export class CanvasState {
          wrinkleIntensity: Math.random(),
          size: this.getRandomSize(),
          angle: this.getRandomAngle(),
-         count: this.state.count + 2,
+         count: this.stickerState.count + 2,
       };
    }
 }

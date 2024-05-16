@@ -70,6 +70,7 @@ export const useStickers = () => {
 
    const wrinkles = textures.slice(0, WRINKLE_TEXTURES.length);
    const stickers = textures.slice(WRINKLE_TEXTURES.length);
+   const silhouette = stickers[0];
 
    canvasState.textures = {
       wrinkles,
@@ -88,10 +89,10 @@ export const useStickers = () => {
                   value: new THREE.Vector2(0),
                },
                uRandomSize: {
-                  value: canvasState.state.size,
+                  value: canvasState.stickerState.size,
                },
                uRandomAngle: {
-                  value: canvasState.state.angle,
+                  value: canvasState.stickerState.angle,
                },
             });
             parameters.fragmentShader = parameters.fragmentShader.replace(
@@ -144,10 +145,10 @@ export const useStickers = () => {
                   value: new THREE.Vector2(0),
                },
                uRandomSize: {
-                  value: canvasState.state.size,
+                  value: canvasState.stickerState.size,
                },
                uRandomAngle: {
-                  value: canvasState.state.angle,
+                  value: canvasState.stickerState.angle,
                },
             });
             shader.fragmentShader = shader.fragmentShader.replace(
@@ -212,41 +213,43 @@ export const useStickers = () => {
    const [isReady, setIsReady] = useState(false);
 
    useFrame((state) => {
-      if (tickCount.current !== canvasState.state.count) {
-         tickCount.current++;
-
-         if (tickCount.current === 0) {
-            setIsReady(true);
-         }
-
-         const updateState = {
-            uStampPoint: canvasState.state.point,
-            uRandomSize: canvasState.state.size,
-            uRandomAngle: canvasState.state.angle,
-         };
-         updateSticker(
-            state,
-            {
-               texture: canvasState.state.sticker ?? stickers[0],
-            },
-            {
-               ...updateState,
-            }
-         );
-         updateNormal(
-            state,
-            {
-               texture: stickerMap,
-            },
-            {
-               uStickerTexture: canvasState.state.sticker ?? stickers[0],
-               uWrinkleTexure: canvasState.state.wrinkle ?? wrinkles[0],
-               uWrinkleIntensity: canvasState.state.wrinkleIntensity,
-               ...updateState,
-            }
-         );
+      if (tickCount.current === canvasState.stickerState.count) {
+         return;
       }
+
+      tickCount.current++;
+
+      if (tickCount.current === 0) {
+         setIsReady(true);
+      }
+
+      const updateState = {
+         uStampPoint: canvasState.stickerState.point,
+         uRandomSize: canvasState.stickerState.size,
+         uRandomAngle: canvasState.stickerState.angle,
+      };
+      updateSticker(
+         state,
+         {
+            texture: canvasState.stickerState.sticker ?? stickers[0],
+         },
+         {
+            ...updateState,
+         }
+      );
+      updateNormal(
+         state,
+         {
+            texture: stickerMap,
+         },
+         {
+            uStickerTexture: canvasState.stickerState.sticker ?? stickers[0],
+            uWrinkleTexure: canvasState.stickerState.wrinkle ?? wrinkles[0],
+            uWrinkleIntensity: canvasState.stickerState.wrinkleIntensity,
+            ...updateState,
+         }
+      );
    });
 
-   return { stickerMap, normalMap, isReady };
+   return { stickerMap, normalMap, isReady, silhouette };
 };

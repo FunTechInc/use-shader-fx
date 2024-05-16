@@ -3,10 +3,11 @@
 import * as THREE from "three";
 import Image from "next/image";
 import { CanvasState } from "../CanvasState";
-import { useCallback, useEffect, useRef, useState, memo } from "react";
-import s from "./index.module.scss";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { STICKER_TEXTURES_LENGTH } from "../useStickers";
+import { GifPreloader } from "./GifPreloader";
+import { Confetti } from "./Confetti";
+import s from "./index.module.scss";
 
 const updateTargetPoint = (target: HTMLDivElement, point: THREE.Vector2) => {
    const targetRect = target.getBoundingClientRect();
@@ -16,75 +17,11 @@ const updateTargetPoint = (target: HTMLDivElement, point: THREE.Vector2) => {
 
 const CURSOR_LERP = 0.8;
 
-const GIF_IMAGES = [...Array(STICKER_TEXTURES_LENGTH)].map(
-   (_, i) => `/stickers/gif/gif${i}.gif`
-);
-
-const GifPreloader = memo(() => {
-   console.log("render");
-   return (
-      <div
-         style={{
-            visibility: "hidden",
-            opacity: 0,
-            pointerEvents: "none",
-            position: "fixed",
-            width: 1,
-            height: 1,
-         }}>
-         {GIF_IMAGES.map((src, i) => (
-            <Image
-               key={i}
-               src={src}
-               fill
-               alt=""
-               priority
-               unoptimized
-               style={{ visibility: "hidden" }}
-            />
-         ))}
-      </div>
-   );
-});
-
-GifPreloader.displayName = "GifPreloader";
-
-const Confetti = ({ state }: { state: number }) => {
-   const [styles, setStyles] = useState<
-      { top: string; left: string; scale: string }[]
-   >([]);
-
-   useEffect(() => {
-      // ハイドレーションエラーを回避するために、must be useEffect
-      const newStyles = [...Array(8)].map(() => ({
-         top: `${Math.random() * 140 - 20}%`,
-         left: `${Math.random() * 140 - 20}%`,
-         scale: `${Math.random() + 0.5}`,
-      }));
-      setStyles(newStyles);
-   }, [state]);
-
-   return (
-      <>
-         {styles.map((style, i) => (
-            <div className={s.confetti} key={i} style={style}>
-               <Image
-                  src="/stickers/gif/gif3.gif"
-                  fill
-                  alt=""
-                  unoptimized
-                  style={{ visibility: "hidden" }}
-               />
-            </div>
-         ))}
-      </>
-   );
-};
-
 export const CursorUI = () => {
    const canvasState = CanvasState.getInstance();
+
    const [stickerIndex, setStickerIndex] = useState(
-      canvasState.state.nextStickerIndex
+      canvasState.stickerState.nextStickerIndex
    );
 
    const rafID = useRef<number>(0);
@@ -100,7 +37,7 @@ export const CursorUI = () => {
          confettiTarget: HTMLDivElement,
          point: THREE.Vector2
       ) => {
-         setStickerIndex(canvasState.state.nextStickerIndex);
+         setStickerIndex(canvasState.stickerState.nextStickerIndex);
          gsap.fromTo(
             target,
             {
@@ -146,7 +83,7 @@ export const CursorUI = () => {
             }
          );
       },
-      [canvasState]
+      [canvasState.stickerState]
    );
 
    const onOver = useCallback((target: HTMLImageElement) => {
@@ -182,7 +119,7 @@ export const CursorUI = () => {
       const targetImage = imageRef.current!;
 
       // update sticker index
-      if (stickerIndex !== canvasState.state.nextStickerIndex) {
+      if (stickerIndex !== canvasState.stickerState.nextStickerIndex) {
          onStickerChange(
             targetImage,
             confettiRef.current!,
@@ -212,7 +149,14 @@ export const CursorUI = () => {
       }
       prevIsOver.current = isOver;
       rafID.current = requestAnimationFrame(handleFrame);
-   }, [canvasState, stickerIndex, onStickerChange, onOver, onOut]);
+   }, [
+      canvasState.stickerState,
+      stickerIndex,
+      canvasState.cursorState,
+      onStickerChange,
+      onOver,
+      onOut,
+   ]);
 
    useEffect(() => {
       rafID.current = requestAnimationFrame(handleFrame);

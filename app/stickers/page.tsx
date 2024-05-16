@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { ShaderFx } from "../ShaderFx";
 import { Playground } from "./Playground";
 import { CursorUI } from "./CursorUI";
