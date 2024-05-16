@@ -10,7 +10,7 @@ import { CanvasState } from "./CanvasState";
 const Background = memo(({ stickerMap }: { stickerMap: THREE.Texture }) => {
    return (
       <>
-         <Environment preset="warehouse" environmentIntensity={0.8} />
+         <Environment preset="warehouse" environmentIntensity={0.5} />
          <mesh scale={100}>
             <sphereGeometry args={[2, 64, 64]} />
             <meshBasicMaterial
@@ -127,7 +127,7 @@ export const Playground = () => {
       <mesh visible={isReady}>
          <StickerBall stickerMap={stickerMap} normalMap={normalMap} />
          <Background stickerMap={stickerMap} />
-         <OrbitControls />
+         {/* <OrbitControls /> */}
       </mesh>
    );
 };
