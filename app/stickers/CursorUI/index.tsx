@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import Image from "next/image";
 import { CanvasState } from "../CanvasState";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, memo } from "react";
 import s from "./index.module.scss";
 import gsap from "gsap";
 import { STICKER_TEXTURES_LENGTH } from "../useStickers";
@@ -20,7 +20,7 @@ const GIF_IMAGES = [...Array(STICKER_TEXTURES_LENGTH)].map(
    (_, i) => `/stickers/gif/gif${i}.gif`
 );
 
-const GifPreloader = () => {
+const GifPreloader = memo(() => {
    console.log("render");
    return (
       <div
@@ -38,13 +38,16 @@ const GifPreloader = () => {
                src={src}
                fill
                alt=""
+               priority
                unoptimized
                style={{ visibility: "hidden" }}
             />
          ))}
       </div>
    );
-};
+});
+
+GifPreloader.displayName = "GifPreloader";
 
 const Confetti = ({ state }: { state: number }) => {
    const [styles, setStyles] = useState<
@@ -225,7 +228,6 @@ export const CursorUI = () => {
                fill
                alt=""
                unoptimized
-               priority
                style={{ visibility: "hidden" }}
             />
          </div>
