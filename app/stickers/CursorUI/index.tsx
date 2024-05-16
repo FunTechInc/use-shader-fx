@@ -6,6 +6,7 @@ import { CanvasState } from "../CanvasState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import s from "./index.module.scss";
 import gsap from "gsap";
+import { STICKER_TEXTURES_LENGTH } from "../useStickers";
 
 const updateTargetPoint = (target: HTMLDivElement, point: THREE.Vector2) => {
    const targetRect = target.getBoundingClientRect();
@@ -14,6 +15,36 @@ const updateTargetPoint = (target: HTMLDivElement, point: THREE.Vector2) => {
 };
 
 const CURSOR_LERP = 0.8;
+
+const GIF_IMAGES = [...Array(STICKER_TEXTURES_LENGTH)].map(
+   (_, i) => `/stickers/gif/gif${i}.gif`
+);
+
+const GifPreloader = () => {
+   console.log("render");
+   return (
+      <div
+         style={{
+            visibility: "hidden",
+            opacity: 0,
+            pointerEvents: "none",
+            position: "fixed",
+            width: 1,
+            height: 1,
+         }}>
+         {GIF_IMAGES.map((src, i) => (
+            <Image
+               key={i}
+               src={src}
+               fill
+               alt=""
+               unoptimized
+               style={{ visibility: "hidden" }}
+            />
+         ))}
+      </div>
+   );
+};
 
 const Confetti = ({ state }: { state: number }) => {
    const [styles, setStyles] = useState<
@@ -37,8 +68,8 @@ const Confetti = ({ state }: { state: number }) => {
                <Image
                   src="/stickers/gif/gif3.gif"
                   fill
-                  sizes="120px"
                   alt=""
+                  unoptimized
                   style={{ visibility: "hidden" }}
                />
             </div>
@@ -192,14 +223,16 @@ export const CursorUI = () => {
                ref={imageRef}
                src={`/stickers/gif/gif${stickerIndex}.gif`}
                fill
-               sizes="50vw"
                alt=""
+               unoptimized
+               priority
                style={{ visibility: "hidden" }}
             />
          </div>
          <div ref={confettiRef} className={s.confettiContainer}>
             <Confetti state={stickerIndex} />
          </div>
+         <GifPreloader />
       </div>
    );
 };

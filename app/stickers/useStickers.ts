@@ -58,18 +58,7 @@ const STICKER_TEXTURES = [
    "/stickers/sticker19.png",
 ];
 
-const GIF_IMAGES = [...Array(STICKER_TEXTURES.length)].map(
-   (_, i) => `/stickers/gif/gif${i}.gif`
-);
-
-const useGifPreLoader = () => {
-   useEffect(() => {
-      GIF_IMAGES.forEach((src) => {
-         const img = new Image();
-         img.src = src;
-      });
-   }, []);
-};
+export const STICKER_TEXTURES_LENGTH = STICKER_TEXTURES.length;
 
 export const useStickers = () => {
    const canvasState = CanvasState.getInstance();
@@ -78,8 +67,6 @@ export const useStickers = () => {
       ...WRINKLE_TEXTURES,
       ...STICKER_TEXTURES,
    ]);
-
-   useGifPreLoader();
 
    const wrinkles = textures.slice(0, WRINKLE_TEXTURES.length);
    const stickers = textures.slice(WRINKLE_TEXTURES.length);
