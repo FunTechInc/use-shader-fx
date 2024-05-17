@@ -125,7 +125,7 @@ export const useStickers = () => {
 
    const [updateNormal, __, { output: normalMap }] = useBlank({
       size,
-      dpr: 3,
+      dpr: 4,
       onBeforeInit: useCallback(
          (shader: any) => {
             Object.assign(shader.uniforms, {

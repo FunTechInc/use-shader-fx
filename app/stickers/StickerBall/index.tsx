@@ -22,7 +22,7 @@ const StickerBallMesh = ({ children }: { children: React.ReactNode }) => {
    const isDesktop = useMediaQuery({ type: "min", width: 960 });
    return (
       <mesh
-         scale={isDesktop ? [1, 1, 1] : [0.7, 0.7, 0.7]}
+         scale={isDesktop ? [1, 1, 1] : [0.72, 0.72, 0.72]}
          onClick={(e) => {
             canvasState.setStickerState(e.uv!);
             canvasState.cameraState.point.set(
