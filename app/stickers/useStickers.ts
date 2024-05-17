@@ -31,29 +31,32 @@ const STICKER_TEXCOORD = `
 	sticker_texCoord += .5;
 `;
 
-const WRINKLE_TEXTURES = ["/stickers/wrinkle0.jpg", "/stickers/wrinkle1.jpg"];
+const WRINKLE_TEXTURES = [
+   "/stickers/webp/wrinkle0.webp",
+   "/stickers/webp/wrinkle1.webp",
+];
 
 const STICKER_TEXTURES = [
-   "/stickers/sticker0.png",
-   "/stickers/sticker1.png",
-   "/stickers/sticker2.png",
-   "/stickers/sticker3.png",
-   "/stickers/sticker4.png",
-   "/stickers/sticker5.png",
-   "/stickers/sticker6.png",
-   "/stickers/sticker7.png",
-   "/stickers/sticker8.png",
-   "/stickers/sticker9.png",
-   "/stickers/sticker10.png",
-   "/stickers/sticker11.png",
-   "/stickers/sticker12.png",
-   "/stickers/sticker13.png",
-   "/stickers/sticker14.png",
-   "/stickers/sticker15.png",
-   "/stickers/sticker16.png",
-   "/stickers/sticker17.png",
-   "/stickers/sticker18.png",
-   "/stickers/sticker19.png",
+   "/stickers/webp/sticker0.webp",
+   "/stickers/webp/sticker1.webp",
+   "/stickers/webp/sticker2.webp",
+   "/stickers/webp/sticker3.webp",
+   "/stickers/webp/sticker4.webp",
+   "/stickers/webp/sticker5.webp",
+   "/stickers/webp/sticker6.webp",
+   "/stickers/webp/sticker7.webp",
+   "/stickers/webp/sticker8.webp",
+   "/stickers/webp/sticker9.webp",
+   "/stickers/webp/sticker10.webp",
+   "/stickers/webp/sticker11.webp",
+   "/stickers/webp/sticker12.webp",
+   "/stickers/webp/sticker13.webp",
+   "/stickers/webp/sticker14.webp",
+   "/stickers/webp/sticker15.webp",
+   "/stickers/webp/sticker16.webp",
+   "/stickers/webp/sticker17.webp",
+   "/stickers/webp/sticker18.webp",
+   "/stickers/webp/sticker19.webp",
 ];
 
 export const STICKER_TEXTURES_LENGTH = STICKER_TEXTURES.length;
