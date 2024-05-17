@@ -62,7 +62,7 @@ export * from "./misc/useCopyTexture";
 /*===============================================
 Easing
 ===============================================*/
-export * from "./libs/Easing";
+export * from "./libs/Easings";
 
 /*===============================================
 Utils
