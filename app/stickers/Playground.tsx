@@ -45,19 +45,19 @@ export const Playground = () => {
 
       // control clock state
       if (canvasState.stickerState.isNotSticked) {
-         const eased = Easing.easeOutSine(
-            Math.sin(clock.getElapsedTime() * 3.5) * 0.5 + 0.5
-         );
          canvasState.clockState.waiting = Utils.interpolate(
             canvasState.clockState.waiting,
-            eased,
+            Easing.easeOutSine(
+               Math.sin(clock.getElapsedTime() * 3.5) * 0.5 + 0.5
+            ),
             0.1
          );
       } else if (canvasState.clockState.waiting > 0) {
-         canvasState.clockState.waiting =
-            canvasState.clockState.waiting > 0.001
-               ? Utils.interpolate(canvasState.clockState.waiting, 0, 0.16)
-               : 0;
+         canvasState.clockState.waiting = Utils.interpolate(
+            canvasState.clockState.waiting,
+            0,
+            0.16
+         );
       }
    });
    return (

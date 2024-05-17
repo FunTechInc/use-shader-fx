@@ -2,12 +2,14 @@ type Utils = {
    interpolate: (
       startValue: number,
       endValue: number,
-      progress: number
+      progress: number,
+      threshold?: number
    ) => number;
 };
 
 export const Utils: Utils = Object.freeze({
-   interpolate(startValue: number, endValue: number, progress: number): number {
-      return startValue + (endValue - startValue) * progress;
+   interpolate(startValue, endValue, progress, threshold = 1e-6): number {
+      const result = startValue + (endValue - startValue) * progress;
+      return Math.abs(result) < threshold ? 0 : result;
    },
 });
