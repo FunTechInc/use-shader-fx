@@ -95,6 +95,8 @@ export const StickerBall = memo(
          // Only let them wobble when the sticker is pressed.
          if (canvasState.stickerState.wobbleStrength > 0) {
             canvasState.stickerState.wobbleStrength -= delta;
+         } else {
+            canvasState.stickerState.wobbleStrength = 0;
          }
 
          wobbleVal.current = Utils.interpolate(
