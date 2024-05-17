@@ -79,7 +79,7 @@ export const useStickers = () => {
 
    const [updateSticker, _, { output: stickerMap }] = useBlank({
       size,
-      dpr: 8,
+      dpr: 6,
       onBeforeInit: useCallback(
          (parameters: any) => {
             Object.assign(parameters.uniforms, {
@@ -125,7 +125,7 @@ export const useStickers = () => {
 
    const [updateNormal, __, { output: normalMap }] = useBlank({
       size,
-      dpr: 6,
+      dpr: 3,
       onBeforeInit: useCallback(
          (shader: any) => {
             Object.assign(shader.uniforms, {
