@@ -8,7 +8,7 @@ export const Confetti = ({ state }: { state: number }) => {
    >([]);
 
    useEffect(() => {
-      // ハイドレーションエラーを回避するために、must be useEffect
+      // To avoid hydration errors, must be useEffect
       const newStyles = [...Array(8)].map(() => ({
          top: `${Math.random() * 140 - 20}%`,
          left: `${Math.random() * 140 - 20}%`,

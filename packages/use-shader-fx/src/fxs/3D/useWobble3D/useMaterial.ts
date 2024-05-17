@@ -122,8 +122,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
          );
          parameters.fragmentShader = cutomizedParams.fragmentShader;
          parameters.vertexShader = cutomizedParams.vertexShader;
-
-         Object.assign(parameters.uniforms, mat.userData.uniforms);
+         Object.assign(parameters.uniforms, cutomizedParams.uniforms);
       };
       mat.needsUpdate = true;
 

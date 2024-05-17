@@ -4,18 +4,43 @@ import * as THREE from "three";
 import { memo, useCallback, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { CanvasState } from "../CanvasState";
-import {
-   Utils,
-   Easing,
-   useBeat,
-   useCreateWobble3D,
-} from "@/packages/use-shader-fx/src";
+import { Utils, useCreateWobble3D } from "@/packages/use-shader-fx/src";
 import { rewriteShader } from "./rewriteShader";
 import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
-import { useVideoTexture } from "@react-three/drei";
+import { useMediaQuery } from "@funtech-inc/spice";
 
-// ステッカー部分以外のroughness
+// ROUGHNESS other than sticker part
 export const BASE_ROUGHNESS = 0.4;
+
+// wobble strength when clicked
+export const CLICKED_WOBBLE_STRENGTH = 0.4;
+
+const FUNTECH_COLOR = new THREE.Color(0xb84f0a);
+
+const StickerBallMesh = ({ children }: { children: React.ReactNode }) => {
+   const canvasState = CanvasState.getInstance();
+   const isDesktop = useMediaQuery({ type: "min", width: 960 });
+   return (
+      <mesh
+         scale={isDesktop ? [1, 1, 1] : [0.7, 0.7, 0.7]}
+         onClick={(e) => {
+            canvasState.setStickerState(e.uv!);
+            canvasState.cameraState.point.set(
+               e.point.x,
+               e.point.y,
+               canvasState.CAMERA_Z.zoom
+            );
+            canvasState.cursorState.point.set(e.offsetX, e.offsetY);
+         }}
+         onPointerOver={() => (canvasState.cursorState.isOver = true)}
+         onPointerOut={() => (canvasState.cursorState.isOver = false)}
+         onPointerMove={(e) => {
+            canvasState.cursorState.point.set(e.offsetX, e.offsetY);
+         }}>
+         {children}
+      </mesh>
+   );
+};
 
 export const StickerBall = memo(
    ({
@@ -45,8 +70,6 @@ export const StickerBall = memo(
             (shader: OnBeforeInitParameters) => {
                Object.assign(shader.uniforms, {
                   uSilhouette: { value: silhouetteMap },
-                  uWaitingValue: { value: 0 },
-                  uIsNotSticked: { value: true },
                });
                rewriteShader(shader);
             },
@@ -55,10 +78,10 @@ export const StickerBall = memo(
       });
 
       updateWobble(null, {
-         color0: new THREE.Color(0xb84f0a),
-         color1: new THREE.Color(0xb84f0a),
-         color2: new THREE.Color(0xb84f0a),
-         color3: new THREE.Color(0xb84f0a),
+         color0: FUNTECH_COLOR,
+         color1: FUNTECH_COLOR,
+         color2: FUNTECH_COLOR,
+         color3: FUNTECH_COLOR,
          wobblePositionFrequency: 0.4,
          wobbleTimeFrequency: 0.4,
          warpPositionFrequency: 0,
@@ -66,63 +89,30 @@ export const StickerBall = memo(
          warpTimeFrequency: 0,
       });
 
-      const waitingMixVal = useRef(0);
       const wobbleVal = useRef(0);
 
       useFrame((state, delta) => {
-         const { clock } = state;
-         const { isNotSticked } = canvasState.stickerState;
-
-         // isNotSticked stateの時にwaiting animationをloopする
-         if (isNotSticked) {
-            const tick = clock.getElapsedTime();
-            waitingMixVal.current = Easing.easeOutQuad(
-               Math.sin(tick * 3) * 0.5 + 0.5
-            );
-         } else {
-            waitingMixVal.current = Utils.interpolate(
-               waitingMixVal.current,
-               0,
-               0.1
-            );
-         }
-
-         // ステッカーが押された時だけwobbleさせる
+         // Only let them wobble when the sticker is pressed.
          if (canvasState.stickerState.wobbleStrength > 0) {
             canvasState.stickerState.wobbleStrength -= delta;
          }
+
          wobbleVal.current = Utils.interpolate(
             wobbleVal.current,
             canvasState.stickerState.wobbleStrength,
             0.24
          );
 
-         updateWobble(
-            state,
-            {
-               colorMix: waitingMixVal.current * 0.16,
-               wobbleStrength: wobbleVal.current,
-            },
-            {
-               uWaitingValue: waitingMixVal.current * 0.8,
-               uIsNotSticked: isNotSticked,
-            }
-         );
+         updateWobble(state, {
+            colorMix: canvasState.clockState.waiting * 0.24,
+            wobbleStrength: wobbleVal.current,
+         });
       });
 
       return (
-         <mesh
-            onClick={(e) => {
-               canvasState.setStickerState(e.uv!);
-               canvasState.cameraState.point.set(e.point.x, e.point.y, 3.5);
-            }}
-            onPointerOver={() => (canvasState.cursorState.isOver = true)}
-            onPointerOut={() => (canvasState.cursorState.isOver = false)}
-            onPointerMove={(e) => {
-               canvasState.cursorState.point.set(e.offsetX, e.offsetY);
-            }}>
+         <StickerBallMesh>
             <primitive object={wobble.mesh} />
-         </mesh>
+         </StickerBallMesh>
       );
    }
 );

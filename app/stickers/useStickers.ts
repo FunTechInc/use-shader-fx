@@ -16,11 +16,9 @@ const STICKER_TEXCOORD = `
 	uv.x *= 2.;
 	stamp.x *= 2.;
 
-	// 距離と半径
 	float d = distance(uv, stamp);
 	float r = uRandomSize;
 
-	// スタンプ
 	float angle = uRandomAngle;
 	float cosAngle = cos(angle);
 	float sinAngle = sin(angle);
@@ -109,14 +107,13 @@ export const useStickers = () => {
                `
 					vec2 uv = vUv;
 
-					// バッファー取得
 					vec4 backColor = texture2D(uBackbuffer,uv);
 
 					${STICKER_TEXCOORD}
 					vec4 stampColor = texture2D(uTexture,sticker_texCoord);
 
-					// 最終色
-					vec4 finalColor = mix(backColor,stampColor,smoothstep(0.9,1.,stampColor.a));
+					// Boundaries pick up alpha subtly, adjust with smoothstep.
+					vec4 finalColor = mix(backColor,stampColor,smoothstep(0.8,0.9,stampColor.a));
 					usf_FragColor = finalColor;
          	`
             );
@@ -169,35 +166,34 @@ export const useStickers = () => {
 
 					vec2 texelSize = 1.0 / uResolution;
 
-					// 高さマップから高さ値をサンプリング
+					// Sampling height values from height maps.
 					float mapAlpha = texture2D(uTexture, uv).a;
 					float heightL = texture2D(uTexture, uv - vec2(texelSize.x, 0.0)).a;
 					float heightR = texture2D(uTexture, uv + vec2(texelSize.x, 0.0)).a;
 					float heightD = texture2D(uTexture, uv - vec2(0.0, texelSize.y)).a;
 					float heightU = texture2D(uTexture, uv + vec2(0.0, texelSize.y)).a;
 
-					// バックバッファー
 					vec4 backColor = texture2D(uBackbuffer, uv);
 
-					// シワ
+					// wrickle texture
 					${STICKER_TEXCOORD}
 					float stickerAlpha = texture2D(uStickerTexture,sticker_texCoord).a;
 					vec3 wrinkledColor = texture2D(uWrinkleTexure,sticker_texCoord).rgb;
-					wrinkledColor *= stickerAlpha * uWrinkleIntensity; // シワのintensity
+					wrinkledColor *= stickerAlpha * uWrinkleIntensity;
 				
-					// 法線ベクトルを計算
+					// compute normal
 					vec3 normal;
 					normal.x = (heightL - heightR) + wrinkledColor.r;
 					normal.y = (heightD - heightU) + wrinkledColor.g;
 					normal.z = 1. + wrinkledColor.b;
 
-					// 法線ベクトルを正規化 -1 ~ 1
+					// normalize -1 ~ 1
 					normal = normalize(normal);
 
-					// 法線ベクトルを [0, 1] の範囲に変換してテクスチャに格納
+					// 0 ~ 1
 					vec4 normalColor = vec4(normal*.5+.5,1.);
 					
-					// ステッカーの部分はシワを適用して、それ以外はbackColorを使う
+					// Apply wrinkles to sticker areas and use backColour for the rest.
 					vec4 finalColor = mix(normalColor,mix(backColor,normalColor,stickerAlpha),mapAlpha);
 					usf_FragColor = finalColor;
          	`

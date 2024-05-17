@@ -1,6 +1,7 @@
 import { ShaderFx } from "../ShaderFx";
 import { Playground } from "./Playground";
-import { CursorUI } from "./CursorUI";
+import { CursorUI } from "./UI/Cursor";
+import { TargetUI } from "./UI/Target";
 
 export default function Page() {
    return (
@@ -15,6 +16,7 @@ export default function Page() {
             <Playground />
          </ShaderFx>
          <CursorUI />
+         <TargetUI />
       </div>
    );
 }

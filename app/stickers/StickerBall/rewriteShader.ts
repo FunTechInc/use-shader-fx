@@ -2,19 +2,15 @@ import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
 import { BASE_ROUGHNESS } from ".";
 
 export const rewriteShader = (shader: OnBeforeInitParameters) => {
-   // otherTextureをuniform追加
    shader.fragmentShader = shader.fragmentShader.replace(
       "void main(){",
       `
-			uniform sampler2D uSilhouette;
-			uniform float uWaitingValue;
-			uniform bool uIsNotSticked;
-			
+			uniform sampler2D uSilhouette;			
 			void main(){
 		`
    );
 
-   // mapのalphaをfloat変数に格納
+   // Map alpha to float.
    shader.fragmentShader = shader.fragmentShader.replace(
       "#include <map_fragment>",
       `
@@ -28,25 +24,30 @@ export const rewriteShader = (shader: OnBeforeInitParameters) => {
 			diffuseColor *= sampledDiffuseColor;
 			
 			vec2 silhouettePosition = vec2(0.);
-			float silhouetteRadius = 0.48;
+			float silhouetteRadius = 0.56;
 			float silhouetteAlpha = 0.;
 			float silhouetteDist = distance(silhouettePosition,vPosition);
 			if (silhouetteDist < silhouetteRadius) {
-				float waitingValue = uIsNotSticked ? uWaitingValue : 1.-uWaitingValue;
+
 				vec2 sticker_texCoord = (vPosition-silhouettePosition)/(silhouetteRadius*2.);
 				sticker_texCoord+=0.5;
 				vec4 silhouetteColor = texture2D(uSilhouette,vec2(sticker_texCoord));
-				// 境界が微妙にalphaを拾うので、smoothstepで調整
-				silhouetteAlpha = smoothstep(0.5,0.8,silhouetteColor.a);
-				diffuseColor = silhouetteAlpha > 0. ? vec4(silhouetteColor.rgb * waitingValue,1.) : diffuseColor;
+				
+				// Boundaries pick up alpha subtly, adjust with smoothstep.
+				silhouetteAlpha = smoothstep(0.8,0.9,silhouetteColor.a);
+
+				// 範囲内のカラー
+				vec3 overwriteColor = sampledDiffuseColor.a > 0. ? sampledDiffuseColor.rgb : silhouetteColor.rgb;
+
+				diffuseColor = silhouetteAlpha > 0. ? vec4(overwriteColor,1.) : diffuseColor;
 			}
 
-			// シルエットのalphaも加算する
+			// Also add the alpha of the silhouette.
 			float customMapAlpha = min(sampledDiffuseColor.a + silhouetteAlpha,1.);
 
    	`
    );
-   // iridescenceにmapのalphaをかける（mapだけiridescenceする）
+   // Multiply iridescence by alpha of map (only map iridescences).
    shader.fragmentShader = shader.fragmentShader.replace(
       "#include <lights_fragment_begin>",
       `
@@ -55,14 +56,14 @@ export const rewriteShader = (shader: OnBeforeInitParameters) => {
    		material.iridescenceF0 *= customMapAlpha;
    	`
    );
-   // クリアコートにmapのalphaをかける（mapだけclearcoatする）
+   // Multiply clearcoat by alpha of map (only map clearcoat).
    shader.fragmentShader = shader.fragmentShader.replace(
       "outgoingLight = outgoingLight * ( 1.0 - material.clearcoat * Fcc ) + ( clearcoatSpecularDirect + clearcoatSpecularIndirect ) * material.clearcoat;",
       `
    		outgoingLight = outgoingLight * ( 1.0 - material.clearcoat * Fcc ) + ( clearcoatSpecularDirect + clearcoatSpecularIndirect ) * material.clearcoat * customMapAlpha;
    	`
    );
-   // roughnessにmapのalphaをかける（mapだけroughnessする）
+   // Multiply roughness by alpha of map (only map roughness).
    shader.fragmentShader = shader.fragmentShader.replace(
       "#include <lights_physical_fragment>",
       `
@@ -71,7 +72,7 @@ export const rewriteShader = (shader: OnBeforeInitParameters) => {
    	`
    );
 
-   // metalnessにmapのalphaをかける（mapだけmetalnessする。あるいは強くする）
+   // Multiply metalness by alpha of map (only map metalness).
    shader.fragmentShader = shader.fragmentShader.replace(
       "#include <metalnessmap_fragment>",
       `
@@ -79,6 +80,4 @@ export const rewriteShader = (shader: OnBeforeInitParameters) => {
    		metalnessFactor *= customMapAlpha;
    	`
    );
-
-   console.log(shader.fragmentShader);
 };

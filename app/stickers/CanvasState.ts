@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { CLICKED_WOBBLE_STRENGTH } from "./StickerBall";
+import { STICKER_TEXTURES_LENGTH } from "./useStickers";
 
 export class CanvasState {
    private static instance: CanvasState;
@@ -9,24 +11,30 @@ export class CanvasState {
       }
       return CanvasState.instance;
    }
-   private STICKERSIZE = {
+
+   private STICKER_SIZE = {
       min: 0.04,
       max: 0.08,
    };
+
+   public CAMERA_Z = {
+      zoom: 3.5,
+      default: 4,
+   };
+
    private getRandomSize() {
       return (
-         Math.random() * (this.STICKERSIZE.max - this.STICKERSIZE.min) +
-         this.STICKERSIZE.min
+         Math.random() * (this.STICKER_SIZE.max - this.STICKER_SIZE.min) +
+         this.STICKER_SIZE.min
       );
    }
    private getRandomAngle() {
       return Math.random() * Math.PI * 2;
    }
-
    private getNextStickerIndex() {
       const prevIndex = this.stickerState.nextStickerIndex;
       let nextIndex;
-      // 重複しないように次のステッカーを選ぶ
+      // Select the next sticker to avoid duplication.
       do {
          nextIndex = Math.floor(Math.random() * this.textures.stickers.length);
       } while (nextIndex === prevIndex);
@@ -49,7 +57,11 @@ export class CanvasState {
    public cameraState: {
       point: THREE.Vector3;
    } = {
-      point: new THREE.Vector3(0, 0, 4),
+      point: new THREE.Vector3(0, 0, this.CAMERA_Z.default),
+   };
+
+   public clockState = {
+      waiting: 0,
    };
 
    public stickerState: {
@@ -68,7 +80,7 @@ export class CanvasState {
       wobbleStrength: 0,
       point: new THREE.Vector2(0, 0),
       sticker: null,
-      nextStickerIndex: 0,
+      nextStickerIndex: Math.floor(Math.random() * STICKER_TEXTURES_LENGTH),
       wrinkle: null,
       wrinkleIntensity: Math.random(),
       size: this.getRandomSize(),
@@ -79,7 +91,7 @@ export class CanvasState {
    public setStickerState(point: THREE.Vector2) {
       this.stickerState = {
          isNotSticked: false,
-         wobbleStrength: 0.4,
+         wobbleStrength: CLICKED_WOBBLE_STRENGTH,
          point: point,
          sticker: this.textures.stickers[this.stickerState.nextStickerIndex],
          nextStickerIndex: this.getNextStickerIndex(),
@@ -90,7 +102,7 @@ export class CanvasState {
          wrinkleIntensity: Math.random(),
          size: this.getRandomSize(),
          angle: this.getRandomAngle(),
-         count: this.stickerState.count + 2,
+         count: this.stickerState.count + 2, // To swap FBOs
       };
    }
 }
