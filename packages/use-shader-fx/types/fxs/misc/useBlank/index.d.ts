@@ -27,4 +27,4 @@ export declare const BLANK_PARAMS: BlankParams;
  * ※ `usf_Position` overrides `gl_Position`
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useBlank: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<BlankParams, BlankObject, CustomParams>;
+export declare const useBlank: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<BlankParams, BlankObject, CustomParams>;

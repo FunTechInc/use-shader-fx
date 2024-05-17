@@ -19,4 +19,4 @@ export declare class VorticityMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useVorticityMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => VorticityMaterial;
+export declare const useVorticityMaterial: ({ onBeforeInit }: MaterialProps) => VorticityMaterial;

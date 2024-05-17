@@ -22,4 +22,4 @@ export declare const DUOTONE_PARAMS: DuoToneParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useDuoTone: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<DuoToneParams, DuoToneObject, CustomParams>;
+export declare const useDuoTone: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<DuoToneParams, DuoToneObject, CustomParams>;

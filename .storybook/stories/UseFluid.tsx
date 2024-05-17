@@ -18,13 +18,13 @@ extend({ FxMaterial });
 
 const CONFIG: FluidParams = structuredClone(FLUID_PARAMS);
 const setGUI = (gui: GUI) => {
-   gui.add(CONFIG, "density_dissipation", 0, 1, 0.01);
-   gui.add(CONFIG, "velocity_dissipation", 0, 1, 0.01);
-   gui.add(CONFIG, "velocity_acceleration", 0, 100, 1);
-   gui.add(CONFIG, "pressure_dissipation", 0, 1, 0.01);
-   gui.add(CONFIG, "pressure_iterations", 0, 30, 1);
-   gui.add(CONFIG, "curl_strength", 0, 100, 1);
-   gui.add(CONFIG, "splat_radius", 0, 0.2, 0.001);
+   gui.add(CONFIG, "densityDissipation", 0, 1, 0.01);
+   gui.add(CONFIG, "velocityDissipation", 0, 1, 0.01);
+   gui.add(CONFIG, "velocityAcceleration", 0, 100, 1);
+   gui.add(CONFIG, "pressureDissipation", 0, 1, 0.01);
+   gui.add(CONFIG, "pressureIterations", 0, 30, 1);
+   gui.add(CONFIG, "curlStrength", 0, 100, 1);
+   gui.add(CONFIG, "splatRadius", 0, 0.2, 0.001);
 };
 const setConfig = () => {
    return {
@@ -44,8 +44,8 @@ export const UseFluid = (args: FluidParams) => {
       dpr,
       customFluidProps: {
          curl: {
-            onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
-               // console.log(shader.fragmentShader);
+            onBeforeInit: React.useCallback((shader: any) => {
+               console.log(shader.fragmentShader);
             }, []),
          },
       },

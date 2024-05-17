@@ -1,2 +1,2 @@
-import * as THREE from "three";
-export declare const resolveShaders: (parameters: THREE.WebGLProgramParametersWithUniforms) => void;
+declare function resolveIncludes(string: string): string;
+export { resolveIncludes };

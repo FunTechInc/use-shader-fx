@@ -9,7 +9,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class SampleMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -21,26 +21,28 @@ export class SampleMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uTexture: { value: DEFAULT_TEXTURE },
-            uResolution: { value: new THREE.Vector2(0, 0) },
-            uBlurSize: { value: SIMPLEBLUR_PARAMS.blurSize },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uTexture: { value: DEFAULT_TEXTURE },
+                  uResolution: { value: new THREE.Vector2(0, 0) },
+                  uBlurSize: { value: SIMPLEBLUR_PARAMS.blurSize },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
 
       return mat;
-   }, [onBeforeCompile, uniforms]) as SampleMaterial;
+   }, [onBeforeInit]) as SampleMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

@@ -14,7 +14,7 @@ export declare class FxTextureMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, size, dpr, uniforms, onBeforeCompile, }: {
+export declare const useMesh: ({ scene, size, dpr, onBeforeInit, }: {
     scene: THREE.Scene;
     size: Size;
     dpr: number | false;

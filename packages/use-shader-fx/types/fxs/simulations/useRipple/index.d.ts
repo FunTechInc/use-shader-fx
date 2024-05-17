@@ -8,7 +8,7 @@ export type RippleParams = {
     /** rotation rate, default : `0.05` */
     rotation?: number;
     /** fadeout speed, default : `0.9` */
-    fadeout_speed?: number;
+    fadeoutSpeed?: number;
     /** scale rate, default : `0.3` */
     scale?: number;
     /** alpha, default : `0.6` */
@@ -35,5 +35,5 @@ interface UseRippleProps extends HooksProps {
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useRipple: ({ texture, scale, max, size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject, CustomParams>;
+export declare const useRipple: ({ texture, scale, max, size, dpr, samples, isSizeUpdate, onBeforeInit, }: UseRippleProps) => HooksReturn<RippleParams, RippleObject, CustomParams>;
 export {};

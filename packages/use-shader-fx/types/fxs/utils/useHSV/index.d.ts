@@ -21,4 +21,4 @@ export declare const HSV_PARAMS: HSVParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useHSV: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<HSVParams, HSVObject, CustomParams>;
+export declare const useHSV: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<HSVParams, HSVObject, CustomParams>;

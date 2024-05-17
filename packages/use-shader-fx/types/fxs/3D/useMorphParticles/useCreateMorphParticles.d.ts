@@ -25,5 +25,5 @@ type UseCreateMorphParticlesReturn = [
         uvs: Float32Array[];
     }
 ];
-export declare const useCreateMorphParticles: ({ size, dpr, scene, geometry, positions, uvs, mapArray, uniforms, onBeforeCompile, }: Create3DHooksProps & UseCreateMorphParticlesProps) => UseCreateMorphParticlesReturn;
+export declare const useCreateMorphParticles: ({ size, dpr, scene, geometry, positions, uvs, mapArray, onBeforeInit, }: Create3DHooksProps & UseCreateMorphParticlesProps) => UseCreateMorphParticlesReturn;
 export {};

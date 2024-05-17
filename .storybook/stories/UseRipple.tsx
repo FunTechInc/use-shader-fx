@@ -9,6 +9,7 @@ import {
    RippleParams,
    RIPPLE_PARAMS,
 } from "../../packages/use-shader-fx/src/fxs/simulations/useRipple";
+import { OnBeforeInitParameters } from "../../packages/use-shader-fx/src/fxs/types";
 
 extend({ FxMaterial });
 
@@ -16,7 +17,7 @@ const CONFIG: RippleParams = structuredClone(RIPPLE_PARAMS);
 const setGUI = (gui: GUI) => {
    gui.add(CONFIG, "frequency", 0, 0.1, 0.01);
    gui.add(CONFIG, "rotation", 0, 1, 0.01);
-   gui.add(CONFIG, "fadeout_speed", 0, 0.99, 0.01);
+   gui.add(CONFIG, "fadeoutSpeed", 0, 0.99, 0.01);
    gui.add(CONFIG, "scale", 0, 1, 0.01);
    gui.add(CONFIG, "alpha", 0, 1, 0.01);
 };
@@ -36,13 +37,10 @@ export const UseRipple = (args: RippleParams) => {
       texture: ripple,
       dpr: viewport.dpr,
       max: 80,
-      uniforms: React.useMemo(
-         () => ({
+      onBeforeInit: React.useCallback((shader: OnBeforeInitParameters) => {
+         Object.assign(shader.uniforms, {
             testtest: { value: 0 },
-         }),
-         []
-      ),
-      onBeforeCompile: React.useCallback((shader: THREE.Shader) => {
+         });
          shader.fragmentShader = shader.fragmentShader.replace(
             "void main() {",
             `

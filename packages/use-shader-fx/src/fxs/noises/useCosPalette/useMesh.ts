@@ -9,7 +9,7 @@ import {
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
 import { COSPALETTE_PARAMS } from ".";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class CosPaletteMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -24,30 +24,31 @@ export class CosPaletteMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uTexture: { value: DEFAULT_TEXTURE },
-            uRgbWeight: { value: COSPALETTE_PARAMS.rgbWeight },
-            uColor1: { value: COSPALETTE_PARAMS.color1 },
-            uColor2: { value: COSPALETTE_PARAMS.color2 },
-            uColor3: { value: COSPALETTE_PARAMS.color3 },
-            uColor4: { value: COSPALETTE_PARAMS.color4 },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uTexture: { value: DEFAULT_TEXTURE },
+                  uRgbWeight: { value: COSPALETTE_PARAMS.rgbWeight },
+                  uColor1: { value: COSPALETTE_PARAMS.color1 },
+                  uColor2: { value: COSPALETTE_PARAMS.color2 },
+                  uColor3: { value: COSPALETTE_PARAMS.color3 },
+                  uColor4: { value: COSPALETTE_PARAMS.color4 },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as CosPaletteMaterial;
+   }, [onBeforeInit]) as CosPaletteMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

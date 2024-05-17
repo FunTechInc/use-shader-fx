@@ -64,8 +64,7 @@ export const useFxTexture = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<FxTextureParams, FxTextureObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
@@ -74,8 +73,7 @@ export const useFxTexture = ({
       scene,
       size,
       dpr: _dpr.shader,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
    const camera = useCamera(size);
    const [renderTarget, updateRenderTarget] = useSingleFBO({

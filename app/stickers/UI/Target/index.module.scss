@@ -1,0 +1,25 @@
+.container {
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   top: 0;
+   pointer-events: none;
+   user-select: none;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 88svh;
+   @media (max-width: 960px) {
+      padding: 0 12px;
+      gap: initial;
+      justify-content: space-between;
+   }
+}
+
+.touch {
+   filter: brightness(1.6);
+   opacity: 0;
+   &:nth-child(2) {
+      rotate: 180deg;
+   }
+}

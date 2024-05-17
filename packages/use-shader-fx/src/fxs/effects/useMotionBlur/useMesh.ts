@@ -9,7 +9,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../libs/constants";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class MotionBlurMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -23,29 +23,29 @@ export class MotionBlurMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uTexture: { value: DEFAULT_TEXTURE },
-            uBackbuffer: { value: DEFAULT_TEXTURE },
-            uBegin: { value: MOTIONBLUR_PARAMS.begin },
-            uEnd: { value: MOTIONBLUR_PARAMS.end },
-            uStrength: { value: MOTIONBLUR_PARAMS.strength },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uTexture: { value: DEFAULT_TEXTURE },
+                  uBackbuffer: { value: DEFAULT_TEXTURE },
+                  uBegin: { value: MOTIONBLUR_PARAMS.begin },
+                  uEnd: { value: MOTIONBLUR_PARAMS.end },
+                  uStrength: { value: MOTIONBLUR_PARAMS.strength },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as MotionBlurMaterial;
+   }, [onBeforeInit]) as MotionBlurMaterial;
 
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
 

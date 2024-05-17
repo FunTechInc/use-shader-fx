@@ -4,8 +4,8 @@ import { FBO_OPTION, UseFboProps, renderFBO } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
 
 export type DoubleRenderTarget = {
-   read: THREE.WebGLRenderTarget | null;
-   write: THREE.WebGLRenderTarget | null;
+   read: THREE.WebGLRenderTarget;
+   write: THREE.WebGLRenderTarget;
 };
 
 interface WebGLDoubleRenderTarget extends DoubleRenderTarget {
@@ -44,19 +44,9 @@ export const useDoubleFBO = ({
    depthBuffer = false,
    depthTexture = false,
 }: UseFboProps): UseDoubleFBOReturn => {
-   const renderTarget = useRef<WebGLDoubleRenderTarget>({
-      read: null,
-      write: null,
-      swap: function () {
-         let temp = this.read;
-         this.read = this.write;
-         this.write = temp;
-      },
-   });
-
    const resolution = useResolution(size, dpr);
 
-   const initRenderTargets = useMemo(() => {
+   const renderTarget = useMemo<WebGLDoubleRenderTarget>(() => {
       const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
          ...FBO_OPTION,
          samples,
@@ -81,29 +71,72 @@ export const useDoubleFBO = ({
          );
       }
 
-      return { read, write };
+      return {
+         read: read,
+         write: write,
+         swap: function () {
+            let temp = this.read;
+            this.read = this.write;
+            this.write = temp;
+         },
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
+   }, [samples, depthBuffer, depthTexture]);
 
-   renderTarget.current.read = initRenderTargets.read;
-   renderTarget.current.write = initRenderTargets.write;
+   // const initRenderTargets = useMemo(() => {
+   //    const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
+   //       ...FBO_OPTION,
+   //       samples,
+   //       depthBuffer,
+   //    });
+   //    const write = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
+   //       ...FBO_OPTION,
+   //       samples,
+   //       depthBuffer,
+   //    });
+
+   //    if (depthTexture) {
+   //       read.depthTexture = new THREE.DepthTexture(
+   //          resolution.x,
+   //          resolution.y,
+   //          THREE.FloatType
+   //       );
+   //       write.depthTexture = new THREE.DepthTexture(
+   //          resolution.x,
+   //          resolution.y,
+   //          THREE.FloatType
+   //       );
+   //    }
+
+   //    return { read, write };
+   //    // eslint-disable-next-line react-hooks/exhaustive-deps
+   // }, []);
+
+   // renderTarget.current.read = initRenderTargets.read;
+   // renderTarget.current.write = initRenderTargets.write;
+   // renderTarget.read = initRenderTargets.read;
+   // renderTarget.write = initRenderTargets.write;
 
    if (isSizeUpdate) {
-      renderTarget.current.read?.setSize(resolution.x, resolution.y);
-      renderTarget.current.write?.setSize(resolution.x, resolution.y);
+      // renderTarget.current.read?.setSize(resolution.x, resolution.y);
+      // renderTarget.current.write?.setSize(resolution.x, resolution.y);
+      renderTarget.read?.setSize(resolution.x, resolution.y);
+      renderTarget.write?.setSize(resolution.x, resolution.y);
    }
 
    useEffect(() => {
-      const temp = renderTarget.current;
+      // const temp = renderTarget.current;
+      const temp = renderTarget;
       return () => {
          temp.read?.dispose();
          temp.write?.dispose();
       };
-   }, []);
+   }, [renderTarget]);
 
    const updateRenderTarget: FBOUpdateFunction = useCallback(
       (gl, onBeforeRender) => {
-         const fbo = renderTarget.current;
+         // const fbo = renderTarget.current;
+         const fbo = renderTarget;
          renderFBO({
             gl,
             scene,
@@ -119,11 +152,11 @@ export const useDoubleFBO = ({
          });
          return fbo.read?.texture as THREE.Texture;
       },
-      [scene, camera]
+      [scene, camera, renderTarget]
    );
 
    return [
-      { read: renderTarget.current.read, write: renderTarget.current.write },
+      { read: renderTarget.read, write: renderTarget.write },
       updateRenderTarget,
    ];
 };

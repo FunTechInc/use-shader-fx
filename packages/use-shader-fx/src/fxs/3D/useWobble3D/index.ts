@@ -91,10 +91,9 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
    geometry,
    baseMaterial,
    materialParameters,
-   uniforms,
-   onBeforeCompile,
-   depthOnBeforeCompile,
    isCustomTransmission,
+   onBeforeInit,
+   depthOnBeforeInit,
 }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>): HooksReturn<
    Wobble3DParams,
    Wobble3DObject,
@@ -109,10 +108,9 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       materialParameters,
       scene,
       geometry,
-      uniforms,
-      onBeforeCompile,
-      depthOnBeforeCompile,
       isCustomTransmission,
+      onBeforeInit,
+      depthOnBeforeInit,
    });
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({

@@ -7,7 +7,7 @@ import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,
 } from "../../../../libs/constants";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class ClearMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -17,27 +17,26 @@ export class ClearMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useClearMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const useClearMaterial = ({ onBeforeInit }: MaterialProps) => {
    const advectionMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uTexture: { value: DEFAULT_TEXTURE },
-            value: { value: 0.0 },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uTexture: { value: DEFAULT_TEXTURE },
+                  value: { value: 0.0 },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return advectionMaterial as ClearMaterial;
 };

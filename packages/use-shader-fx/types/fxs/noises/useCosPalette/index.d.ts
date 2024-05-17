@@ -27,4 +27,4 @@ export declare const COSPALETTE_PARAMS: CosPaletteParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useCosPalette: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<CosPaletteParams, ColorPaletteObject, CustomParams>;
+export declare const useCosPalette: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<CosPaletteParams, ColorPaletteObject, CustomParams>;

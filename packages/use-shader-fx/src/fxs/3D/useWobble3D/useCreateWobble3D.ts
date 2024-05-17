@@ -42,9 +42,8 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    isCustomTransmission,
    baseMaterial,
    materialParameters,
-   onBeforeCompile,
-   depthOnBeforeCompile,
-   uniforms,
+   onBeforeInit,
+   depthOnBeforeInit,
 }: UseCreateWobble3DProps &
    Create3DHooksProps &
    WobbleMaterialProps<T>): UseCreateWobble3DReturn<T> => {
@@ -57,15 +56,15 @@ export const useCreateWobble3D = <T extends WobbleMaterialConstructor>({
    const { material, depthMaterial } = useMaterial({
       baseMaterial,
       materialParameters,
-      onBeforeCompile,
-      depthOnBeforeCompile,
-      uniforms,
       isCustomTransmission,
+      onBeforeInit,
+      depthOnBeforeInit,
    });
 
    const mesh = useAddObject(scene, wobbleGeometry, material, THREE.Mesh);
 
    const userData = material.userData as Wobble3DMaterial;
+
    const updateValue = setUniform(userData);
    const updateCustomValue = setCustomUniform(userData);
 

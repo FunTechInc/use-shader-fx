@@ -18,7 +18,7 @@ export declare class DomSyncerMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const createMesh: ({ params, scene, uniforms, onBeforeCompile, }: {
+export declare const createMesh: ({ params, scene, onBeforeInit, }: {
     params: DomSyncerParams;
     size: Size;
     scene: THREE.Scene;

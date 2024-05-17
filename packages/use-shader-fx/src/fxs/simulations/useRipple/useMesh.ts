@@ -7,7 +7,7 @@ import {
    DEFAULT_TEXTURE,
    MATERIAL_BASIC_PARAMS,
 } from "../../../libs/constants";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 type UseMeshProps = {
    scale: number;
@@ -21,8 +21,7 @@ export const useMesh = ({
    max,
    texture,
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: UseMeshProps & MaterialProps) => {
    const geometry = useMemo(
       () => new THREE.PlaneGeometry(scale, scale),
@@ -31,28 +30,29 @@ export const useMesh = ({
 
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uOpacity: { value: 0.0 },
-            uMap: { value: texture || DEFAULT_TEXTURE },
-            ...uniforms,
-         },
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uOpacity: { value: 0.0 },
+                  uMap: { value: texture || DEFAULT_TEXTURE },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          blending: THREE.AdditiveBlending,
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
          ...MATERIAL_BASIC_PARAMS,
          // Must be transparent.
          transparent: true,
       });
       return mat;
-   }, [texture, uniforms]);
+   }, [texture, onBeforeInit]);
 
    const meshArr = useMemo(() => {
       const temp = [];
       for (let i = 0; i < max; i++) {
          const clonedMat = material.clone();
-
-         clonedMat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
          const mesh = new THREE.Mesh(geometry.clone(), clonedMat);
          mesh.rotateZ(2 * Math.PI * Math.random());
          mesh.visible = false;
@@ -60,7 +60,7 @@ export const useMesh = ({
          temp.push(mesh);
       }
       return temp;
-   }, [onBeforeCompile, geometry, material, scene, max]);
+   }, [geometry, material, scene, max]);
 
    useEffect(() => {
       return () => {

@@ -6,17 +6,19 @@ export type Dpr = number | {
     /** you can set whether `dpr` affects `fbo`. default : `false` */
     fbo?: false | number;
 };
-export type MaterialProps = {
-    /** It is possible to add your own uniforms - they are not added to the GLSL and must be replace with `onBeforeCompile` */
-    uniforms?: {
-        [uniform: string]: THREE.IUniform<any>;
+export type OnBeforeInitParameters = {
+    uniforms: {
+        [uniform: string]: THREE.IUniform;
     };
+    fragmentShader: string;
+    vertexShader: string;
+};
+export type MaterialProps = {
     /**
-     * An optional callback that is executed immediately before the shader program is compiled. `use-shader-fx` already defines `onBeforeCompile`, so pass the function to this props instead of redefining it in material.
-     * @param parameters — WebGL program parameters
-     * @param renderer — WebGLRenderer Context that is initializing the material
+     * An optional callback that is executed immediately before the shader program is initialised. This function is called with the shader source code as a parameter. Useful for the modification of built-in materials.
+     * @param parameters — {fragmentShader, vertexShader, uniforms}
      */
-    onBeforeCompile?: (parameters: THREE.WebGLProgramParametersWithUniforms, renderer: THREE.WebGLRenderer) => void;
+    onBeforeInit?: (parameters: OnBeforeInitParameters) => void;
 };
 export interface HooksProps extends MaterialProps {
     size: Size;

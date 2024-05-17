@@ -4,7 +4,7 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/curl.frag";
 import { MaterialProps } from "../../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class CurlMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -13,26 +13,25 @@ export class CurlMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useCurlMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const useCurlMaterial = ({ onBeforeInit }: MaterialProps) => {
    const curlMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uVelocity: { value: null },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uVelocity: { value: null },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return curlMaterial as CurlMaterial;
 };

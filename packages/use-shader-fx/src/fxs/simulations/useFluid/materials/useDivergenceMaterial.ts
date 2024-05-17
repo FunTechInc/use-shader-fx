@@ -4,7 +4,7 @@ import vertexShader from "../shaders/main.vert";
 import fragmentShader from "../shaders/divergence.frag";
 import { MaterialProps } from "../../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class DivergenceMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -13,26 +13,24 @@ export class DivergenceMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useDivergenceMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const useDivergenceMaterial = ({ onBeforeInit }: MaterialProps) => {
    const divergenceMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uVelocity: { value: null },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uVelocity: { value: null },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return divergenceMaterial as DivergenceMaterial;
 };

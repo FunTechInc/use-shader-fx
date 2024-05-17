@@ -19,4 +19,4 @@ export declare class AdvectionMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useAdvectionMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => AdvectionMaterial;
+export declare const useAdvectionMaterial: ({ onBeforeInit }: MaterialProps) => AdvectionMaterial;

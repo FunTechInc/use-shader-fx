@@ -110,7 +110,7 @@ export declare class MorphParticlesMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, mapArray, uniforms, onBeforeCompile, }: {
+export declare const useMaterial: ({ size, dpr, geometry, positions, uvs, mapArray, onBeforeInit, }: {
     size: Size;
     dpr: number | false;
     geometry: THREE.BufferGeometry;

@@ -102,6 +102,9 @@ export const Playground = () => {
       baseMaterial: THREE.MeshPhysicalMaterial,
       materialParameters: MATERIAL_CONFIG,
       isCustomTransmission: true,
+      onBeforeInit: (params) => {
+         console.log(params);
+      },
    });
    wobble.mesh.customDepthMaterial = wobble.depthMaterial;
    wobble.mesh.receiveShadow = true;

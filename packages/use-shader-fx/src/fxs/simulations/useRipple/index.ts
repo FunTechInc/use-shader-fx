@@ -20,7 +20,7 @@ export type RippleParams = {
    /** rotation rate, default : `0.05` */
    rotation?: number;
    /** fadeout speed, default : `0.9` */
-   fadeout_speed?: number;
+   fadeoutSpeed?: number;
    /** scale rate, default : `0.3` */
    scale?: number;
    /** alpha, default : `0.6` */
@@ -40,7 +40,7 @@ export type RippleObject = {
 export const RIPPLE_PARAMS: RippleParams = Object.freeze({
    frequency: 0.01,
    rotation: 0.05,
-   fadeout_speed: 0.9,
+   fadeoutSpeed: 0.9,
    scale: 0.3,
    alpha: 0.6,
    pointerValues: false,
@@ -66,8 +66,7 @@ export const useRipple = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: UseRippleProps): HooksReturn<RippleParams, RippleObject, CustomParams> => {
    const _dpr = getDpr(dpr);
    const scene = useMemo(() => new THREE.Scene(), []);
@@ -76,8 +75,7 @@ export const useRipple = ({
       max: max,
       texture,
       scene,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
    const camera = useCamera(size);
    const updatePointer = usePointer();
@@ -102,13 +100,10 @@ export const useRipple = ({
                const material = mesh.material as THREE.ShaderMaterial;
                mesh.rotation.z += params.rotation!;
                mesh.scale.x =
-                  params.fadeout_speed! * mesh.scale.x + params.scale!;
+                  params.fadeoutSpeed! * mesh.scale.x + params.scale!;
                mesh.scale.y = mesh.scale.x;
                const opacity = material.uniforms.uOpacity.value;
-               setUniform(material)(
-                  "uOpacity",
-                  opacity * params.fadeout_speed!
-               );
+               setUniform(material)("uOpacity", opacity * params.fadeoutSpeed!);
                if (opacity < 0.001) mesh.visible = false;
             }
             setCustomUniform(mesh.material)(customParams);

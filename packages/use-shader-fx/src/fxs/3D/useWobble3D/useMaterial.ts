@@ -1,10 +1,11 @@
 import * as THREE from "three";
 import { useMemo } from "react";
-import transmission_pars_fragment from "./shaders/transmission_pars_fragment.glsl";
-import transmission_fragment from "./shaders/transmission_fragment.glsl";
 import { WOBBLE3D_PARAMS } from ".";
-import { MaterialProps } from "../../types";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { MaterialProps, OnBeforeInitParameters } from "../../types";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
+import { rewriteVertexShader } from "./utils/rewriteVertexShader";
+import { rewriteFragmentShader } from "./utils/rewriteFragmentShader";
+import { resolveEachMaterial } from "./utils/resolveEachMaterial";
 
 export class Wobble3DMaterial extends THREE.Material {
    uniforms!: {
@@ -31,105 +32,19 @@ export class Wobble3DMaterial extends THREE.Material {
    };
 }
 
-/** You also need to rewrite the vertext shader of depthMaterial */
-const rewriteVertex = (vertex: string) => {
-   let shader = vertex;
-   shader = shader.replace(
-      "#include <beginnormal_vertex>",
-      `
-		vec3 objectNormal = usf_Normal;
-		#ifdef USE_TANGENT
-		vec3 objectTangent = vec3( tangent.xyz );
-		#endif`
-   );
-   // position
-   shader = shader.replace(
-      "#include <begin_vertex>",
-      `
-		vec3 transformed = usf_Position;`
-   );
-
-   // uniforms
-   shader = shader.replace(
-      "void main() {",
-      `
-		uniform float uTime;
-		uniform float uWobblePositionFrequency;
-		uniform float uWobbleTimeFrequency;
-		uniform float uWobbleStrength;
-		uniform float uWarpPositionFrequency;
-		uniform float uWarpTimeFrequency;
-		uniform float uWarpStrength;
-		attribute vec4 tangent;
-		varying float vWobble;
-		varying vec2 vPosition;
-		// edge
-		varying vec3 vEdgeNormal;
-		varying vec3 vEdgeViewPosition;
-		#usf <wobble3D>
-		void main() {
-		`
-   );
-
-   // vert
-   shader = shader.replace(
-      "void main() {",
-      `
-		void main() {
-		vec3 usf_Position = position;
-		vec3 usf_Normal = normal;
-		vec3 biTangent = cross(normal, tangent.xyz);
-		
-		// Neighbours positions
-		float shift = 0.01;
-		vec3 positionA = usf_Position + tangent.xyz * shift;
-		vec3 positionB = usf_Position + biTangent * shift;
-		
-		// wobble
-		float wobble = (uWobbleStrength > 0.) ? getWobble(usf_Position) : 0.0;
-		float wobblePositionA = (uWobbleStrength > 0.) ? getWobble(positionA) : 0.0;
-		float wobblePositionB = (uWobbleStrength > 0.) ? getWobble(positionB) : 0.0;
-		
-		usf_Position += wobble * normal;
-		positionA += wobblePositionA * normal;
-		positionB += wobblePositionB * normal;
-
-		// Compute normal
-		vec3 toA = normalize(positionA - usf_Position);
-		vec3 toB = normalize(positionB - usf_Position);
-		usf_Normal = cross(toA, toB);
-		
-		// Varying
-		vPosition = usf_Position.xy;
-		vWobble = wobble/uWobbleStrength;
-		
-		vEdgeNormal = normalize(normalMatrix * usf_Normal);
-		vec4 viewPosition = viewMatrix * modelMatrix * vec4(usf_Position, 1.0);
-		vEdgeViewPosition = normalize(viewPosition.xyz);
-		`
-   );
-   return shader;
-};
-
 export type WobbleMaterialConstructor = new (opts: {
    [key: string]: any;
 }) => THREE.Material;
+
 type WobbleMaterialParams<T extends WobbleMaterialConstructor> =
    ConstructorParameters<T>[0];
+
 export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
    extends MaterialProps {
    /** default:THREE.MeshPhysicalMaterial */
    baseMaterial?: T;
    materialParameters?: WobbleMaterialParams<T>;
-   /**
-    * depthMaterial's onBeforeCompile
-    * @param parameters — WebGL program parameters
-    * @param renderer — WebGLRenderer Context that is initializing the material
-    */
-   depthOnBeforeCompile?: (
-      parameters: THREE.WebGLProgramParametersWithUniforms,
-      renderer: THREE.WebGLRenderer
-   ) => void;
+   depthOnBeforeInit?: (parameters: OnBeforeInitParameters) => void;
    /**
     * Whether to apply more advanced `transmission` or not. valid only for `MeshPhysicalMaterial`. This is a function referring to `drei/MeshTransmissionMaterial`, default : `false`
     * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
@@ -140,10 +55,9 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
 export const useMaterial = <T extends WobbleMaterialConstructor>({
    baseMaterial,
    materialParameters,
-   onBeforeCompile,
-   depthOnBeforeCompile,
    isCustomTransmission = false,
-   uniforms,
+   onBeforeInit,
+   depthOnBeforeInit,
 }: WobbleMaterialProps<T>) => {
    const { material, depthMaterial } = useMemo(() => {
       const mat = new (baseMaterial || THREE.MeshPhysicalMaterial)(
@@ -183,88 +97,32 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
             transmission: { value: 0 },
             _transmission: { value: 1 },
             transmissionMap: { value: null },
-            ...uniforms,
          },
       });
 
-      mat.onBeforeCompile = (parameters, renderer) => {
-         Object.assign(parameters.uniforms, mat.userData.uniforms);
+      mat.onBeforeCompile = (parameters) => {
+         rewriteVertexShader(parameters);
 
-         /********************
-			vert
-			********************/
-         parameters.vertexShader = rewriteVertex(parameters.vertexShader);
+         rewriteFragmentShader(parameters);
 
-         /********************
-			frag
-			********************/
-         // diffuse color , Manipulate color mixing ratio with `uColorMix`
-         parameters.fragmentShader = parameters.fragmentShader.replace(
-            "#include <color_fragment>",
-            `
-					#include <color_fragment>
+         resolveEachMaterial({
+            parameters,
+            mat,
+            isCustomTransmission,
+         });
 
-					if (uEdgeThreshold > 0.0) {
-						float edgeThreshold = dot(vEdgeNormal, -vEdgeViewPosition);
-						diffuseColor = edgeThreshold < uEdgeThreshold ? vec4(uEdgeColor, 1.0) : mix(diffuseColor, usf_DiffuseColor, uColorMix);
-					} else {
-						diffuseColor = mix(diffuseColor, usf_DiffuseColor, uColorMix);
-					}
-				`
+         const cutomizedParams = createMaterialParameters(
+            {
+               fragmentShader: parameters.fragmentShader,
+               vertexShader: parameters.vertexShader,
+               // Because wobble3D uses userData to update uniforms.
+               uniforms: mat.userData.uniforms,
+            },
+            onBeforeInit
          );
-
-         // frag
-         parameters.fragmentShader = parameters.fragmentShader.replace(
-            "void main() {",
-            `
-				uniform vec3 uColor0;
-				uniform vec3 uColor1;
-				uniform vec3 uColor2;
-				uniform vec3 uColor3;
-				uniform float uColorMix;
-				uniform float uEdgeThreshold;
-				uniform vec3 uEdgeColor;
-				
-				// transmission
-				uniform float uChromaticAberration;         
-				uniform float uAnisotropicBlur;      
-				uniform float uTime;
-				uniform float uDistortion;
-				uniform float uDistortionScale;
-				uniform float uTemporalDistortion;
-				uniform float uRefractionSamples;
-				
-				float rand(float n){return fract(sin(n) * 43758.5453123);}
-				#usf <snoise>
-
-				varying float vWobble;
-				varying vec2 vPosition;
-				varying vec3 vEdgeNormal;
-				varying vec3 vEdgeViewPosition;
-				
-				void main(){
-					vec4 usf_DiffuseColor = vec4(1.0);
-					float colorWobbleMix = smoothstep(-1.,1.,vWobble);
-					vec2 colorPosMix = vec2(smoothstep(-1.,1.,vPosition.x),smoothstep(-1.,1.,vPosition.y));
-				
-					usf_DiffuseColor.rgb = mix(mix(uColor0, uColor1, colorPosMix.x), mix(uColor2, uColor3, colorPosMix.y), colorWobbleMix);
-				`
-         );
-
-         // custom transmission
-         if (mat.type === "MeshPhysicalMaterial" && isCustomTransmission) {
-            parameters.fragmentShader = parameters.fragmentShader.replace(
-               "#include <transmission_pars_fragment>",
-               `${transmission_pars_fragment}`
-            );
-
-            parameters.fragmentShader = parameters.fragmentShader.replace(
-               "#include <transmission_fragment>",
-               `${transmission_fragment}`
-            );
-         }
-
-         setOnBeforeCompile(onBeforeCompile)(parameters, renderer);
+         parameters.fragmentShader = cutomizedParams.fragmentShader;
+         parameters.vertexShader = cutomizedParams.vertexShader;
+         Object.assign(parameters.uniforms, cutomizedParams.uniforms);
       };
       mat.needsUpdate = true;
 
@@ -274,10 +132,10 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       const depthMat = new THREE.MeshDepthMaterial({
          depthPacking: THREE.RGBADepthPacking,
       });
-      depthMat.onBeforeCompile = (parameters, renderer) => {
+      depthMat.onBeforeCompile = (parameters) => {
          Object.assign(parameters.uniforms, mat.userData.uniforms);
-         parameters.vertexShader = rewriteVertex(parameters.vertexShader);
-         setOnBeforeCompile(depthOnBeforeCompile)(parameters, renderer);
+         rewriteVertexShader(parameters);
+         createMaterialParameters(parameters, depthOnBeforeInit);
       };
       depthMat.needsUpdate = true;
 
@@ -285,9 +143,8 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
    }, [
       materialParameters,
       baseMaterial,
-      onBeforeCompile,
-      depthOnBeforeCompile,
-      uniforms,
+      onBeforeInit,
+      depthOnBeforeInit,
       isCustomTransmission,
    ]);
 

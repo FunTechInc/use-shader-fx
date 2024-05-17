@@ -13,4 +13,4 @@ export declare class PressureMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const usePressureMaterial: ({ onBeforeCompile, uniforms, }: MaterialProps) => PressureMaterial;
+export declare const usePressureMaterial: ({ onBeforeInit }: MaterialProps) => PressureMaterial;

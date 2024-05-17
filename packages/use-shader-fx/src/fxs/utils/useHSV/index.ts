@@ -46,8 +46,7 @@ export const useHSV = ({
    dpr,
    samples,
    isSizeUpdate,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: HooksProps): HooksReturn<HSVParams, HSVObject, CustomParams> => {
    const _dpr = getDpr(dpr);
 
@@ -55,8 +54,7 @@ export const useHSV = ({
    const { material, mesh } = useMesh({
       scene,
       size,
-      uniforms,
-      onBeforeCompile,
+      onBeforeInit,
    });
    const camera = useCamera(size);
 

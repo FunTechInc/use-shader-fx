@@ -17,4 +17,4 @@ export declare const COVERTEXTURE_PARAMS: CoverTextureParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useCoverTexture: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<CoverTextureParams, CoverTextureObject, CustomParams>;
+export declare const useCoverTexture: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<CoverTextureParams, CoverTextureObject, CustomParams>;

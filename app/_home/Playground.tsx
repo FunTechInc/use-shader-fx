@@ -15,6 +15,7 @@ import {
 } from "@/packages/use-shader-fx/src";
 
 import { Environment, OrbitControls } from "@react-three/drei";
+import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
 
 export const CONFIG = {
    marble: {
@@ -98,8 +99,8 @@ export const Playground = ({
    const [updateBlank, _, { output: blank }] = useBlank({
       size,
       dpr: viewport.dpr,
-      uniforms: useMemo(
-         () => ({
+      onBeforeInit: useCallback((params: OnBeforeInitParameters) => {
+         Object.assign(params.uniforms, {
             u_noise: {
                value: marble,
             },
@@ -109,14 +110,10 @@ export const Playground = ({
             u_colorStrata: {
                value: hsv,
             },
-         }),
-         [hsv, marble]
-      ),
-      onBeforeCompile: useCallback(
-         (shader: THREE.WebGLProgramParametersWithUniforms) => {
-            shader.fragmentShader = shader.fragmentShader.replace(
-               "#usf <uniforms>",
-               `
+         });
+         params.fragmentShader = params.fragmentShader.replace(
+            "#usf <uniforms>",
+            `
 					uniform sampler2D u_noise;
 					uniform float u_noiseIntensity;
 					uniform sampler2D u_colorStrata;
@@ -124,10 +121,10 @@ export const Playground = ({
 						return fract(sin(dot(n ,vec2(12.9898,78.233))) * 43758.5453);
 					}
 			`
-            );
-            shader.fragmentShader = shader.fragmentShader.replace(
-               "#usf <main>",
-               `
+         );
+         params.fragmentShader = params.fragmentShader.replace(
+            "#usf <main>",
+            `
 					vec2 uv = vUv;
 					float grain=rand(uv+sin(uTime))*.4;
 					grain=grain*.5+.5;
@@ -136,10 +133,8 @@ export const Playground = ({
 					vec4 colorStrata = texture2D(u_colorStrata,uv);
 					usf_FragColor = colorStrata*grain;
 			`
-            );
-         },
-         []
-      ),
+         );
+      }, []),
    });
 
    // set fxs
@@ -207,7 +202,7 @@ export const Playground = ({
                metalness={0.4}
             />
          </mesh>
-         <Environment preset="warehouse" environmentIntensity={0.1} />
+         <Environment preset="warehouse" environmentIntensity={0.5} />
          <OrbitControls />
       </mesh>
    );

@@ -42,4 +42,4 @@ export declare const DOMSYNCER_PARAMS: DomSyncerParams;
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usedomsyncer
  * @param dependencies - When this dependency array is changed, the mesh and intersection judgment will be updated according to the passed DOM array.
  */
-export declare const useDomSyncer: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile }: HooksProps, dependencies?: import("react").DependencyList) => HooksReturn<DomSyncerParams, DomSyncerObject, CustomParams>;
+export declare const useDomSyncer: ({ size, dpr, samples, isSizeUpdate, onBeforeInit }: HooksProps, dependencies?: import("react").DependencyList) => HooksReturn<DomSyncerParams, DomSyncerObject, CustomParams>;

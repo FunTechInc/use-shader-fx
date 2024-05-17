@@ -50,13 +50,13 @@ export const UseBlending = (args: BlendingParams) => {
    const colorVec = React.useMemo(() => new THREE.Vector3(), []);
 
    setFluid({
-      density_dissipation: 0.92,
-      velocity_dissipation: 0.99,
-      velocity_acceleration: 12.0,
-      splat_radius: 0.015,
-      curl_strength: 5.0,
-      pressure_iterations: 4,
-      fluid_color: (velocity: THREE.Vector2) => {
+      densityDissipation: 0.92,
+      velocityDissipation: 0.99,
+      velocityAcceleration: 12.0,
+      splatRadius: 0.015,
+      curlStrength: 5.0,
+      pressureIterations: 4,
+      fluidColor: (velocity: THREE.Vector2) => {
          const rCol = Math.max(0.0, Math.abs(velocity.x) * 150);
          const gCol = Math.max(0.0, Math.abs(velocity.y) * 150);
          const bCol = Math.max(0.1, (rCol + gCol) / 2);

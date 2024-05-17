@@ -5,7 +5,7 @@ import fragmentShader from "../shaders/vorticity.frag";
 import { MaterialProps } from "../../../types";
 import { MATERIAL_BASIC_PARAMS } from "../../../../libs/constants";
 import { DELTA_TIME } from "..";
-import { setOnBeforeCompile } from "../../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class VorticityMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -17,29 +17,27 @@ export class VorticityMaterial extends THREE.ShaderMaterial {
    };
 }
 
-export const useVorticityMaterial = ({
-   onBeforeCompile,
-   uniforms,
-}: MaterialProps) => {
+export const useVorticityMaterial = ({ onBeforeInit }: MaterialProps) => {
    const vorticityMaterial = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            uVelocity: { value: null },
-            uCurl: { value: null },
-            curl: { value: 0 },
-            dt: { value: DELTA_TIME },
-            texelSize: { value: new THREE.Vector2() },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  uVelocity: { value: null },
+                  uCurl: { value: null },
+                  curl: { value: 0 },
+                  dt: { value: DELTA_TIME },
+                  texelSize: { value: new THREE.Vector2() },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
-
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]);
+   }, [onBeforeInit]);
 
    return vorticityMaterial as VorticityMaterial;
 };

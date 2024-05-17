@@ -9,7 +9,7 @@ import {
    MATERIAL_BASIC_PARAMS,
 } from "../../../libs/constants";
 import { BLENDING_PARAMS } from ".";
-import { setOnBeforeCompile } from "../../../utils/setOnBeforeCompile";
+import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 
 export class BlendingMaterial extends THREE.ShaderMaterial {
    uniforms!: {
@@ -28,34 +28,35 @@ export class BlendingMaterial extends THREE.ShaderMaterial {
 
 export const useMesh = ({
    scene,
-   uniforms,
-   onBeforeCompile,
+   onBeforeInit,
 }: { scene: THREE.Scene } & MaterialProps) => {
    const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
    const material = useMemo(() => {
       const mat = new THREE.ShaderMaterial({
-         uniforms: {
-            u_texture: { value: DEFAULT_TEXTURE },
-            uMap: { value: DEFAULT_TEXTURE },
-            u_alphaMap: { value: DEFAULT_TEXTURE },
-            u_isAlphaMap: { value: false },
-            uMapIntensity: { value: BLENDING_PARAMS.mapIntensity },
-            u_brightness: { value: BLENDING_PARAMS.brightness },
-            u_min: { value: BLENDING_PARAMS.min },
-            u_max: { value: BLENDING_PARAMS.max },
-            u_dodgeColor: { value: new THREE.Color() },
-            u_isDodgeColor: { value: false },
-            ...uniforms,
-         },
-         vertexShader: vertexShader,
-         fragmentShader: fragmentShader,
+         ...createMaterialParameters(
+            {
+               uniforms: {
+                  u_texture: { value: DEFAULT_TEXTURE },
+                  uMap: { value: DEFAULT_TEXTURE },
+                  u_alphaMap: { value: DEFAULT_TEXTURE },
+                  u_isAlphaMap: { value: false },
+                  uMapIntensity: { value: BLENDING_PARAMS.mapIntensity },
+                  u_brightness: { value: BLENDING_PARAMS.brightness },
+                  u_min: { value: BLENDING_PARAMS.min },
+                  u_max: { value: BLENDING_PARAMS.max },
+                  u_dodgeColor: { value: new THREE.Color() },
+                  u_isDodgeColor: { value: false },
+               },
+               vertexShader: vertexShader,
+               fragmentShader: fragmentShader,
+            },
+            onBeforeInit
+         ),
          ...MATERIAL_BASIC_PARAMS,
       });
 
-      mat.onBeforeCompile = setOnBeforeCompile(onBeforeCompile);
-
       return mat;
-   }, [onBeforeCompile, uniforms]) as BlendingMaterial;
+   }, [onBeforeInit]) as BlendingMaterial;
    const mesh = useAddObject(scene, geometry, material, THREE.Mesh);
    return { material, mesh };
 };

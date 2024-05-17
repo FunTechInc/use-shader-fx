@@ -22,4 +22,4 @@ export declare const SIMPLEBLUR_PARAMS: SimpleBlurParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useSimpleBlur: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<SimpleBlurParams, SimpleBlurObject, CustomParams>;
+export declare const useSimpleBlur: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<SimpleBlurParams, SimpleBlurObject, CustomParams>;

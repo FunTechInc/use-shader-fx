@@ -22,7 +22,7 @@ export declare class CosPaletteMaterial extends THREE.ShaderMaterial {
         };
     };
 }
-export declare const useMesh: ({ scene, uniforms, onBeforeCompile, }: {
+export declare const useMesh: ({ scene, onBeforeInit, }: {
     scene: THREE.Scene;
 } & MaterialProps) => {
     material: CosPaletteMaterial;

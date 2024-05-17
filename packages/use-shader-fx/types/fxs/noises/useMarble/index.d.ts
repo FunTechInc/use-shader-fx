@@ -29,4 +29,4 @@ export declare const MARBLE_PARAMS: MarbleParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useMarble: ({ size, dpr, samples, isSizeUpdate, uniforms, onBeforeCompile, }: HooksProps) => HooksReturn<MarbleParams, MarbleObject, CustomParams>;
+export declare const useMarble: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<MarbleParams, MarbleObject, CustomParams>;

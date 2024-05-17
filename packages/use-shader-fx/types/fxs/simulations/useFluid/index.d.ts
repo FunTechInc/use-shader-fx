@@ -6,21 +6,21 @@ import { DoubleRenderTarget } from "../../../utils/useDoubleFBO";
 export declare const DELTA_TIME = 0.016;
 export type FluidParams = {
     /** density disspation , default : `0.98` */
-    density_dissipation?: number;
+    densityDissipation?: number;
     /** velocity dissipation , default : `0.99` */
-    velocity_dissipation?: number;
+    velocityDissipation?: number;
     /** velocity acceleration , default : `10.0` */
-    velocity_acceleration?: number;
+    velocityAcceleration?: number;
     /** pressure dissipation , default : `0.9` */
-    pressure_dissipation?: number;
+    pressureDissipation?: number;
     /** pressure iterations. affects performance , default : `20` */
-    pressure_iterations?: number;
+    pressureIterations?: number;
     /** curl_strength , default : `35` */
-    curl_strength?: number;
+    curlStrength?: number;
     /** splat radius , default : `0.002` */
-    splat_radius?: number;
+    splatRadius?: number;
     /** Fluid Color.THREE.Vector3 Alternatively, it accepts a function that returns THREE.Vector3.The function takes velocity:THREE.Vector2 as an argument. , default : `THREE.Vector3(1.0, 1.0, 1.0)` */
-    fluid_color?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3 | THREE.Color;
+    fluidColor?: ((velocity: THREE.Vector2) => THREE.Vector3) | THREE.Vector3 | THREE.Color;
     /** When calling usePointer in a frame loop, setting PointerValues ​​to this value prevents double calls , default : `false` */
     pointerValues?: PointerValues | false;
 };
@@ -43,14 +43,11 @@ export declare const FLUID_PARAMS: FluidParams;
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export declare const useFluid: ({ size, dpr, samples, isSizeUpdate, customFluidProps, }: {
-    /** you can add `onBeforeComile` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat`
+    /** you can add `onBeforeInit` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat`
       * ```ts
-      * fluidOnBeforeCompile: {
+      * customFluidProps: {
           vorticity: {
-             onBeforeCompile: (shader) => console.log(shader),
-                 uniforms:{
-                     hoge: { value: 0.0 },
-                 }
+             onBeforeInit: (parameters) => console.log(parameters),
           },
        },
       * ```

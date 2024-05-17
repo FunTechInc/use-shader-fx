@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { UseFboProps } from "./useSingleFBO";
 export type DoubleRenderTarget = {
-    read: THREE.WebGLRenderTarget | null;
-    write: THREE.WebGLRenderTarget | null;
+    read: THREE.WebGLRenderTarget;
+    write: THREE.WebGLRenderTarget;
 };
 type FBOUpdateFunction = (gl: THREE.WebGLRenderer, 
 /**  call before FBO is rendered */

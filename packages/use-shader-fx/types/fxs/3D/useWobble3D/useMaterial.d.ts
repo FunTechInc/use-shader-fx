@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { MaterialProps } from "../../types";
+import { MaterialProps, OnBeforeInitParameters } from "../../types";
 export declare class Wobble3DMaterial extends THREE.Material {
     uniforms: {
         uTime: {
@@ -72,19 +72,14 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor> extend
     /** default:THREE.MeshPhysicalMaterial */
     baseMaterial?: T;
     materialParameters?: WobbleMaterialParams<T>;
-    /**
-     * depthMaterial's onBeforeCompile
-     * @param parameters — WebGL program parameters
-     * @param renderer — WebGLRenderer Context that is initializing the material
-     */
-    depthOnBeforeCompile?: (parameters: THREE.WebGLProgramParametersWithUniforms, renderer: THREE.WebGLRenderer) => void;
+    depthOnBeforeInit?: (parameters: OnBeforeInitParameters) => void;
     /**
      * Whether to apply more advanced `transmission` or not. valid only for `MeshPhysicalMaterial`. This is a function referring to `drei/MeshTransmissionMaterial`, default : `false`
      * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
      * */
     isCustomTransmission?: boolean;
 }
-export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, onBeforeCompile, depthOnBeforeCompile, isCustomTransmission, uniforms, }: WobbleMaterialProps<T>) => {
+export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, isCustomTransmission, onBeforeInit, depthOnBeforeInit, }: WobbleMaterialProps<T>) => {
     material: Wobble3DMaterial;
     depthMaterial: THREE.MeshDepthMaterial;
 };
