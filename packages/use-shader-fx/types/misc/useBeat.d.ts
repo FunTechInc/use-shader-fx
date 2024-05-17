@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { EasingTypes } from "../libs/Easing";
+import { EasingTypes } from "../libs/easing";
 type BeatValues = {
     beat: number;
     floor: number;
