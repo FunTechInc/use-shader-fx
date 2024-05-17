@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Easing, EasingTypes } from "../libs/Easing";
+import { Easing, EasingTypes } from "../libs/easing";
 import { useCallback } from "react";
 
 /** Returns a unique hash specific to the beat */

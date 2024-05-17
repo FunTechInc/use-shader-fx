@@ -34,6 +34,6 @@ export * from "./misc/useBeat";
 export * from "./misc/useFPSLimiter";
 export * from "./misc/useDomSyncer";
 export * from "./misc/useCopyTexture";
-export * from "./libs/Easing";
-export * from "./libs/Utils";
+export * from "./libs/easing";
+export * from "./libs/utils";
 export * from "./libs/shaders/ShaderChunk";
