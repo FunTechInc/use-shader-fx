@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 import { memo } from "react";
-import { Environment, OrbitControls } from "@react-three/drei";
+import { CameraControls, Environment, OrbitControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useStickers } from "./useStickers";
 import { CanvasState } from "./CanvasState";
@@ -31,7 +31,7 @@ export const Playground = () => {
 
    const canvasState = CanvasState.getInstance();
 
-   useFrame(({ camera, clock }, delta) => {
+   useFrame(({ camera, clock, controls }, delta) => {
       if (!isReady) {
          return;
       }
@@ -68,7 +68,14 @@ export const Playground = () => {
             silhouetteMap={silhouette}
          />
          <Background stickerMap={stickerMap} />
-         {/* <OrbitControls /> */}
+         <OrbitControls
+            enabled={true}
+            enableZoom={false}
+            minAzimuthAngle={-0.785} // -45
+            maxAzimuthAngle={0.785} // 45
+            minPolarAngle={1.134} // 65
+            maxPolarAngle={1.919} // 110
+         />
       </mesh>
    );
 };
