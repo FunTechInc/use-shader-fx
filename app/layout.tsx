@@ -26,6 +26,7 @@ export default function RootLayout({
             overflow: "hidden",
             backgroundColor: "#000",
             touchAction: "none",
+            userSelect: "none",
          }}>
          <body className={oswald.className}>
             {children}
