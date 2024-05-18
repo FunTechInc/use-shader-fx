@@ -71,6 +71,8 @@ export const Playground = () => {
          <OrbitControls
             enabled={true}
             enableZoom={false}
+            enablePan={false}
+            rotateSpeed={0.12}
             minAzimuthAngle={-0.785} // -45
             maxAzimuthAngle={0.785} // 45
             minPolarAngle={1.134} // 65
