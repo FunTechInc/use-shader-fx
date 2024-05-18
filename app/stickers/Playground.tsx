@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 import { memo } from "react";
-import { CameraControls, Environment, OrbitControls } from "@react-three/drei";
+import { Environment, OrbitControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useStickers } from "./useStickers";
 import { CanvasState } from "./CanvasState";
