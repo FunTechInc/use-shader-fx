@@ -20,7 +20,13 @@ export default function RootLayout({
    children: React.ReactNode;
 }) {
    return (
-      <html lang="en" style={{ overflow: "hidden", backgroundColor: "#000" }}>
+      <html
+         lang="en"
+         style={{
+            overflow: "hidden",
+            backgroundColor: "#000",
+            touchAction: "none",
+         }}>
          <body className={oswald.className}>
             {children}
             <UI />

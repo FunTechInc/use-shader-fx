@@ -68,7 +68,14 @@ export const Playground = () => {
             silhouetteMap={silhouette}
          />
          <Background stickerMap={stickerMap} />
-         {/* <OrbitControls /> */}
+         <OrbitControls
+            enabled={true}
+            enableZoom={false}
+            minAzimuthAngle={-0.785} // -45
+            maxAzimuthAngle={0.785} // 45
+            minPolarAngle={1.134} // 65
+            maxPolarAngle={1.919} // 110
+         />
       </mesh>
    );
 };
