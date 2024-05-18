@@ -31,7 +31,7 @@ export const Playground = () => {
 
    const canvasState = CanvasState.getInstance();
 
-   useFrame(({ camera, clock, controls }, delta) => {
+   useFrame(({ camera, clock }, delta) => {
       if (!isReady) {
          return;
       }
