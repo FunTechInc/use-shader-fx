@@ -103,8 +103,7 @@ export const useSimpleBlur = ({
 
          let _tempTexture: THREE.Texture = updateTempTexture(gl);
 
-         const iterations = params.blurPower!;
-         for (let i = 0; i < iterations; i++) {
+         for (let i = 0; i < params.blurPower!; i++) {
             updateValue("uTexture", _tempTexture);
             _tempTexture = updateTempTexture(gl);
          }

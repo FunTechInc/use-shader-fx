@@ -1,7 +1,11 @@
 import * as THREE from "three";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useResolution } from "../utils/useResolution";
-import { UseFboProps, renderFBO, FBO_OPTION } from "../utils/useSingleFBO";
+import {
+   UseFboProps,
+   renderFBO,
+   FBO_DEFAULT_OPTION,
+} from "../utils/useSingleFBO";
 
 type UpdateCopyFunction = (
    gl: THREE.WebGLRenderer,
@@ -20,18 +24,19 @@ type UseCopyTextureReturn = [THREE.WebGLRenderTarget[], UpdateCopyFunction];
  * @returns [THREE.WebGLRenderTarget[] , updateCopyTexture] - Receives the RenderTarget array as the first argument and the update function as the second argument. `updateCopyTexture()` receives gl as the first argument and the index of the texture you want to copy as the second argument.
  */
 export const useCopyTexture = (
-   {
+   props: UseFboProps,
+   length: number
+): UseCopyTextureReturn => {
+   const {
       scene,
       camera,
       size,
       dpr = false,
       isSizeUpdate = false,
-      samples = 0,
-      depthBuffer = false,
-      depthTexture = false,
-   }: UseFboProps,
-   length: number
-): UseCopyTextureReturn => {
+      depth = false,
+      ...targetSettings
+   } = props;
+
    const renderTargetArr = useRef<THREE.WebGLRenderTarget[]>([]);
    const resolution = useResolution(size, dpr);
 
@@ -41,12 +46,11 @@ export const useCopyTexture = (
             resolution.x,
             resolution.y,
             {
-               ...FBO_OPTION,
-               samples,
-               depthBuffer,
+               ...FBO_DEFAULT_OPTION,
+               ...targetSettings,
             }
          );
-         if (depthTexture) {
+         if (depth) {
             target.depthTexture = new THREE.DepthTexture(
                resolution.x,
                resolution.y,

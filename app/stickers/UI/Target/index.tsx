@@ -1,40 +1,31 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { CanvasState } from "../../CanvasState";
 import s from "./index.module.scss";
+import { useFrame } from "@funtech-inc/spice";
 
 export const TargetUI = () => {
    const canvasState = CanvasState.getInstance();
    const containerRef = useRef<HTMLDivElement>(null);
-   const rafID = useRef<number>(0);
 
-   useEffect(() => {
-      const container = containerRef.current!;
+   useFrame(() => {
+      let tick = canvasState.clockState.waiting;
+      if (tick === 0 && !canvasState.stickerState.isNotSticked) {
+         return;
+      }
+      const container = containerRef.current;
+      if (!container) {
+         return;
+      }
       const touchUIs = container.querySelectorAll(".js_touchUI");
-
-      const handleFrame = () => {
-         let tick = canvasState.clockState.waiting;
-
-         touchUIs.forEach((ui, i) => {
-            const touchUI = ui as HTMLElement;
-            touchUI.style.opacity = tick.toString();
-            touchUI.style.translate = `${(
-               tick *
-               16 *
-               (i ? -1 : 1)
-            ).toString()}px`;
-         });
-
-         if (tick !== 0 || canvasState.stickerState.isNotSticked) {
-            requestAnimationFrame(handleFrame);
-         }
-      };
-
-      rafID.current = requestAnimationFrame(handleFrame);
-      return () => cancelAnimationFrame(rafID.current);
-   }, [canvasState]);
+      touchUIs.forEach((ui, i) => {
+         const touchUI = ui as HTMLElement;
+         touchUI.style.opacity = tick.toString();
+         touchUI.style.translate = `${(tick * 16 * (i ? -1 : 1)).toString()}px`;
+      });
+   });
 
    return (
       <div ref={containerRef} className={s.container}>

@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { FBO_OPTION, UseFboProps, renderFBO } from "./useSingleFBO";
+import { useCallback, useEffect, useMemo } from "react";
+import { FBO_DEFAULT_OPTION, UseFboProps, renderFBO } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
 
 export type DoubleRenderTarget = {
@@ -34,31 +34,30 @@ type UseDoubleFBOReturn = [
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default : `false`
  * @returns [{read:THREE.WebGLRenderTarget,write:THREE.WebGLRenderTarget} , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
-export const useDoubleFBO = ({
-   scene,
-   camera,
-   size,
-   dpr = false,
-   isSizeUpdate = false,
-   samples = 0,
-   depthBuffer = false,
-   depthTexture = false,
-}: UseFboProps): UseDoubleFBOReturn => {
+export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
+   const {
+      scene,
+      camera,
+      size,
+      dpr = false,
+      isSizeUpdate = false,
+      depth = false,
+      ...targetSettings
+   } = props;
+
    const resolution = useResolution(size, dpr);
 
    const renderTarget = useMemo<WebGLDoubleRenderTarget>(() => {
       const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
-         ...FBO_OPTION,
-         samples,
-         depthBuffer,
+         ...FBO_DEFAULT_OPTION,
+         ...targetSettings,
       });
       const write = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
-         ...FBO_OPTION,
-         samples,
-         depthBuffer,
+         ...FBO_DEFAULT_OPTION,
+         ...targetSettings,
       });
 
-      if (depthTexture) {
+      if (depth) {
          read.depthTexture = new THREE.DepthTexture(
             resolution.x,
             resolution.y,
@@ -81,51 +80,14 @@ export const useDoubleFBO = ({
          },
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [samples, depthBuffer, depthTexture]);
-
-   // const initRenderTargets = useMemo(() => {
-   //    const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
-   //       ...FBO_OPTION,
-   //       samples,
-   //       depthBuffer,
-   //    });
-   //    const write = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
-   //       ...FBO_OPTION,
-   //       samples,
-   //       depthBuffer,
-   //    });
-
-   //    if (depthTexture) {
-   //       read.depthTexture = new THREE.DepthTexture(
-   //          resolution.x,
-   //          resolution.y,
-   //          THREE.FloatType
-   //       );
-   //       write.depthTexture = new THREE.DepthTexture(
-   //          resolution.x,
-   //          resolution.y,
-   //          THREE.FloatType
-   //       );
-   //    }
-
-   //    return { read, write };
-   //    // eslint-disable-next-line react-hooks/exhaustive-deps
-   // }, []);
-
-   // renderTarget.current.read = initRenderTargets.read;
-   // renderTarget.current.write = initRenderTargets.write;
-   // renderTarget.read = initRenderTargets.read;
-   // renderTarget.write = initRenderTargets.write;
+   }, []);
 
    if (isSizeUpdate) {
-      // renderTarget.current.read?.setSize(resolution.x, resolution.y);
-      // renderTarget.current.write?.setSize(resolution.x, resolution.y);
       renderTarget.read?.setSize(resolution.x, resolution.y);
       renderTarget.write?.setSize(resolution.x, resolution.y);
    }
 
    useEffect(() => {
-      // const temp = renderTarget.current;
       const temp = renderTarget;
       return () => {
          temp.read?.dispose();
@@ -135,7 +97,6 @@ export const useDoubleFBO = ({
 
    const updateRenderTarget: FBOUpdateFunction = useCallback(
       (gl, onBeforeRender) => {
-         // const fbo = renderTarget.current;
          const fbo = renderTarget;
          renderFBO({
             gl,

@@ -5,7 +5,15 @@ import fxBlending from "./shaderChunk/fxBlending.glsl";
 import planeVertex from "./shaderChunk/planeVertex.glsl";
 import defaultVertex from "./shaderChunk/defaultVertex.glsl";
 
-export const ShaderChunk: { [key: string]: string } = Object.freeze({
+export type ShaderChunkTypes =
+   | "wobble3D"
+   | "snoise"
+   | "coverTexture"
+   | "fxBlending"
+   | "planeVertex"
+   | "defaultVertex";
+
+export const ShaderChunk: { [K in ShaderChunkTypes]: string } = Object.freeze({
    wobble3D,
    snoise,
    coverTexture,
