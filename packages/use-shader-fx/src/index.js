@@ -49,6 +49,7 @@ export * from "./utils/useDoubleFBO";
 export * from "./utils/useParams";
 export * from "./utils/useResolution";
 export * from "./utils/useSingleFBO";
+export * from "./utils/useResizeBoundary";
 
 /*===============================================
 misc

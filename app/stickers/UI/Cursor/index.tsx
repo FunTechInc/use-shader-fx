@@ -7,13 +7,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { GifPreloader } from "./GifPreloader";
 import { Confetti } from "./Confetti";
-import { useIsTouchDevice } from "@funtech-inc/spice";
+import { useIsTouchDevice, useFrame } from "@funtech-inc/spice";
 import s from "./index.module.scss";
 
 const updateTargetPoint = (target: HTMLDivElement, point: THREE.Vector2) => {
-   const targetRect = target.getBoundingClientRect();
-   target.style.left = `${point.x - targetRect.width / 2}px`;
-   target.style.top = `${point.y - targetRect.height / 2}px`;
+   const width = target.clientWidth;
+   const height = target.clientHeight;
+   target.style.left = `${point.x - width / 2}px`;
+   target.style.top = `${point.y - height / 2}px`;
 };
 
 const CURSOR_LERP = 0.8;
@@ -58,7 +59,6 @@ export const CursorUI = () => {
       canvasState.stickerState.nextStickerIndex
    );
 
-   const rafID = useRef<number>(0);
    const cursorRef = useRef<HTMLDivElement>(null);
    const imageRef = useRef<HTMLImageElement>(null);
    const confettiRef = useRef<HTMLDivElement>(null);
@@ -170,7 +170,7 @@ export const CursorUI = () => {
       [canvasState]
    );
 
-   const handleFrame = useCallback(() => {
+   useFrame(() => {
       const isOver = canvasState.cursorState.isOver;
 
       // update sticker index
@@ -194,21 +194,7 @@ export const CursorUI = () => {
          updateCursorPoint(false);
       }
       prevIsOver.current = isOver;
-      rafID.current = requestAnimationFrame(handleFrame);
-   }, [
-      canvasState.stickerState,
-      stickerIndex,
-      canvasState.cursorState,
-      onStickerChange,
-      onOver,
-      onOut,
-      updateCursorPoint,
-   ]);
-
-   useEffect(() => {
-      rafID.current = requestAnimationFrame(handleFrame);
-      return () => cancelAnimationFrame(rafID.current);
-   }, [handleFrame]);
+   });
 
    return (
       <div className={s.container}>

@@ -3,11 +3,13 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useResolution } from "./useResolution";
 import { Size } from "@react-three/fiber";
 
-export const FBO_OPTION: THREE.RenderTargetOptions = {
+export const FBO_DEFAULT_OPTION: THREE.RenderTargetOptions = {
    minFilter: THREE.LinearFilter,
    magFilter: THREE.LinearFilter,
    type: THREE.HalfFloatType,
    stencilBuffer: false,
+   depthBuffer: false,
+   samples: 0,
 };
 
 export type UseFboProps = {
@@ -18,13 +20,9 @@ export type UseFboProps = {
    dpr?: number | false;
    /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default : `false` */
    isSizeUpdate?: boolean;
-   /** Defines the count of MSAA samples. Can only be used with WebGL 2. default : `0.0` */
-   samples?: number;
-   /** Renders to the depth buffer. Unlike the three.js, default : `false` */
-   depthBuffer?: boolean;
-   /** If set, the scene depth will be rendered to this texture. default : `false` */
-   depthTexture?: boolean;
-};
+   /** If set, the scene depth will be rendered into buffer.depthTexture. default : `false` */
+   depth?: boolean;
+} & THREE.RenderTargetOptions;
 
 export const renderFBO = ({
    gl,
@@ -63,16 +61,17 @@ type UseSingleFBOReturn = [THREE.WebGLRenderTarget, UpdateRenderTarget];
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
  * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
-export const useSingleFBO = ({
-   scene,
-   camera,
-   size,
-   dpr = false,
-   isSizeUpdate = false,
-   samples = 0,
-   depthBuffer = false,
-   depthTexture = false,
-}: UseFboProps): UseSingleFBOReturn => {
+export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
+   const {
+      scene,
+      camera,
+      size,
+      dpr = false,
+      isSizeUpdate = false,
+      depth = false,
+      ...targetSettings
+   } = props;
+
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
 
    const resolution = useResolution(size, dpr);
@@ -83,12 +82,11 @@ export const useSingleFBO = ({
             resolution.x,
             resolution.y,
             {
-               ...FBO_OPTION,
-               samples,
-               depthBuffer,
+               ...FBO_DEFAULT_OPTION,
+               ...targetSettings,
             }
          );
-         if (depthTexture) {
+         if (depth) {
             target.depthTexture = new THREE.DepthTexture(
                resolution.x,
                resolution.y,

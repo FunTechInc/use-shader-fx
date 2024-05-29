@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { CLICKED_WOBBLE_STRENGTH } from "./StickerBall";
-import { STICKER_TEXTURES_LENGTH } from "./useStickers";
+import { STICKER_TEXTURES_LENGTH } from "./StickerBall/useStickers";
 
 export class CanvasState {
    private static instance: CanvasState;
@@ -18,7 +18,7 @@ export class CanvasState {
    };
 
    public CAMERA_Z = {
-      zoom: 3.5,
+      zoom: 3.2,
       default: 4,
    };
 

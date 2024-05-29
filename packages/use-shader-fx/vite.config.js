@@ -12,7 +12,13 @@ export default defineConfig({
          fileName: "use-shader-fx",
       },
       rollupOptions: {
-         external: ["react", "@react-three/fiber", "react-dom", "three"],
+         external: [
+            "react",
+            "@react-three/fiber",
+            "react-dom",
+            "three",
+            "three-stdlib",
+         ],
          output: {
             dir: "./build",
             globals: {
@@ -20,6 +26,7 @@ export default defineConfig({
                "@react-three/fiber": "ReactThreeFiber",
                "react-dom": "ReactDOM",
                three: "THREE",
+               "three-stdlib": "THREEStdlib",
             },
          },
       },

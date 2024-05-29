@@ -1,3 +1,4 @@
+export type ShaderChunkTypes = "wobble3D" | "snoise" | "coverTexture" | "fxBlending" | "planeVertex" | "defaultVertex";
 export declare const ShaderChunk: {
-    [key: string]: string;
+    [K in ShaderChunkTypes]: string;
 };

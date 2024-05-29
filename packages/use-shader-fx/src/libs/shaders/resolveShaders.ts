@@ -1,8 +1,8 @@
-import { ShaderChunk } from "./ShaderChunk";
+import { ShaderChunk, ShaderChunkTypes } from "./ShaderChunk";
 
 const includePattern = /^[ \t]*#usf +<([\w\d./]+)>/gm;
 
-function includeReplacer(match: string, include: string): string {
+function includeReplacer(match: string, include: ShaderChunkTypes): string {
    return resolveIncludes(ShaderChunk[include] || "");
 }
 

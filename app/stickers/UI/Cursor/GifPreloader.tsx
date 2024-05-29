@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Image from "next/image";
-import { STICKER_TEXTURES_LENGTH } from "../../useStickers";
+import { STICKER_TEXTURES_LENGTH } from "../../StickerBall/useStickers";
 
 const GIF_IMAGES = [...Array(STICKER_TEXTURES_LENGTH)].map(
    (_, i) => `/stickers/gif/gif${i}.gif`
