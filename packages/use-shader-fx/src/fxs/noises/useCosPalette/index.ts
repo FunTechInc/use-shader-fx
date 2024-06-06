@@ -54,6 +54,7 @@ export const useCosPalette = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -73,6 +74,7 @@ export const useCosPalette = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<CosPaletteParams>(COSPALETTE_PARAMS);

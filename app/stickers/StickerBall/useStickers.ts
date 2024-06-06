@@ -40,19 +40,14 @@ const STICKER_TEXTURES = [
    "/stickers/webp/sticker7.webp",
    "/stickers/webp/sticker8.webp",
    "/stickers/webp/sticker9.webp",
-   "/stickers/webp/sticker10.webp",
-   "/stickers/webp/sticker11.webp",
-   "/stickers/webp/sticker12.webp",
-   "/stickers/webp/sticker13.webp",
-   "/stickers/webp/sticker14.webp",
-   "/stickers/webp/sticker15.webp",
-   "/stickers/webp/sticker16.webp",
-   "/stickers/webp/sticker17.webp",
-   "/stickers/webp/sticker18.webp",
-   "/stickers/webp/sticker19.webp",
 ];
 
 export const STICKER_TEXTURES_LENGTH = STICKER_TEXTURES.length;
+
+const MAX_DPR = {
+   sticker: 5,
+   normal: 5,
+};
 
 export const useStickers = (resizeBoundary: ResizeBoundary) => {
    const canvasState = CanvasState.getInstance();
@@ -75,7 +70,7 @@ export const useStickers = (resizeBoundary: ResizeBoundary) => {
 
    const [updateSticker, _, { output: stickerMap }] = useBlank({
       size,
-      dpr: Math.min(resizeBoundary.maxDpr, 6),
+      dpr: Math.min(resizeBoundary.maxDpr, MAX_DPR.sticker),
       isSizeUpdate: resizeBoundary.isUpdate,
       onBeforeInit: useCallback(
          (parameters: any) => {
@@ -127,7 +122,7 @@ export const useStickers = (resizeBoundary: ResizeBoundary) => {
 
    const [updateNormal, __, { output: normalMap }] = useBlank({
       size,
-      dpr: Math.min(resizeBoundary.maxDpr, 4),
+      dpr: Math.min(resizeBoundary.maxDpr, MAX_DPR.normal),
       isSizeUpdate: resizeBoundary.isUpdate,
       onBeforeInit: useCallback(
          (shader: any) => {

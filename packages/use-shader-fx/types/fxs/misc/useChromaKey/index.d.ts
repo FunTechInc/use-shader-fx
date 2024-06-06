@@ -33,4 +33,4 @@ export declare const CHROMAKEY_PARAMS: ChromaKeyParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useChromaKey: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<ChromaKeyParams, ChromaKeyObject, CustomParams>;
+export declare const useChromaKey: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<ChromaKeyParams, ChromaKeyObject, CustomParams>;

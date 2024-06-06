@@ -33,4 +33,4 @@ export declare const NOISE_PARAMS: NoiseParams;
  *
  * It is a basic value noise with `fbm` and `domain warping`
  */
-export declare const useNoise: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<NoiseParams, NoiseObject, CustomParams>;
+export declare const useNoise: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<NoiseParams, NoiseObject, CustomParams>;

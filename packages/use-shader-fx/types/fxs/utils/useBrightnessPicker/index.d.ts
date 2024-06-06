@@ -23,4 +23,4 @@ export declare const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useBrightnessPicker: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<BrightnessPickerParams, BrightnessPickerObject, CustomParams>;
+export declare const useBrightnessPicker: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<BrightnessPickerParams, BrightnessPickerObject, CustomParams>;

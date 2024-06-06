@@ -63,6 +63,7 @@ export const useChromaKey = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<ChromaKeyParams, ChromaKeyObject, CustomParams> => {
@@ -83,6 +84,7 @@ export const useChromaKey = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<ChromaKeyParams>(CHROMAKEY_PARAMS);

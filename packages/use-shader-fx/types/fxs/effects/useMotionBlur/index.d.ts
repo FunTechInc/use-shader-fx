@@ -24,4 +24,4 @@ export declare const MOTIONBLUR_PARAMS: MotionBlurParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useMotionBlur: ({ size, dpr, samples, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<MotionBlurParams, MotionBlurObject, CustomParams>;
+export declare const useMotionBlur: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<MotionBlurParams, MotionBlurObject, CustomParams>;

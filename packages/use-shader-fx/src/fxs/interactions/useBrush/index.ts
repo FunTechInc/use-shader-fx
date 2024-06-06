@@ -75,6 +75,7 @@ export const useBrush = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<BrushParams, BrushObject, CustomParams> => {
@@ -96,6 +97,7 @@ export const useBrush = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<BrushParams>(BRUSH_PARAMS);

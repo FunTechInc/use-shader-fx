@@ -62,6 +62,7 @@ export const useBlending = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<BlendingParams, BlendingObject, CustomParams> => {
@@ -77,6 +78,7 @@ export const useBlending = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<BlendingParams>(BLENDING_PARAMS);

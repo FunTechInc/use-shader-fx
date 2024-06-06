@@ -64,6 +64,7 @@ export const useRipple = ({
    max = 100,
    size,
    dpr,
+   renderTargetOptions,
    samples,
    isSizeUpdate,
    onBeforeInit,
@@ -86,6 +87,7 @@ export const useRipple = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<RippleParams>(RIPPLE_PARAMS);

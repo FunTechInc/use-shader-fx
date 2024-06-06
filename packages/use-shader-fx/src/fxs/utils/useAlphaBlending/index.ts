@@ -42,6 +42,7 @@ export const useAlphaBlending = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -66,6 +67,7 @@ export const useAlphaBlending = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] =

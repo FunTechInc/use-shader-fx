@@ -42,7 +42,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
       dpr = false,
       isSizeUpdate = false,
       depth = false,
-      ...targetSettings
+      ...renderTargetOptions
    } = props;
 
    const resolution = useResolution(size, dpr);
@@ -50,11 +50,11 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
    const renderTarget = useMemo<WebGLDoubleRenderTarget>(() => {
       const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
          ...FBO_DEFAULT_OPTION,
-         ...targetSettings,
+         ...renderTargetOptions,
       });
       const write = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
          ...FBO_DEFAULT_OPTION,
-         ...targetSettings,
+         ...renderTargetOptions,
       });
 
       if (depth) {

@@ -68,6 +68,7 @@ export const useColorStrata = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -87,6 +88,7 @@ export const useColorStrata = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<ColorStrataParams>(COLORSTRATA_PARAMS);

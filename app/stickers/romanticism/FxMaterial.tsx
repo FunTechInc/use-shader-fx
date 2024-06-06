@@ -74,8 +74,8 @@ export const FxMaterial = shaderMaterial(
 			vec4 romanticColor = vec4(vec3(clamp(gamma * noise,0.,1.)),romance.a);
 
 			// mix
-			gl_FragColor = mix(originalColor, romanticColor, sin(u_time)*0.5+0.5);
-			// gl_FragColor = mix(originalColor, romanticColor, 0.);
+			// gl_FragColor = mix(originalColor, romanticColor, sin(u_time)*0.5+0.5);
+			gl_FragColor = mix(originalColor, romanticColor, 0.);
 		}
 	`
 );
