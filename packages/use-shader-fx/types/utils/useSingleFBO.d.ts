@@ -29,6 +29,7 @@ type UseSingleFBOReturn = [THREE.WebGLRenderTarget, UpdateRenderTarget];
 /**
  * @param dpr If dpr is set, dpr will be multiplied, default:false
  * @param isSizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
+ * @param depthBuffer Unlike the default in three.js, the default is `false`.
  * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
 export declare const useSingleFBO: (props: UseFboProps) => UseSingleFBOReturn;
