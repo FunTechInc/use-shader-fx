@@ -61,6 +61,7 @@ export const useNoise = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<NoiseParams, NoiseObject, CustomParams> => {
@@ -76,6 +77,7 @@ export const useNoise = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<NoiseParams>(NOISE_PARAMS);

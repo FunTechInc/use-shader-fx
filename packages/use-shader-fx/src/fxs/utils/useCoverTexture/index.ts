@@ -39,6 +39,7 @@ export const useCoverTexture = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -63,6 +64,7 @@ export const useCoverTexture = ({
       size,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] =

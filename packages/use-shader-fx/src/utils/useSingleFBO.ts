@@ -4,12 +4,7 @@ import { useResolution } from "./useResolution";
 import { Size } from "@react-three/fiber";
 
 export const FBO_DEFAULT_OPTION: THREE.RenderTargetOptions = {
-   minFilter: THREE.LinearFilter,
-   magFilter: THREE.LinearFilter,
-   type: THREE.HalfFloatType,
-   stencilBuffer: false,
    depthBuffer: false,
-   samples: 0,
 };
 
 export type UseFboProps = {
@@ -69,7 +64,7 @@ export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
       dpr = false,
       isSizeUpdate = false,
       depth = false,
-      ...targetSettings
+      ...renderTargetOptions
    } = props;
 
    const renderTarget = useRef<THREE.WebGLRenderTarget>();
@@ -83,7 +78,7 @@ export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
             resolution.y,
             {
                ...FBO_DEFAULT_OPTION,
-               ...targetSettings,
+               ...renderTargetOptions,
             }
          );
          if (depth) {

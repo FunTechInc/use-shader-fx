@@ -50,6 +50,7 @@ export const useWave = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<WaveParams, WaveObject, CustomParams> => {
@@ -64,6 +65,7 @@ export const useWave = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<WaveParams>(WAVE_PARAMS);

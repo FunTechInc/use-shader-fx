@@ -56,6 +56,7 @@ export const useMarble = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<MarbleParams, MarbleObject, CustomParams> => {
@@ -70,6 +71,7 @@ export const useMarble = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<MarbleParams>(MARBLE_PARAMS);

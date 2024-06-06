@@ -46,6 +46,7 @@ export const useFxBlending = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -65,6 +66,7 @@ export const useFxBlending = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<FxBlendingParams>(FXBLENDING_PARAMS);

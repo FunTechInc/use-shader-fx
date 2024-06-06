@@ -52,6 +52,7 @@ export const useBlank = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<BlankParams, BlankObject, CustomParams> => {
@@ -76,8 +77,17 @@ export const useBlank = ({
          dpr: _dpr.fbo,
          samples,
          isSizeUpdate,
+         ...renderTargetOptions,
       }),
-      [scene, camera, size, _dpr.fbo, samples, isSizeUpdate]
+      [
+         scene,
+         camera,
+         size,
+         _dpr.fbo,
+         samples,
+         isSizeUpdate,
+         renderTargetOptions,
+      ]
    ) as UseFboProps;
 
    const [renderTarget, updateRenderTarget] = useDoubleFBO(fboProps);

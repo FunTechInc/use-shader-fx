@@ -46,6 +46,7 @@ export const useSimpleBlur = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -66,8 +67,17 @@ export const useSimpleBlur = ({
          dpr: _dpr.fbo,
          samples,
          isSizeUpdate,
+         ...renderTargetOptions,
       }),
-      [scene, camera, size, _dpr.fbo, samples, isSizeUpdate]
+      [
+         scene,
+         camera,
+         size,
+         _dpr.fbo,
+         samples,
+         isSizeUpdate,
+         renderTargetOptions,
+      ]
    ) as UseFboProps;
 
    const [renderTarget, updateTempTexture] = useDoubleFBO(fboProps);

@@ -63,6 +63,7 @@ export const useFxTexture = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<FxTextureParams, FxTextureObject, CustomParams> => {
@@ -83,6 +84,7 @@ export const useFxTexture = ({
       size,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<FxTextureParams>(FXTEXTURE_PARAMS);

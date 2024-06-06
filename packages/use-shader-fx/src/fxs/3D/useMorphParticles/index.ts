@@ -109,6 +109,7 @@ export const useMorphParticles = ({
    dpr,
    samples,
    isSizeUpdate,
+   renderTargetOptions,
    camera,
    geometry,
    positions,
@@ -149,6 +150,7 @@ export const useMorphParticles = ({
       samples,
       isSizeUpdate,
       depthBuffer: true,
+      ...renderTargetOptions,
    });
 
    const updateFx = useCallback(

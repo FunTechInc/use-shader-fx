@@ -22,7 +22,7 @@ export const Confetti = ({ state }: { state: number }) => {
          {styles.map((style, i) => (
             <div className={s.confetti} key={i} style={style}>
                <Image
-                  src="/stickers/gif/gif3.gif"
+                  src="/stickers/gif/gif11.gif"
                   fill
                   alt=""
                   unoptimized

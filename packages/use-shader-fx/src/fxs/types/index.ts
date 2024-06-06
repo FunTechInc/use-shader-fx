@@ -18,7 +18,7 @@ export type OnBeforeInitParameters = {
 export type MaterialProps = {
    /**
     * An optional callback that is executed immediately before the shader program is initialised. This function is called with the shader source code as a parameter. Useful for the modification of built-in materials.
-    * @param parameters — {fragmentShader, vertexShader, uniforms}
+    * @param parameters {fragmentShader, vertexShader, uniforms}
     */
    onBeforeInit?: (parameters: OnBeforeInitParameters) => void;
 };
@@ -30,6 +30,11 @@ export interface HooksProps extends MaterialProps {
    samples?: number;
    /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
    isSizeUpdate?: boolean;
+   /**
+    * @type `THREE.RenderTargetOptions`
+    * @param depthBuffer Unlike the default in three.js, the default is `false`.
+    */
+   renderTargetOptions?: THREE.RenderTargetOptions;
 }
 
 /**

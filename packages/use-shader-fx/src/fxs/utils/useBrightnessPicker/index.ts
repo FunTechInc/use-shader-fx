@@ -48,6 +48,7 @@ export const useBrightnessPicker = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -66,6 +67,7 @@ export const useBrightnessPicker = ({
       dpr: _dpr.fbo,
       samples,
       isSizeUpdate,
+      ...renderTargetOptions,
    });
 
    const [params, setParams] = useParams<BrightnessPickerParams>(

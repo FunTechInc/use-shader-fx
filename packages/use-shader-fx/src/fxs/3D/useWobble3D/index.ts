@@ -86,6 +86,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    camera,
    geometry,
@@ -121,6 +122,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       samples,
       isSizeUpdate,
       depthBuffer: true,
+      ...renderTargetOptions,
    });
 
    const updateFx = useCallback(

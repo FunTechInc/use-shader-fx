@@ -49,6 +49,7 @@ export const useMotionBlur = ({
    size,
    dpr,
    samples,
+   renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
 }: HooksProps): HooksReturn<
@@ -70,8 +71,17 @@ export const useMotionBlur = ({
          dpr: _dpr.fbo,
          samples,
          isSizeUpdate,
+         ...renderTargetOptions,
       }),
-      [scene, camera, size, _dpr.fbo, samples, isSizeUpdate]
+      [
+         scene,
+         camera,
+         size,
+         _dpr.fbo,
+         samples,
+         isSizeUpdate,
+         renderTargetOptions,
+      ]
    ) as UseFboProps;
 
    const [renderTarget, updateRenderTarget] = useDoubleFBO(fboProps);
