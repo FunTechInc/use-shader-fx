@@ -33,4 +33,4 @@ export declare const BLENDING_PARAMS: BlendingParams;
 If you don't want to reflect the map's color, you can use useFxBlending instead.
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useBlending: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<BlendingParams, BlendingObject, CustomParams>;
+export declare const useBlending: ({ size, dpr, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<BlendingParams, BlendingObject, CustomParams>;

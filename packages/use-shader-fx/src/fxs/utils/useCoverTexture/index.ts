@@ -38,7 +38,6 @@ export const COVERTEXTURE_PARAMS: CoverTextureParams = Object.freeze({
 export const useCoverTexture = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -62,7 +61,6 @@ export const useCoverTexture = ({
       camera,
       dpr: _dpr.fbo,
       size,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

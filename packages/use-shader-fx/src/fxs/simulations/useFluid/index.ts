@@ -81,7 +81,6 @@ export const FLUID_PARAMS: FluidParams = Object.freeze({
 export const useFluid = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    customFluidProps,
@@ -115,20 +114,11 @@ export const useFluid = ({
          camera,
          dpr: _dpr.fbo,
          size,
-         samples,
          isSizeUpdate,
          type: THREE.HalfFloatType,
          ...renderTargetOptions,
       }),
-      [
-         scene,
-         camera,
-         size,
-         samples,
-         _dpr.fbo,
-         isSizeUpdate,
-         renderTargetOptions,
-      ]
+      [scene, camera, size, _dpr.fbo, isSizeUpdate, renderTargetOptions]
    );
    const [velocityFBO, updateVelocityFBO] = useDoubleFBO(fboProps);
    const [densityFBO, updateDensityFBO] = useDoubleFBO(fboProps);

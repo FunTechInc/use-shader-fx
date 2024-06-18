@@ -107,7 +107,6 @@ export const MORPHPARTICLES_PARAMS: MorphParticlesParams = Object.freeze({
 export const useMorphParticles = ({
    size,
    dpr,
-   samples,
    isSizeUpdate,
    renderTargetOptions,
    camera,
@@ -147,7 +146,6 @@ export const useMorphParticles = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       depthBuffer: true,
       ...renderTargetOptions,

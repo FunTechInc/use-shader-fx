@@ -60,7 +60,6 @@ export const NOISE_PARAMS: NoiseParams = Object.freeze({
 export const useNoise = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -75,7 +74,6 @@ export const useNoise = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

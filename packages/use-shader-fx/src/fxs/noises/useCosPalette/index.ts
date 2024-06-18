@@ -53,7 +53,6 @@ export const COSPALETTE_PARAMS: CosPaletteParams = Object.freeze({
 export const useCosPalette = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -72,7 +71,6 @@ export const useCosPalette = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

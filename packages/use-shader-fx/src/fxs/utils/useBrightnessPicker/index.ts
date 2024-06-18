@@ -47,7 +47,6 @@ export const BRIGHTNESSPICKER_PARAMS: BrightnessPickerParams = Object.freeze({
 export const useBrightnessPicker = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -65,7 +64,6 @@ export const useBrightnessPicker = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

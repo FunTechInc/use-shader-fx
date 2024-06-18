@@ -51,7 +51,6 @@ export const BLANK_PARAMS: BlankParams = Object.freeze({
 export const useBlank = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -75,19 +74,10 @@ export const useBlank = ({
          camera,
          size,
          dpr: _dpr.fbo,
-         samples,
          isSizeUpdate,
          ...renderTargetOptions,
       }),
-      [
-         scene,
-         camera,
-         size,
-         _dpr.fbo,
-         samples,
-         isSizeUpdate,
-         renderTargetOptions,
-      ]
+      [scene, camera, size, _dpr.fbo, isSizeUpdate, renderTargetOptions]
    ) as UseFboProps;
 
    const [renderTarget, updateRenderTarget] = useDoubleFBO(fboProps);

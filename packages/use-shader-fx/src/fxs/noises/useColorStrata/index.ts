@@ -67,7 +67,6 @@ export const COLORSTRATA_PARAMS: ColorStrataParams = Object.freeze({
 export const useColorStrata = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -86,7 +85,6 @@ export const useColorStrata = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

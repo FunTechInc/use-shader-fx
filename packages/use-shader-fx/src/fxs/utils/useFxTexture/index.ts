@@ -62,7 +62,6 @@ export const FXTEXTURE_PARAMS: FxTextureParams = Object.freeze({
 export const useFxTexture = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -82,7 +81,6 @@ export const useFxTexture = ({
       camera,
       dpr: _dpr.fbo,
       size,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

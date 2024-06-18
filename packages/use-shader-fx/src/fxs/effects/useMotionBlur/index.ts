@@ -48,7 +48,6 @@ export const MOTIONBLUR_PARAMS: MotionBlurParams = Object.freeze({
 export const useMotionBlur = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -69,19 +68,10 @@ export const useMotionBlur = ({
          camera,
          size,
          dpr: _dpr.fbo,
-         samples,
          isSizeUpdate,
          ...renderTargetOptions,
       }),
-      [
-         scene,
-         camera,
-         size,
-         _dpr.fbo,
-         samples,
-         isSizeUpdate,
-         renderTargetOptions,
-      ]
+      [scene, camera, size, _dpr.fbo, isSizeUpdate, renderTargetOptions]
    ) as UseFboProps;
 
    const [renderTarget, updateRenderTarget] = useDoubleFBO(fboProps);

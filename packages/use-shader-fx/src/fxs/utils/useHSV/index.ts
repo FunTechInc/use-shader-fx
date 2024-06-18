@@ -44,7 +44,6 @@ export const HSV_PARAMS: HSVParams = Object.freeze({
 export const useHSV = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -64,7 +63,6 @@ export const useHSV = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

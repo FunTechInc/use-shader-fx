@@ -61,7 +61,6 @@ If you don't want to reflect the map's color, you can use useFxBlending instead.
 export const useBlending = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -76,7 +75,6 @@ export const useBlending = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

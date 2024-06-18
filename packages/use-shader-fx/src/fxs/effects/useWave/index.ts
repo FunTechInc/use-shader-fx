@@ -49,7 +49,6 @@ export const WAVE_PARAMS: WaveParams = Object.freeze({
 export const useWave = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -63,7 +62,6 @@ export const useWave = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

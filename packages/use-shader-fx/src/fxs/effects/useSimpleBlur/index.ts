@@ -45,7 +45,6 @@ export const SIMPLEBLUR_PARAMS: SimpleBlurParams = Object.freeze({
 export const useSimpleBlur = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -65,19 +64,10 @@ export const useSimpleBlur = ({
          camera,
          size,
          dpr: _dpr.fbo,
-         samples,
          isSizeUpdate,
          ...renderTargetOptions,
       }),
-      [
-         scene,
-         camera,
-         size,
-         _dpr.fbo,
-         samples,
-         isSizeUpdate,
-         renderTargetOptions,
-      ]
+      [scene, camera, size, _dpr.fbo, isSizeUpdate, renderTargetOptions]
    ) as UseFboProps;
 
    const [renderTarget, updateTempTexture] = useDoubleFBO(fboProps);
