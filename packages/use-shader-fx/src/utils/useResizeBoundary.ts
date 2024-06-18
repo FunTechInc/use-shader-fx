@@ -1,13 +1,5 @@
-import * as THREE from "three";
 import { useMemo, useRef } from "react";
 import { Size } from "@react-three/fiber";
-import { Utils } from "..";
-
-export type ResizeBoundary = {
-   /** Useful if you intentionally want to specify a higher resolution than `window.devicePixelRatio`. The maximum dpr is returned according to `GL_MAX_TEXTURE_SIZE`. */
-   maxDpr: number;
-   isUpdate: boolean;
-};
 
 const checkUpdate = (
    currentW: number,
@@ -30,19 +22,17 @@ const checkUpdate = (
 };
 
 export const useResizeBoundary = ({
-   gl,
    size,
    boundFor,
    threshold,
 }: {
-   gl: THREE.WebGLRenderer;
    size: Size;
    boundFor: "smaller" | "larger" | "both";
    threshold: number;
 }) => {
    const memorizedSize = useRef<Size>(size);
 
-   const resizeBoundary = useMemo<ResizeBoundary>(() => {
+   const isBeyondBoundary = useMemo<boolean>(() => {
       const { width: currentW, height: currentH } = size;
       const { width: memoW, height: memoH } = memorizedSize.current;
 
@@ -54,16 +44,12 @@ export const useResizeBoundary = ({
          threshold,
          boundFor
       );
-      const dpr = Utils.getMaxDpr(gl, size);
 
       if (isUpdate) {
          memorizedSize.current = size;
       }
-      return {
-         maxDpr: dpr,
-         isUpdate,
-      };
-   }, [size, gl, boundFor, threshold]);
+      return isUpdate;
+   }, [size, boundFor, threshold]);
 
-   return resizeBoundary;
+   return isBeyondBoundary;
 };

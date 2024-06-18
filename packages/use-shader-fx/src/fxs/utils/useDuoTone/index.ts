@@ -44,7 +44,6 @@ export const DUOTONE_PARAMS: DuoToneParams = Object.freeze({
 export const useDuoTone = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -59,7 +58,6 @@ export const useDuoTone = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

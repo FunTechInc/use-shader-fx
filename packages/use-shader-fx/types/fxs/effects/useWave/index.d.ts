@@ -25,4 +25,4 @@ export declare const WAVE_PARAMS: WaveParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useWave: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<WaveParams, WaveObject, CustomParams>;
+export declare const useWave: ({ size, dpr, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<WaveParams, WaveObject, CustomParams>;

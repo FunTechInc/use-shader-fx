@@ -55,7 +55,6 @@ export const MARBLE_PARAMS: MarbleParams = Object.freeze({
 export const useMarble = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -69,7 +68,6 @@ export const useMarble = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

@@ -41,7 +41,6 @@ export const ALPHABLENDING_PARAMS: AlphaBlendingParams = Object.freeze({
 export const useAlphaBlending = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -65,7 +64,6 @@ export const useAlphaBlending = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

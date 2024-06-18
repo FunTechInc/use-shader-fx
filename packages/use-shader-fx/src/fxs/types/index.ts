@@ -25,9 +25,8 @@ export type MaterialProps = {
 
 export interface HooksProps extends MaterialProps {
    size: Size;
+   /** Pixel-ratio, use window.devicePixelRatio or viewport.dpr from r3f */
    dpr: Dpr;
-   /** Defines the count of MSAA samples. Can only be used with WebGL 2. default : `0` */
-   samples?: number;
    /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
    isSizeUpdate?: boolean;
    /**

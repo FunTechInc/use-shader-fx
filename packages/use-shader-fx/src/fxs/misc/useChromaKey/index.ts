@@ -62,7 +62,6 @@ export const CHROMAKEY_PARAMS: ChromaKeyParams = Object.freeze({
 export const useChromaKey = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -82,7 +81,6 @@ export const useChromaKey = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

@@ -42,7 +42,7 @@ export declare const FLUID_PARAMS: FluidParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useFluid: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, customFluidProps, }: {
+export declare const useFluid: ({ size, dpr, renderTargetOptions, isSizeUpdate, customFluidProps, }: {
     /** you can add `onBeforeInit` of the next material.`initial`,`curl`,`vorticity`,`advection`,`divergence`,`pressure`,`clear`,`gradientSubtract`,`splat`
       * ```ts
       * customFluidProps: {

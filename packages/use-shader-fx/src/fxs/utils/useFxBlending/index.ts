@@ -45,7 +45,6 @@ export const FXBLENDING_PARAMS: FxBlendingParams = Object.freeze({
 export const useFxBlending = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -64,7 +63,6 @@ export const useFxBlending = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

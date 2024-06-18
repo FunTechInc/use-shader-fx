@@ -19,4 +19,4 @@ export declare const ALPHABLENDING_PARAMS: AlphaBlendingParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export declare const useAlphaBlending: ({ size, dpr, samples, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<AlphaBlendingParams, AlphaBlendingObject, CustomParams>;
+export declare const useAlphaBlending: ({ size, dpr, renderTargetOptions, isSizeUpdate, onBeforeInit, }: HooksProps) => HooksReturn<AlphaBlendingParams, AlphaBlendingObject, CustomParams>;

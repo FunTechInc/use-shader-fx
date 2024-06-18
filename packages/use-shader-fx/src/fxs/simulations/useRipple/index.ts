@@ -65,7 +65,6 @@ export const useRipple = ({
    size,
    dpr,
    renderTargetOptions,
-   samples,
    isSizeUpdate,
    onBeforeInit,
 }: UseRippleProps): HooksReturn<RippleParams, RippleObject, CustomParams> => {
@@ -85,7 +84,6 @@ export const useRipple = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });

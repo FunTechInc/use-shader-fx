@@ -74,7 +74,6 @@ export const BRUSH_PARAMS: BrushParams = Object.freeze({
 export const useBrush = ({
    size,
    dpr,
-   samples,
    renderTargetOptions,
    isSizeUpdate,
    onBeforeInit,
@@ -95,7 +94,6 @@ export const useBrush = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      samples,
       isSizeUpdate,
       ...renderTargetOptions,
    });
