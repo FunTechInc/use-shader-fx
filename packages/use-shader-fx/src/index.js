@@ -31,7 +31,10 @@ export * from "./fxs/effects/useWave";
 
 // misc
 export * from "./fxs/misc/useChromaKey";
-export * from "./fxs/misc/useBlank";
+
+// blank
+export * from "./fxs/blank/useBlank";
+export * from "./fxs/blank/useRawBlank";
 
 // 3D
 export * from "./fxs/3D/useMorphParticles";

@@ -500,11 +500,12 @@ return (
 
 👉 [morphParticles demo](https://use-shader-fx.vercel.app/useMorphParticles) 👈
 
-# useBlank
+# useBlank / useRawBlank
 
 By default, it is a blank canvas with nothing drawn on it. You can customise the shaders using `onBeforeInit`.
 
 Fragment shaders have `uTexture`,`uBackbuffer`,`uTime`,`uPointer` and `uResolution` as default uniforms.
+`useRawBlank` is more raw, default uniforms is only `uResolution`.
 
 ```tsx
 const [updateBlank, _, { output: blank, material }] = useBlank({
