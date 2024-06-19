@@ -9,17 +9,7 @@ import {
    useLoader,
    createPortal,
 } from "@react-three/fiber";
-import {
-   useDoubleFBO,
-   useSingleFBO,
-   useFluid,
-   useCoverTexture,
-   useMotionBlur,
-   useSimpleBlur,
-   usePointer,
-   useNoise,
-   useCreateWobble3D,
-} from "@/packages/use-shader-fx/src";
+import { useRawBlank } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
 import { OrbitControls, useVideoTexture } from "@react-three/drei";
 
@@ -28,57 +18,61 @@ extend({ FxMaterial });
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
 
-   // /FT_Ch02-comp.mp4
-   // http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
-   const funkun_mov = useVideoTexture("/FT_Ch02-comp.mp4", {
-      width: 1280,
-      height: 720,
-   });
    const [funkun] = useLoader(THREE.TextureLoader, ["/funkun.jpg"]);
 
-   const [updateNoise, setNoise, { output: noise }] = useNoise({
+   const [update, set, { output }] = useRawBlank({
       size,
-      dpr: 0.2,
-   });
-   setNoise({
-      noiseOctaves: 1,
-      fbmOctaves: 1,
-      warpOctaves: 1,
-      timeStrength: 1,
-      scale: 2000,
-   });
-
-   const [updateWobble, wobble] = useCreateWobble3D({
-      materialParameters: {
-         color: "hotpink",
-         // displacementMap: noise,
-         // displacementScale: 2,
+      dpr: 2,
+      onBeforeInit: (param) => {
+         Object.assign(param.uniforms, {
+            uTexture: { value: funkun },
+            uTime: { value: 0 },
+         });
+         param.fragmentShader = param.fragmentShader.replace(
+            "#usf <uniforms>",
+            `
+					uniform sampler2D uTexture;
+					uniform float uTime;
+				`
+         );
+         param.fragmentShader = param.fragmentShader.replace(
+            "#usf <main>",
+            `
+					vec2 uv = vUv;
+					vec2 perDivSize = vec2(20.) / uResolution;
+					vec4 outColor = vec4(
+						texture2D(uTexture, uv + perDivSize * vec2(-1.0, -1.0)) +
+						texture2D(uTexture, uv + perDivSize * vec2(0.0, -1.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(1.0, -1.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(-1.0, 0.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(0.0,  0.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(1.0,  0.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(-1.0, 1.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(0.0,  1.0)) + 
+						texture2D(uTexture, uv + perDivSize * vec2(1.0,  1.0))
+						) / 9.0;
+					usf_FragColor = outColor;
+					usf_FragColor.r += sin(uTime);
+				`
+         );
       },
    });
 
-   updateWobble(null, {
-      // wobbleStrength: 0.0,
-      // colorMix: 0,
-   });
-
    useFrame((state) => {
-      updateWobble(state);
-      // updateNoise(state);
+      update(
+         state,
+         { hofsehfgose: 2 },
+         {
+            uTime: state.clock.getElapsedTime(),
+         }
+      );
    });
 
    return (
       <>
          <mesh>
-            <directionalLight
-               color={"white"}
-               position={[0.25, 2, 3]}
-               intensity={2}
-            />
-            <ambientLight intensity={1} />
-            <primitive object={wobble.mesh} />
-            {/* <icosahedronGeometry args={[2, 20]} />
-            <meshPhysicalMaterial color={"hotpink"} displacementMap={noise} /> */}
-            <OrbitControls />
+            <planeGeometry args={[2, 2]} />
+            <fxMaterial u_fx={output} key={FxMaterial.key} />
          </mesh>
       </>
    );
