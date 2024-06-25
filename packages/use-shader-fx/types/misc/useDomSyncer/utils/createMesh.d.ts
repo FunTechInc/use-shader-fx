@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { DomSyncerParams } from "../";
-import { Size } from "@react-three/fiber";
-import { MaterialProps } from "../../../fxs/types";
+import { MaterialProps, Size } from "../../../fxs/types";
 export declare class DomSyncerMaterial extends THREE.ShaderMaterial {
     uniforms: {
         u_texture: {

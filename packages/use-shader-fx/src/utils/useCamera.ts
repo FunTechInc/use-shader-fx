@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useResolution } from "./useResolution";
 import { useMemo } from "react";
-import { Size } from "@react-three/fiber";
+import { Size } from "../fxs/types";
 
 const getCameraProps = (width: number, height: number) => {
    const frustumSize = height;

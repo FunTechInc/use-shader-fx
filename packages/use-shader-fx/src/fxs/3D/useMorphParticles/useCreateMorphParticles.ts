@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Size, RootState } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
 import {
    InteractiveMesh,
    MorphParticlePoints,
@@ -14,7 +14,7 @@ import {
 } from "../../../utils/setUniforms";
 import { useCallback, useMemo } from "react";
 import { Create3DHooksProps } from "../types";
-import { Dpr } from "../../types";
+import { Dpr, Size } from "../../types";
 import { getDpr } from "../../../utils/getDpr";
 
 export type UseCreateMorphParticlesProps = {

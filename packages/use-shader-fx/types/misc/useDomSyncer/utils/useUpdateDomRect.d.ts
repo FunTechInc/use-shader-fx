@@ -1,8 +1,8 @@
 /// <reference types="react" />
 import * as THREE from "three";
 import { DomSyncerParams } from "..";
-import { Size } from "@react-three/fiber";
 import { CustomParams } from "../../../utils/setUniforms";
+import { Size } from "../../../fxs/types";
 type UpdateDomRect = ({ params, customParams, size, resolutionRef, scene, isIntersectingRef, }: {
     params: DomSyncerParams;
     customParams?: CustomParams;

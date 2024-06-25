@@ -97,7 +97,10 @@ export const Playground = ({
       dpr: viewport.dpr,
    });
    const [updateBlank, _, { output: blank }] = useBlank({
-      size,
+      size: {
+         width: size.width,
+         height: size.height,
+      },
       dpr: viewport.dpr,
       onBeforeInit: useCallback((params: OnBeforeInitParameters) => {
          Object.assign(params.uniforms, {

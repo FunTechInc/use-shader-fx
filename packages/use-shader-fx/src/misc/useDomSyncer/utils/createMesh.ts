@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import { DomSyncerParams } from "../";
-import { Size } from "@react-three/fiber";
 import vertexShader from "../shader/main.vert";
 import fragmentShader from "../shader/main.frag";
-import { MaterialProps } from "../../../fxs/types";
+import { MaterialProps, Size } from "../../../fxs/types";
 import { MATERIAL_BASIC_PARAMS } from "../../../libs/constants";
 import { createMaterialParameters } from "../../../utils/createMaterialParameters";
 

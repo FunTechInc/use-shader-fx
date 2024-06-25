@@ -8,8 +8,7 @@ import { ClearMaterial } from "./materials/useClearMaterial";
 import { GradientSubtractMaterial } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial } from "./materials/useSplatMaterial";
 import { CustomParams } from "../../../utils/setUniforms";
-import { Size } from "@react-three/fiber";
-import { MaterialProps } from "../../types";
+import { MaterialProps, Size } from "../../types";
 type TMaterials = AdvectionMaterial | DivergenceMaterial | CurlMaterial | PressureMaterial | ClearMaterial | GradientSubtractMaterial | SplatMaterial;
 export type FluidMaterials = {
     vorticityMaterial: VorticityMaterial;

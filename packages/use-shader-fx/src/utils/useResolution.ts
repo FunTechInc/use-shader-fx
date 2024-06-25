@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { useMemo } from "react";
-import { Size } from "@react-three/fiber";
+import { Size } from "../fxs/types";
 
 /**
  * @params dpr if dpr is set, it returns the resolution which is size multiplied by dpr.

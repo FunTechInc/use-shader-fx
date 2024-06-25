@@ -3,28 +3,7 @@ import * as THREE from "three";
 export const rewriteVertexShader = (
    parameters: THREE.WebGLProgramParametersWithUniforms
 ) => {
-   parameters.vertexShader = parameters.vertexShader.replace(
-      "void main() {",
-      `
-			uniform float uTime;
-			uniform float uWobblePositionFrequency;
-			uniform float uWobbleTimeFrequency;
-			uniform float uWobbleStrength;
-			uniform float uWarpPositionFrequency;
-			uniform float uWarpTimeFrequency;
-			uniform float uWarpStrength;
-			varying float vWobble;
-			varying vec2 vPosition;
-			
-			// edge
-			varying vec3 vEdgeNormal;
-			varying vec3 vEdgeViewPosition;
-
-			#usf <wobble3D>
-
-			void main() {
-		`
-   );
+   const isDepth = parameters.shaderType === "MeshDepthMaterial";
 
    parameters.vertexShader = parameters.vertexShader.replace(
       "#include <beginnormal_vertex>",
@@ -40,12 +19,34 @@ export const rewriteVertexShader = (
       "#include <begin_vertex>",
       `
 			vec3 transformed = usf_Position;
+			#ifdef USE_ALPHAHASH
+			vPosition = vec3( position );
+			#endif
 		`
    );
 
    parameters.vertexShader = parameters.vertexShader.replace(
       "void main() {",
       `
+		uniform float uTime;
+		uniform float uWobblePositionFrequency;
+		uniform float uWobbleTimeFrequency;
+		uniform float uWobbleStrength;
+		uniform float uWarpPositionFrequency;
+		uniform float uWarpTimeFrequency;
+		uniform float uWarpStrength;
+
+		${isDepth ? "attribute vec4 tangent;" : ""}
+		
+		varying float vWobble;
+		varying vec2 vPosition;
+		
+		// edge
+		varying vec3 vEdgeNormal;
+		varying vec3 vEdgeViewPosition;
+
+		#usf <wobble3D>
+
 		void main() {
 		
 			vec3 usf_Position = position;

@@ -13,8 +13,8 @@ type UseCreateWobble3DReturn<T> = [
     UpdateUniform,
     {
         mesh: THREE.Mesh;
-        depthMaterial: THREE.MeshDepthMaterial;
+        depthMaterial: THREE.MeshDepthMaterial | null;
     }
 ];
-export declare const useCreateWobble3D: <T extends WobbleMaterialConstructor>({ scene, geometry, isCustomTransmission, baseMaterial, materialParameters, onBeforeInit, depthOnBeforeInit, }: UseCreateWobble3DProps & Create3DHooksProps & WobbleMaterialProps<T>) => UseCreateWobble3DReturn<T>;
+export declare const useCreateWobble3D: <T extends WobbleMaterialConstructor>({ scene, geometry, isCustomTransmission, baseMaterial, materialParameters, depth, onBeforeInit, depthOnBeforeInit, }: UseCreateWobble3DProps & Create3DHooksProps & WobbleMaterialProps<T>) => UseCreateWobble3DReturn<T>;
 export {};

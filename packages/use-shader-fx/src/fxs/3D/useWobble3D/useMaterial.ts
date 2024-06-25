@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { WOBBLE3D_PARAMS } from ".";
 import { MaterialProps, OnBeforeInitParameters } from "../../types";
 import { createMaterialParameters } from "../../../utils/createMaterialParameters";
@@ -50,6 +50,8 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor>
     * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
     * */
    isCustomTransmission?: boolean;
+   /** Whether to initialise `MeshDepthMaterial` or not , default : `false` */
+   depth?: boolean;
 }
 
 export const useMaterial = <T extends WobbleMaterialConstructor>({
@@ -58,6 +60,7 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
    isCustomTransmission = false,
    onBeforeInit,
    depthOnBeforeInit,
+   depth = false,
 }: WobbleMaterialProps<T>) => {
    const { material, depthMaterial } = useMemo(() => {
       const mat = new (baseMaterial || THREE.MeshPhysicalMaterial)(
@@ -129,15 +132,18 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       /*===============================================
 		depthMaterial
 		===============================================*/
-      const depthMat = new THREE.MeshDepthMaterial({
-         depthPacking: THREE.RGBADepthPacking,
-      });
-      depthMat.onBeforeCompile = (parameters) => {
-         Object.assign(parameters.uniforms, mat.userData.uniforms);
-         rewriteVertexShader(parameters);
-         createMaterialParameters(parameters, depthOnBeforeInit);
-      };
-      depthMat.needsUpdate = true;
+      let depthMat = null;
+      if (depth) {
+         depthMat = new THREE.MeshDepthMaterial({
+            depthPacking: THREE.RGBADepthPacking,
+         });
+         depthMat.onBeforeCompile = (parameters) => {
+            Object.assign(parameters.uniforms, mat.userData.uniforms);
+            rewriteVertexShader(parameters);
+            createMaterialParameters(parameters, depthOnBeforeInit);
+         };
+         depthMat.needsUpdate = true;
+      }
 
       return { material: mat, depthMaterial: depthMat };
    }, [
@@ -146,7 +152,15 @@ export const useMaterial = <T extends WobbleMaterialConstructor>({
       onBeforeInit,
       depthOnBeforeInit,
       isCustomTransmission,
+      depth,
    ]);
+
+   // Only the depthMaterial is disposed of because the material is disposed of by useAddObject.
+   useEffect(() => {
+      return () => {
+         if (depthMaterial) depthMaterial.dispose();
+      };
+   }, [depthMaterial]);
 
    return {
       material: material as Wobble3DMaterial,

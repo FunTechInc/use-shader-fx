@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useResolution } from "./useResolution";
-import { Size } from "@react-three/fiber";
+import { Size } from "../fxs/types";
 
 export const FBO_DEFAULT_OPTION: THREE.RenderTargetOptions = {
    depthBuffer: false,

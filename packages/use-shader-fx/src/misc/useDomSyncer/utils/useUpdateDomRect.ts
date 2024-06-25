@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { DomSyncerParams } from "..";
-import { Size } from "@react-three/fiber";
 import {
    CustomParams,
    setCustomUniform,
@@ -8,6 +7,7 @@ import {
 } from "../../../utils/setUniforms";
 import { DomSyncerMaterial } from "./createMesh";
 import { useCallback, useRef } from "react";
+import { Size } from "../../../fxs/types";
 
 type UpdateDomRect = ({
    params,

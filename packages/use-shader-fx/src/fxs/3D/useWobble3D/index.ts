@@ -51,7 +51,7 @@ export type Wobble3DParams = {
 export type Wobble3DObject = {
    scene: THREE.Scene;
    mesh: THREE.Mesh;
-   depthMaterial: THREE.MeshDepthMaterial;
+   depthMaterial: THREE.MeshDepthMaterial | null;
    renderTarget: THREE.WebGLRenderTarget;
    output: THREE.Texture;
 };
@@ -94,6 +94,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
    isCustomTransmission,
    onBeforeInit,
    depthOnBeforeInit,
+   depth,
 }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>): HooksReturn<
    Wobble3DParams,
    Wobble3DObject,
@@ -111,6 +112,7 @@ export const useWobble3D = <T extends WobbleMaterialConstructor>({
       isCustomTransmission,
       onBeforeInit,
       depthOnBeforeInit,
+      depth,
    });
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
