@@ -4,9 +4,8 @@ import fragmentShader from "./shader/main.frag";
 import { useMemo } from "react";
 import { useResolution } from "../../../utils/useResolution";
 import { setUniform } from "../../../utils/setUniforms";
-import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
-import { MaterialProps } from "../../types";
+import { MaterialProps, Size } from "../../types";
 import {
    DEFAULT_TEXTURE,
    MATERIAL_BASIC_PARAMS,

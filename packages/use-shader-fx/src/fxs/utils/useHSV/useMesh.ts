@@ -2,9 +2,8 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useMemo } from "react";
-import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
-import { MaterialProps } from "../../types";
+import { MaterialProps, Size } from "../../types";
 import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,

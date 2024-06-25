@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { MaterialProps } from "../../types";
-import { Size } from "@react-three/fiber";
+import { MaterialProps, Size } from "../../types";
 export declare class BlankMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTexture: {

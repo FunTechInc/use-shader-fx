@@ -1,5 +1,9 @@
 import * as THREE from "three";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
+export type Size = {
+    width: number;
+    height: number;
+};
 export type Dpr = number | {
     /** you can set whether `dpr` affects `shader`. default : `false` */
     shader?: false | number;
@@ -21,8 +25,9 @@ export type MaterialProps = {
     onBeforeInit?: (parameters: OnBeforeInitParameters) => void;
 };
 export interface HooksProps extends MaterialProps {
+    /** Width,Height in pixels, or `size` from r3f */
     size: Size;
-    /** Pixel-ratio, use window.devicePixelRatio or viewport.dpr from r3f */
+    /** Pixel-ratio, use `window.devicePixelRatio` or viewport.dpr from r3f */
     dpr: Dpr;
     /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
     isSizeUpdate?: boolean;

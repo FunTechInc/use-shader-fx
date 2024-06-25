@@ -116,7 +116,13 @@ import { useFluid } from "@funtech-inc/use-shader-fx";
 
 export const Home = () => {
    const { size } = useThree();
-   const [updateFluid, , { output }] = useFluid({ size, dpr: 1 });
+   const [updateFluid, , { output }] = useFluid({
+      size: {
+         width: size.width,
+         height: size.height,
+      },
+      dpr: 1,
+   });
    useFrame((rootState) => updateFluid(rootState));
    return (
       <mesh>

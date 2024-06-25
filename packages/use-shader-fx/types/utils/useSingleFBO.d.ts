@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
+import { Size } from "../fxs/types";
 export declare const FBO_DEFAULT_OPTION: THREE.RenderTargetOptions;
 export type UseFboProps = {
     scene: THREE.Scene;

@@ -4,9 +4,8 @@ import { useResolution } from "../../../utils/useResolution";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { setUniform } from "../../../utils/setUniforms";
-import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
-import { MaterialProps } from "../../types";
+import { MaterialProps, Size } from "../../types";
 import {
    MATERIAL_BASIC_PARAMS,
    DEFAULT_TEXTURE,

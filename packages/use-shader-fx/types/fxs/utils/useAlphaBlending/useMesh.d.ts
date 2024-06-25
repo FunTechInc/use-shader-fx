@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Size } from "@react-three/fiber";
-import { MaterialProps } from "../../types";
+import { MaterialProps, Size } from "../../types";
 export declare class AlphaBlendingMaterial extends THREE.ShaderMaterial {
     uniforms: {
         uTexture: {

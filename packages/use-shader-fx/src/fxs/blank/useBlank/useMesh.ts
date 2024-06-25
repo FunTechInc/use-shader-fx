@@ -3,8 +3,7 @@ import * as THREE from "three";
 import vertexShader from "./shader/main.vert";
 import fragmentShader from "./shader/main.frag";
 import { useAddObject } from "../../../utils/useAddObject";
-import { MaterialProps } from "../../types";
-import { Size } from "@react-three/fiber";
+import { MaterialProps, Size } from "../../types";
 import { setUniform, useResolution } from "../../..";
 import {
    MATERIAL_BASIC_PARAMS,

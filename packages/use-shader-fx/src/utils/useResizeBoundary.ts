@@ -1,5 +1,5 @@
 import { useMemo, useRef } from "react";
-import { Size } from "@react-three/fiber";
+import { Size } from "../fxs/types";
 
 const checkUpdate = (
    currentW: number,

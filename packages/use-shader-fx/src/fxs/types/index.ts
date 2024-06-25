@@ -1,5 +1,7 @@
 import * as THREE from "three";
-import { RootState, Size } from "@react-three/fiber";
+import { RootState } from "@react-three/fiber";
+
+export type Size = { width: number; height: number };
 
 export type Dpr =
    | number
@@ -15,6 +17,7 @@ export type OnBeforeInitParameters = {
    fragmentShader: string;
    vertexShader: string;
 };
+
 export type MaterialProps = {
    /**
     * An optional callback that is executed immediately before the shader program is initialised. This function is called with the shader source code as a parameter. Useful for the modification of built-in materials.
@@ -24,8 +27,9 @@ export type MaterialProps = {
 };
 
 export interface HooksProps extends MaterialProps {
+   /** Width,Height in pixels, or `size` from r3f */
    size: Size;
-   /** Pixel-ratio, use window.devicePixelRatio or viewport.dpr from r3f */
+   /** Pixel-ratio, use `window.devicePixelRatio` or viewport.dpr from r3f */
    dpr: Dpr;
    /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
    isSizeUpdate?: boolean;

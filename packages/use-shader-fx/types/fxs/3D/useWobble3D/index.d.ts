@@ -45,7 +45,7 @@ export type Wobble3DParams = {
 export type Wobble3DObject = {
     scene: THREE.Scene;
     mesh: THREE.Mesh;
-    depthMaterial: THREE.MeshDepthMaterial;
+    depthMaterial: THREE.MeshDepthMaterial | null;
     renderTarget: THREE.WebGLRenderTarget;
     output: THREE.Texture;
 };
@@ -53,4 +53,4 @@ export declare const WOBBLE3D_PARAMS: Wobble3DParams;
 /**
  * @link https://github.com/FunTechInc/use-shader-fx
  */
-export declare const useWobble3D: <T extends WobbleMaterialConstructor>({ size, dpr, renderTargetOptions, isSizeUpdate, camera, geometry, baseMaterial, materialParameters, isCustomTransmission, onBeforeInit, depthOnBeforeInit, }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>) => HooksReturn<Wobble3DParams, Wobble3DObject, CustomParams>;
+export declare const useWobble3D: <T extends WobbleMaterialConstructor>({ size, dpr, renderTargetOptions, isSizeUpdate, camera, geometry, baseMaterial, materialParameters, isCustomTransmission, onBeforeInit, depthOnBeforeInit, depth, }: HooksProps3D & UseCreateWobble3DProps & WobbleMaterialProps<T>) => HooksReturn<Wobble3DParams, Wobble3DObject, CustomParams>;

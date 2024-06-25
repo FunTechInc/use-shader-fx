@@ -78,9 +78,11 @@ export interface WobbleMaterialProps<T extends WobbleMaterialConstructor> extend
      * @link https://github.com/pmndrs/drei?tab=readme-ov-file#meshtransmissionmaterial
      * */
     isCustomTransmission?: boolean;
+    /** Whether to initialise `MeshDepthMaterial` or not , default : `false` */
+    depth?: boolean;
 }
-export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, isCustomTransmission, onBeforeInit, depthOnBeforeInit, }: WobbleMaterialProps<T>) => {
+export declare const useMaterial: <T extends WobbleMaterialConstructor>({ baseMaterial, materialParameters, isCustomTransmission, onBeforeInit, depthOnBeforeInit, depth, }: WobbleMaterialProps<T>) => {
     material: Wobble3DMaterial;
-    depthMaterial: THREE.MeshDepthMaterial;
+    depthMaterial: THREE.MeshDepthMaterial | null;
 };
 export {};

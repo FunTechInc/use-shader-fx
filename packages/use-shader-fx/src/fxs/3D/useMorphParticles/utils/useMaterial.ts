@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { useMemo } from "react";
-import { Size } from "@react-three/fiber";
 import { useResolution } from "../../../../utils/useResolution";
 import { setUniform } from "../../../../utils/setUniforms";
 import vertexShader from "../shaders/main.vert";
@@ -14,7 +13,7 @@ import {
 import { rewriteVertexShader } from "./rewriteVertexShader";
 import { modifyAttributes } from "./modifyAttributes";
 import { rewriteFragmentShader } from "./rewriteFragmentShader";
-import { MaterialProps } from "../../../types";
+import { MaterialProps, Size } from "../../../types";
 import { createMaterialParameters } from "../../../../utils/createMaterialParameters";
 
 export class MorphParticlesMaterial extends THREE.ShaderMaterial {

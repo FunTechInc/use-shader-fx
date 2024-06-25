@@ -26,9 +26,8 @@ import {
 } from "./materials/useGradientSubtractMaterial";
 import { SplatMaterial, useSplatMaterial } from "./materials/useSplatMaterial";
 import { CustomParams, setUniform } from "../../../utils/setUniforms";
-import { Size } from "@react-three/fiber";
 import { useAddObject } from "../../../utils/useAddObject";
-import { MaterialProps } from "../../types";
+import { MaterialProps, Size } from "../../types";
 
 type TMaterials =
    | AdvectionMaterial
