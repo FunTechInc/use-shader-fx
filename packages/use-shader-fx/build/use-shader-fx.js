@@ -4728,6 +4728,10 @@ const kn = ({
   interpolate(e, t, n, r = 1e-6) {
     const s = e + (t - e) * n;
     return Math.abs(s) < r ? 0 : s;
+  },
+  smoothstep(e, t, n) {
+    const r = Math.min(Math.max((n - e) / (t - e), 0), 1);
+    return r * r * (3 - 2 * r);
   }
 });
 export {
