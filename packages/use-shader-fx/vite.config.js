@@ -2,6 +2,9 @@ import path from "path";
 import glsl from "vite-plugin-glsl";
 import { defineConfig } from "vite";
 
+const root = process.platform === "win32" ? path.resolve("/") : "/";
+const external = (id) => !id.startsWith(".") && !id.startsWith(root);
+
 export default defineConfig({
    root: "src",
    plugins: [glsl()],
@@ -12,22 +15,9 @@ export default defineConfig({
          fileName: "use-shader-fx",
       },
       rollupOptions: {
-         external: [
-            "react",
-            "@react-three/fiber",
-            "react-dom",
-            "three",
-            "three-stdlib",
-         ],
+         external,
          output: {
             dir: "./build",
-            globals: {
-               react: "React",
-               "@react-three/fiber": "ReactThreeFiber",
-               "react-dom": "ReactDOM",
-               three: "THREE",
-               "three-stdlib": "THREEStdlib",
-            },
          },
       },
       sourcemap: true,
