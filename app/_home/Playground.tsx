@@ -12,7 +12,7 @@ import {
    HSVParams,
    MarbleParams,
    useBlank,
-} from "@/packages/use-shader-fx/src";
+} from "@/packages/use-shader-fx/src/legacy";
 
 import { Environment, OrbitControls } from "@react-three/drei";
 import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
