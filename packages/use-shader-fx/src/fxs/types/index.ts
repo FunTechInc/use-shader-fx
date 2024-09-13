@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { RootState } from "@react-three/fiber";
 
 export type Size = { width: number; height: number };
 
@@ -12,27 +11,24 @@ export type Dpr =
         fbo?: false | number;
      };
 
-export type OnBeforeInitParameters = {
-   uniforms: { [uniform: string]: THREE.IUniform };
-   fragmentShader: string;
-   vertexShader: string;
+export type RootState = {
+   /** The instance of the renderer */
+   gl: THREE.WebGLRenderer;
+   /** Default clock */
+   clock: THREE.Clock;
+   /** Normalized event coordinates */
+   pointer: THREE.Vector2;
+   /** Reactive pixel-size of the canvas */
+   size: Size;
 };
 
-export type MaterialProps = {
-   /**
-    * An optional callback that is executed immediately before the shader program is initialised. This function is called with the shader source code as a parameter. Useful for the modification of built-in materials.
-    * @param parameters {fragmentShader, vertexShader, uniforms}
-    */
-   onBeforeInit?: (parameters: OnBeforeInitParameters) => void;
-};
-
-export interface HooksProps extends MaterialProps {
+export interface HooksProps {
    /** Width,Height in pixels, or `size` from r3f */
    size: Size;
    /** Pixel-ratio, use `window.devicePixelRatio` or viewport.dpr from r3f */
    dpr: Dpr;
    /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
-   isSizeUpdate?: boolean;
+   sizeUpdate?: boolean;
    /**
     * @type `THREE.RenderTargetOptions`
     * @param depthBuffer Unlike the default in three.js, the default is `false`.
@@ -40,32 +36,32 @@ export interface HooksProps extends MaterialProps {
    renderTargetOptions?: THREE.RenderTargetOptions;
 }
 
+export type OnInit<T> = (material: T) => void;
+
 /**
  * @returns {HooksReturn<T, O, C>}
- *  updateFx - Functions to update parameters and render.
- *  updateParams - Function to update parameters only.
- *  fxObject - An object containing various FX components such as scene, camera, material, and render target.
+ *  render - Functions to update parameters and render.
+ *  setValues - Function to update parameters only.
+ *  texture - テクスチャー
+ *  material - material
+ *  scene - scene
  *
- * @template T The type for the parameters of the hooks.
- * @template O The type for the FX object.
- * @template C The type for the custom parameters.
+ * @template V The type for the FX parameters.
+ * @template O The type for the material.
  */
-export type HooksReturn<T, O, C> = [
+export type HooksReturn<V, M> = {
    /**
     * Functions to update parameters and render.
     * @param rootState RootState
-    * @param newParams params of fxHooks
-    * @param customParams custom params, added to `uniforms` during initialisation
+    * @param newValues params of fxHooks
     */
-   (rootState: RootState, newParams?: T, customParams?: C) => THREE.Texture,
+   render: (rootState: RootState, newValues?: V) => THREE.Texture;
    /**
     * Function to update parameters only.
-    * @param newParams params of fxHooks
-    * @param customParams custom params, added to `uniforms` during initialisation
+    * @param newValues params of fxHooks
     */
-   (newParams?: T, customParams?: C) => void,
-   /**
-    * Contains each part of FX such as scene, camera, material, render target, etc.
-    */
-   O
-];
+   setValues: (newValues: V) => void;
+   texture: THREE.Texture;
+   material: M;
+   scene: THREE.Scene;
+};

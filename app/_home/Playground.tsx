@@ -12,10 +12,10 @@ import {
    HSVParams,
    MarbleParams,
    useBlank,
-} from "@/packages/use-shader-fx/src";
+} from "@/packages/use-shader-fx/legacy";
 
 import { Environment, OrbitControls } from "@react-three/drei";
-import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
+// import { OnBeforeInitParameters } from "@/packages/use-shader-fx/src/fxs/types";
 
 export const CONFIG = {
    marble: {
@@ -102,7 +102,7 @@ export const Playground = ({
          height: size.height,
       },
       dpr: viewport.dpr,
-      onBeforeInit: useCallback((params: OnBeforeInitParameters) => {
+      onBeforeInit: useCallback((params: any) => {
          Object.assign(params.uniforms, {
             u_noise: {
                value: marble,

@@ -1,11 +1,6 @@
 import * as THREE from "three";
 import { useCallback, useEffect, useMemo } from "react";
-import {
-   FBO_DEFAULT_OPTION,
-   UseFboProps,
-   renderFBO,
-   RenderProps,
-} from "./useSingleFBO";
+import { FBO_DEFAULT_OPTION, UseFboProps, renderFBO } from "./useSingleFBO";
 import { useResolution } from "./useResolution";
 
 export type DoubleRenderTarget = {
@@ -17,8 +12,8 @@ interface WebGLDoubleRenderTarget extends DoubleRenderTarget {
    swap: () => void;
 }
 
-export type DoubleFBOUpdateFunction = (
-   renderProps: RenderProps,
+type FBOUpdateFunction = (
+   gl: THREE.WebGLRenderer,
    /**  call before FBO is rendered */
    onBeforeRender?: ({
       read,
@@ -31,7 +26,7 @@ export type DoubleFBOUpdateFunction = (
 
 type UseDoubleFBOReturn = [
    { read: THREE.WebGLRenderTarget; write: THREE.WebGLRenderTarget },
-   DoubleFBOUpdateFunction
+   FBOUpdateFunction
 ];
 
 /**
@@ -44,7 +39,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
       camera,
       size,
       dpr = false,
-      sizeUpdate = false,
+      isSizeUpdate = false,
       depth = false,
       ...renderTargetOptions
    } = props;
@@ -86,7 +81,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
-   if (sizeUpdate) {
+   if (isSizeUpdate) {
       renderTarget.read?.setSize(resolution.x, resolution.y);
       renderTarget.write?.setSize(resolution.x, resolution.y);
    }
@@ -99,16 +94,17 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
       };
    }, [renderTarget]);
 
-   const updateRenderTarget: DoubleFBOUpdateFunction = useCallback(
-      (renderProps, onBeforeRender) => {
+   const updateRenderTarget: FBOUpdateFunction = useCallback(
+      (gl, onBeforeRender) => {
          const fbo = renderTarget;
          renderFBO({
-            ...renderProps,
-            scene: renderProps.scene || scene,
-            camera: renderProps.camera || camera,
+            gl,
+            scene,
+            camera,
             fbo: fbo.write!,
             onBeforeRender: () =>
-               onBeforeRender?.({
+               onBeforeRender &&
+               onBeforeRender({
                   read: fbo.read!.texture,
                   write: fbo.write!.texture,
                }),
