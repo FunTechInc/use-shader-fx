@@ -1,8 +1,9 @@
 import * as THREE from "three";
-import vertex from "./shaders/face.vert";
+import vertex from "./shaders/vertex";
 import fragment from "./shaders/advection.frag";
 import { FxMaterial } from "../../materials/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
+import { DeltaTime } from "..";
 
 export class AdvectionMaterial extends FxMaterial {
    static get type() {
@@ -25,10 +26,10 @@ export class AdvectionMaterial extends FxMaterial {
          texelsize: { value: new THREE.Vector2() },
          ratio: { value: new THREE.Vector2() },
          velocity: { value: DEFAULT_TEXTURE },
-         dt: { value: 0.014 },
+         dt: { value: DeltaTime },
       };
 
-      this.vertexShader = vertex;
+      this.vertexShader = vertex.advection;
       this.fragmentShader = fragment;
 
       this.setUniformValues(uniformValues);

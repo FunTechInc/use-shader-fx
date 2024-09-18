@@ -2,7 +2,7 @@ precision highp float;
 precision highp int;
 
 varying vec2 vUv;
-uniform float uTime;
+uniform float tick;
 uniform float timeStrength;
 uniform int noiseOctaves;
 uniform int fbmOctaves;
@@ -70,7 +70,17 @@ float warp(vec2 x, float g,float time){
 	return val;
 }
 
+
+#usf <blendingUniforms>
+
 void main() {
-	float noise = warp(gl_FragCoord.xy * scale ,warpStrength,uTime * timeStrength);
-	gl_FragColor = vec4(vec3(noise),1.0);
+	float noise = warp(gl_FragCoord.xy * scale ,warpStrength,tick * timeStrength);
+	vec4 noiseColor = vec4(vec3(noise),1.0);
+
+	vec4 blendingDst = noiseColor;
+
+	#usf <blendingColor>
+	
+	gl_FragColor = blendingDst;
+
 }

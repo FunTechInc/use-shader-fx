@@ -1,29 +1,25 @@
 import * as THREE from "three";
 import { useCallback, useMemo } from "react";
-import { useCamera } from "../../utils/useCamera";
 import { UseFboProps, useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
-import { OnInit, RootState } from "../types";
-import { useAddObject } from "../../utils/useAddObject";
+import { RootState } from "../types";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
-import { useAdvection } from "./useAdvection";
-import { useSplat } from "./useSplat";
-import { useDivergence } from "./useDivergence";
-import { usePoisson } from "./usePoisson";
-import { usePressure } from "./usePressure";
+import { useAdvection } from "./scenes/useAdvection";
+import { useSplat } from "./scenes/useSplat";
+import { useDivergence } from "./scenes/useDivergence";
+import { usePoisson } from "./scenes/usePoisson";
+import { usePressure } from "./scenes/usePressure";
+
+export const DeltaTime = 0.015;
 
 export type FluidValues = {};
 
 /*===============================================
-- mause周りの修正
-- 境界の作成
-- リファクタリング
-	- vertexShader、普通でいいのでは？
-
-useAddObject を　useObject3Dに
-sceneにいれたり、useObject3Dをする部分を、useSceneにまとめる
-
+- 出力でcolormapとvelocitymapを選択できるみたいな仕組みにする
+- params
+ - velocity dissipation
+ - color dissipation (color map)
 ===============================================*/
 
 /**
@@ -31,24 +27,22 @@ sceneにいれたり、useObject3Dをする部分を、useSceneにまとめる
  *
  * It is a basic value noise with `fbm` and `domain warping`
  */
-export const useFluid = (
-   {
-      size,
-      dpr,
-      sizeUpdate,
-      renderTargetOptions,
-      ...values
-   }: HooksProps & FluidValues,
-   onInit?: OnInit<NoiseMaterial>
-): HooksReturn<FluidValues, NoiseMaterial> => {
+export const useFluid = ({
+   size,
+   dpr,
+   sizeUpdate,
+   renderTargetOptions,
+   ...values
+}: HooksProps & FluidValues): HooksReturn<FluidValues, NoiseMaterial> => {
    const _dpr = getDpr(dpr);
 
+   // fbos
    const fboProps = useMemo<UseFboProps>(
       () => ({
          dpr: _dpr.fbo,
          size,
          sizeUpdate,
-         type: THREE.FloatType,
+         type: THREE.HalfFloatType,
          ...renderTargetOptions,
       }),
       [size, _dpr.fbo, renderTargetOptions, sizeUpdate]
@@ -58,58 +52,71 @@ export const useFluid = (
    const [divergenceFBO, updateDivergenceFBO] = useSingleFBO(fboProps);
    const [pressureFBO, updatePressureFBO] = useDoubleFBO(fboProps);
 
-   const updateAdvection = useAdvection({
-      size,
-      dpr: _dpr.shader,
-      velocity: velocity_0.texture,
-      updateRenderTarget: updateVelocity_1,
-   });
-   const updateSplat = useSplat({
-      size,
-      dpr: _dpr.shader,
-      updateRenderTarget: updateVelocity_1,
-   });
-   const updateDivergence = useDivergence({
-      size,
-      dpr: _dpr.shader,
-      velocity: velocity_1.texture,
-      updateRenderTarget: updateDivergenceFBO,
-   });
-   const updatePoisson = usePoisson({
-      size,
-      dpr: _dpr.shader,
-      divergence: divergenceFBO.texture,
-      updateRenderTarget: updatePressureFBO,
-   });
-   const updatePressure = usePressure({
-      size,
-      dpr: _dpr.shader,
-      velocity: velocity_1.texture,
-      pressure: pressureFBO.read.texture,
-      updateRenderTarget: updateVelocity_0,
-   });
+   // scenes
+   const SceneSize = useMemo(() => ({ size, dpr: _dpr.shader }), [_dpr, size]);
+   const advection = useAdvection(
+      {
+         ...SceneSize,
+         velocity: velocity_0.texture,
+      },
+      updateVelocity_1
+   );
+   const splat = useSplat(
+      {
+         ...SceneSize,
+      },
+      updateVelocity_1
+   );
+   const divergence = useDivergence(
+      {
+         ...SceneSize,
+         velocity: velocity_1.texture,
+      },
+      updateDivergenceFBO
+   );
+   const poisson = usePoisson(
+      {
+         ...SceneSize,
+         divergence: divergenceFBO.texture,
+      },
+      updatePressureFBO
+   );
+   const pressure = usePressure(
+      {
+         ...SceneSize,
+         velocity: velocity_1.texture,
+         pressure: pressureFBO.read.texture,
+      },
+      updateVelocity_0
+   );
 
    const setValues = useCallback((newValues: FluidValues) => {
-      // material.setUniformValues(newValues);
+      // splat.material.force = newValues.force;
+      // bounce の設定
+      divergence.material.uniforms.isBounce.value = false;
+      poisson.material.uniforms.isBounce.value = false;
+      pressure.material.uniforms.isBounce.value = false;
    }, []);
 
    const render = useCallback(
       (rootState: RootState, newValues?: FluidValues) => {
-         updateAdvection(rootState);
-         updateSplat(rootState);
-         updateDivergence(rootState);
-         for (let i = 0; i < 32; i++) {
-            updatePoisson(rootState);
-         }
-         updatePressure(rootState);
+         newValues && setValues(newValues);
+
+         advection.render(rootState);
+         splat.render(rootState);
+         divergence.render(rootState);
+         poisson.render(rootState);
+         pressure.render(rootState);
+
          return velocity_0.texture;
       },
       [
-         updateAdvection,
-         updateDivergence,
-         updatePoisson,
-         updatePressure,
-         updateSplat,
+         setValues,
+         advection,
+         divergence,
+         poisson,
+         pressure,
+         splat,
          velocity_0.texture,
       ]
    );

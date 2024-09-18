@@ -9,10 +9,7 @@ type Object3DConstructor<T, M extends THREE.Material> = new (
 /**
  * Add geometry and material to Object3D and add them to scene.
  */
-export const useAddObject = <
-   T extends THREE.Object3D,
-   M extends THREE.Material
->(
+export const useObject3D = <T extends THREE.Object3D, M extends THREE.Material>(
    scene: THREE.Scene | false,
    geometry: THREE.BufferGeometry,
    material: M,

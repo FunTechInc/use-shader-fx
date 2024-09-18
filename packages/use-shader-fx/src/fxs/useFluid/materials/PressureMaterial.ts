@@ -1,8 +1,9 @@
 import * as THREE from "three";
-import vertex from "./shaders/face.vert";
+import vertex from "./shaders/vertex";
 import fragment from "./shaders/pressure.frag";
 import { FxMaterial } from "../../materials/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
+import { DeltaTime } from "..";
 
 export class PressureMaterial extends FxMaterial {
    static get type() {
@@ -11,6 +12,7 @@ export class PressureMaterial extends FxMaterial {
 
    uniforms: {
       texelsize: { value: THREE.Vector2 };
+      isBounce: { value: boolean };
       pressure: { value: THREE.Texture };
       velocity: { value: THREE.Texture };
       dt: { value: number };
@@ -23,12 +25,13 @@ export class PressureMaterial extends FxMaterial {
 
       this.uniforms = {
          texelsize: { value: new THREE.Vector2() },
+         isBounce: { value: true },
          pressure: { value: DEFAULT_TEXTURE },
          velocity: { value: DEFAULT_TEXTURE },
-         dt: { value: 0.014 },
+         dt: { value: DeltaTime },
       };
 
-      this.vertexShader = vertex;
+      this.vertexShader = vertex.main;
       this.fragmentShader = fragment;
 
       this.setUniformValues(uniformValues);

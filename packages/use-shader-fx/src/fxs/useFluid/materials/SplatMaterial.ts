@@ -1,13 +1,14 @@
 import * as THREE from "three";
-import vertex from "./shaders/splat.vert";
+import vertex from "./shaders/vertex";
 import fragment from "./shaders/splat.frag";
 import { FxMaterial } from "../../materials/FxMaterial";
-import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 export class SplatMaterial extends FxMaterial {
    static get type() {
       return "SplatMaterial";
    }
+
+   force: number;
 
    uniforms: {
       texelsize: { value: THREE.Vector2 };
@@ -21,14 +22,16 @@ export class SplatMaterial extends FxMaterial {
 
       this.type = SplatMaterial.type;
 
+      this.force = 30;
+
       this.uniforms = {
          texelsize: { value: new THREE.Vector2() },
-         force: { value: new THREE.Vector2(10, 10) },
+         force: { value: new THREE.Vector2(0, 0) },
          center: { value: new THREE.Vector2(0, 0) },
-         scale: { value: new THREE.Vector2(100, 100) },
+         scale: { value: new THREE.Vector2(80, 80) },
       };
 
-      this.vertexShader = vertex;
+      this.vertexShader = vertex.splat;
       this.fragmentShader = fragment;
 
       this.blending = THREE.AdditiveBlending;

@@ -1,17 +1,25 @@
 precision highp float;
+
+uniform vec2 texelsize;
 uniform sampler2D pressure;
 uniform sampler2D divergence;
-uniform vec2 texelsize;
+
 varying vec2 vUv;
+varying vec2 vL;
+varying vec2 vR;
+varying vec2 vT;
+varying vec2 vB;
 
 void main(){    
 
-	float p0 = texture2D(pressure, vUv+vec2(texelsize.x * 2.0,  0)).r;
-	float p1 = texture2D(pressure, vUv-vec2(texelsize.x * 2.0, 0)).r;
-	float p2 = texture2D(pressure, vUv+vec2(0, texelsize.y * 2.0 )).r;
-	float p3 = texture2D(pressure, vUv-vec2(0, texelsize.y * 2.0 )).r;
+	float L = texture2D(pressure, vL).r;
+	float R = texture2D(pressure, vR).r;
+	float B = texture2D(pressure, vB).r;
+	float T = texture2D(pressure, vT).r;
+
 	float div = texture2D(divergence, vUv).r;
 	
-	float newP = (p0 + p1 + p2 + p3) / 4.0 - div;
+	float newP = (L + R + B + T) / 4.0 - div;
+
 	gl_FragColor = vec4(newP);
 }

@@ -23,20 +23,7 @@ export class FxMaterial extends THREE.ShaderMaterial {
             return;
          }
 
-         const currentValue = curretUniform.value;
-
-         if (currentValue && currentValue.isColor) {
-            currentValue.set(newValue);
-         } else if (
-            currentValue &&
-            currentValue.isVector3 &&
-            newValue &&
-            newValue.isVector3
-         ) {
-            currentValue.copy(newValue);
-         } else {
-            curretUniform.value = newValue;
-         }
+         curretUniform.value = newValue;
       }
    }
 }

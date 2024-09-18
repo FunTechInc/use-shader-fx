@@ -1,0 +1,2 @@
+- fxMaterialでblendingの仕組みをつくる
+	- shaderChunk的にblendingのコードをshaderに追加する仕組み

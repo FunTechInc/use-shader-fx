@@ -2,6 +2,7 @@ precision highp float;
 
 uniform vec2 force;
 uniform vec2 center;
+
 varying vec2 vUv;
 
 void main(){

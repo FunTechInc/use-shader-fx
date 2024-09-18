@@ -40,13 +40,14 @@ export const renderFBO = ({
    onSwap?: () => void;
 } & RenderProps) => {
    if (!scene || !camera) return;
+   const clearCache = gl.autoClear;
+   gl.autoClear = clear;
    gl.setRenderTarget(fbo);
    onBeforeRender();
-   gl.autoClear = clear;
-   clear && gl.clear();
    gl.render(scene, camera);
    onSwap && onSwap();
    gl.setRenderTarget(null);
+   gl.autoClear = clearCache;
 };
 
 export type SingleFBOUpdateFunction = (

@@ -1,12 +1,18 @@
 import * as THREE from "three";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
-import { OnInit, RootState } from "../types";
-import { useAddObject } from "../../utils/useAddObject";
+import { RootState } from "../types";
 import { NoiseMaterial } from "./NoiseMaterial";
+import { useScene } from "../../utils/useScene";
+
+/*===============================================
+- textureのcoverする機能とかも入れたいか
+	- これをvertexで処理
+- cloneUniformとmergeUniformすればいいのかも。マテリアルの継承で。
+===============================================*/
 
 export type NoiseValues = {
    /** noise scale , default : `0.004` */
@@ -25,6 +31,14 @@ export type NoiseValues = {
    warpStrength?: number;
    /** you can get into the rhythm ♪ , default : `false` */
    beat?: number | false;
+
+   /*===============================================
+	blending
+	===============================================*/
+   fxBlendingSrc?: THREE.Texture;
+   uvBlending?: number;
+   alphaBlending?: number;
+   fxBlendingSrcResolution?: THREE.Vector2;
 };
 
 /**
@@ -32,32 +46,26 @@ export type NoiseValues = {
  *
  * It is a basic value noise with `fbm` and `domain warping`
  */
-export const useNoise = (
-   {
-      size,
-      dpr,
-      sizeUpdate,
-      renderTargetOptions,
-      ...values
-   }: HooksProps & NoiseValues,
-   onInit?: OnInit<NoiseMaterial>
-): HooksReturn<NoiseValues, NoiseMaterial> => {
+export const useNoise = ({
+   size,
+   dpr,
+   sizeUpdate,
+   renderTargetOptions,
+   fxBlending,
+   materialParameters,
+   ...values
+}: HooksProps & NoiseValues): HooksReturn<NoiseValues, NoiseMaterial> => {
    const _dpr = getDpr(dpr);
 
-   const scene = useMemo(() => new THREE.Scene(), []);
+   const { scene, material } = useScene({
+      size,
+      material: NoiseMaterial,
+      uniformValues: values,
+      fxBlending,
+      materialParameters,
+   });
 
    const camera = useCamera(size);
-
-   const geometry = useMemo(() => new THREE.PlaneGeometry(2, 2), []);
-
-   const material = useMemo(() => {
-      const _mat = new NoiseMaterial(values);
-      onInit && onInit(_mat);
-      return _mat;
-   }, [onInit, values]);
-
-   useAddObject(scene, geometry, material, THREE.Mesh);
-
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene,
       camera,
@@ -78,9 +86,9 @@ export const useNoise = (
       (rootState: RootState, newValues?: NoiseValues) => {
          const { gl, clock } = rootState;
          newValues && setValues(newValues);
-         material.uniforms.uTime.value =
+         material.uniforms.tick.value =
             newValues?.beat || clock.getElapsedTime();
-         return updateRenderTarget(gl);
+         return updateRenderTarget({ gl });
       },
       [setValues, updateRenderTarget, material]
    );
@@ -91,5 +99,6 @@ export const useNoise = (
       texture: renderTarget.texture,
       material,
       scene,
+      camera,
    };
 };

@@ -34,9 +34,9 @@ export interface HooksProps {
     * @param depthBuffer Unlike the default in three.js, the default is `false`.
     */
    renderTargetOptions?: THREE.RenderTargetOptions;
+   materialParameters?: THREE.MaterialParameters;
+   fxBlending?: boolean;
 }
-
-export type OnInit<T> = (material: T) => void;
 
 /**
  * @returns {HooksReturn<T, O, C>}
@@ -64,4 +64,5 @@ export type HooksReturn<V, M> = {
    texture: THREE.Texture;
    material: M;
    scene: THREE.Scene;
+   camera: THREE.Camera;
 };
