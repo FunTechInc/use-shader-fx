@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { BasicFx } from "../materials/FxBasicFxMaterial";
 
 export type Size = { width: number; height: number };
 
@@ -34,8 +35,7 @@ export interface HooksProps {
     * @param depthBuffer Unlike the default in three.js, the default is `false`.
     */
    renderTargetOptions?: THREE.RenderTargetOptions;
-   materialParameters?: THREE.MaterialParameters;
-   fxBlending?: boolean;
+   materialParameters?: THREE.ShaderMaterialParameters;
 }
 
 /**

@@ -1,31 +1,17 @@
 import * as THREE from "three";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
-import { NoiseMaterial } from "./NoiseMaterial";
+import { CoverTextureMaterial } from "./CoverTextureMaterial";
 import { useScene } from "../../utils/useScene";
 import { BasicFxValues } from "../materials/FxBasicFxMaterial";
 
-export type NoiseValues = {
-   /** noise scale , default : `0.004` */
-   scale?: number;
-   /** time factor default : `0.3` */
-   timeStrength?: number;
-   /** noiseOctaves, affects performance default : `2` */
-   noiseOctaves?: number;
-   /** fbmOctaves, affects performance default : `2` */
-   fbmOctaves?: number;
-   /** domain warping octaves , affects performance default : `2`  */
-   warpOctaves?: number;
-   /** direction of domain warping , default : `(2.0,2,0)` */
-   warpDirection?: THREE.Vector2;
-   /** strength of domain warping , default : `8.0` */
-   warpStrength?: number;
-   /** you can get into the rhythm ♪ , default : `false` */
-   beat?: number | false;
+export type CoverTextureValues = {
+   src?: THREE.Texture;
+   textureResolution?: THREE.Vector2;
 } & BasicFxValues;
 
 /**
@@ -33,18 +19,21 @@ export type NoiseValues = {
  *
  * It is a basic value noise with `fbm` and `domain warping`
  */
-export const useNoise = ({
+export const useCoverTexture = ({
    size,
    dpr,
    sizeUpdate,
    renderTargetOptions,
    materialParameters,
    ...uniformValues
-}: HooksProps & NoiseValues): HooksReturn<NoiseValues, NoiseMaterial> => {
+}: HooksProps & CoverTextureValues): HooksReturn<
+   CoverTextureValues,
+   CoverTextureMaterial
+> => {
    const _dpr = getDpr(dpr);
 
    const { scene, material } = useScene({
-      material: NoiseMaterial,
+      material: CoverTextureMaterial,
       uniformValues,
       materialParameters,
    });
@@ -60,18 +49,16 @@ export const useNoise = ({
    });
 
    const setValues = useCallback(
-      (newValues: NoiseValues) => {
+      (newValues: CoverTextureValues) => {
          material.setUniformValues(newValues);
       },
       [material]
    );
 
    const render = useCallback(
-      (rootState: RootState, newValues?: NoiseValues) => {
-         const { gl, clock } = rootState;
+      (rootState: RootState, newValues?: CoverTextureValues) => {
+         const { gl } = rootState;
          newValues && setValues(newValues);
-         material.uniforms.tick.value =
-            newValues?.beat || clock.getElapsedTime();
 
          material.update(rootState);
 

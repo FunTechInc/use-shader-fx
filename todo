@@ -1,2 +1,16 @@
-- fxMaterialでblendingの仕組みをつくる
-	- shaderChunk的にblendingのコードをshaderに追加する仕組み
+- coverTextureつくる
+- noiseをbaseFxにいれる
+- fluidを整える
+
+- srcBlending, dstBlendingをつくる
+	- blend srcでこのhookでblendingする
+	- このhookでblend dstをblendingする
+	- たぶん、basic_begin_fragmentとbasic_end_fragmentを作ればいいかな
+	- fxBlendingをmixSrc/mixDstに変更する
+
+
+- updateBasicFxでneedsUpdateしなくても更新できるはず。
+	- 実態はthis.versionを++してるだけだった！
+
+
+- ShaderのmixDstMap、mixSrcMapの命名が気持ちわるい

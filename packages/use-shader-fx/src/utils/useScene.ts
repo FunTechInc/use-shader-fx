@@ -1,12 +1,10 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { useObject3D } from "./useObject3D";
-import { useResolution } from "./useResolution";
-import { Size } from "../fxs/types";
 
 type MaterialConstructor<M extends THREE.ShaderMaterial> = new (
-   uniformValues: any,
-   materialParameters: THREE.MaterialParameters
+   uniformValues?: any,
+   materialParameters?: THREE.ShaderMaterialParameters
 ) => M;
 type GeometryConstructor = new (
    width: number,
@@ -14,19 +12,15 @@ type GeometryConstructor = new (
 ) => THREE.BufferGeometry;
 
 export const useScene = <M extends THREE.ShaderMaterial>({
-   size,
    material,
    uniformValues,
    materialParameters,
-   fxBlending,
    geometry = THREE.PlaneGeometry,
-   geometrySize = { width: 2, height: 2 },
+   geometrySize,
 }: {
-   size: Size;
    material: MaterialConstructor<M>;
    uniformValues?: any;
-   materialParameters?: THREE.MaterialParameters;
-   fxBlending?: boolean;
+   materialParameters?: THREE.ShaderMaterialParameters;
    geometry?: GeometryConstructor;
    geometrySize?: {
       width: number;
@@ -36,21 +30,14 @@ export const useScene = <M extends THREE.ShaderMaterial>({
    const scene = useMemo(() => new THREE.Scene(), []);
 
    const _geometry = useMemo(
-      () => new geometry(geometrySize.width, geometrySize.height),
+      () => new geometry(geometrySize?.width || 2, geometrySize?.height || 2),
       [geometry, geometrySize]
    );
 
    const _material = useMemo(
-      () =>
-         new material(uniformValues, {
-            ...materialParameters,
-            ...(fxBlending !== undefined && { fxBlending }),
-         }),
-      [material, uniformValues, materialParameters, fxBlending]
+      () => new material(uniformValues, materialParameters),
+      [material, uniformValues, materialParameters]
    );
-
-   const resolution = useResolution(size);
-   _material.uniforms.resolution.value.copy(resolution);
 
    useObject3D(scene, _geometry, _material, THREE.Mesh);
 
