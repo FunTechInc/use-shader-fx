@@ -7,7 +7,7 @@ import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
 import { CoverTextureMaterial } from "./CoverTextureMaterial";
 import { useScene } from "../../utils/useScene";
-import { BasicFxValues } from "../materials/FxBasicFxMaterial";
+import { BasicFxValues } from "../materials/BasicFxLib";
 
 export type CoverTextureValues = {
    src?: THREE.Texture;

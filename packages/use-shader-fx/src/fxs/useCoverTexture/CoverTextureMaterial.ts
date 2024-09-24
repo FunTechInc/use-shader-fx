@@ -5,7 +5,7 @@ import {
    FxBasicFxMaterial,
 } from "../materials/FxBasicFxMaterial";
 import { CoverTextureValues } from ".";
-import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
+import { FxMaterialProps } from "../materials/FxMaterial";
 
 type CoverTextureUniforms = {
    src: { value: THREE.Texture | null };
@@ -19,21 +19,24 @@ export class CoverTextureMaterial extends FxBasicFxMaterial {
 
    uniforms!: CoverTextureUniforms;
 
-   constructor(uniformValues?: CoverTextureValues, parameters = {}) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+   }: FxMaterialProps<CoverTextureValues>) {
       super();
 
       this.type = CoverTextureMaterial.type;
 
-      this.uniforms = mergeUniforms([
-         this.uniforms,
-         {
+      this.uniforms = {
+         ...this.uniforms,
+         ...{
             src: { value: null },
             textureResolution: { value: new THREE.Vector2() },
          },
-      ]) as CoverTextureUniforms;
+      };
 
       this.setUniformValues(uniformValues);
-      this.setValues(parameters);
+      this.setValues(materialParameters);
 
       this.setupBasicFxShaders(vertex, fragment);
    }

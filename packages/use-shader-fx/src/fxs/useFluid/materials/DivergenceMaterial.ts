@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import vertex from "./shaders/vertex";
 import fragment from "./shaders/divergence.frag";
-import { FxMaterial, DefaultUniforms } from "../../materials/FxMaterial";
+import {
+   FxMaterial,
+   DefaultUniforms,
+   FxMaterialProps,
+} from "../../materials/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
 import { DeltaTime } from "..";
-import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
 
 type DivergenceUniforms = {
    isBounce: { value: boolean };
@@ -19,23 +22,23 @@ export class DivergenceMaterial extends FxMaterial {
 
    uniforms!: DivergenceUniforms;
 
-   constructor(uniformValues = {}, parameters = {}) {
+   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
       super();
 
       this.type = DivergenceMaterial.type;
 
-      this.uniforms = mergeUniforms([
-         this.uniforms,
-         {
+      this.uniforms = {
+         ...this.uniforms,
+         ...{
             isBounce: { value: true },
             velocity: { value: DEFAULT_TEXTURE },
             dt: { value: DeltaTime },
          },
-      ]) as DivergenceUniforms;
+      };
 
       this.resolveDefaultShaders(vertex.main, fragment);
 
       this.setUniformValues(uniformValues);
-      this.setValues(parameters);
+      this.setValues(materialParameters);
    }
 }

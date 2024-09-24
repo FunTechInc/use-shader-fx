@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { BasicFx } from "../materials/FxBasicFxMaterial";
 
 export type Size = { width: number; height: number };
 

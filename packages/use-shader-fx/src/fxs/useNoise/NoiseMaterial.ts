@@ -4,8 +4,7 @@ import {
    BasicFxUniforms,
    FxBasicFxMaterial,
 } from "../materials/FxBasicFxMaterial";
-import { NoiseValues } from ".";
-import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
+import { FxMaterialProps } from "../materials/FxMaterial";
 
 type NoiseUniforms = {
    tick: { value: number };
@@ -23,16 +22,16 @@ export class NoiseMaterial extends FxBasicFxMaterial {
       return "NoiseMaterial";
    }
 
-   uniforms: NoiseUniforms;
+   uniforms!: NoiseUniforms;
 
-   constructor(uniformValues?: NoiseValues, parameters = {}) {
+   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
       super();
 
       this.type = NoiseMaterial.type;
 
-      this.uniforms = mergeUniforms([
-         this.uniforms,
-         {
+      this.uniforms = {
+         ...this.uniforms,
+         ...{
             tick: { value: 0.0 },
             scale: { value: 0.03 },
             timeStrength: { value: 0.3 },
@@ -42,10 +41,10 @@ export class NoiseMaterial extends FxBasicFxMaterial {
             warpDirection: { value: new THREE.Vector2(2.0, 2.0) },
             warpStrength: { value: 8 },
          },
-      ]) as NoiseUniforms;
+      };
 
       this.setUniformValues(uniformValues);
-      this.setValues(parameters);
+      this.setValues(materialParameters);
 
       this.setupBasicFxShaders(noiseVertex, noiseFragment);
    }

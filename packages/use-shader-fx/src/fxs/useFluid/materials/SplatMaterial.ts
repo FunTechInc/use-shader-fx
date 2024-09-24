@@ -1,8 +1,11 @@
 import * as THREE from "three";
 import vertex from "./shaders/vertex";
 import fragment from "./shaders/splat.frag";
-import { DefaultUniforms, FxMaterial } from "../../materials/FxMaterial";
-import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
+import {
+   DefaultUniforms,
+   FxMaterial,
+   FxMaterialProps,
+} from "../../materials/FxMaterial";
 
 type SplatUniforms = {
    force: { value: THREE.Vector2 };
@@ -19,27 +22,27 @@ export class SplatMaterial extends FxMaterial {
 
    uniforms!: SplatUniforms;
 
-   constructor(uniformValues = {}, parameters = {}) {
+   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
       super();
 
       this.type = SplatMaterial.type;
 
       this.force = 30;
 
-      this.uniforms = mergeUniforms([
-         this.uniforms,
-         {
+      this.uniforms = {
+         ...this.uniforms,
+         ...{
             force: { value: new THREE.Vector2(0, 0) },
             center: { value: new THREE.Vector2(0, 0) },
             scale: { value: new THREE.Vector2(20, 20) },
          },
-      ]) as SplatUniforms;
+      };
 
       this.resolveDefaultShaders(vertex.splat, fragment);
 
       this.blending = THREE.AdditiveBlending;
 
       this.setUniformValues(uniformValues);
-      this.setValues(parameters);
+      this.setValues(materialParameters);
    }
 }

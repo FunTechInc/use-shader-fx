@@ -8,8 +8,22 @@ export type DefaultUniforms = {
    maxAspect: { value: THREE.Vector2 };
 };
 
+export type FxMaterialProps<T = {}> = {
+   uniformValues?: T;
+   materialParameters?: {};
+   uniforms?: { [uniform: string]: THREE.IUniform };
+   vertexShader?: string;
+   fragmentShader?: string;
+};
+
 export class FxMaterial extends THREE.ShaderMaterial {
-   constructor(parameters = {}) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+      uniforms,
+      vertexShader,
+      fragmentShader,
+   }: FxMaterialProps = {}) {
       super();
 
       this.uniforms = {
@@ -17,9 +31,14 @@ export class FxMaterial extends THREE.ShaderMaterial {
          texelSize: { value: new THREE.Vector2() },
          aspectRatio: { value: 0 },
          maxAspect: { value: new THREE.Vector2() },
+         ...uniforms,
       } as DefaultUniforms;
 
-      this.setValues(parameters);
+      this.vertexShader = vertexShader || this.vertexShader;
+      this.fragmentShader = fragmentShader || this.fragmentShader;
+
+      this.setUniformValues(uniformValues);
+      this.setValues(materialParameters);
    }
 
    updateResolution(resolution: THREE.Vector2) {
@@ -36,7 +55,7 @@ export class FxMaterial extends THREE.ShaderMaterial {
       this.fragmentShader = resolveIncludes(fragmentShader);
    }
 
-   setUniformValues(values: any) {
+   setUniformValues(values?: { [key: string]: any }) {
       if (values === undefined) return;
 
       for (const key in values) {

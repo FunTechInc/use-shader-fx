@@ -9,7 +9,12 @@ import {
    useCoverTexture,
 } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
-import { Float, OrbitControls, useVideoTexture } from "@react-three/drei";
+import {
+   Environment,
+   Float,
+   OrbitControls,
+   useVideoTexture,
+} from "@react-three/drei";
 
 /*===============================================
 # webglooの設計
@@ -60,7 +65,7 @@ export const Playground = () => {
 
    const fluid = useFluid({
       size,
-      dpr: 0.15,
+      dpr: 0.1,
    });
 
    const cover = useCoverTexture({
@@ -68,17 +73,17 @@ export const Playground = () => {
       dpr: 2,
       src: funkun_mov,
       textureResolution: new THREE.Vector2(1280, 720),
-      mixSrc: fluid.texture,
-      // mixSrcResolution: new THREE.Vector2(512, 512),
+      // mixSrc: fluid.texture,
+      mixSrcResolution: new THREE.Vector2(512, 512),
       mixSrcUvFactor: 0.05,
-      // mixSrcAlphaFactor: 0.1,
-      // mixSrcColorFactor: 0.0,
+      mixSrcAlphaFactor: 0.1,
+      mixSrcColorFactor: 0.0,
    });
 
    useFrame((state) => {
-      cover.render(state);
+      // cover.render(state);
       fluid.render(state);
-      noise.render(state);
+      // noise.render(state);
       // material.color = new THREE.Color(
       //    Math.sin(state.clock.getElapsedTime()),
       //    1,
@@ -90,10 +95,36 @@ export const Playground = () => {
 
    return (
       <>
-         <mesh>
-            <planeGeometry args={[2, 2]} />
-            <fxMaterial u_fx={cover.texture} key={FxMaterial.key} />
-         </mesh>
+         <Float rotationIntensity={10} floatIntensity={10} speed={2}>
+            <mesh>
+               {/* <planeGeometry args={[2, 2]} />
+            <fxMaterial u_fx={cover.texture} key={FxMaterial.key} /> */}
+               <ambientLight intensity={0.2} />
+               <directionalLight intensity={0.2} />
+               <torusKnotGeometry args={[2, 1, 400, 32]} />
+               <meshPhysicalMaterial
+                  transparent
+                  transmission={0.9}
+                  thickness={0.1}
+                  iridescence={0.1}
+                  ior={1.5}
+                  roughness={0.1}
+                  metalness={0.1}
+                  color={0xffffff}
+               />
+               {/* <Environment preset="city" /> */}
+               <Environment frames={Infinity} background>
+                  <mesh scale={2}>
+                     <sphereGeometry args={[2, 64, 64]} />
+                     <meshBasicMaterial
+                        map={fluid.texture}
+                        side={THREE.BackSide}
+                     />
+                  </mesh>
+               </Environment>
+               {/* <OrbitControls /> */}
+            </mesh>
+         </Float>
       </>
    );
 };

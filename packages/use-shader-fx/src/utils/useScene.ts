@@ -3,12 +3,10 @@ import * as THREE from "three";
 import { useObject3D } from "./useObject3D";
 import { Size } from "../fxs/types";
 import { useResolution } from "./useResolution";
-import { FxMaterial } from "../fxs/materials/FxMaterial";
+import { FxMaterial, FxMaterialProps } from "../fxs/materials/FxMaterial";
 
-type MaterialConstructor<M extends FxMaterial> = new (
-   uniformValues?: any,
-   materialParameters?: THREE.ShaderMaterialParameters
-) => M;
+type MaterialConstructor<M> = new (props: FxMaterialProps) => M;
+
 type GeometryConstructor = new (
    width: number,
    height: number
@@ -18,22 +16,19 @@ export const useScene = <M extends FxMaterial>({
    size,
    dpr,
    material,
-   uniformValues,
-   materialParameters,
    geometry = THREE.PlaneGeometry,
    geometrySize,
+   ...materialProps
 }: {
    size: Size;
    dpr: number | false;
    material: MaterialConstructor<M>;
-   uniformValues?: any;
-   materialParameters?: THREE.ShaderMaterialParameters;
    geometry?: GeometryConstructor;
    geometrySize?: {
       width: number;
       height: number;
    };
-}) => {
+} & FxMaterialProps) => {
    const scene = useMemo(() => new THREE.Scene(), []);
 
    const _geometry = useMemo(
@@ -42,8 +37,8 @@ export const useScene = <M extends FxMaterial>({
    );
 
    const _material = useMemo(
-      () => new material(uniformValues, materialParameters),
-      [material, uniformValues, materialParameters]
+      () => new material(materialProps),
+      [material, materialProps]
    );
 
    const resolution = useResolution(size, dpr);
