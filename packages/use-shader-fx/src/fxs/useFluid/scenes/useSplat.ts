@@ -3,7 +3,6 @@ import { useCallback, useMemo } from "react";
 import { useCamera } from "../../../utils/useCamera";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
-import { useResolution } from "../../../utils/useResolution";
 import { SplatMaterial } from "../materials/SplatMaterial";
 import { usePointer } from "../../../misc/usePointer";
 import { useScene } from "../../../utils/useScene";
@@ -19,6 +18,8 @@ export const useSplat = (
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
    const { scene, material } = useScene({
+      size,
+      dpr,
       material: SplatMaterial,
       geometrySize: {
          width: 1,
@@ -27,8 +28,6 @@ export const useSplat = (
    });
 
    const camera = useCamera(size);
-   const resolution = useResolution(size, dpr);
-   material.uniforms.texelsize.value.set(1 / resolution.x, 1 / resolution.y);
 
    const updatePointer = usePointer();
 

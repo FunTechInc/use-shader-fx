@@ -33,6 +33,8 @@ export const useCoverTexture = ({
    const _dpr = getDpr(dpr);
 
    const { scene, material } = useScene({
+      size,
+      dpr: _dpr.shader,
       material: CoverTextureMaterial,
       uniformValues,
       materialParameters,
@@ -60,7 +62,7 @@ export const useCoverTexture = ({
          const { gl } = rootState;
          newValues && setValues(newValues);
 
-         material.update(rootState);
+         material.updateBasicFx();
 
          return updateRenderTarget({ gl });
       },

@@ -1,16 +1,10 @@
-- coverTextureつくる
-- noiseをbaseFxにいれる
-- fluidを整える
+- useBlankの設計まとめる
 
-- srcBlending, dstBlendingをつくる
-	- blend srcでこのhookでblendingする
-	- このhookでblend dstをblendingする
-	- たぶん、basic_begin_fragmentとbasic_end_fragmentを作ればいいかな
-	- fxBlendingをmixSrc/mixDstに変更する
+- pixelateつくる
+- 要件定義つくって、ろくくんに引き継ぐ
+- grain をbasic fxに
+- 流体まとめる
 
-
-- updateBasicFxでneedsUpdateしなくても更新できるはず。
-	- 実態はthis.versionを++してるだけだった！
+- grain、暗くならないような工夫
 
 
-- ShaderのmixDstMap、mixSrcMapの命名が気持ちわるい

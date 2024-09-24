@@ -1,7 +1,14 @@
 import * as THREE from "three";
 import vertex from "./shaders/vertex";
 import fragment from "./shaders/splat.frag";
-import { FxMaterial } from "../../materials/FxMaterial";
+import { DefaultUniforms, FxMaterial } from "../../materials/FxMaterial";
+import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
+
+type SplatUniforms = {
+   force: { value: THREE.Vector2 };
+   center: { value: THREE.Vector2 };
+   scale: { value: THREE.Vector2 };
+} & DefaultUniforms;
 
 export class SplatMaterial extends FxMaterial {
    static get type() {
@@ -10,12 +17,7 @@ export class SplatMaterial extends FxMaterial {
 
    force: number;
 
-   uniforms: {
-      texelsize: { value: THREE.Vector2 };
-      force: { value: THREE.Vector2 };
-      center: { value: THREE.Vector2 };
-      scale: { value: THREE.Vector2 };
-   };
+   uniforms!: SplatUniforms;
 
    constructor(uniformValues = {}, parameters = {}) {
       super();
@@ -24,15 +26,16 @@ export class SplatMaterial extends FxMaterial {
 
       this.force = 30;
 
-      this.uniforms = {
-         texelsize: { value: new THREE.Vector2() },
-         force: { value: new THREE.Vector2(0, 0) },
-         center: { value: new THREE.Vector2(0, 0) },
-         scale: { value: new THREE.Vector2(80, 80) },
-      };
+      this.uniforms = mergeUniforms([
+         this.uniforms,
+         {
+            force: { value: new THREE.Vector2(0, 0) },
+            center: { value: new THREE.Vector2(0, 0) },
+            scale: { value: new THREE.Vector2(20, 20) },
+         },
+      ]) as SplatUniforms;
 
-      this.vertexShader = vertex.splat;
-      this.fragmentShader = fragment;
+      this.resolveDefaultShaders(vertex.splat, fragment);
 
       this.blending = THREE.AdditiveBlending;
 

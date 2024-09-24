@@ -1,3 +1,7 @@
+precision highp float;
+
 varying vec2 vUv;
 uniform vec2 resolution;
-uniform float screenAspect;
+uniform vec2 texelSize;
+uniform float aspectRatio;
+uniform vec2 maxAspect;

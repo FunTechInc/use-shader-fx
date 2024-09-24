@@ -53,7 +53,7 @@ export const useFluid = ({
    const [pressureFBO, updatePressureFBO] = useDoubleFBO(fboProps);
 
    // scenes
-   const SceneSize = useMemo(() => ({ size, dpr: _dpr.shader }), [_dpr, size]);
+   const SceneSize = useMemo(() => ({ size, dpr: _dpr.shader }), [size, _dpr]);
    const advection = useAdvection(
       {
          ...SceneSize,
@@ -61,12 +61,7 @@ export const useFluid = ({
       },
       updateVelocity_1
    );
-   const splat = useSplat(
-      {
-         ...SceneSize,
-      },
-      updateVelocity_1
-   );
+   const splat = useSplat(SceneSize, updateVelocity_1);
    const divergence = useDivergence(
       {
          ...SceneSize,
@@ -90,6 +85,11 @@ export const useFluid = ({
       updateVelocity_0
    );
 
+   const fluidShaders = useMemo(
+      () => [advection, splat, divergence, poisson, pressure],
+      [advection, splat, divergence, poisson, pressure]
+   );
+
    const setValues = useCallback((newValues: FluidValues) => {
       // splat.material.force = newValues.force;
       // bounce の設定
@@ -102,23 +102,13 @@ export const useFluid = ({
       (rootState: RootState, newValues?: FluidValues) => {
          newValues && setValues(newValues);
 
-         advection.render(rootState);
-         splat.render(rootState);
-         divergence.render(rootState);
-         poisson.render(rootState);
-         pressure.render(rootState);
+         fluidShaders.forEach((shader) => {
+            shader.render(rootState);
+         });
 
          return velocity_0.texture;
       },
-      [
-         setValues,
-         advection,
-         divergence,
-         poisson,
-         pressure,
-         splat,
-         velocity_0.texture,
-      ]
+      [setValues, fluidShaders, velocity_0.texture]
    );
 
    return {

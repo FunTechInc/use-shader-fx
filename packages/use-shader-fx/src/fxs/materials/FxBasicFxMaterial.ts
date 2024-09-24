@@ -1,36 +1,35 @@
 import * as THREE from "three";
 import { DefaultUniforms, FxMaterial } from "./FxMaterial";
 import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
-import { RootState } from "../types";
 
 export type BasicFxUniforms = {
    // mixSrc
    mixSrc: { value: THREE.Texture | null };
    mixSrcResolution: { value: THREE.Vector2 };
-   mixSrcUv: { value: number };
-   mixSrcAlpha: { value: number };
-   mixSrcColor: { value: number };
+   mixSrcUvFactor: { value: number };
+   mixSrcAlphaFactor: { value: number };
+   mixSrcColorFactor: { value: number };
    // mixDst
    mixDst: { value: THREE.Texture | null };
    mixDstResolution: { value: THREE.Vector2 };
-   mixDstUv: { value: number };
-   mixDstAlpha: { value: number };
-   mixDstColor: { value: number };
+   mixDstUvFactor: { value: number };
+   mixDstAlphaFactor: { value: number };
+   mixDstColorFactor: { value: number };
 } & DefaultUniforms;
 
 export type BasicFxValues = {
    // mixSrc
    mixSrc?: THREE.Texture | null;
    mixSrcResolution?: THREE.Vector2;
-   mixSrcUv?: number;
-   mixSrcAlpha?: number;
-   mixSrcColor?: number;
+   mixSrcUvFactor?: number;
+   mixSrcAlphaFactor?: number;
+   mixSrcColorFactor?: number;
    //mixDst
    mixDst?: THREE.Texture | null;
    mixDstResolution?: THREE.Vector2;
-   mixDstUv?: number;
-   mixDstAlpha?: number;
-   mixDstColor?: number;
+   mixDstUvFactor?: number;
+   mixDstAlphaFactor?: number;
+   mixDstColorFactor?: number;
 };
 
 type FxBasicMaterialProps = {
@@ -46,7 +45,7 @@ export class FxBasicFxMaterial extends FxMaterial {
       mixDst: boolean;
    };
 
-   uniforms: BasicFxUniforms;
+   uniforms!: BasicFxUniforms;
 
    vertexShaderCache: string;
    vertexPrefixCache: string;
@@ -73,15 +72,15 @@ export class FxBasicFxMaterial extends FxMaterial {
             // mixSrc
             mixSrc: { value: null },
             mixSrcResolution: { value: new THREE.Vector2() },
-            mixSrcUv: { value: 0 },
-            mixSrcAlpha: { value: 0 },
-            mixSrcColor: { value: 0 },
+            mixSrcUvFactor: { value: 0 },
+            mixSrcAlphaFactor: { value: 0 },
+            mixSrcColorFactor: { value: 0 },
             // mixDst
             mixDst: { value: null },
             mixDstResolution: { value: new THREE.Vector2() },
-            mixDstUv: { value: 0 },
-            mixDstAlpha: { value: 0 },
-            mixDstColor: { value: 0 },
+            mixDstUvFactor: { value: 0 },
+            mixDstAlphaFactor: { value: 0 },
+            mixDstColorFactor: { value: 0 },
          } as BasicFxUniforms,
       ]) as BasicFxUniforms;
 
@@ -95,11 +94,6 @@ export class FxBasicFxMaterial extends FxMaterial {
       this.programCache = 0;
 
       this.setupBasicFxShaders(vertexShader, fragmentShader);
-   }
-
-   update(rootState: RootState) {
-      this.updateDefaultValues(rootState);
-      this.updateBasicFx();
    }
 
    updateBasicFx() {
@@ -123,7 +117,7 @@ export class FxBasicFxMaterial extends FxMaterial {
       if (_cache !== this.programCache) {
          this.updateBasicFxPrefix();
          this.updateBasicFxShader();
-         this.version++; // to update material
+         this.needsUpdate = true; // same as this.version++
       }
    }
 
@@ -154,13 +148,12 @@ export class FxBasicFxMaterial extends FxMaterial {
 
    setupBasicFxShaders(vertexShader?: string, fragmentShader?: string) {
       this.updateBasicFxPrefix();
-      const { vertexShader: _vertex, fragmentShader: _fragment } =
-         this.resolveDefaultShaders(
-            vertexShader || this.vertexShaderCache,
-            fragmentShader || this.fragmentShaderCache
-         );
-      this.vertexShaderCache = _vertex;
-      this.fragmentShaderCache = _fragment;
+      this.resolveDefaultShaders(
+         vertexShader || this.vertexShaderCache,
+         fragmentShader || this.fragmentShaderCache
+      );
+      this.vertexShaderCache = this.vertexShader;
+      this.fragmentShaderCache = this.fragmentShader;
       this.updateBasicFxShader();
    }
 }

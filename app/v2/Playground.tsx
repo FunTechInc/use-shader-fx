@@ -45,32 +45,39 @@ export const Playground = () => {
    const noise = useNoise({
       size,
       dpr: 0.2,
-      scale: 0.01,
+      scale: 0.02,
       // mixSrc: gear,
       // mixSrcResolution: new THREE.Vector2(512, 512),
-      // mixSrcUv: 0.9,
-      // mixSrcAlpha: 1,
-      mixDst: gear,
-      mixDstResolution: new THREE.Vector2(512, 512),
-      mixDstUv: 0.2,
-      mixDstAlpha: 1,
-      mixDstColor: 0.5,
+      // mixSrcUvFactor: 0.2,
+      // mixSrcAlphaFactor: 0.1,
+      // mixSrcColorFactor: 0.4,
+      // mixDst: gear,
+      // mixDstResolution: new THREE.Vector2(512, 512),
+      // mixDstUvFactor: 0.3,
+      // mixDstAlphaFactor: 1,
+      // mixDstColorFactor: 0,
    });
 
-   // const cover = useCoverTexture({
-   //    size,
-   //    dpr: 1,
-   //    src: funkun_mov,
-   //    textureResolution: new THREE.Vector2(1280, 720),
-   //    // mixSrc: smoke,
-   //    mixSrcResolution: new THREE.Vector2(512, 512),
-   //    mixSrcUv: 0.12,
-   //    mixSrcAlpha: 0.2,
-   // });
+   const fluid = useFluid({
+      size,
+      dpr: 0.15,
+   });
+
+   const cover = useCoverTexture({
+      size,
+      dpr: 2,
+      src: funkun_mov,
+      textureResolution: new THREE.Vector2(1280, 720),
+      mixSrc: fluid.texture,
+      // mixSrcResolution: new THREE.Vector2(512, 512),
+      mixSrcUvFactor: 0.05,
+      // mixSrcAlphaFactor: 0.1,
+      // mixSrcColorFactor: 0.0,
+   });
 
    useFrame((state) => {
-      // cover.render(state);
-      // fluid.render(state);
+      cover.render(state);
+      fluid.render(state);
       noise.render(state);
       // material.color = new THREE.Color(
       //    Math.sin(state.clock.getElapsedTime()),
@@ -85,7 +92,7 @@ export const Playground = () => {
       <>
          <mesh>
             <planeGeometry args={[2, 2]} />
-            <fxMaterial u_fx={noise.texture} key={FxMaterial.key} />
+            <fxMaterial u_fx={cover.texture} key={FxMaterial.key} />
          </mesh>
       </>
    );

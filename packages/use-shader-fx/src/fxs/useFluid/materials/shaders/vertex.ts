@@ -1,8 +1,5 @@
 const base = `
-	precision highp float;
-
-	uniform vec2 texelsize;
-	varying vec2 vUv;
+	#usf <default_pars_vertex>
 `;
 
 const boxVarying = `
@@ -18,8 +15,8 @@ const getPosition = (isBounce: boolean = true) => {
 		vec3 pos = position;
 		vec2 scale = ${
          isBounce
-            ? "isBounce ? vec2(1.,1.) : 1.-texelsize*2."
-            : "1.-texelsize*2."
+            ? "isBounce ? vec2(1.,1.) : 1.-texelSize*2."
+            : "1.-texelSize*2."
       };
 		pos.xy = pos.xy * scale;
 		vUv = vec2(.5)+(pos.xy)*.5;		
@@ -28,10 +25,10 @@ const getPosition = (isBounce: boolean = true) => {
 
 const getBoxCompute = (diff: string) => {
    return `
-		vL = vUv - vec2(texelsize.x * ${diff}, 0.0);
-		vR = vUv + vec2(texelsize.x * ${diff}, 0.0);
-		vT = vUv + vec2(0.0, texelsize.y * ${diff});
-		vB = vUv - vec2(0.0, texelsize.y * ${diff});
+		vL = vUv - vec2(texelSize.x * ${diff}, 0.0);
+		vR = vUv + vec2(texelSize.x * ${diff}, 0.0);
+		vT = vUv + vec2(0.0, texelSize.y * ${diff});
+		vB = vUv - vec2(0.0, texelSize.y * ${diff});
 	`;
 };
 
@@ -72,7 +69,7 @@ const vertex = {
 		uniform vec2 center;
 		uniform vec2 scale;
 		void main(){
-			vec2 pos = position.xy * scale * 2.0 * texelsize + center;
+			vec2 pos = position.xy * scale * 2.0 * texelSize + center;
 			vUv = uv;
 			gl_Position = vec4(pos, 0.0, 1.0);
 		}

@@ -11,8 +11,8 @@ export const vertex = `
 
 		float textureAspect = textureResolution.x / textureResolution.y;
 		vec2 aspectRatio = vec2(
-			min(screenAspect / textureAspect, 1.0),
-			min(textureAspect / screenAspect, 1.0)
+			min(aspectRatio / textureAspect, 1.0),
+			min(textureAspect / aspectRatio, 1.0)
 		);
 		vCoverTextureUv = vUv * aspectRatio + (1.0 - aspectRatio) * .5;
 
@@ -36,7 +36,7 @@ export const fragment = `
 		vec4 usf_FragColor = texColor;
 
 		${ShaderLib.basicFx_fragment_end}
-		
+				
 		gl_FragColor = usf_FragColor;
 	}
 `;

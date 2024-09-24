@@ -17,7 +17,7 @@ export class CoverTextureMaterial extends FxBasicFxMaterial {
       return "NoiseMaterial";
    }
 
-   uniforms: CoverTextureUniforms;
+   uniforms!: CoverTextureUniforms;
 
    constructor(uniformValues?: CoverTextureValues, parameters = {}) {
       super();

@@ -1,10 +1,8 @@
-precision highp float;
+#usf <default_pars_fragment>
 
-uniform vec2 texelsize;
 uniform sampler2D pressure;
 uniform sampler2D divergence;
 
-varying vec2 vUv;
 varying vec2 vL;
 varying vec2 vR;
 varying vec2 vT;

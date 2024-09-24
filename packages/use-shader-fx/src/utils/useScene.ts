@@ -1,8 +1,11 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { useObject3D } from "./useObject3D";
+import { Size } from "../fxs/types";
+import { useResolution } from "./useResolution";
+import { FxMaterial } from "../fxs/materials/FxMaterial";
 
-type MaterialConstructor<M extends THREE.ShaderMaterial> = new (
+type MaterialConstructor<M extends FxMaterial> = new (
    uniformValues?: any,
    materialParameters?: THREE.ShaderMaterialParameters
 ) => M;
@@ -11,13 +14,17 @@ type GeometryConstructor = new (
    height: number
 ) => THREE.BufferGeometry;
 
-export const useScene = <M extends THREE.ShaderMaterial>({
+export const useScene = <M extends FxMaterial>({
+   size,
+   dpr,
    material,
    uniformValues,
    materialParameters,
    geometry = THREE.PlaneGeometry,
    geometrySize,
 }: {
+   size: Size;
+   dpr: number | false;
    material: MaterialConstructor<M>;
    uniformValues?: any;
    materialParameters?: THREE.ShaderMaterialParameters;
@@ -38,6 +45,9 @@ export const useScene = <M extends THREE.ShaderMaterial>({
       () => new material(uniformValues, materialParameters),
       [material, uniformValues, materialParameters]
    );
+
+   const resolution = useResolution(size, dpr);
+   _material.updateResolution(resolution);
 
    useObject3D(scene, _geometry, _material, THREE.Mesh);
 

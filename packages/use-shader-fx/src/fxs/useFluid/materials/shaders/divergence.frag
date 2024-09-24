@@ -1,9 +1,8 @@
-precision highp float;
+#usf <default_pars_fragment>
 
 uniform float dt;
 uniform sampler2D velocity;
 
-varying vec2 vUv;
 varying vec2 vL;
 varying vec2 vR;
 varying vec2 vT;

@@ -40,10 +40,10 @@ export const FxMaterial = shaderMaterial(
 			// float len = length(vel);
 			// vel = vel * 0.5 + 0.5;
 			
-			// vec3 color = vec3(vel.x, vel.y, len);
-			// color = mix(vec3(0.), color, len);
+			// vec3 color = vec3(vel.x, vel.y, 1.);
+			// color = mix(vec3(1.), color, len);
 
-			// gl_FragColor = vec4(color,  1.0);
+			// gl_FragColor = vec4(color, 1.0);
 		}
 	`
 );

@@ -44,6 +44,8 @@ export const useNoise = ({
    const _dpr = getDpr(dpr);
 
    const { scene, material } = useScene({
+      size,
+      dpr: _dpr.shader,
       material: NoiseMaterial,
       uniformValues,
       materialParameters,
@@ -73,7 +75,7 @@ export const useNoise = ({
          material.uniforms.tick.value =
             newValues?.beat || clock.getElapsedTime();
 
-         material.update(rootState);
+         material.updateBasicFx();
 
          return updateRenderTarget({ gl });
       },

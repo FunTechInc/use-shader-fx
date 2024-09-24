@@ -1,7 +1,7 @@
 #ifdef USF_USE_MIXSRC
 
-	usf_FragColor = mix(usf_FragColor, mixSrcMap, mixSrcColor);
+	usf_FragColor = mix(usf_FragColor, mixSrcColor, mixSrcColorFactor);
 	
-	usf_FragColor = mix(usf_FragColor, mixSrcMap, mixSrcMap.a * mixSrcAlpha);
+	usf_FragColor = mix(usf_FragColor, mixSrcColor, mixSrcColor.a * mixSrcAlphaFactor);
 
 #endif

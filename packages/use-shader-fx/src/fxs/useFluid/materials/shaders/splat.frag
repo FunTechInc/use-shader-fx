@@ -1,9 +1,7 @@
-precision highp float;
+#usf <default_pars_fragment>
 
 uniform vec2 force;
 uniform vec2 center;
-
-varying vec2 vUv;
 
 void main(){
 	vec2 circle = (vUv - 0.5) * 2.0;

@@ -8,11 +8,11 @@ uniform float u_borderRadius;
 
 void main() {
 	// texuture color
-	float screenAspect = u_resolution.x / u_resolution.y;
+	float aspectRatio = u_resolution.x / u_resolution.y;
 	float textureAspect = u_textureResolution.x / u_textureResolution.y;
 	vec2 ratio = vec2(
-		min(screenAspect / textureAspect, 1.0),
-		min(textureAspect / screenAspect, 1.0)
+		min(aspectRatio / textureAspect, 1.0),
+		min(textureAspect / aspectRatio, 1.0)
 	);
 
 	vec2 adjustedUv = vUv * ratio + (1.0 - ratio) * 0.5;
