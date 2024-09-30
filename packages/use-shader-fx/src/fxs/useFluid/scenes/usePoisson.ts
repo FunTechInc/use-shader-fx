@@ -1,10 +1,9 @@
 import * as THREE from "three";
-import { useCallback, useMemo } from "react";
-import { useCamera } from "../../../utils/useCamera";
-import { Dpr, RootState, Size } from "../../types";
+import { useCallback } from "react";
+import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
 import { PoissonMaterial } from "../materials/PoissonMaterial";
-import { useScene } from "../../../utils/useScene";
+import { useFxScene } from "../../../utils/useFxScene";
 
 export const usePoisson = (
    {
@@ -18,14 +17,12 @@ export const usePoisson = (
    },
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
-   const { scene, material } = useScene({
+   const { scene, material, camera } = useFxScene({
       size,
       dpr,
       material: PoissonMaterial,
       uniformValues: values,
    });
-
-   const camera = useCamera(size);
 
    const render = useCallback(
       (rootState: RootState) => {

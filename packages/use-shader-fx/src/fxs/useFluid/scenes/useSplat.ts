@@ -1,11 +1,9 @@
-import * as THREE from "three";
-import { useCallback, useMemo } from "react";
-import { useCamera } from "../../../utils/useCamera";
+import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
 import { SplatMaterial } from "../materials/SplatMaterial";
 import { usePointer } from "../../../misc/usePointer";
-import { useScene } from "../../../utils/useScene";
+import { useFxScene } from "../../../utils/useFxScene";
 
 export const useSplat = (
    {
@@ -17,7 +15,7 @@ export const useSplat = (
    },
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
-   const { scene, material } = useScene({
+   const { scene, material, camera } = useFxScene({
       size,
       dpr,
       material: SplatMaterial,
@@ -26,8 +24,6 @@ export const useSplat = (
          height: 1,
       },
    });
-
-   const camera = useCamera(size);
 
    const updatePointer = usePointer();
 

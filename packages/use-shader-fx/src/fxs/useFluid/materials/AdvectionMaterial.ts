@@ -34,7 +34,7 @@ export class AdvectionMaterial extends FxMaterial {
          },
       };
 
-      this.resolveDefaultShaders(vertex.advection, fragment);
+      this.setupDefaultShaders(vertex.advection, fragment);
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);

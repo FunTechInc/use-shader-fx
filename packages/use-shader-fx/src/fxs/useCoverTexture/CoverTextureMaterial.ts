@@ -1,11 +1,9 @@
 import * as THREE from "three";
 import { fragment, vertex } from "./coverTexture.glsl";
-import {
-   BasicFxUniforms,
-   FxBasicFxMaterial,
-} from "../materials/FxBasicFxMaterial";
+import { FxBasicFxMaterial } from "../materials/FxBasicFxMaterial";
 import { CoverTextureValues } from ".";
 import { FxMaterialProps } from "../materials/FxMaterial";
+import { BasicFxUniforms } from "../materials/BasicFxLib";
 
 type CoverTextureUniforms = {
    src: { value: THREE.Texture | null };

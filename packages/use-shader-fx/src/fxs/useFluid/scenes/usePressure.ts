@@ -1,10 +1,9 @@
 import * as THREE from "three";
-import { useCallback, useMemo } from "react";
-import { useCamera } from "../../../utils/useCamera";
+import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
 import { PressureMaterial } from "../materials/PressureMaterial";
-import { useScene } from "../../../utils/useScene";
+import { useFxScene } from "../../../utils/useFxScene";
 
 export const usePressure = (
    {
@@ -19,14 +18,12 @@ export const usePressure = (
    },
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
-   const { scene, material } = useScene({
+   const { scene, material, camera } = useFxScene({
       size,
       dpr,
       material: PressureMaterial,
       uniformValues: values,
    });
-
-   const camera = useCamera(size);
 
    const render = useCallback(
       (rootState: RootState) => {

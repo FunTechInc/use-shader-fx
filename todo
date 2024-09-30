@@ -1,10 +1,17 @@
 - useBlankの設計まとめる
 - usf wip
 	- blank つくって水面のやつで
+- 設計まとめ、ろくくんに引き継ぐ
 
 - pixelateつくる
-- 要件定義つくって、ろくくんに引き継ぐ
 - grain をbasic fxに
 - 流体まとめる
 
 - grain、暗くならないような工夫
+
+
+- useNoiseのtickの処理を確認
+	- valuesの値はuniformと一致させるべき
+		- 一致しないものはconfigsで設定する
+		- useBlankで例つくる
+- 

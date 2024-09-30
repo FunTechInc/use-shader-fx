@@ -27,7 +27,7 @@ export class SplatMaterial extends FxMaterial {
 
       this.type = SplatMaterial.type;
 
-      this.force = 30;
+      this.force = 15;
 
       this.uniforms = {
          ...this.uniforms,
@@ -38,7 +38,7 @@ export class SplatMaterial extends FxMaterial {
          },
       };
 
-      this.resolveDefaultShaders(vertex.splat, fragment);
+      this.setupDefaultShaders(vertex.splat, fragment);
 
       this.blending = THREE.AdditiveBlending;
 

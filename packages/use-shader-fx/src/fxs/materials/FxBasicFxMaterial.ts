@@ -5,6 +5,7 @@ import {
    BasicFxFlag,
    BasicFxLib,
 } from "./BasicFxLib";
+import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
 
 export class FxBasicFxMaterial extends FxMaterial {
    basicFxFlag: BasicFxFlag;
@@ -60,7 +61,7 @@ export class FxBasicFxMaterial extends FxMaterial {
       if (_cache !== this.programCache) {
          this.updateBasicFxPrefix();
          this.updateBasicFxShader();
-         this.needsUpdate = true; // same as this.version++
+         this.version++; // same as this.needsUpdate = true;
       }
    }
 
@@ -78,10 +79,15 @@ export class FxBasicFxMaterial extends FxMaterial {
 
    setupBasicFxShaders(vertexShader?: string, fragmentShader?: string) {
       this.updateBasicFxPrefix();
-      this.resolveDefaultShaders(
-         vertexShader || this.vertexShaderCache,
-         fragmentShader || this.fragmentShaderCache
+
+      const [vertex, fragment] = mergeShaderLib(
+         vertexShader,
+         fragmentShader,
+         "basicFx"
       );
+
+      this.setupDefaultShaders(vertex, fragment);
+
       this.vertexShaderCache = this.vertexShader;
       this.fragmentShaderCache = this.fragmentShader;
       this.updateBasicFxShader();

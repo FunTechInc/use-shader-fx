@@ -4,37 +4,42 @@ import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { useDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
-import { CoverTextureMaterial } from "./CoverTextureMaterial";
+import { RawBlankMaterial } from "./RawBlankMaterial";
 import { useFxScene } from "../../utils/useFxScene";
-import { BasicFxValues } from "../materials/BasicFxLib";
+import { ShaderWithUniforms } from "../materials/FxMaterial";
 
-export type CoverTextureValues = {
-   src?: THREE.Texture;
-   textureResolution?: THREE.Vector2;
-} & BasicFxValues;
+export type RawBlankValues = {};
+
+type RawBlankConfig = ShaderWithUniforms;
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
-export const useCoverTexture = ({
+export const useRawBlank = ({
    size,
    dpr,
    sizeUpdate,
    renderTargetOptions,
    materialParameters,
+   uniforms,
+   vertexShader,
+   fragmentShader,
    ...uniformValues
-}: HooksProps & CoverTextureValues): HooksReturn<
-   CoverTextureValues,
-   CoverTextureMaterial
+}: HooksProps & RawBlankValues & RawBlankConfig): HooksReturn<
+   RawBlankValues,
+   RawBlankMaterial
 > => {
    const _dpr = useDpr(dpr);
 
    const { scene, material, camera } = useFxScene({
       size,
       dpr: _dpr.shader,
-      material: CoverTextureMaterial,
+      material: RawBlankMaterial,
       uniformValues,
       materialParameters,
+      uniforms,
+      vertexShader,
+      fragmentShader,
    });
 
    const [renderTarget, updateRenderTarget] = useSingleFBO({
@@ -47,22 +52,19 @@ export const useCoverTexture = ({
    });
 
    const setValues = useCallback(
-      (newValues: CoverTextureValues) => {
+      (newValues: RawBlankValues) => {
          material.setUniformValues(newValues);
       },
       [material]
    );
 
    const render = useCallback(
-      (rootState: RootState, newValues?: CoverTextureValues) => {
+      (rootState: RootState, newValues?: RawBlankValues) => {
          const { gl } = rootState;
          newValues && setValues(newValues);
-
-         material.updateBasicFx();
-
          return updateRenderTarget({ gl });
       },
-      [setValues, updateRenderTarget, material]
+      [setValues, updateRenderTarget]
    );
 
    return {

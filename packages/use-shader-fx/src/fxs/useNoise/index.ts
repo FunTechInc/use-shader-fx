@@ -3,11 +3,11 @@ import { useCallback } from "react";
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
-import { getDpr } from "../../utils/getDpr";
+import { getDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
 import { NoiseMaterial } from "./NoiseMaterial";
-import { useScene } from "../../utils/useScene";
-import { BasicFxValues } from "../materials/FxBasicFxMaterial";
+import { useScene } from "../../utils/useFxScene";
+import { BasicFxValues } from "../materials/BasicFxLib";
 
 export type NoiseValues = {
    /** noise scale , default : `0.004` */
@@ -24,8 +24,8 @@ export type NoiseValues = {
    warpDirection?: THREE.Vector2;
    /** strength of domain warping , default : `8.0` */
    warpStrength?: number;
-   /** you can get into the rhythm ♪ , default : `false` */
-   beat?: number | false;
+   /** useBeatを渡せば、リズムを変えられる。 */
+   tick?: number;
 } & BasicFxValues;
 
 /**
@@ -73,7 +73,7 @@ export const useNoise = ({
          const { gl, clock } = rootState;
          newValues && setValues(newValues);
          material.uniforms.tick.value =
-            newValues?.beat || clock.getElapsedTime();
+            newValues?.tick || clock.getElapsedTime();
 
          material.updateBasicFx();
 

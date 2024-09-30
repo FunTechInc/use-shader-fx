@@ -38,7 +38,7 @@ export class PressureMaterial extends FxMaterial {
          },
       };
 
-      this.resolveDefaultShaders(vertex.main, fragment);
+      this.setupDefaultShaders(vertex.main, fragment);
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);

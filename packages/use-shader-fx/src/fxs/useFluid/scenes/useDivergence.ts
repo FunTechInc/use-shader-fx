@@ -1,10 +1,9 @@
 import * as THREE from "three";
-import { useCallback, useMemo } from "react";
-import { useCamera } from "../../../utils/useCamera";
-import { Dpr, RootState, Size } from "../../types";
+import { useCallback } from "react";
+import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
 import { DivergenceMaterial } from "../materials/DivergenceMaterial";
-import { useScene } from "../../../utils/useScene";
+import { useFxScene } from "../../../utils/useFxScene";
 
 export const useDivergence = (
    {
@@ -18,14 +17,12 @@ export const useDivergence = (
    },
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
-   const { scene, material } = useScene({
+   const { scene, material, camera } = useFxScene({
       size,
       dpr,
       material: DivergenceMaterial,
       uniformValues: values,
    });
-
-   const camera = useCamera(size);
 
    const render = useCallback(
       (rootState: RootState) => {

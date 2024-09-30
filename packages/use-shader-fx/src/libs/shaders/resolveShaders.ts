@@ -9,5 +9,4 @@ function includeReplacer(match: string, include: ShaderChunkTypes): string {
 function resolveIncludes(string: string): string {
    return string.replace(includePattern, includeReplacer);
 }
-
 export { resolveIncludes };

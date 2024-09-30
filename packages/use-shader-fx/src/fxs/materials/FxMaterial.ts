@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { resolveIncludes } from "../../libs/shaders/resolveShaders";
+import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
 
 export type DefaultUniforms = {
    resolution: { value: THREE.Vector2 };
@@ -8,13 +9,16 @@ export type DefaultUniforms = {
    maxAspect: { value: THREE.Vector2 };
 };
 
-export type FxMaterialProps<T = {}> = {
-   uniformValues?: T;
-   materialParameters?: {};
+export type ShaderWithUniforms = {
    uniforms?: { [uniform: string]: THREE.IUniform };
    vertexShader?: string;
    fragmentShader?: string;
 };
+
+export type FxMaterialProps<T = {}> = {
+   uniformValues?: T;
+   materialParameters?: {};
+} & ShaderWithUniforms;
 
 export class FxMaterial extends THREE.ShaderMaterial {
    constructor({
@@ -34,13 +38,13 @@ export class FxMaterial extends THREE.ShaderMaterial {
          ...uniforms,
       } as DefaultUniforms;
 
-      this.vertexShader = vertexShader || this.vertexShader;
-      this.fragmentShader = fragmentShader || this.fragmentShader;
+      this.setupDefaultShaders(vertexShader, fragmentShader);
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);
    }
 
+   /** This is updated in useFxScene */
    updateResolution(resolution: THREE.Vector2) {
       const { width, height } = resolution;
       const maxAspect = Math.max(width, height);
@@ -50,9 +54,16 @@ export class FxMaterial extends THREE.ShaderMaterial {
       this.uniforms.maxAspect.value.set(maxAspect / width, maxAspect / height);
    }
 
-   resolveDefaultShaders(vertexShader: string, fragmentShader: string) {
-      this.vertexShader = resolveIncludes(vertexShader);
-      this.fragmentShader = resolveIncludes(fragmentShader);
+   setupDefaultShaders(vertexShader?: string, fragmentShader?: string) {
+      const [vertex, fragment] = mergeShaderLib(
+         vertexShader,
+         fragmentShader,
+         "default"
+      );
+      this.vertexShader = vertex ? resolveIncludes(vertex) : this.vertexShader;
+      this.fragmentShader = fragment
+         ? resolveIncludes(fragment)
+         : this.fragmentShader;
    }
 
    setUniformValues(values?: { [key: string]: any }) {

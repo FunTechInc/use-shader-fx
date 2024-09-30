@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { useCallback } from "react";
-import { useCamera } from "../../../utils/useCamera";
 import { RootState, Size } from "../../types";
 import { AdvectionMaterial } from "../materials/AdvectionMaterial";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
-import { useScene } from "../../../utils/useScene";
+import { useFxScene } from "../../../utils/useFxScene";
 
 export const useAdvection = (
    {
@@ -18,14 +17,12 @@ export const useAdvection = (
    },
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
-   const { scene, material } = useScene({
+   const { scene, material, camera } = useFxScene({
       size,
       dpr,
       material: AdvectionMaterial,
       uniformValues: values,
    });
-
-   const camera = useCamera(size);
 
    const render = useCallback(
       (rootState: RootState) => {

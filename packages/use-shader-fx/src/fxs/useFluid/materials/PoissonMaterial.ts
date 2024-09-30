@@ -39,7 +39,7 @@ export class PoissonMaterial extends FxMaterial {
 
       this.iteration = 32;
 
-      this.resolveDefaultShaders(vertex.poisson, fragment);
+      this.setupDefaultShaders(vertex.poisson, fragment);
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);

@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useCallback, useMemo } from "react";
 import { UseFboProps, useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
-import { getDpr } from "../../utils/getDpr";
+import { useDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useAdvection } from "./scenes/useAdvection";
@@ -34,7 +34,7 @@ export const useFluid = ({
    renderTargetOptions,
    ...values
 }: HooksProps & FluidValues): HooksReturn<FluidValues, NoiseMaterial> => {
-   const _dpr = getDpr(dpr);
+   const _dpr = useDpr(dpr);
 
    // fbos
    const fboProps = useMemo<UseFboProps>(

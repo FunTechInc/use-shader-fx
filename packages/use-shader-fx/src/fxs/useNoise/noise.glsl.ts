@@ -1,4 +1,4 @@
-import { ShaderLib } from "../../libs/shaders/ShdaerLib";
+import { ShaderLib } from "../../libs/shaders/ShaderLib";
 
 export const noiseVertex = `
 	${ShaderLib.basicFx_pars_vertex}
@@ -9,7 +9,6 @@ export const noiseVertex = `
 `;
 
 export const noiseFragment = `
-	precision highp float;
 	precision highp int;
 
 	${ShaderLib.basicFx_pars_fragment}

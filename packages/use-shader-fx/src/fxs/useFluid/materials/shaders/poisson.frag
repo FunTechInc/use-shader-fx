@@ -1,5 +1,3 @@
-#usf <default_pars_fragment>
-
 uniform sampler2D pressure;
 uniform sampler2D divergence;
 

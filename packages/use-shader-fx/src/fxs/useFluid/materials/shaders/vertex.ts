@@ -1,7 +1,3 @@
-const base = `
-	#usf <default_pars_vertex>
-`;
-
 const boxVarying = `
 	uniform bool isBounce;
 	varying vec2 vL;
@@ -19,7 +15,7 @@ const getPosition = (isBounce: boolean = true) => {
             : "1.-texelSize*2."
       };
 		pos.xy = pos.xy * scale;
-		vUv = vec2(.5)+(pos.xy)*.5;		
+		vUv = vec2(.5)+(pos.xy)*.5;
 	`;
 };
 
@@ -34,7 +30,6 @@ const getBoxCompute = (diff: string) => {
 
 const vertex = {
    main: `
-		${base}
 		${boxVarying}
 
 		void main(){
@@ -46,7 +41,6 @@ const vertex = {
 		}
 	`,
    poisson: `
-		${base}
 		${boxVarying}
 		
 		void main(){
@@ -58,19 +52,16 @@ const vertex = {
 		}
 	`,
    advection: `
-		${base}
 		void main(){
 			${getPosition(false)}
 			gl_Position = vec4(pos, 1.0);
 		}
 	`,
    splat: `
-		${base}
 		uniform vec2 center;
 		uniform vec2 scale;
-		void main(){
+		void main(){		
 			vec2 pos = position.xy * scale * 2.0 * texelSize + center;
-			vUv = uv;
 			gl_Position = vec4(pos, 0.0, 1.0);
 		}
 	`,

@@ -4,6 +4,7 @@ import { useObject3D } from "./useObject3D";
 import { Size } from "../fxs/types";
 import { useResolution } from "./useResolution";
 import { FxMaterial, FxMaterialProps } from "../fxs/materials/FxMaterial";
+import { useCamera } from "./useCamera";
 
 type MaterialConstructor<M> = new (props: FxMaterialProps) => M;
 
@@ -12,7 +13,7 @@ type GeometryConstructor = new (
    height: number
 ) => THREE.BufferGeometry;
 
-export const useScene = <M extends FxMaterial>({
+export const useFxScene = <M extends FxMaterial>({
    size,
    dpr,
    material,
@@ -46,8 +47,11 @@ export const useScene = <M extends FxMaterial>({
 
    useObject3D(scene, _geometry, _material, THREE.Mesh);
 
+   const camera = useCamera(size);
+
    return {
       scene,
       material: _material,
+      camera,
    };
 };

@@ -15,11 +15,11 @@ export const useCamera = (
    cameraType: "OrthographicCamera" | "PerspectiveCamera" = "OrthographicCamera"
 ) => {
    const resolution = useResolution(size);
-   const { width, height, near, far } = getCameraProps(
-      resolution.x,
-      resolution.y
-   );
    const camera = useMemo(() => {
+      const { width, height, near, far } = getCameraProps(
+         resolution.x,
+         resolution.y
+      );
       return cameraType === "OrthographicCamera"
          ? new THREE.OrthographicCamera(
               -width,
@@ -30,6 +30,6 @@ export const useCamera = (
               far
            )
          : new THREE.PerspectiveCamera(50, width / height);
-   }, [width, height, near, far, cameraType]);
+   }, [resolution, cameraType]);
    return camera;
 };

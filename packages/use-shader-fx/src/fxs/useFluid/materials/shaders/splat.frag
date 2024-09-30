@@ -1,5 +1,3 @@
-#usf <default_pars_fragment>
-
 uniform vec2 force;
 uniform vec2 center;
 

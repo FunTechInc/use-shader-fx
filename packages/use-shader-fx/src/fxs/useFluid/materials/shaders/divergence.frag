@@ -1,5 +1,3 @@
-#usf <default_pars_fragment>
-
 uniform float dt;
 uniform sampler2D velocity;
 
