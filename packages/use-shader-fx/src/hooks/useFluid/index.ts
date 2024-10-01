@@ -13,14 +13,16 @@ import { usePressure } from "./scenes/usePressure";
 
 export const DeltaTime = 0.015;
 
-export type FluidValues = {};
-
-/*===============================================
-- 出力でcolormapとvelocitymapを選択できるみたいな仕組みにする
-- params
- - velocity dissipation
- - color dissipation (color map)
-===============================================*/
+export type FluidValues = {
+   /*===============================================
+	TODO * 
+	- 出力でcolormapとvelocitymapを選択できるみたいな仕組みにする
+		- colormapはfxBasicFxmaterialで、基礎FXも
+	- params
+	 - velocity dissipation
+	 - color dissipation (color map)
+	===============================================*/
+};
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

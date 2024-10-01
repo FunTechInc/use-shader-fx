@@ -12,7 +12,7 @@ export const vertex = `
 		);
 		vCoverTextureUv = vUv * aspectRatio + (1.0 - aspectRatio) * .5;
 
-		gl_Position = vec4(position, 1.0);
+		${ShaderLib.plane_vertex}
 	}
 `;
 

@@ -6,6 +6,7 @@ import basicFx_pars_vertex from "./ShaderLib/basicFx_pars_vertex.glsl";
 import default_pars_fragment from "./ShaderLib/default_pars_fragment.glsl";
 import default_pars_vertex from "./ShaderLib/default_pars_vertex.glsl";
 import default_vertex from "./ShaderLib/default_vertex.glsl";
+import plane_vertex from "./ShaderLib/plane_vertex.glsl";
 
 export type ShaderLibTypes =
    | "basicFx_vertex"
@@ -15,7 +16,8 @@ export type ShaderLibTypes =
    | "basicFx_pars_vertex"
    | "default_pars_fragment"
    | "default_pars_vertex"
-   | "default_vertex";
+   | "default_vertex"
+   | "plane_vertex";
 
 export const ShaderLib: { [K in ShaderLibTypes]: string } = Object.freeze({
    basicFx_vertex,
@@ -26,4 +28,5 @@ export const ShaderLib: { [K in ShaderLibTypes]: string } = Object.freeze({
    default_pars_fragment,
    default_pars_vertex,
    default_vertex,
+   plane_vertex,
 });

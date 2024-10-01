@@ -1,7 +1,8 @@
 /*===============================================
 FXs
 ===============================================*/
-export * from "./fxs/useNoise";
-export * from "./fxs/useFluid";
-export * from "./fxs/useCoverTexture";
-export * from "./fxs/useRawBlank";
+export * from "./hooks/useNoise";
+export * from "./hooks/useFluid";
+export * from "./hooks/useCoverTexture";
+export * from "./hooks/useRawBlank";
+export * from "./hooks/useBlur";

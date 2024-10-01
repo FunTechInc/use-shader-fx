@@ -3,10 +3,10 @@ import { useCallback } from "react";
 import { useCamera } from "../../utils/useCamera";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
-import { getDpr } from "../../utils/useDpr";
+import { useDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
 import { NoiseMaterial } from "./NoiseMaterial";
-import { useScene } from "../../utils/useFxScene";
+import { useFxScene } from "../../utils/useFxScene";
 import { BasicFxValues } from "../materials/BasicFxLib";
 
 export type NoiseValues = {
@@ -41,9 +41,9 @@ export const useNoise = ({
    materialParameters,
    ...uniformValues
 }: HooksProps & NoiseValues): HooksReturn<NoiseValues, NoiseMaterial> => {
-   const _dpr = getDpr(dpr);
+   const _dpr = useDpr(dpr);
 
-   const { scene, material } = useScene({
+   const { scene, material } = useFxScene({
       size,
       dpr: _dpr.shader,
       material: NoiseMaterial,

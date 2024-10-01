@@ -1,1 +1,1 @@
-vUv = uv;
+#usf <default_vertex>

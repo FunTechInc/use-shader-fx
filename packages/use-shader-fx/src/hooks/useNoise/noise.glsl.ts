@@ -1,17 +1,13 @@
 import { ShaderLib } from "../../libs/shaders/ShaderLib";
 
 export const noiseVertex = `
-	${ShaderLib.basicFx_pars_vertex}
 	void main() {
-		${ShaderLib.basicFx_vertex}
-		gl_Position = vec4(position, 1.0);
+		${ShaderLib.plane_vertex}
 	}
 `;
 
 export const noiseFragment = `
 	precision highp int;
-
-	${ShaderLib.basicFx_pars_fragment}
 
 	uniform float tick;
 	uniform float timeStrength;
