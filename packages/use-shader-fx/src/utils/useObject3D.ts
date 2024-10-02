@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Object3DConstructor<T, M extends THREE.Material> = new (
    geometry: THREE.BufferGeometry,
@@ -19,7 +19,7 @@ export const useObject3D = <T extends THREE.Object3D, M extends THREE.Material>(
       const obj = new Proto(geometry, material);
       scene && scene.add(obj);
       return obj;
-   }, [geometry, material, Proto, scene]);
+   }, [scene, geometry, material, Proto]);
 
    useEffect(() => {
       return () => {

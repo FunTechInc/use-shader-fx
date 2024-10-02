@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
    useFrame,
    useThree,
@@ -15,27 +15,37 @@ import {
    useCoverTexture,
    useRawBlank,
    useBlur,
+   useSingleFBO,
+   createFxMaterial,
+   createFxBasixFxMaterial,
 } from "@/packages/use-shader-fx/src";
-import { FxMaterial } from "./FxMaterial";
+// import { FxMaterial } from "./FxMaterial";
 import {
    Environment,
    Float,
    OrbitControls,
    useVideoTexture,
 } from "@react-three/drei";
-import { useSingleFBO } from "@/packages/use-shader-fx/legacy";
 
-/*===============================================
-TODO * これをFxRendererで、描画できるようにする
-glslのカスマイズなしで、レンダリングするのを目標とする
-===============================================*/
+const FxMaterial = createFxMaterial();
+const FxBasicFxMaterial = createFxBasixFxMaterial();
 
-extend({ FxMaterial });
+extend({ FxMaterial, FxBasicFxMaterial });
+
+declare global {
+   namespace JSX {
+      interface IntrinsicElements {
+         fxMaterial: any;
+         fxBasicFxMaterial: any;
+      }
+   }
+}
 
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
 
-   const offscreenScene = useMemo(() => new THREE.Scene(), []);
+   const [offscreenScene] = useState(() => new THREE.Scene());
+
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene: offscreenScene,
       camera,
@@ -57,19 +67,31 @@ export const Playground = () => {
    });
 
    useFrame((state) => {
-      blur.render(state);
+      updateRenderTarget({ gl: state.gl });
       noise.render(state);
-      updateRenderTarget(state.gl);
+      blur.render(state);
    });
+
+   const ref = useRef<any>();
+   useFrame(() => {
+      // ref.current.updateBasicFx();
+   });
+   // console.log(ref.current.updateResolution);
 
    return (
       <>
          <mesh>
             <planeGeometry args={[2, 2]} />
-            <fxMaterial
-               u_fx={blur.texture}
-               u_noise={noise.texture}
-               key={FxMaterial.key}
+            <fxBasicFxMaterial
+               ref={ref}
+               src={blur.texture}
+               mixSrc={noise.texture}
+               mixSrcUvFactor={0.4}
+               mixDstUvFactor={0.5}
+               mixDstAlphaFactor={0.5}
+               // u_fx={blur.texture}
+               // u_noise={noise.texture}
+               // key={FxMaterial.key}
             />
          </mesh>
          {createPortal(

@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { resolveIncludes } from "../../libs/shaders/resolveShaders";
-import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
+import { resolveIncludes } from "../libs/shaders/resolveShaders";
+import { mergeShaderLib } from "../libs/shaders/mergeShaderLib";
 
 export type DefaultUniforms = {
    resolution: { value: THREE.Vector2 };
@@ -9,8 +9,9 @@ export type DefaultUniforms = {
    maxAspect: { value: THREE.Vector2 };
 };
 
+export type Uniforms = { [uniform: string]: THREE.IUniform<any> };
 export type ShaderWithUniforms = {
-   uniforms?: { [uniform: string]: THREE.IUniform };
+   uniforms?: Uniforms;
    vertexShader?: string;
    fragmentShader?: string;
 };
@@ -90,5 +91,19 @@ export class FxMaterial extends THREE.ShaderMaterial {
 
          curretUniform.value = newValue;
       }
+   }
+
+   // Create getter/setters
+   defineUniformAccessors(onSet?: () => void) {
+      const entries = Object.entries(this.uniforms);
+      entries.forEach(([name]) =>
+         Object.defineProperty(this, name, {
+            get: () => this.uniforms[name].value,
+            set: (v) => {
+               this.uniforms[name].value = v;
+               onSet?.();
+            },
+         })
+      );
    }
 }

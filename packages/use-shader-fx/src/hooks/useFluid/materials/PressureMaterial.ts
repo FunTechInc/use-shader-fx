@@ -5,7 +5,7 @@ import {
    FxMaterial,
    DefaultUniforms,
    FxMaterialProps,
-} from "../../materials/FxMaterial";
+} from "../../../materials/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
 import { DeltaTime } from "..";
 

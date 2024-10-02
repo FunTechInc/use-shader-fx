@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { noiseFragment, noiseVertex } from "./noise.glsl";
-import { FxBasicFxMaterial } from "../materials/FxBasicFxMaterial";
-import { FxMaterialProps } from "../materials/FxMaterial";
-import { BasicFxUniforms } from "../materials/BasicFxLib";
+import { FxBasicFxMaterial } from "../../materials/FxBasicFxMaterial";
+import { FxMaterialProps } from "../../materials/FxMaterial";
+import { BasicFxUniforms } from "../../materials/BasicFxLib";
 
 type NoiseUniforms = {
    tick: { value: number };

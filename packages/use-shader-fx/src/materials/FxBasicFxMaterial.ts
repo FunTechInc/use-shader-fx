@@ -5,7 +5,7 @@ import {
    BasicFxFlag,
    BasicFxLib,
 } from "./BasicFxLib";
-import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
+import { mergeShaderLib } from "../libs/shaders/mergeShaderLib";
 
 export class FxBasicFxMaterial extends FxMaterial {
    basicFxFlag: BasicFxFlag;

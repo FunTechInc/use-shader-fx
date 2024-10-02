@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import GUI from "lil-gui";
 
 export const useGUI = (setGUI: (gui: GUI) => void) => {
-   const gui = useMemo(() => new GUI({ closeFolders: true, width: 240 }), []);
+   const [gui] = useState(() => new GUI({ closeFolders: true, width: 240 }));
+
    useEffect(() => {
       setGUI(gui);
       return () => {

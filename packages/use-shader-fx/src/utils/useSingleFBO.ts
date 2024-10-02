@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useResolution } from "./useResolution";
-import { Size } from "../fxs/types";
+import { Size } from "../hooks/types";
 
 export const FBO_DEFAULT_OPTION: THREE.RenderTargetOptions = {
    depthBuffer: false,
@@ -75,47 +75,37 @@ export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
       ...renderTargetOptions
    } = props;
 
-   const renderTarget = useRef<THREE.WebGLRenderTarget>();
-
    const resolution = useResolution(size, dpr);
 
-   renderTarget.current = useMemo(
-      () => {
-         const target = new THREE.WebGLRenderTarget(
+   const [renderTarget] = useState(() => {
+      const target = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
+         ...FBO_DEFAULT_OPTION,
+         ...renderTargetOptions,
+      });
+      if (depth) {
+         target.depthTexture = new THREE.DepthTexture(
             resolution.x,
             resolution.y,
-            {
-               ...FBO_DEFAULT_OPTION,
-               ...renderTargetOptions,
-            }
+            THREE.FloatType
          );
-         if (depth) {
-            target.depthTexture = new THREE.DepthTexture(
-               resolution.x,
-               resolution.y,
-               THREE.FloatType
-            );
-         }
-         return target;
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      []
-   );
+      }
+      return target;
+   });
 
    if (sizeUpdate) {
-      renderTarget.current?.setSize(resolution.x, resolution.y);
+      renderTarget.setSize(resolution.x, resolution.y);
    }
 
    useEffect(() => {
-      const temp = renderTarget.current;
+      const temp = renderTarget;
       return () => {
          temp?.dispose();
       };
-   }, []);
+   }, [renderTarget]);
 
    const updateRenderTarget: SingleFBOUpdateFunction = useCallback(
       (renderProps, onBeforeRender) => {
-         const fbo = renderTarget.current!;
+         const fbo = renderTarget!;
          renderFBO({
             ...renderProps,
             scene: renderProps.scene || scene,
@@ -125,8 +115,8 @@ export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
          });
          return fbo.texture;
       },
-      [scene, camera]
+      [scene, camera, renderTarget]
    );
 
-   return [renderTarget.current, updateRenderTarget];
+   return [renderTarget, updateRenderTarget];
 };

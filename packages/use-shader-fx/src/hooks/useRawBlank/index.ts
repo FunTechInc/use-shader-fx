@@ -6,7 +6,7 @@ import { useDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
 import { RawBlankMaterial } from "./RawBlankMaterial";
 import { useFxScene } from "../../utils/useFxScene";
-import { ShaderWithUniforms } from "../materials/FxMaterial";
+import { ShaderWithUniforms } from "../../materials/FxMaterial";
 
 export type RawBlankValues = {};
 

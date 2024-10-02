@@ -28,6 +28,5 @@ export const fragment = `
 
 		gl_FragColor = outColor;
 
-
 	}
 `;

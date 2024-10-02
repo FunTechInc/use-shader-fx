@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useResolution } from "./useResolution";
-import { useMemo } from "react";
-import { Size } from "../fxs/types";
+import { useState } from "react";
+import { Size } from "../hooks/types";
 
 const getCameraProps = (width: number, height: number) => {
    const frustumSize = height;
@@ -15,11 +15,12 @@ export const useCamera = (
    cameraType: "OrthographicCamera" | "PerspectiveCamera" = "OrthographicCamera"
 ) => {
    const resolution = useResolution(size);
-   const camera = useMemo(() => {
-      const { width, height, near, far } = getCameraProps(
-         resolution.x,
-         resolution.y
-      );
+   const { width, height, near, far } = getCameraProps(
+      resolution.x,
+      resolution.y
+   );
+
+   const [camera] = useState(() => {
       return cameraType === "OrthographicCamera"
          ? new THREE.OrthographicCamera(
               -width,
@@ -30,6 +31,20 @@ export const useCamera = (
               far
            )
          : new THREE.PerspectiveCamera(50, width / height);
-   }, [resolution, cameraType]);
+   });
+
+   if (camera instanceof THREE.OrthographicCamera) {
+      camera.left = -width;
+      camera.right = width;
+      camera.top = height;
+      camera.bottom = -height;
+      camera.near = near;
+      camera.far = far;
+      camera.updateProjectionMatrix();
+   } else if (camera instanceof THREE.PerspectiveCamera) {
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+   }
+
    return camera;
 };

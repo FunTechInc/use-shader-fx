@@ -1,24 +1,19 @@
 "use client";
 
 import * as THREE from "three";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useFrame, useThree, extend, createPortal } from "@react-three/fiber";
-import { useNoise, useBlur } from "@/packages/use-shader-fx/src";
+import { useNoise, useBlur, useSingleFBO } from "@/packages/use-shader-fx/src";
 import { FxMaterial } from "./FxMaterial";
-import {
-   Environment,
-   Float,
-   OrbitControls,
-   useVideoTexture,
-} from "@react-three/drei";
-import { useSingleFBO } from "@/packages/use-shader-fx/legacy";
+import { Float, OrbitControls } from "@react-three/drei";
 
 extend({ FxMaterial });
 
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
 
-   const offscreenScene = useMemo(() => new THREE.Scene(), []);
+   const [offscreenScene] = useState(() => new THREE.Scene());
+
    const [renderTarget, updateRenderTarget] = useSingleFBO({
       scene: offscreenScene,
       camera,
@@ -29,8 +24,8 @@ export const Playground = () => {
 
    const blur = useBlur({
       size,
-      dpr: 0.6,
-      blurSize: 8,
+      dpr: 0.4,
+      blurSize: 4,
       blurIteration: 20,
       src: renderTarget.texture,
    });
@@ -56,7 +51,7 @@ export const Playground = () => {
       blur.render(state);
       gooey.render(state);
       noise.render(state);
-      updateRenderTarget(state.gl);
+      updateRenderTarget({ gl: state.gl });
       mesh0.current!.position.x -=
          Math.sin(state.clock.getElapsedTime()) * 0.02;
    });

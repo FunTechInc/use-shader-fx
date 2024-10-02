@@ -5,7 +5,7 @@ import {
    DefaultUniforms,
    FxMaterial,
    FxMaterialProps,
-} from "../../materials/FxMaterial";
+} from "../../../materials/FxMaterial";
 
 type SplatUniforms = {
    force: { value: THREE.Vector2 };

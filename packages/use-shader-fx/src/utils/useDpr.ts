@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Dpr } from "../fxs/types";
+import { Dpr } from "../hooks/types";
 
 export const useDpr = (
    dpr: Dpr

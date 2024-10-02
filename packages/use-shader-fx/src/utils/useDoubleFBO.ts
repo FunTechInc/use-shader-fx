@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
    FBO_DEFAULT_OPTION,
    UseFboProps,
@@ -51,7 +51,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
 
    const resolution = useResolution(size, dpr);
 
-   const renderTarget = useMemo<WebGLDoubleRenderTarget>(() => {
+   const [renderTarget] = useState<WebGLDoubleRenderTarget>(() => {
       const read = new THREE.WebGLRenderTarget(resolution.x, resolution.y, {
          ...FBO_DEFAULT_OPTION,
          ...renderTargetOptions,
@@ -83,8 +83,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
             this.write = temp;
          },
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
+   });
 
    if (sizeUpdate) {
       renderTarget.read?.setSize(resolution.x, resolution.y);
