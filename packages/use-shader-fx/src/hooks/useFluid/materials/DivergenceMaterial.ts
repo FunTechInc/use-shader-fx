@@ -27,14 +27,14 @@ export class DivergenceMaterial extends FxMaterial {
 
       this.type = DivergenceMaterial.type;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             isBounce: { value: true },
             velocity: { value: DEFAULT_TEXTURE },
             dt: { value: DeltaTime },
          },
-      };
+      ]) as DivergenceUniforms;
 
       this.setupDefaultShaders(vertex.main, fragment);
 

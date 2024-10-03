@@ -1,12 +1,6 @@
 import * as THREE from "three";
-import {
-   DefaultUniforms,
-   FxMaterial,
-   FxMaterialProps,
-   ShaderWithUniforms,
-} from "./FxMaterial";
+import { FxMaterialProps, ShaderWithUniforms } from "./FxMaterial";
 import { ShaderLib } from "../libs/shaders/ShaderLib";
-import { DEFAULT_TEXTURE } from "../libs/constants";
 import { FxBasicFxMaterial } from "./FxBasicFxMaterial";
 import { BasicFxUniforms, BasicFxValues } from "./BasicFxLib";
 
@@ -14,7 +8,7 @@ type FxBasicFxMaterialImplUniforms = {
    src: { value: THREE.Texture };
 } & BasicFxUniforms;
 
-type FxBasixFxMaterialImplValues = {
+export type FxBasicFxMaterialImplValues = {
    src?: THREE.Texture;
 } & BasicFxValues;
 
@@ -41,40 +35,33 @@ const fragment = `
 	}
 `;
 
-/*===============================================
-TODO *
-- FxMaterialImplもTHREE.UniformsUtils.mergeを使うように変更
-	- そもそもなぜ、mergeを使うとバグが解消されるのか調査
-- 全体的に、THREE.UniformsUtils.mergeの必要性を検討
-
-===============================================*/
-export const createFxBasixFxMaterial = ({
+export const createFxBasicFxMaterialImpl = ({
    uniforms,
    vertexShader = vertex,
    fragmentShader = fragment,
 }: ShaderWithUniforms = {}) => {
    class FxBasicFxMaterialImpl extends FxBasicFxMaterial {
+      public key: string = THREE.MathUtils.generateUUID();
+
       static get type() {
          return "FxBasicFxMaterialImpl";
       }
 
       uniforms!: FxBasicFxMaterialImplUniforms;
 
-      constructor(props: FxMaterialProps<FxBasixFxMaterialImplValues>) {
+      constructor(props: FxMaterialProps<FxBasicFxMaterialImplValues>) {
          super();
 
          this.type = FxBasicFxMaterialImpl.type;
 
-         this.uniforms = {
-            ...THREE.UniformsUtils.merge([
-               this.uniforms,
-               {
-                  src: { value: null },
-               },
-            ]),
-            ...uniforms,
-            ...props?.uniforms,
-         };
+         this.uniforms = THREE.UniformsUtils.merge([
+            this.uniforms,
+            {
+               src: { value: null },
+            },
+            uniforms || {},
+            props?.uniforms || {},
+         ]) as FxBasicFxMaterialImplUniforms;
 
          this.setupBasicFxShaders(
             props?.vertexShader || vertexShader,
@@ -84,9 +71,12 @@ export const createFxBasixFxMaterial = ({
          this.setUniformValues(props?.uniformValues);
          this.setValues(props?.materialParameters || {});
 
-         this.defineUniformAccessors(() => this.updateBasicFx());
+         // to update basicFx flag
+         this.defineUniformAccessors(this.updateBasicFx.bind(this));
       }
    }
 
-   return FxBasicFxMaterialImpl;
+   return FxBasicFxMaterialImpl as typeof FxBasicFxMaterialImpl & {
+      key: string;
+   };
 };

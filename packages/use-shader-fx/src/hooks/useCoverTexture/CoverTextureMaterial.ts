@@ -25,13 +25,13 @@ export class CoverTextureMaterial extends FxBasicFxMaterial {
 
       this.type = CoverTextureMaterial.type;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             src: { value: null },
             textureResolution: { value: new THREE.Vector2() },
          },
-      };
+      ]) as CoverTextureUniforms;
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);

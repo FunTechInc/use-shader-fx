@@ -28,14 +28,14 @@ export class PoissonMaterial extends FxMaterial {
 
       this.type = PoissonMaterial.type;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             isBounce: { value: true },
             pressure: { value: DEFAULT_TEXTURE },
             divergence: { value: DEFAULT_TEXTURE },
          },
-      };
+      ]) as PoissonUniforms;
 
       this.iteration = 32;
 

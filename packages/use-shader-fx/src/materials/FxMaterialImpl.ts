@@ -4,7 +4,6 @@ import {
    FxMaterial,
    FxMaterialProps,
    ShaderWithUniforms,
-   Uniforms,
 } from "./FxMaterial";
 import { ShaderLib } from "../libs/shaders/ShaderLib";
 import { DEFAULT_TEXTURE } from "../libs/constants";
@@ -13,7 +12,7 @@ type FxMaterialImplUniforms = {
    src: { value: THREE.Texture };
 } & DefaultUniforms;
 
-type FxMaterialImplValues = {
+export type FxMaterialImplValues = {
    src?: THREE.Texture;
 };
 
@@ -30,31 +29,33 @@ const fragment = `
 	}
 `;
 
-export const createFxMaterial = ({
+export const createFxMaterialImpl = ({
    uniforms,
    vertexShader = vertex,
    fragmentShader = fragment,
 }: ShaderWithUniforms = {}) => {
    class FxMaterialImpl extends FxMaterial {
+      public key: string = THREE.MathUtils.generateUUID();
+
       static get type() {
          return "FxMaterialImpl";
       }
 
-      uniforms!: FxMaterialImplUniforms & Uniforms;
+      uniforms!: FxMaterialImplUniforms;
 
       constructor(props: FxMaterialProps<FxMaterialImplValues>) {
          super();
 
          this.type = FxMaterialImpl.type;
 
-         this.uniforms = {
-            ...this.uniforms,
-            ...{
+         this.uniforms = THREE.UniformsUtils.merge([
+            this.uniforms,
+            {
                src: { value: DEFAULT_TEXTURE },
             },
-            ...uniforms,
-            ...props?.uniforms,
-         };
+            uniforms || {},
+            props?.uniforms || {},
+         ]) as FxMaterialImplUniforms;
 
          this.setupDefaultShaders(
             props?.vertexShader || vertexShader,
@@ -68,5 +69,7 @@ export const createFxMaterial = ({
       }
    }
 
-   return FxMaterialImpl;
+   return FxMaterialImpl as typeof FxMaterialImpl & {
+      key: string;
+   };
 };

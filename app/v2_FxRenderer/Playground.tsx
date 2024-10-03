@@ -2,44 +2,37 @@
 
 import * as THREE from "three";
 import { useRef, useState } from "react";
-import {
-   useFrame,
-   useThree,
-   extend,
-   useLoader,
-   createPortal,
-} from "@react-three/fiber";
+import { useFrame, useThree, extend, createPortal } from "@react-three/fiber";
 import {
    useNoise,
-   useFluid,
-   useCoverTexture,
-   useRawBlank,
    useBlur,
    useSingleFBO,
-   createFxMaterial,
-   createFxBasixFxMaterial,
+   createFxMaterialImpl,
+   createFxBasicFxMaterialImpl,
+   FxMaterialImplValues,
+   FxBasicFxMaterialImplValues,
+   useFluid,
 } from "@/packages/use-shader-fx/src";
-// import { FxMaterial } from "./FxMaterial";
-import {
-   Environment,
-   Float,
-   OrbitControls,
-   useVideoTexture,
-} from "@react-three/drei";
+import { Float, OrbitControls } from "@react-three/drei";
 
-const FxMaterial = createFxMaterial();
-const FxBasicFxMaterial = createFxBasixFxMaterial();
+const FxMaterialImpl = createFxMaterialImpl({
+   fragmentShader: `
+	uniform sampler2D src;
+	void main() {
+		vec2 vel = texture2D(src, vUv).xy;
+		float len = length(vel);
+		vel = vel * 0.5 + 0.5;
+		
+		vec3 color = vec3(vel.x, vel.y, 1.0);
+		color = mix(vec3(1.0), color, len);
 
-extend({ FxMaterial, FxBasicFxMaterial });
+		gl_FragColor = vec4(color,  1.0);
+	}
+`,
+});
+const FxBasicFxMaterialImpl = createFxBasicFxMaterialImpl();
 
-declare global {
-   namespace JSX {
-      interface IntrinsicElements {
-         fxMaterial: any;
-         fxBasicFxMaterial: any;
-      }
-   }
-}
+extend({ FxMaterialImpl, FxBasicFxMaterialImpl });
 
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
@@ -66,32 +59,32 @@ export const Playground = () => {
       scale: 0.03,
    });
 
+   const fluid = useFluid({
+      size,
+      dpr: 0.25,
+   });
+
    useFrame((state) => {
       updateRenderTarget({ gl: state.gl });
       noise.render(state);
       blur.render(state);
+      fluid.render(state);
    });
 
    const ref = useRef<any>();
-   useFrame(() => {
-      // ref.current.updateBasicFx();
-   });
+   useFrame(() => {});
    // console.log(ref.current.updateResolution);
 
    return (
       <>
          <mesh>
             <planeGeometry args={[2, 2]} />
-            <fxBasicFxMaterial
+            <fxMaterialImpl
+               key={FxMaterialImpl.key}
                ref={ref}
-               src={blur.texture}
-               mixSrc={noise.texture}
-               mixSrcUvFactor={0.4}
-               mixDstUvFactor={0.5}
-               mixDstAlphaFactor={0.5}
-               // u_fx={blur.texture}
-               // u_noise={noise.texture}
-               // key={FxMaterial.key}
+               src={fluid.texture}
+               // mixSrc={noise.texture}
+               // mixSrcUvFactor={0.6}
             />
          </mesh>
          {createPortal(
@@ -109,3 +102,14 @@ export const Playground = () => {
       </>
    );
 };
+
+declare global {
+   namespace JSX {
+      interface IntrinsicElements {
+         fxMaterialImpl: FxMaterialImplValues &
+            JSX.IntrinsicElements["shaderMaterial"];
+         fxBasicFxMaterialImpl: FxBasicFxMaterialImplValues &
+            JSX.IntrinsicElements["shaderMaterial"];
+      }
+   }
+}

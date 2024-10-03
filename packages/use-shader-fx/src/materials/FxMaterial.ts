@@ -31,13 +31,15 @@ export class FxMaterial extends THREE.ShaderMaterial {
    }: FxMaterialProps = {}) {
       super();
 
-      this.uniforms = {
-         resolution: { value: new THREE.Vector2() },
-         texelSize: { value: new THREE.Vector2() },
-         aspectRatio: { value: 0 },
-         maxAspect: { value: new THREE.Vector2() },
-         ...uniforms,
-      } as DefaultUniforms;
+      this.uniforms = THREE.UniformsUtils.merge([
+         {
+            resolution: { value: new THREE.Vector2() },
+            texelSize: { value: new THREE.Vector2() },
+            aspectRatio: { value: 0 },
+            maxAspect: { value: new THREE.Vector2() },
+         },
+         uniforms || {},
+      ]) as DefaultUniforms;
 
       this.setupDefaultShaders(vertexShader, fragmentShader);
 

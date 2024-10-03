@@ -28,15 +28,15 @@ export class PressureMaterial extends FxMaterial {
 
       this.type = PressureMaterial.type;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             isBounce: { value: true },
             pressure: { value: DEFAULT_TEXTURE },
             velocity: { value: DEFAULT_TEXTURE },
             dt: { value: DeltaTime },
          },
-      };
+      ]) as PressureUniforms;
 
       this.setupDefaultShaders(vertex.main, fragment);
 

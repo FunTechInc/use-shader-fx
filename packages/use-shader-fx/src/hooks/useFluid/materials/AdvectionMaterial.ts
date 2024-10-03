@@ -26,13 +26,13 @@ export class AdvectionMaterial extends FxMaterial {
 
       this.type = AdvectionMaterial.type;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             velocity: { value: DEFAULT_TEXTURE },
             dt: { value: DeltaTime },
          },
-      };
+      ]) as AdvectionUniforms;
 
       this.setupDefaultShaders(vertex.advection, fragment);
 

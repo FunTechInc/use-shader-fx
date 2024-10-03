@@ -25,13 +25,13 @@ export class BlurMaterial extends FxBasicFxMaterial {
 
       this.type = BlurMaterial.type;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             src: { value: null },
             blurSize: { value: 5 },
          },
-      };
+      ]) as BlurUniforms;
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);

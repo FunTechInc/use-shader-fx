@@ -29,14 +29,14 @@ export class SplatMaterial extends FxMaterial {
 
       this.force = 30;
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...{
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         {
             force: { value: new THREE.Vector2(0, 0) },
             center: { value: new THREE.Vector2(0, 0) },
             scale: { value: new THREE.Vector2(30, 30) },
          },
-      };
+      ]) as SplatUniforms;
 
       this.setupDefaultShaders(vertex.splat, fragment);
 

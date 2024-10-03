@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { FxMaterial, FxMaterialProps } from "./FxMaterial";
 import {
    BasicFxUniforms,
@@ -29,11 +30,11 @@ export class FxBasicFxMaterial extends FxMaterial {
 
       this.basicFxFlag = BasicFxLib.setupDefaultFlag(uniformValues);
 
-      this.uniforms = {
-         ...this.uniforms,
-         ...BasicFxLib.DEFAULT_BASICFX_VALUES,
-         ...uniforms,
-      } as BasicFxUniforms;
+      this.uniforms = THREE.UniformsUtils.merge([
+         this.uniforms,
+         BasicFxLib.DEFAULT_BASICFX_VALUES,
+         uniforms || {},
+      ]) as BasicFxUniforms;
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);
