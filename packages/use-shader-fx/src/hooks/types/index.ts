@@ -1,6 +1,12 @@
 import * as THREE from "three";
 
-export type Size = { width: number; height: number };
+export type Size = {
+   width: number;
+   height: number;
+   top: number;
+   left: number;
+   updateStyle?: boolean;
+};
 
 export type Dpr =
    | number

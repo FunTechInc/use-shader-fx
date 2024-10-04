@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
 import { SplatMaterial } from "../materials/SplatMaterial";
-import { usePointer } from "../../../misc/usePointer";
+import { usePointerTracker } from "../../../misc/usePointerTracker";
 import { useFxScene } from "../../../utils/useFxScene";
 
 export const useSplat = (
@@ -25,12 +25,12 @@ export const useSplat = (
       },
    });
 
-   const updatePointer = usePointer();
+   const pointerTracker = usePointerTracker();
 
    const render = useCallback(
       (rootState: RootState) => {
          const { gl, pointer } = rootState;
-         const { currentPointer, diffPointer } = updatePointer(pointer);
+         const { currentPointer, diffPointer } = pointerTracker(pointer);
 
          material.uniforms.center.value.copy(currentPointer);
          material.uniforms.force.value.copy(
@@ -39,7 +39,7 @@ export const useSplat = (
 
          updateRenderTarget({ gl, scene, camera, clear: false });
       },
-      [updateRenderTarget, material, updatePointer, scene, camera]
+      [updateRenderTarget, material, pointerTracker, scene, camera]
    );
 
    return { render, material };

@@ -73,7 +73,7 @@ npm install @funtech-inc/use-shader-fx
 <table>
 <tr>
 <th><strong>misc</strong></th>
-<td><a href="#usebeat">useBeat</a>, <a href="#usefpslimiter">useFPSLimiter</a>, <a href="#usepointer">usePointer</a>, <a href="#usedomsyncer">useDomSyncer</a></td>
+<td><a href="#usebeat">useBeat</a>, <a href="#usefpslimiter">useFPSLimiter</a>, <a href="#usePointerTracker">usePointerTracker</a>, <a href="#usedomsyncer">useDomSyncer</a></td>
 </tr>
 </table>
 
@@ -409,23 +409,23 @@ type DomSyncerParams = {
 
 `updateKey` : Because DOM rendering and React updates occur asynchronously, there may be a lag between updating dependent arrays and setting DOM arrays. That's what the Key is for. If the dependent array is updated but the Key is not, the loop will skip and return an empty texture. By updating the timing key when DOM acquisition is complete, you can perfectly synchronize DOM and Mesh updates.
 
-## usePointer
+## usePointerTracker
 
 When given the `pointer` vector2 from r3f's `RootState`, it generates an update function that returns {currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity}.
 You can also add `lerp` (0~1, lerp intensity (0 to less than 1) , default: 0)
 
 ```js
-const updatePointer = usePointer(lerp);
+const pointerTracker = usePointerTracker(lerp);
 
 const { currentPointer, prevPointer, diffPointer, isVelocityUpdate, velocity } =
-   updatePointer(pointer);
+   pointerTracker(pointer);
 ```
 
 You can override the pointer process by passing `pointerValues` to `updateFx` in the `useFrame`.
 
 ```ts
 useFrame((rootState) => {
-   const pointerValues = updatePointer(rootState.pointer);
+   const pointerValues = pointerTracker(rootState.pointer);
    updateBrush(rootState, {
       pointerValues: pointerValues,
    });

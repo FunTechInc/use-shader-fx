@@ -9,14 +9,14 @@ export type PointerValues = {
    isVelocityUpdate: boolean;
 };
 
-type UpdatePointer = (currentPointer: THREE.Vector2) => PointerValues;
+type PointerTracker = (currentPointer: THREE.Vector2) => PointerValues;
 
 /**
  * @description When given the pointer vector2 from r3f's RootState, it generates an update function that returns {`currentPointer`, `prevPointer`, `diffPointer`, `isVelocityUpdate`, `velocity`}.
  * @description When calling custom in a `useFrame` loop, you can avoid duplication of execution by passing `pointerValues` to the update function of a Pointer-activated fxHook, such as `useBrush`.
  * @param lerp 0~1, lerp intensity (0 to less than 1) , default : `0`
  */
-export const usePointer = (lerp: number = 0): UpdatePointer => {
+export const usePointerTracker = (lerp: number = 0): PointerTracker => {
    const prevPointer = useRef(new THREE.Vector2(0, 0));
    const diffPointer = useRef(new THREE.Vector2(0, 0));
    const lerpPointer = useRef(new THREE.Vector2(0, 0));
@@ -24,7 +24,7 @@ export const usePointer = (lerp: number = 0): UpdatePointer => {
    const velocity = useRef(new THREE.Vector2(0, 0));
    const isMoved = useRef(false);
 
-   const updatePointer = useCallback(
+   const pointerTracker = useCallback(
       (currentPointer: THREE.Vector2) => {
          const now = performance.now();
 
@@ -76,5 +76,5 @@ export const usePointer = (lerp: number = 0): UpdatePointer => {
       [lerp]
    );
 
-   return updatePointer;
+   return pointerTracker;
 };
