@@ -47,17 +47,17 @@ export const Playground = () => {
       depthBuffer: true,
    });
 
-   const blur = useBlur({
-      size,
-      dpr: 1,
-      src: renderTarget.texture,
-   });
+   // const blur = useBlur({
+   //    size,
+   //    dpr: 1,
+   //    src: renderTarget.texture,
+   // });
 
-   const noise = useNoise({
-      size,
-      dpr: 0.05,
-      scale: 0.03,
-   });
+   // const noise = useNoise({
+   //    size,
+   //    dpr: 0.05,
+   //    scale: 0.03,
+   // });
 
    const fluid = useFluid({
       size,
@@ -66,8 +66,8 @@ export const Playground = () => {
 
    useFrame((state) => {
       updateRenderTarget({ gl: state.gl });
-      noise.render(state);
-      blur.render(state);
+      // noise.render(state);
+      // blur.render(state);
       fluid.render(state);
    });
 

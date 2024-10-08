@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { FxBasicFxMaterial } from "../../materials/FxBasicFxMaterial";
 
 export type Size = {
    width: number;
@@ -54,7 +55,7 @@ export interface HooksProps {
  * @template V The type for the FX parameters.
  * @template O The type for the material.
  */
-export type HooksReturn<V, M> = {
+export type HooksReturn<V = {}, M = FxBasicFxMaterial> = {
    /**
     * Functions to update parameters and render.
     * @param rootState RootState
