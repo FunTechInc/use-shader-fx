@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useObject3D } from "./useObject3D";
 import { Size } from "../hooks/types";
 import { useResolution } from "./useResolution";
-import { FxMaterial, FxMaterialProps } from "../materials/FxMaterial";
+import { FxMaterial, FxMaterialProps } from "../materials/core/FxMaterial";
 import { useCamera } from "./useCamera";
 
 type MaterialConstructor<M> = new (props: FxMaterialProps) => M;
@@ -30,12 +30,14 @@ export const useFxScene = <M extends FxMaterial>({
       height: number;
    };
 } & FxMaterialProps) => {
+   // non-reactive
    const [scene] = useState(() => new THREE.Scene());
    const [_geometry] = useState(
       () => new geometry(geometrySize?.width || 2, geometrySize?.height || 2)
    );
    const [_material] = useState(() => new material(materialProps));
 
+   // materialのresolutionはreactiveに更新する
    const resolution = useResolution(size, dpr);
    _material.updateResolution(resolution);
 

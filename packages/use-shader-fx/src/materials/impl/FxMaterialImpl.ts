@@ -4,9 +4,9 @@ import {
    FxMaterial,
    FxMaterialProps,
    ShaderWithUniforms,
-} from "./FxMaterial";
-import { ShaderLib } from "../libs/shaders/ShaderLib";
-import { DEFAULT_TEXTURE } from "../libs/constants";
+} from "../core/FxMaterial";
+import { ShaderLib } from "../../libs/shaders/ShaderLib";
+import { DEFAULT_TEXTURE } from "../../libs/constants";
 
 type FxMaterialImplUniforms = {
    src: { value: THREE.Texture };

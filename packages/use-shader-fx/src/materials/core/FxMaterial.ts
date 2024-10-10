@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { resolveIncludes } from "../libs/shaders/resolveShaders";
-import { mergeShaderLib } from "../libs/shaders/mergeShaderLib";
+import { resolveIncludes } from "../../libs/shaders/resolveShaders";
+import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
 
 export type DefaultUniforms = {
    resolution: { value: THREE.Vector2 };

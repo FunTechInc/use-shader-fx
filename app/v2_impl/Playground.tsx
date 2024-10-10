@@ -55,14 +55,17 @@ export const Playground = () => {
 
    const noise = useNoise({
       size,
-      dpr: 0.23,
-      scale: 0.03,
+      dpr: 0.3,
+      scale: 0.3,
+      noiseOctaves: 2,
    });
 
-   const fluid = useFluid({
-      size,
-      dpr: 0.25,
-   });
+   console.log(noise);
+
+   // const fluid = useFluid({
+   //    size,
+   //    dpr: 0.25,
+   // });
 
    useFrame((state) => {
       updateRenderTarget({ gl: state.gl });

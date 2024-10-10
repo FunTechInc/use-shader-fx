@@ -7,7 +7,7 @@ import { useDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
 import { NoiseMaterial } from "./NoiseMaterial";
 import { useFxScene } from "../../utils/useFxScene";
-import { BasicFxValues } from "../../materials/BasicFxLib";
+import { BasicFxValues } from "../../materials/core/BasicFxLib";
 
 export type NoiseValues = {
    /** noise scale , default : `0.004` */

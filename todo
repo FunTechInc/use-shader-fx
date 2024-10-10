@@ -1,0 +1,18 @@
+- useFxScene
+	- TODO* uniformValuesとmaterialParametersをreactiveにする
+   - Q * ここ、変更時のみにしないと一瞬ズレるかな？
+	- ここ（初期化時のuniformValues）nonReactiveでいいか（useComposeもnon reactiveだし。）
+- useComposer
+	- non reactiveにすることにした！
+		- reactiveに処理したい場合は、keyを渡せばいい
+			- このケース、webglooでしか使わないよね
+
+- つまり、HooksPropsはsizeとdpr以外はnon reactiveになる。
+	- ※ fboのsizeはsizeUpdateをtrueにしないと、nonReactive.
+	- ※ shaderのsizeは常にreactive
+
+TODO 
+- hooksReturnにfbo/renderTarget追加する
+- hooksPropsのreactiveとnon-reactiveについてコメント追加
+- rename sizeUpdate to autoFBO/rendertarget SetSizeとか？
+- useDPR、メモ化する必要ないかも

@@ -24,7 +24,7 @@ export default function Page() {
             }}>
             <Image src="/momo.jpg" alt="" fill style={{ objectFit: "cover" }} />
          </div>
-         <ShaderFx isDprUpdate={true}>
+         <ShaderFx isDprUpdate={false}>
             <Playground />
          </ShaderFx>
       </div>

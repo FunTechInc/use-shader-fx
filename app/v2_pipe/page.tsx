@@ -1,6 +1,5 @@
 import { ShaderFx } from "../ShaderFx";
 import { Playground } from "./Playground";
-import Image from "next/image";
 
 export default function Page() {
    return (

@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { fragment, vertex } from "./blur.glsl";
-import { FxBasicFxMaterial } from "../../materials/FxBasicFxMaterial";
+import { FxBasicFxMaterial } from "../../materials/core/FxBasicFxMaterial";
 import { BlurValues } from ".";
-import { FxMaterialProps } from "../../materials/FxMaterial";
-import { BasicFxUniforms } from "../../materials/BasicFxLib";
+import { FxMaterialProps } from "../../materials/core/FxMaterial";
+import { BasicFxUniforms } from "../../materials/core/BasicFxLib";
 
 type BlurUniforms = {
    src: { value: THREE.Texture | null };

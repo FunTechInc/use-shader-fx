@@ -1,4 +1,4 @@
-import { FxMaterial, FxMaterialProps } from "../../materials/FxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../materials/core/FxMaterial";
 
 export class RawBlankMaterial extends FxMaterial {
    static get type() {

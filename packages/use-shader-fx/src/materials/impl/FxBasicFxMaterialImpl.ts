@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { FxMaterialProps, ShaderWithUniforms } from "./FxMaterial";
-import { ShaderLib } from "../libs/shaders/ShaderLib";
-import { FxBasicFxMaterial } from "./FxBasicFxMaterial";
-import { BasicFxUniforms, BasicFxValues } from "./BasicFxLib";
+import { FxMaterialProps, ShaderWithUniforms } from "../core/FxMaterial";
+import { ShaderLib } from "../../libs/shaders/ShaderLib";
+import { FxBasicFxMaterial } from "../core/FxBasicFxMaterial";
+import { BasicFxUniforms, BasicFxValues } from "../core/BasicFxLib";
 
 type FxBasicFxMaterialImplUniforms = {
    src: { value: THREE.Texture };

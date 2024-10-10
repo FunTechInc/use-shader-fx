@@ -5,7 +5,7 @@ import { useDpr } from "../../utils/useDpr";
 import { RootState } from "../types";
 import { BlurMaterial } from "./BlurMaterial";
 import { useFxScene } from "../../utils/useFxScene";
-import { BasicFxValues } from "../../materials/BasicFxLib";
+import { BasicFxValues } from "../../materials/core/BasicFxLib";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
 
 export type BlurValues = {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { FxBasicFxMaterial } from "../../materials/FxBasicFxMaterial";
+import { FxBasicFxMaterial } from "../../materials/core/FxBasicFxMaterial";
 
 export type Size = {
    width: number;

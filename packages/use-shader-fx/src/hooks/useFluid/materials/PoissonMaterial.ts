@@ -5,7 +5,7 @@ import {
    DefaultUniforms,
    FxMaterial,
    FxMaterialProps,
-} from "../../../materials/FxMaterial";
+} from "../../../materials/core/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
 
 type PoissonUniforms = {

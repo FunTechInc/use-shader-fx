@@ -1,24 +1,17 @@
 "use client";
 
-import * as THREE from "three";
-import { useCallback, useMemo, useRef, useState } from "react";
 import { useFrame, useThree, extend, createPortal } from "@react-three/fiber";
 import {
    useNoise,
-   useBlur,
-   useSingleFBO,
    createFxMaterialImpl,
    createFxBasicFxMaterialImpl,
    FxMaterialImplValues,
    FxBasicFxMaterialImplValues,
    useFluid,
+   useComposer,
+   FxConfig,
 } from "@/packages/use-shader-fx/src";
-import {
-   HooksProps,
-   HooksReturn,
-   RootState,
-} from "@/packages/use-shader-fx/src/hooks/types";
-import { BasicFxValues } from "@/packages/use-shader-fx/src/materials/BasicFxLib";
+import { useEffect, useMemo, useState } from "react";
 
 const FxMaterialImpl = createFxMaterialImpl();
 const FxBasicFxMaterialImpl = createFxBasicFxMaterialImpl();
@@ -26,47 +19,74 @@ const FxBasicFxMaterialImpl = createFxBasicFxMaterialImpl();
 extend({ FxMaterialImpl, FxBasicFxMaterialImpl });
 
 /*===============================================
-fxのパイプラインをつくる
-const {render,texture} = compose({type,size,dpr,config},{type,size,dpr,config});
-- Generates a pipeline of fx
-- Automatically receives one previous texture as mixSrc
+reactive way
+- fxの変更をtriggerにkeyを変更することで、reactiveにfxを変更することが可能
 ===============================================*/
-
-type FxConfig = {
-   fx: typeof useFluid | typeof useNoise;
-} & HooksProps &
-   BasicFxValues;
-
-const compose = (...configs: FxConfig[]) => {
-   const fxArr: HooksReturn[] = [];
-   configs.forEach(({ fx, ...rest }, i) =>
-      fxArr.push(
-         fx({
-            ...rest,
-            mixSrc: fxArr[i - 1]?.texture,
-         })
-      )
-   );
-   const render = (state: RootState) => fxArr.forEach((fx) => fx.render(state));
-   return { render, texture: fxArr.at(-1)?.texture };
+const Composer = ({ compose }: { compose: FxConfig[] }) => {
+   const { texture, render } = useComposer(...compose);
+   useFrame((state) => render(state));
+   return <fxMaterialImpl key={FxMaterialImpl.key} src={texture} />;
 };
-
 export const Playground = () => {
    const { size } = useThree();
 
-   const { render, texture } = compose(
-      { fx: useFluid, size, dpr: 0.4 },
-      { fx: useNoise, size, dpr: 0.2, mixSrcColorFactor: 0.3 }
-   );
-   useFrame((state) => render(state));
+   const compose: FxConfig[] = [
+      { fx: useFluid, size, dpr: 0.3 },
+      {
+         fx: useNoise,
+         size,
+         dpr: 0.1,
+         mixSrcColorFactor: 0.2,
+      },
+   ];
+
+   // keyを変更することで、fxの変更をreactiveにすることが可能
+   // UIではGUIの変更を検知して、keyを変更することで、reactiveに変更を反映するなどを想定
+   const [composeCache, setComposeCache] = useState(compose.length);
+   const [version, setVersion] = useState(0);
+   if (compose.length !== composeCache) {
+      setComposeCache(compose.length);
+      setVersion(version + 1);
+   }
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <fxMaterialImpl key={FxMaterialImpl.key} src={texture} />
+         <Composer compose={compose} key={version} />
       </mesh>
    );
 };
+
+/*===============================================
+non-reactive way
+- resolutionはreactive
+	- ただし他のhooksと同様、resolution以外はnon-reactive
+===============================================*/
+// export const Playground = () => {
+//    const { size } = useThree();
+
+//    const { texture, render } = useComposer(
+//       {
+//          fx: useFluid,
+//          size,
+//          dpr: 0.2,
+//       },
+//       {
+//          fx: useNoise,
+//          size,
+//          dpr: 0.1,
+//          mixSrcColorFactor: 0.2,
+//       }
+//    );
+//    useFrame((state) => render(state));
+
+//    return (
+//       <mesh>
+//          <planeGeometry args={[2, 2]} />
+//          <fxMaterialImpl key={FxMaterialImpl.key} src={texture} />
+//       </mesh>
+//    );
+// };
 
 declare global {
    namespace JSX {
