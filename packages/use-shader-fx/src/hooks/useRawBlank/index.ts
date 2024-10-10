@@ -2,11 +2,11 @@ import * as THREE from "three";
 import { useCallback } from "react";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
-import { useDpr } from "../../utils/useDpr";
+import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
 import { RawBlankMaterial } from "./RawBlankMaterial";
 import { useFxScene } from "../../utils/useFxScene";
-import { ShaderWithUniforms } from "../../materials/FxMaterial";
+import { ShaderWithUniforms } from "../../materials/core/FxMaterial";
 
 export type RawBlankValues = {};
 
@@ -18,7 +18,7 @@ type RawBlankConfig = ShaderWithUniforms;
 export const useRawBlank = ({
    size,
    dpr,
-   sizeUpdate,
+   fboAutoSetSize,
    renderTargetOptions,
    materialParameters,
    uniforms,
@@ -29,7 +29,7 @@ export const useRawBlank = ({
    RawBlankValues,
    RawBlankMaterial
 > => {
-   const _dpr = useDpr(dpr);
+   const _dpr = getDpr(dpr);
 
    const { scene, material, camera } = useFxScene({
       size,
@@ -47,7 +47,7 @@ export const useRawBlank = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      sizeUpdate,
+      fboAutoSetSize,
       ...renderTargetOptions,
    });
 

@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { UseFboProps, useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
-import { useDpr } from "../../utils/useDpr";
+import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
 import { useAdvection } from "./scenes/useAdvection";
@@ -32,30 +32,27 @@ export type FluidValues = {
 export const useFluid = ({
    size,
    dpr,
-   sizeUpdate,
+   fboAutoSetSize,
    renderTargetOptions,
    ...values
 }: HooksProps & FluidValues): HooksReturn<FluidValues, NoiseMaterial> => {
-   const _dpr = useDpr(dpr);
+   const _dpr = getDpr(dpr);
 
    // fbos
-   const fboProps = useMemo<UseFboProps>(
-      () => ({
-         dpr: _dpr.fbo,
-         size,
-         sizeUpdate,
-         type: THREE.HalfFloatType,
-         ...renderTargetOptions,
-      }),
-      [size, _dpr.fbo, renderTargetOptions, sizeUpdate]
-   );
+   const fboProps = {
+      dpr: _dpr.fbo,
+      size,
+      fboAutoSetSize,
+      type: THREE.HalfFloatType,
+      ...renderTargetOptions,
+   };
    const [velocity_0, updateVelocity_0] = useSingleFBO(fboProps);
    const [velocity_1, updateVelocity_1] = useSingleFBO(fboProps);
    const [divergenceFBO, updateDivergenceFBO] = useSingleFBO(fboProps);
    const [pressureFBO, updatePressureFBO] = useDoubleFBO(fboProps);
 
    // scenes
-   const SceneSize = useMemo(() => ({ size, dpr: _dpr.shader }), [size, _dpr]);
+   const SceneSize = { size, dpr: _dpr.shader };
    const advection = useAdvection(
       {
          ...SceneSize,
@@ -87,11 +84,6 @@ export const useFluid = ({
       updateVelocity_0
    );
 
-   const fluidShaders = useMemo(
-      () => [advection, splat, divergence, poisson, pressure],
-      [advection, splat, divergence, poisson, pressure]
-   );
-
    const setValues = useCallback((newValues: FluidValues) => {
       // splat.material.force = newValues.force;
       // bounce の設定
@@ -104,13 +96,21 @@ export const useFluid = ({
       (rootState: RootState, newValues?: FluidValues) => {
          newValues && setValues(newValues);
 
-         fluidShaders.forEach((shader) => {
+         [advection, splat, divergence, poisson, pressure].forEach((shader) => {
             shader.render(rootState);
          });
 
          return velocity_0.texture;
       },
-      [setValues, fluidShaders, velocity_0.texture]
+      [
+         setValues,
+         velocity_0.texture,
+         advection,
+         splat,
+         divergence,
+         poisson,
+         pressure,
+      ]
    );
 
    return {

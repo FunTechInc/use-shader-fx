@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useCallback } from "react";
 import { HooksProps, HooksReturn } from "../types";
-import { useDpr } from "../../utils/useDpr";
+import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
 import { BlurMaterial } from "./BlurMaterial";
 import { useFxScene } from "../../utils/useFxScene";
@@ -23,7 +23,7 @@ type BlurConfig = {
 export const useBlur = ({
    size,
    dpr,
-   sizeUpdate,
+   fboAutoSetSize,
    renderTargetOptions,
    materialParameters,
    blurIteration = 5,
@@ -32,7 +32,7 @@ export const useBlur = ({
    BlurValues,
    BlurMaterial
 > => {
-   const _dpr = useDpr(dpr);
+   const _dpr = getDpr(dpr);
 
    const { scene, material, camera } = useFxScene({
       size,
@@ -47,7 +47,7 @@ export const useBlur = ({
       camera,
       size,
       dpr: _dpr.fbo,
-      sizeUpdate,
+      fboAutoSetSize,
       ...renderTargetOptions,
    });
 
@@ -89,5 +89,6 @@ export const useBlur = ({
       material,
       scene,
       camera,
+      renderTarget,
    };
 };

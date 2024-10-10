@@ -14,7 +14,7 @@ export type UseFboProps = {
    /** If dpr is set, dpr will be multiplied, default : `false` */
    dpr?: number | false;
    /** Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default : `false` */
-   sizeUpdate?: boolean;
+   fboAutoSetSize?: boolean;
    /** If set, the scene depth will be rendered into buffer.depthTexture. default : `false` */
    depth?: boolean;
 } & THREE.RenderTargetOptions;
@@ -60,7 +60,7 @@ type UseSingleFBOReturn = [THREE.WebGLRenderTarget, SingleFBOUpdateFunction];
 
 /**
  * @param dpr If dpr is set, dpr will be multiplied, default:false
- * @param sizeUpdate Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
+ * @param fboAutoSetSize Whether to resize when resizing occurs. If isDpr is true, set FBO to setSize even if dpr is changed, default:false
  * @param depthBuffer Unlike the default in three.js, the default is `false`.
  * @returns [THREE.WebGLRenderTarget , updateFBO] -Receives the RenderTarget as the first argument and the update function as the second argument.
  */
@@ -70,7 +70,7 @@ export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
       camera,
       size,
       dpr = false,
-      sizeUpdate = false,
+      fboAutoSetSize = false,
       depth = false,
       ...renderTargetOptions
    } = props;
@@ -92,7 +92,7 @@ export const useSingleFBO = (props: UseFboProps): UseSingleFBOReturn => {
       return target;
    });
 
-   if (sizeUpdate) {
+   if (fboAutoSetSize) {
       renderTarget.setSize(resolution.x, resolution.y);
    }
 

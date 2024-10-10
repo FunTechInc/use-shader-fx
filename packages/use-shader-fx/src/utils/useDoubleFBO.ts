@@ -44,7 +44,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
       camera,
       size,
       dpr = false,
-      sizeUpdate = false,
+      fboAutoSetSize = false,
       depth = false,
       ...renderTargetOptions
    } = props;
@@ -85,7 +85,7 @@ export const useDoubleFBO = (props: UseFboProps): UseDoubleFBOReturn => {
       };
    });
 
-   if (sizeUpdate) {
+   if (fboAutoSetSize) {
       renderTarget.read?.setSize(resolution.x, resolution.y);
       renderTarget.write?.setSize(resolution.x, resolution.y);
    }

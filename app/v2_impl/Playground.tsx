@@ -55,23 +55,22 @@ export const Playground = () => {
 
    const noise = useNoise({
       size,
-      dpr: 0.3,
-      scale: 0.3,
+      dpr: 0.1,
+      fboAutoSetSize: true,
+      scale: 0.2,
       noiseOctaves: 2,
    });
 
-   console.log(noise);
-
-   // const fluid = useFluid({
-   //    size,
-   //    dpr: 0.25,
-   // });
+   const fluid = useFluid({
+      size,
+      dpr: 0.25,
+   });
 
    useFrame((state) => {
       updateRenderTarget({ gl: state.gl });
-      noise.render(state);
+      // noise.render(state);
       // blur.render(state);
-      // fluid.render(state);
+      fluid.render(state);
    });
 
    const ref = useRef<any>();
@@ -85,7 +84,7 @@ export const Playground = () => {
             <fxMaterialImpl
                key={FxMaterialImpl.key}
                ref={ref}
-               src={noise.texture}
+               src={fluid.texture}
                // mixSrc={noise.texture}
                // mixSrcUvFactor={0.6}
             />

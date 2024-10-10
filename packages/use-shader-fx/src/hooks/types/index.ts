@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { FxBasicFxMaterial } from "../../materials/core/FxBasicFxMaterial";
+import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 
 export type Size = {
    width: number;
@@ -29,13 +30,16 @@ export type RootState = {
    size: Size;
 };
 
+/**
+ * sceneやmaterialなどはミュータブルなオブジェクトであり、non-reactiveであるべき
+ */
 export interface HooksProps {
    /** Width,Height in pixels, or `size` from r3f */
    size: Size;
    /** Pixel-ratio, use `window.devicePixelRatio` or viewport.dpr from r3f */
    dpr: Dpr;
    /** Whether to `setSize` the FBO when updating size or dpr. default : `false` */
-   sizeUpdate?: boolean;
+   fboAutoSetSize?: boolean;
    /**
     * @type `THREE.RenderTargetOptions`
     * @param depthBuffer Unlike the default in three.js, the default is `false`.
@@ -71,4 +75,5 @@ export type HooksReturn<V = {}, M = FxBasicFxMaterial> = {
    material: M;
    scene: THREE.Scene;
    camera: THREE.Camera;
+   renderTarget: THREE.WebGLRenderTarget | DoubleRenderTarget;
 };

@@ -10,6 +10,8 @@ export type FxConfig = {
 } & HooksProps &
    BasicFxValues;
 
+const WARN_TEXT = `use-shader-fx: fx and args length mismatch. fx is non-reactive; update by changing the key to reset state.`;
+
 /*===============================================
 - Generates a pipeline of fx
 - hooks are non-reactive
@@ -24,9 +26,7 @@ export const useComposer = (...args: FxConfig[]) => {
    const argsDiff = hooks.length - _args.length;
 
    if (argsDiff !== 0) {
-      console.warn(
-         `use-shader-fx: fx and args length mismatch. fx is non-reactive; update by changing the key to reset state.`
-      );
+      console.warn(WARN_TEXT);
       // argsの長さを調整する
       if (argsDiff < 0) {
          _args = _args.slice(0, hooks.length);
