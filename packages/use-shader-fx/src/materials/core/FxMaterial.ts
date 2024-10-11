@@ -22,6 +22,8 @@ export type FxMaterialProps<T = {}> = {
 } & ShaderWithUniforms;
 
 export class FxMaterial extends THREE.ShaderMaterial {
+   public static readonly key: string = THREE.MathUtils.generateUUID();
+
    constructor({
       uniformValues,
       materialParameters = {},
@@ -95,17 +97,25 @@ export class FxMaterial extends THREE.ShaderMaterial {
       }
    }
 
-   // Create getter/setters
+   /**
+    * Create getter/setters, This method should be called in the implementing class
+    */
    defineUniformAccessors(onSet?: () => void) {
       const entries = Object.entries(this.uniforms);
-      entries.forEach(([name]) =>
+
+      entries.forEach(([name]) => {
+         if (this.hasOwnProperty(name)) {
+            console.warn(`use-shader-fx: ${name} is already defined.`);
+            return;
+         }
+
          Object.defineProperty(this, name, {
             get: () => this.uniforms[name].value,
             set: (v) => {
                this.uniforms[name].value = v;
                onSet?.();
             },
-         })
-      );
+         });
+      });
    }
 }

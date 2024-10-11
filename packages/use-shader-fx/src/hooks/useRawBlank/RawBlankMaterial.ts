@@ -7,5 +7,7 @@ export class RawBlankMaterial extends FxMaterial {
    constructor(props: FxMaterialProps) {
       super(props);
       this.type = RawBlankMaterial.type;
+
+      this.defineUniformAccessors();
    }
 }

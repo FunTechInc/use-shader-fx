@@ -20,7 +20,7 @@ export class CoverTextureMaterial extends FxBasicFxMaterial {
    constructor({
       uniformValues,
       materialParameters = {},
-   }: FxMaterialProps<CoverTextureValues>) {
+   }: FxMaterialProps<CoverTextureValues> = {}) {
       super();
 
       this.type = CoverTextureMaterial.type;

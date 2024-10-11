@@ -35,7 +35,7 @@ export const createFxMaterialImpl = ({
    fragmentShader = fragment,
 }: ShaderWithUniforms = {}) => {
    class FxMaterialImpl extends FxMaterial {
-      public key: string = THREE.MathUtils.generateUUID();
+      public static readonly key: string = THREE.MathUtils.generateUUID();
 
       static get type() {
          return "FxMaterialImpl";

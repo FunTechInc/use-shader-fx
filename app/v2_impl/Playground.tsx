@@ -53,13 +53,13 @@ export const Playground = () => {
    //    src: renderTarget.texture,
    // });
 
-   const noise = useNoise({
-      size,
-      dpr: 0.1,
-      fboAutoSetSize: true,
-      scale: 0.2,
-      noiseOctaves: 2,
-   });
+   // const noise = useNoise({
+   //    size,
+   //    dpr: 0.1,
+   //    fboAutoSetSize: true,
+   //    scale: 0.2,
+   //    noiseOctaves: 2,
+   // });
 
    const fluid = useFluid({
       size,
@@ -74,8 +74,6 @@ export const Playground = () => {
    });
 
    const ref = useRef<any>();
-   useFrame(() => {});
-   // console.log(ref.current.updateResolution);
 
    return (
       <>
@@ -85,8 +83,6 @@ export const Playground = () => {
                key={FxMaterialImpl.key}
                ref={ref}
                src={fluid.texture}
-               // mixSrc={noise.texture}
-               // mixSrcUvFactor={0.6}
             />
          </mesh>
          {createPortal(

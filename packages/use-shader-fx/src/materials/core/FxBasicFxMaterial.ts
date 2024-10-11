@@ -9,6 +9,8 @@ import {
 import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
 
 export class FxBasicFxMaterial extends FxMaterial {
+   public static readonly key: string = THREE.MathUtils.generateUUID();
+
    basicFxFlag: BasicFxFlag;
 
    uniforms!: BasicFxUniforms;

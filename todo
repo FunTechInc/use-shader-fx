@@ -1,0 +1,5 @@
+- fxのmaterialを/material/impl/xxxに移動する
+	- clothとかwobble3Dとか、materialのみのnodeも今後できそうなので。
+- すべてのfxのmaterialをexportする
+- /hooksにindex.tsつくってexportまとめたほうが良さそうね。
+	- useComposerのFxConfigもここで定義する

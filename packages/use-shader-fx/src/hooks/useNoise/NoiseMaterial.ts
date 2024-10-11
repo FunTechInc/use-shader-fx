@@ -16,13 +16,18 @@ type NoiseUniforms = {
 } & BasicFxUniforms;
 
 export class NoiseMaterial extends FxBasicFxMaterial {
+   public static readonly key: string = THREE.MathUtils.generateUUID();
+
    static get type() {
       return "NoiseMaterial";
    }
 
    uniforms!: NoiseUniforms;
 
-   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+   }: FxMaterialProps = {}) {
       super();
 
       this.type = NoiseMaterial.type;
@@ -45,5 +50,7 @@ export class NoiseMaterial extends FxBasicFxMaterial {
       this.setValues(materialParameters);
 
       this.setupBasicFxShaders(noiseVertex, noiseFragment);
+
+      this.defineUniformAccessors();
    }
 }

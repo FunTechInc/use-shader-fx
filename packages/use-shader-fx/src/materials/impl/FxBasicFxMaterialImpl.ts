@@ -41,7 +41,7 @@ export const createFxBasicFxMaterialImpl = ({
    fragmentShader = fragment,
 }: ShaderWithUniforms = {}) => {
    class FxBasicFxMaterialImpl extends FxBasicFxMaterial {
-      public key: string = THREE.MathUtils.generateUUID();
+      public static readonly key: string = THREE.MathUtils.generateUUID();
 
       static get type() {
          return "FxBasicFxMaterialImpl";
@@ -71,7 +71,7 @@ export const createFxBasicFxMaterialImpl = ({
          this.setUniformValues(props?.uniformValues);
          this.setValues(props?.materialParameters || {});
 
-         // to update basicFx flag
+         // set callback `onSet` to update basicFx flag
          this.defineUniformAccessors(this.updateBasicFx.bind(this));
       }
    }
