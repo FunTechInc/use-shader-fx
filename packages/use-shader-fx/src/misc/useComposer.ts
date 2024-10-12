@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { HooksProps, HooksReturn, RootState } from "../hooks/types";
-import { useFluid } from "../hooks/useFluid";
-import { useNoise } from "../hooks/useNoise";
 import { BasicFxValues } from "../materials/core/BasicFxLib";
+import { FxTypes } from "../hooks";
 
 export type FxConfig = {
-   // TODO * ここの型定義うまいことしたい /hooksにindex.tsを作ってそこでexportしてimportするとかかな
-   fx: typeof useFluid | typeof useNoise;
+   fx: FxTypes;
 } & HooksProps &
    BasicFxValues;
 

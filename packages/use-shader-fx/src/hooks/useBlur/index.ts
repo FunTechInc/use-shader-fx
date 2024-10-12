@@ -1,17 +1,10 @@
-import * as THREE from "three";
 import { useCallback } from "react";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
-import { BlurMaterial } from "./BlurMaterial";
+import { BlurMaterial, BlurValues } from "../../materials";
 import { useFxScene } from "../../utils/useFxScene";
-import { BasicFxValues } from "../../materials/core/BasicFxLib";
 import { useDoubleFBO } from "../../utils/useDoubleFBO";
-
-export type BlurValues = {
-   src?: THREE.Texture | null;
-   blurSize?: number;
-} & BasicFxValues;
 
 type BlurConfig = {
    blurIteration?: number;

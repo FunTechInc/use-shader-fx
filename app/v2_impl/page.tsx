@@ -13,8 +13,8 @@ export default function Page() {
          }}>
          <div
             style={{
-               width: "100px",
-               height: "100px",
+               width: "400px",
+               height: "400px",
                backgroundColor: "white",
                position: "fixed",
                inset: 0,
@@ -22,7 +22,14 @@ export default function Page() {
                zIndex: 1000,
                mixBlendMode: "hard-light",
             }}>
-            <Image src="/momo.jpg" alt="" fill style={{ objectFit: "cover" }} />
+            <Image
+               priority
+               src="/momo.jpg"
+               alt=""
+               fill
+               sizes={"100%"}
+               style={{ objectFit: "cover" }}
+            />
          </div>
          <ShaderFx isDprUpdate={false}>
             <Playground />

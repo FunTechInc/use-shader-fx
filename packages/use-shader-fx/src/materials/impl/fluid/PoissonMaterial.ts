@@ -2,7 +2,6 @@ import * as THREE from "three";
 import vertex from "./shaders/vertex";
 import fragment from "./shaders/poisson.frag";
 import {
-   DefaultUniforms,
    FxMaterial,
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
@@ -12,7 +11,7 @@ type PoissonUniforms = {
    isBounce: { value: boolean };
    pressure: { value: THREE.Texture };
    divergence: { value: THREE.Texture };
-} & DefaultUniforms;
+};
 
 export class PoissonMaterial extends FxMaterial {
    static get type() {
@@ -24,24 +23,18 @@ export class PoissonMaterial extends FxMaterial {
    iteration: number;
 
    constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
-      super();
-
-      this.type = PoissonMaterial.type;
-
-      this.uniforms = THREE.UniformsUtils.merge([
-         this.uniforms,
-         {
+      super({
+         vertexShader: vertex.poisson,
+         fragmentShader: fragment,
+         uniformValues,
+         materialParameters,
+         uniforms: {
             isBounce: { value: true },
             pressure: { value: DEFAULT_TEXTURE },
             divergence: { value: DEFAULT_TEXTURE },
-         },
-      ]) as PoissonUniforms;
-
+         } as PoissonUniforms,
+      });
+      this.type = PoissonMaterial.type;
       this.iteration = 32;
-
-      this.setupDefaultShaders(vertex.poisson, fragment);
-
-      this.setUniformValues(uniformValues);
-      this.setValues(materialParameters);
    }
 }

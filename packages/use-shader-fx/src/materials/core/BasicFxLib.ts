@@ -4,7 +4,6 @@ import { DefaultUniforms } from "./FxMaterial";
 /*===============================================
 basic fxを追加するときはこことShaderChunk,Libを編集する
 ===============================================*/
-
 type BasicFxUniformsUnique = {
    // mixSrc
    mixSrc: { value: THREE.Texture | null };
@@ -19,24 +18,6 @@ type BasicFxUniformsUnique = {
    mixDstAlphaFactor: { value: number };
    mixDstColorFactor: { value: number };
 };
-
-export type BasicFxUniforms = BasicFxUniformsUnique & DefaultUniforms;
-
-export type BasicFxValues = {
-   // mixSrc
-   mixSrc?: THREE.Texture | null;
-   mixSrcResolution?: THREE.Vector2;
-   mixSrcUvFactor?: number;
-   mixSrcAlphaFactor?: number;
-   mixSrcColorFactor?: number;
-   //mixDst
-   mixDst?: THREE.Texture | null;
-   mixDstResolution?: THREE.Vector2;
-   mixDstUvFactor?: number;
-   mixDstAlphaFactor?: number;
-   mixDstColorFactor?: number;
-};
-
 const DEFAULT_BASICFX_VALUES: BasicFxUniformsUnique = {
    // mixSrc
    mixSrc: { value: null },
@@ -52,10 +33,25 @@ const DEFAULT_BASICFX_VALUES: BasicFxUniformsUnique = {
    mixDstColorFactor: { value: 0 },
 };
 
+export type BasicFxUniforms = BasicFxUniformsUnique & DefaultUniforms;
+
+export type ExtractUniformValue<T> = {
+   [K in keyof T]?: T[K] extends { value: infer U } ? U : never;
+};
+export type BasicFxValues = ExtractUniformValue<BasicFxUniformsUnique>;
+
 export type BasicFxFlag = {
    mixSrc: boolean;
    mixDst: boolean;
 };
+
+/** valuesのkeyにbasicFxが含まれているかどうかの判定 */
+function containsBasicFxValues(values?: { [key: string]: any }): boolean {
+   if (!values) return false;
+   return Object.keys(values).some((key) =>
+      Object.keys(DEFAULT_BASICFX_VALUES).includes(key as keyof BasicFxValues)
+   );
+}
 
 function setupDefaultFlag(uniformValues?: BasicFxValues): BasicFxFlag {
    return {
@@ -136,4 +132,5 @@ export const BasicFxLib = {
    setupDefaultFlag,
    handleUpdateBasicFx,
    handleUpdateBasicFxPrefix,
+   containsBasicFxValues,
 };

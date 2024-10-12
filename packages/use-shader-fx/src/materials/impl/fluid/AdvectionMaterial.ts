@@ -3,16 +3,15 @@ import vertex from "./shaders/vertex";
 import fragment from "./shaders/advection.frag";
 import {
    FxMaterial,
-   DefaultUniforms,
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
-import { DeltaTime } from "..";
+import { DeltaTime } from ".";
 
 type AdvectionUniforms = {
    velocity: { value: THREE.Texture };
    dt: { value: number };
-} & DefaultUniforms;
+};
 
 export class AdvectionMaterial extends FxMaterial {
    static get type() {
@@ -22,21 +21,16 @@ export class AdvectionMaterial extends FxMaterial {
    uniforms!: AdvectionUniforms;
 
    constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
-      super();
-
-      this.type = AdvectionMaterial.type;
-
-      this.uniforms = THREE.UniformsUtils.merge([
-         this.uniforms,
-         {
+      super({
+         vertexShader: vertex.advection,
+         fragmentShader: fragment,
+         uniformValues,
+         materialParameters,
+         uniforms: {
             velocity: { value: DEFAULT_TEXTURE },
             dt: { value: DeltaTime },
-         },
-      ]) as AdvectionUniforms;
-
-      this.setupDefaultShaders(vertex.advection, fragment);
-
-      this.setUniformValues(uniformValues);
-      this.setValues(materialParameters);
+         } as AdvectionUniforms,
+      });
+      this.type = AdvectionMaterial.type;
    }
 }

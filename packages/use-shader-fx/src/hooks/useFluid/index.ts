@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { useCallback, useMemo, useState } from "react";
-import { UseFboProps, useSingleFBO } from "../../utils/useSingleFBO";
+import { useCallback } from "react";
+import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
@@ -10,8 +10,6 @@ import { useSplat } from "./scenes/useSplat";
 import { useDivergence } from "./scenes/useDivergence";
 import { usePoisson } from "./scenes/usePoisson";
 import { usePressure } from "./scenes/usePressure";
-
-export const DeltaTime = 0.015;
 
 export type FluidValues = {
    /*===============================================
@@ -26,8 +24,6 @@ export type FluidValues = {
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
- *
- * It is a basic value noise with `fbm` and `domain warping`
  */
 export const useFluid = ({
    size,

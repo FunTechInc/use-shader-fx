@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
-import { SplatMaterial } from "../materials/SplatMaterial";
+import { SplatMaterial } from "../../../materials";
 import { usePointerTracker } from "../../../misc/usePointerTracker";
 import { useFxScene } from "../../../utils/useFxScene";
 
@@ -34,7 +34,7 @@ export const useSplat = (
 
          material.uniforms.center.value.copy(currentPointer);
          material.uniforms.force.value.copy(
-            diffPointer.multiplyScalar(material.force)
+            diffPointer.multiplyScalar(material.forceBias)
          );
 
          updateRenderTarget({ gl, scene, camera, clear: false });

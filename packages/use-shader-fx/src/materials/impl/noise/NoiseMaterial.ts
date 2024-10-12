@@ -1,19 +1,33 @@
 import * as THREE from "three";
 import { noiseFragment, noiseVertex } from "./noise.glsl";
-import { FxBasicFxMaterial } from "../../materials/core/FxBasicFxMaterial";
-import { FxMaterialProps } from "../../materials/core/FxMaterial";
-import { BasicFxUniforms } from "../../materials/core/BasicFxLib";
+import { FxBasicFxMaterial } from "../../core/FxBasicFxMaterial";
+import { FxMaterialProps } from "../../core/FxMaterial";
+import {
+   BasicFxUniforms,
+   BasicFxValues,
+   ExtractUniformValue,
+} from "../../core/BasicFxLib";
 
 type NoiseUniforms = {
+   /** useBeatを渡せば、リズムを変えられる。 */
    tick: { value: number };
+   /** noise scale , default : `0.004` */
    scale: { value: number };
+   /** time factor default : `0.3` */
    timeStrength: { value: number };
+   /** noiseOctaves, affects performance default : `2` */
    noiseOctaves: { value: number };
+   /** fbmOctaves, affects performance default : `2` */
    fbmOctaves: { value: number };
+   /** domain warping octaves , affects performance default : `2`  */
    warpOctaves: { value: number };
+   /** direction of domain warping , default : `(2.0,2,0)` */
    warpDirection: { value: THREE.Vector2 };
+   /** strength of domain warping , default : `8.0` */
    warpStrength: { value: number };
 } & BasicFxUniforms;
+
+export type NoiseValues = ExtractUniformValue<NoiseUniforms> & BasicFxValues;
 
 export class NoiseMaterial extends FxBasicFxMaterial {
    public static readonly key: string = THREE.MathUtils.generateUUID();
@@ -27,14 +41,13 @@ export class NoiseMaterial extends FxBasicFxMaterial {
    constructor({
       uniformValues,
       materialParameters = {},
-   }: FxMaterialProps = {}) {
-      super();
-
-      this.type = NoiseMaterial.type;
-
-      this.uniforms = THREE.UniformsUtils.merge([
-         this.uniforms,
-         {
+   }: FxMaterialProps<NoiseValues> = {}) {
+      super({
+         uniformValues,
+         materialParameters,
+         vertexShader: noiseVertex,
+         fragmentShader: noiseFragment,
+         uniforms: {
             tick: { value: 0.0 },
             scale: { value: 0.03 },
             timeStrength: { value: 0.3 },
@@ -43,14 +56,8 @@ export class NoiseMaterial extends FxBasicFxMaterial {
             warpOctaves: { value: 2 },
             warpDirection: { value: new THREE.Vector2(2.0, 2.0) },
             warpStrength: { value: 8 },
-         },
-      ]) as NoiseUniforms;
-
-      this.setUniformValues(uniformValues);
-      this.setValues(materialParameters);
-
-      this.setupBasicFxShaders(noiseVertex, noiseFragment);
-
-      this.defineUniformAccessors();
+         } as NoiseUniforms,
+      });
+      this.type = NoiseMaterial.type;
    }
 }

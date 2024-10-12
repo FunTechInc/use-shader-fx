@@ -7,22 +7,21 @@ import {
 } from "../core/FxMaterial";
 import { ShaderLib } from "../../libs/shaders/ShaderLib";
 import { DEFAULT_TEXTURE } from "../../libs/constants";
+import { ExtractUniformValue } from "../core/BasicFxLib";
 
 type FxMaterialImplUniforms = {
    src: { value: THREE.Texture };
 } & DefaultUniforms;
 
-export type FxMaterialImplValues = {
-   src?: THREE.Texture;
-};
+export type FxMaterialImplValues = ExtractUniformValue<FxMaterialImplUniforms>;
 
-const vertex = `
+const DEFAULT_VERTEX = `
 	void main() {
 		${ShaderLib.plane_vertex}
 	}
 `;
 
-const fragment = `
+const DEFAULT_FRAGMENT = `
 	uniform sampler2D src;
 	void main() {
 		gl_FragColor = texture2D(src, vUv);
@@ -31,8 +30,8 @@ const fragment = `
 
 export const createFxMaterialImpl = ({
    uniforms,
-   vertexShader = vertex,
-   fragmentShader = fragment,
+   vertexShader = DEFAULT_VERTEX,
+   fragmentShader = DEFAULT_FRAGMENT,
 }: ShaderWithUniforms = {}) => {
    class FxMaterialImpl extends FxMaterial {
       public static readonly key: string = THREE.MathUtils.generateUUID();
@@ -44,28 +43,21 @@ export const createFxMaterialImpl = ({
       uniforms!: FxMaterialImplUniforms;
 
       constructor(props: FxMaterialProps<FxMaterialImplValues>) {
-         super();
+         super({
+            vertexShader: props?.vertexShader || vertexShader,
+            fragmentShader: props?.fragmentShader || fragmentShader,
+            uniformValues: props?.uniformValues,
+            materialParameters: props?.materialParameters,
+            uniforms: THREE.UniformsUtils.merge([
+               {
+                  src: { value: DEFAULT_TEXTURE },
+               },
+               uniforms || {},
+               props?.uniforms || {},
+            ]),
+         });
 
          this.type = FxMaterialImpl.type;
-
-         this.uniforms = THREE.UniformsUtils.merge([
-            this.uniforms,
-            {
-               src: { value: DEFAULT_TEXTURE },
-            },
-            uniforms || {},
-            props?.uniforms || {},
-         ]) as FxMaterialImplUniforms;
-
-         this.setupDefaultShaders(
-            props?.vertexShader || vertexShader,
-            props?.fragmentShader || fragmentShader
-         );
-
-         this.setUniformValues(props?.uniformValues);
-         this.setValues(props?.materialParameters || {});
-
-         this.defineUniformAccessors();
       }
    }
 

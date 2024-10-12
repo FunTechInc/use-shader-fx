@@ -1,4 +1,4 @@
-import { ShaderLib } from "../../libs/shaders/ShaderLib";
+import { ShaderLib } from "../../../libs/shaders/ShaderLib";
 
 export const noiseVertex = `
 	void main() {

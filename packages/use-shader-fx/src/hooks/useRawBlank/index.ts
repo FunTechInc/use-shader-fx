@@ -1,14 +1,11 @@
-import * as THREE from "three";
 import { useCallback } from "react";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
-import { RawBlankMaterial } from "./RawBlankMaterial";
+import { RawBlankMaterial, RawBlankValues } from "../../materials";
 import { useFxScene } from "../../utils/useFxScene";
 import { ShaderWithUniforms } from "../../materials/core/FxMaterial";
-
-export type RawBlankValues = {};
 
 type RawBlankConfig = ShaderWithUniforms;
 
@@ -74,5 +71,6 @@ export const useRawBlank = ({
       material,
       scene,
       camera,
+      renderTarget,
    };
 };

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
-import { AdvectionMaterial } from "../materials/AdvectionMaterial";
+import { AdvectionMaterial } from "../../../materials";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
 import { useFxScene } from "../../../utils/useFxScene";
 

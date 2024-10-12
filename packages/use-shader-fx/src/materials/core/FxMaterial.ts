@@ -10,6 +10,7 @@ export type DefaultUniforms = {
 };
 
 export type Uniforms = { [uniform: string]: THREE.IUniform<any> };
+
 export type ShaderWithUniforms = {
    uniforms?: Uniforms;
    vertexShader?: string;
@@ -47,6 +48,8 @@ export class FxMaterial extends THREE.ShaderMaterial {
 
       this.setUniformValues(uniformValues);
       this.setValues(materialParameters);
+
+      this.defineUniformAccessors();
    }
 
    /** This is updated in useFxScene */
@@ -60,6 +63,8 @@ export class FxMaterial extends THREE.ShaderMaterial {
    }
 
    setupDefaultShaders(vertexShader?: string, fragmentShader?: string) {
+      if (!vertexShader && !fragmentShader) return;
+
       const [vertex, fragment] = mergeShaderLib(
          vertexShader,
          fragmentShader,
@@ -97,15 +102,12 @@ export class FxMaterial extends THREE.ShaderMaterial {
       }
    }
 
-   /**
-    * Create getter/setters, This method should be called in the implementing class
-    */
+   /** define getter/setters　*/
    defineUniformAccessors(onSet?: () => void) {
       const entries = Object.entries(this.uniforms);
-
       entries.forEach(([name]) => {
          if (this.hasOwnProperty(name)) {
-            console.warn(`use-shader-fx: ${name} is already defined.`);
+            // skip if already defined
             return;
          }
 

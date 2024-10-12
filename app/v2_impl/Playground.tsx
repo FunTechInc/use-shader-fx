@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { useFrame, useThree, extend, createPortal } from "@react-three/fiber";
 import {
    useNoise,
+   NoiseValues,
    useBlur,
    useSingleFBO,
    createFxMaterialImpl,
@@ -53,22 +54,29 @@ export const Playground = () => {
    //    src: renderTarget.texture,
    // });
 
-   // const noise = useNoise({
-   //    size,
-   //    dpr: 0.1,
-   //    fboAutoSetSize: true,
-   //    scale: 0.2,
-   //    noiseOctaves: 2,
-   // });
-
    const fluid = useFluid({
       size,
       dpr: 0.25,
    });
 
+   const noise = useNoise({
+      size,
+      dpr: 0.3,
+      fboAutoSetSize: true,
+      scale: 0.4,
+      noiseOctaves: 2,
+      // mixSrc: fluid.texture,
+      mixSrcColorFactor: 0.5,
+      mixSrcUvFactor: 0.6,
+   });
+
+   noise.setValues({
+      mixSrc: fluid.texture,
+   });
+
    useFrame((state) => {
       updateRenderTarget({ gl: state.gl });
-      // noise.render(state);
+      noise.render(state);
       // blur.render(state);
       fluid.render(state);
    });
@@ -82,7 +90,7 @@ export const Playground = () => {
             <fxMaterialImpl
                key={FxMaterialImpl.key}
                ref={ref}
-               src={fluid.texture}
+               src={noise.texture}
             />
          </mesh>
          {createPortal(

@@ -1,17 +1,10 @@
-import * as THREE from "three";
 import { useCallback } from "react";
 import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
-import { CoverTextureMaterial } from "./CoverTextureMaterial";
+import { CoverTextureMaterial, CoverTextureValues } from "../../materials";
 import { useFxScene } from "../../utils/useFxScene";
-import { BasicFxValues } from "../../materials/core/BasicFxLib";
-
-export type CoverTextureValues = {
-   src?: THREE.Texture;
-   textureResolution?: THREE.Vector2;
-} & BasicFxValues;
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage

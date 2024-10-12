@@ -1,4 +1,6 @@
-import { FxMaterial, FxMaterialProps } from "../../materials/core/FxMaterial";
+import { FxMaterial, FxMaterialProps } from "../../core/FxMaterial";
+
+export type RawBlankValues = {};
 
 export class RawBlankMaterial extends FxMaterial {
    static get type() {
@@ -7,7 +9,5 @@ export class RawBlankMaterial extends FxMaterial {
    constructor(props: FxMaterialProps) {
       super(props);
       this.type = RawBlankMaterial.type;
-
-      this.defineUniformAccessors();
    }
 }

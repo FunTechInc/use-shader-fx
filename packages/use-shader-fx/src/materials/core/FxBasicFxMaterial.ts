@@ -28,18 +28,14 @@ export class FxBasicFxMaterial extends FxMaterial {
       vertexShader,
       fragmentShader,
    }: FxMaterialProps<BasicFxValues> = {}) {
-      super();
-
-      this.basicFxFlag = BasicFxLib.setupDefaultFlag(uniformValues);
-
-      this.uniforms = THREE.UniformsUtils.merge([
-         this.uniforms,
-         BasicFxLib.DEFAULT_BASICFX_VALUES,
-         uniforms || {},
-      ]) as BasicFxUniforms;
-
-      this.setUniformValues(uniformValues);
-      this.setValues(materialParameters);
+      super({
+         uniformValues,
+         materialParameters,
+         uniforms: THREE.UniformsUtils.merge([
+            BasicFxLib.DEFAULT_BASICFX_VALUES,
+            uniforms || {},
+         ]),
+      });
 
       this.vertexShaderCache = this.vertexShader;
       this.fragmentShaderCache = this.fragmentShader;
@@ -47,10 +43,15 @@ export class FxBasicFxMaterial extends FxMaterial {
       this.fragmentPrefixCache = "";
       this.programCache = 0;
 
+      this.basicFxFlag = BasicFxLib.setupDefaultFlag(uniformValues);
+
       this.setupBasicFxShaders(vertexShader, fragmentShader);
    }
 
    updateBasicFx() {
+      // shaderのsetup前は実行しない
+      if (!this.basicFxFlag) return;
+
       const _cache = this.programCache;
 
       const { validCount, updatedFlag } = BasicFxLib.handleUpdateBasicFx(
@@ -81,6 +82,8 @@ export class FxBasicFxMaterial extends FxMaterial {
    }
 
    setupBasicFxShaders(vertexShader?: string, fragmentShader?: string) {
+      if (!vertexShader && !fragmentShader) return;
+
       this.updateBasicFxPrefix();
 
       const [vertex, fragment] = mergeShaderLib(
@@ -89,10 +92,27 @@ export class FxBasicFxMaterial extends FxMaterial {
          "basicFx"
       );
 
-      this.setupDefaultShaders(vertex, fragment);
+      super.setupDefaultShaders(vertex, fragment);
 
       this.vertexShaderCache = this.vertexShader;
       this.fragmentShaderCache = this.fragmentShader;
+
       this.updateBasicFxShader();
+   }
+
+   // override super class method
+   setUniformValues(values?: { [key: string]: any }) {
+      super.setUniformValues(values);
+      if (BasicFxLib.containsBasicFxValues(values)) {
+         this.updateBasicFx();
+      }
+   }
+
+   // override super class method
+   defineUniformAccessors(onSet?: () => void) {
+      super.defineUniformAccessors(() => {
+         this.updateBasicFx();
+         onSet?.();
+      });
    }
 }

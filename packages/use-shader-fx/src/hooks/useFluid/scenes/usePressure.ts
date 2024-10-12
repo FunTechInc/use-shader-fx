@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction } from "../../../utils/useSingleFBO";
-import { PressureMaterial } from "../materials/PressureMaterial";
+import { PressureMaterial } from "../../../materials";
 import { useFxScene } from "../../../utils/useFxScene";
 
 export const usePressure = (

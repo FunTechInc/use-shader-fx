@@ -11,6 +11,7 @@ import {
 } from "@/packages/use-shader-fx/src";
 
 extend({ NoiseMaterial });
+
 export const Playground = () => {
    const ref = useRef<any>();
    useFrame(({ clock }) => {
@@ -20,7 +21,7 @@ export const Playground = () => {
       <>
          <mesh>
             <planeGeometry args={[2, 2]} />
-            <noiseMaterial ref={ref} scale={0.01} />
+            <noiseMaterial ref={ref} scale={0.01} tick={2} />
          </mesh>
       </>
    );
