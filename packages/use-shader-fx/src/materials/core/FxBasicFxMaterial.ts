@@ -100,15 +100,15 @@ export class FxBasicFxMaterial extends FxMaterial {
       this.updateBasicFxShader();
    }
 
-   // override super class method
+   /*===============================================
+	override super class method
+	===============================================*/
    setUniformValues(values?: { [key: string]: any }) {
       super.setUniformValues(values);
       if (BasicFxLib.containsBasicFxValues(values)) {
          this.updateBasicFx();
       }
    }
-
-   // override super class method
    defineUniformAccessors(onSet?: () => void) {
       super.defineUniformAccessors(() => {
          this.updateBasicFx();

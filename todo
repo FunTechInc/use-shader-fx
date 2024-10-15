@@ -1,0 +1,5 @@
+- useComposer,直接hookを渡すんじゃなくて、stringにしようかな
+
+
+- touch designerを解剖して、機能を因数分解してみる
+	- webglooの設計つくる
