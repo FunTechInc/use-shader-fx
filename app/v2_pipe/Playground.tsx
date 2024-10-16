@@ -9,13 +9,9 @@ import {
    FxBasicFxMaterialImplValues,
    useFluid,
    usePipeline,
-   FxConfig,
-   PipelineConfig,
-   useBlur,
-   NoiseProps,
-   useCoverTexture,
 } from "@/packages/use-shader-fx/src";
 import { useEffect, useMemo, useState } from "react";
+import { useTexture } from "@react-three/drei";
 
 const FxMaterialImpl = createFxMaterialImpl();
 const FxBasicFxMaterialImpl = createFxBasicFxMaterialImpl();
@@ -84,6 +80,8 @@ non-reactive way
 export const Playground = () => {
    const { size } = useThree();
 
+   const [app] = useTexture(["/app-head.jpg"]);
+
    const { texture, render, setPipeline } = usePipeline(
       {
          fx: useFluid,
@@ -94,10 +92,12 @@ export const Playground = () => {
          fx: useNoise,
          size,
          dpr: 0.1,
-         mixSrcColorFactor: 0.2,
+         mixDstUvFactor: 0.2,
+         mixDstColorFactor: 0.2,
       }
    );
-   setPipeline({}, { mixSrc: 0 });
+
+   setPipeline({}, { mixDst: 0 });
 
    useFrame((state) => render(state));
 

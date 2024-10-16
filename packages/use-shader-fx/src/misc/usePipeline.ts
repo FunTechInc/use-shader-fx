@@ -8,15 +8,12 @@ export type FxConfig<T extends FxTypes = FxTypes> = {
 } & FxProps<T>;
 
 export type PipelineConfig = {
-   src?: number;
-   mixSrc?: number;
-   mixDst?: number;
+   src?: number | THREE.Texture;
+   mixSrc?: number | THREE.Texture;
+   mixDst?: number | THREE.Texture;
 };
-
 export type PipelineValues = {
-   src?: THREE.Texture;
-   mixSrc?: THREE.Texture;
-   mixDst?: THREE.Texture;
+   [K in keyof PipelineConfig]: THREE.Texture | undefined;
 };
 
 const WARN_TEXT = {
@@ -60,13 +57,9 @@ export const usePipeline = <T extends FxTypes[]>(
          console.warn(WARN_TEXT.pipeline);
          return;
       }
-      args.forEach(({ src, mixSrc, mixDst }, i) => {
-         const value: PipelineValues = {};
-         if (src != null) value.src = textures[src];
-         if (mixSrc != null) value.mixSrc = textures[mixSrc];
-         if (mixDst != null) value.mixDst = textures[mixDst];
-         pipeline[i].setValues(value);
-      });
+      args.forEach((arg, i) =>
+         pipeline[i].setValues(getPipelineValues(arg, textures))
+      );
    };
 
    return {
@@ -78,3 +71,14 @@ export const usePipeline = <T extends FxTypes[]>(
       pipeline,
    };
 };
+
+function getPipelineValues(config: PipelineConfig, textures: THREE.Texture[]) {
+   const value: PipelineValues = {};
+   for (const key in config) {
+      const _val = config[key as keyof PipelineConfig];
+      if (_val != null)
+         value[key as keyof PipelineConfig] =
+            typeof _val === "number" ? textures[_val] : _val;
+   }
+   return value;
+}
