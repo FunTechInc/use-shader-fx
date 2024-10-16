@@ -6,6 +6,8 @@ import { RootState } from "../types";
 import { CoverTextureMaterial, CoverTextureValues } from "../../materials";
 import { useFxScene } from "../../utils/useFxScene";
 
+export type CoverTextureProps = HooksProps & CoverTextureValues;
+
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
@@ -16,7 +18,7 @@ export const useCoverTexture = ({
    renderTargetOptions,
    materialParameters,
    ...uniformValues
-}: HooksProps & CoverTextureValues): HooksReturn<
+}: CoverTextureProps): HooksReturn<
    CoverTextureValues,
    CoverTextureMaterial
 > => {

@@ -9,6 +9,8 @@ import { ShaderWithUniforms } from "../../materials/core/FxMaterial";
 
 type RawBlankConfig = ShaderWithUniforms;
 
+export type RawBlankProps = HooksProps & RawBlankValues & RawBlankConfig;
+
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
@@ -22,10 +24,7 @@ export const useRawBlank = ({
    vertexShader,
    fragmentShader,
    ...uniformValues
-}: HooksProps & RawBlankValues & RawBlankConfig): HooksReturn<
-   RawBlankValues,
-   RawBlankMaterial
-> => {
+}: RawBlankProps): HooksReturn<RawBlankValues, RawBlankMaterial> => {
    const _dpr = getDpr(dpr);
 
    const { scene, material, camera } = useFxScene({

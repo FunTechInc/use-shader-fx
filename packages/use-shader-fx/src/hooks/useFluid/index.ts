@@ -22,6 +22,8 @@ export type FluidValues = {
 	===============================================*/
 };
 
+export type FluidProps = HooksProps & FluidValues;
+
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
@@ -31,7 +33,7 @@ export const useFluid = ({
    fboAutoSetSize,
    renderTargetOptions,
    ...values
-}: HooksProps & FluidValues): HooksReturn<FluidValues, NoiseMaterial> => {
+}: FluidProps): HooksReturn<FluidValues, any> => {
    const _dpr = getDpr(dpr);
 
    // fbos

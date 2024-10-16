@@ -6,6 +6,8 @@ import { RootState } from "../types";
 import { NoiseMaterial, NoiseValues } from "../../materials";
 import { useFxScene } from "../../utils/useFxScene";
 
+export type NoiseProps = HooksProps & NoiseValues;
+
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
@@ -16,7 +18,7 @@ export const useNoise = ({
    renderTargetOptions,
    materialParameters,
    ...uniformValues
-}: HooksProps & NoiseValues): HooksReturn<NoiseValues, NoiseMaterial> => {
+}: NoiseProps): HooksReturn<NoiseValues, NoiseMaterial> => {
    const _dpr = getDpr(dpr);
 
    const { scene, material, camera } = useFxScene({

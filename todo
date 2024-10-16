@@ -1,14 +1,12 @@
-- useComposer,直接hookを渡すんじゃなくて、stringにしようかな
-
-
 - touch designerを解剖して、機能を因数分解してみる
 	- webglooの設計つくる
 
 - rename
 	- fxbasicfx→basicfx
 
-- createMaterial
+- createMaterialImpl
 	- createMaterialImplにして、引数に関数で引数にチャンクとれるみたいな。第二引数でマテリアルの種類選べるみたいな。
-	- createfxbasicfxmateralimpl
-		→createBasicFxMaterial
-		→createSamplingFxMaterial
+	- 実装クラスを生成する関数
+
+- SamplingFxMaterialの実装
+	- rgbShiftなど

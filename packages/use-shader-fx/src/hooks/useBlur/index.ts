@@ -10,6 +10,8 @@ type BlurConfig = {
    blurIteration?: number;
 };
 
+export type BlurProps = HooksProps & BlurValues & BlurConfig;
+
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
@@ -21,10 +23,7 @@ export const useBlur = ({
    materialParameters,
    blurIteration = 5,
    ...uniformValues
-}: HooksProps & BlurValues & BlurConfig): HooksReturn<
-   BlurValues,
-   BlurMaterial
-> => {
+}: BlurProps): HooksReturn<BlurValues, BlurMaterial> => {
    const _dpr = getDpr(dpr);
 
    const { scene, material, camera } = useFxScene({

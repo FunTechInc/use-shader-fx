@@ -1,13 +1,11 @@
 import * as THREE from "three";
 import { useState } from "react";
-import { HooksProps, HooksReturn, RootState } from "../hooks/types";
-import { BasicFxValues } from "../materials/core/BasicFxLib";
-import { FxTypes } from "../hooks";
+import { HooksReturn, RootState } from "../hooks/types";
+import { FxTypes, FxProps } from "../hooks";
 
-export type FxConfig = {
-   fx: FxTypes;
-} & HooksProps &
-   BasicFxValues;
+export type FxConfig<T extends FxTypes = FxTypes> = {
+   fx: T;
+} & FxProps<T>;
 
 export type PipelineConfig = {
    src?: number;
@@ -26,22 +24,20 @@ const WARN_TEXT = {
    pipeline: `use-shader-fx: fx and pipeline length mismatch. fx is non-reactive; update by changing the key to reset state.`,
 };
 
-/*===============================================
-- Generates a pipeline of fx
-- hooks are non-reactive
-===============================================*/
-export const usePipeline = (...args: FxConfig[]) => {
-   // non reactive
+export const usePipeline = <T extends FxTypes[]>(
+   ...args: { [K in keyof T]: FxConfig<T[K]> }
+) => {
+   // hooks are non-reactive
    const [hooks] = useState(() => args.map(({ fx }) => fx));
 
-   // resolutionを更新するため、argsはreactiveにする
+   // to update the resolution, make the args reactive.
    let _args = args.map(({ fx, ...rest }) => rest);
 
    const argsDiff = hooks.length - _args.length;
 
    if (argsDiff !== 0) {
       console.warn(WARN_TEXT.args);
-      // argsの長さを調整する
+      // adjust length of args
       if (argsDiff < 0) {
          _args = _args.slice(0, hooks.length);
       } else {
@@ -49,7 +45,6 @@ export const usePipeline = (...args: FxConfig[]) => {
       }
    }
 
-   // hooksからの返り値を格納する
    const pipeline: HooksReturn[] = [];
    hooks.forEach((hook, i) => pipeline.push(hook(_args[i])));
 
@@ -58,7 +53,6 @@ export const usePipeline = (...args: FxConfig[]) => {
    const setValues = (...values: {}[]) =>
       pipeline.forEach((fx, i) => fx.setValues(values[i]));
 
-   // setPipiline
    const textures = pipeline.map((fx) => fx.texture);
 
    const setPipeline = (...args: PipelineConfig[]) => {
@@ -68,9 +62,9 @@ export const usePipeline = (...args: FxConfig[]) => {
       }
       args.forEach(({ src, mixSrc, mixDst }, i) => {
          const value: PipelineValues = {};
-         if (src !== undefined) value.src = textures[src];
-         if (mixSrc !== undefined) value.mixSrc = textures[mixSrc];
-         if (mixDst !== undefined) value.mixDst = textures[mixDst];
+         if (src != null) value.src = textures[src];
+         if (mixSrc != null) value.mixSrc = textures[mixSrc];
+         if (mixDst != null) value.mixDst = textures[mixDst];
          pipeline[i].setValues(value);
       });
    };
@@ -78,8 +72,9 @@ export const usePipeline = (...args: FxConfig[]) => {
    return {
       render,
       setValues,
+      setPipeline,
       texture: pipeline.at(-1)?.texture,
       textures,
-      setPipeline,
+      pipeline,
    };
 };
