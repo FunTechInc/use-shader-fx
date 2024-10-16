@@ -3,3 +3,12 @@
 
 - touch designerを解剖して、機能を因数分解してみる
 	- webglooの設計つくる
+
+- rename
+	- fxbasicfx→basicfx
+
+- createMaterial
+	- createMaterialImplにして、引数に関数で引数にチャンクとれるみたいな。第二引数でマテリアルの種類選べるみたいな。
+	- createfxbasicfxmateralimpl
+		→createBasicFxMaterial
+		→createSamplingFxMaterial

@@ -11,7 +11,7 @@ export default function Page() {
             height: "100svh",
             pointerEvents: "none",
          }}>
-         <div
+         {/* <div
             style={{
                width: "400px",
                height: "400px",
@@ -30,7 +30,7 @@ export default function Page() {
                sizes={"100%"}
                style={{ objectFit: "cover" }}
             />
-         </div>
+         </div> */}
          <ShaderFx isDprUpdate={false}>
             <Playground />
          </ShaderFx>

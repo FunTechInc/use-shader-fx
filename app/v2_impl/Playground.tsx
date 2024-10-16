@@ -13,6 +13,7 @@ import {
    FxMaterialImplValues,
    FxBasicFxMaterialImplValues,
    useFluid,
+   useCoverTexture,
 } from "@/packages/use-shader-fx/src";
 import { Float, OrbitControls } from "@react-three/drei";
 
@@ -54,31 +55,39 @@ export const Playground = () => {
    //    src: renderTarget.texture,
    // });
 
-   const fluid = useFluid({
-      size,
-      dpr: 0.25,
-   });
+   // const fluid = useFluid({
+   //    size,
+   //    dpr: 0.25,
+   // });
 
    const noise = useNoise({
       size,
-      dpr: 0.3,
-      fboAutoSetSize: true,
-      scale: 0.4,
+      dpr: 1,
+      scale: 100,
       noiseOctaves: 2,
       // mixSrc: fluid.texture,
-      mixSrcColorFactor: 0.5,
-      mixSrcUvFactor: 0.6,
+      // mixSrcColorFactor: 0.5,
+      // mixSrcUvFactor: 0.6,
    });
 
-   noise.setValues({
-      mixSrc: fluid.texture,
+   const cover = useCoverTexture({
+      size,
+      dpr: 1,
+      src: renderTarget.texture,
+      mixSrc: noise.texture,
+      mixSrcUvFactor: 0.2,
    });
+
+   // noise.setValues({
+   //    mixSrc: cover.texture,
+   //    mixSrcColorFactor: 1,
+   // });
 
    useFrame((state) => {
       updateRenderTarget({ gl: state.gl });
       noise.render(state);
       // blur.render(state);
-      fluid.render(state);
+      cover.render(state);
    });
 
    const ref = useRef<any>();
@@ -90,7 +99,7 @@ export const Playground = () => {
             <fxMaterialImpl
                key={FxMaterialImpl.key}
                ref={ref}
-               src={noise.texture}
+               src={cover.texture}
             />
          </mesh>
          {createPortal(

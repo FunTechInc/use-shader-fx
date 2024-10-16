@@ -8,8 +8,9 @@ import {
    FxMaterialImplValues,
    FxBasicFxMaterialImplValues,
    useFluid,
-   useComposer,
+   usePipeline,
    FxConfig,
+   PipelineConfig,
 } from "@/packages/use-shader-fx/src";
 import { useEffect, useMemo, useState } from "react";
 
@@ -22,37 +23,49 @@ extend({ FxMaterialImpl, FxBasicFxMaterialImpl });
 reactive way
 - fxの変更をtriggerにkeyを変更することで、reactiveにfxを変更することが可能
 ===============================================*/
-const Composer = ({ compose }: { compose: FxConfig[] }) => {
-   const { texture, render } = useComposer(...compose);
+const Pipeline = ({
+   fxConfig,
+   pipelineConfig,
+}: {
+   fxConfig: FxConfig[];
+   pipelineConfig: PipelineConfig[];
+}) => {
+   const { texture, render, setPipeline } = usePipeline(...fxConfig);
+   setPipeline(...pipelineConfig);
    useFrame((state) => render(state));
    return <fxMaterialImpl key={FxMaterialImpl.key} src={texture} />;
 };
 export const Playground = () => {
    const { size } = useThree();
 
-   const compose: FxConfig[] = [
+   const fxConfig: FxConfig[] = [
       { fx: useFluid, size, dpr: 0.3 },
       {
          fx: useNoise,
          size,
-         dpr: 0.1,
+         dpr: 0.2,
          mixSrcColorFactor: 0.2,
       },
    ];
+   const pipelineConfig: PipelineConfig[] = [{}, { mixSrc: 0 }];
 
    // keyを変更することで、fxの変更をreactiveにすることが可能
    // UIではGUIの変更を検知して、keyを変更することで、reactiveに変更を反映するなどを想定
-   const [composeCache, setComposeCache] = useState(compose.length);
+   const [pipelineCache, setPipelineCache] = useState(fxConfig.length);
    const [version, setVersion] = useState(0);
-   if (compose.length !== composeCache) {
-      setComposeCache(compose.length);
+   if (fxConfig.length !== pipelineCache) {
+      setPipelineCache(fxConfig.length);
       setVersion(version + 1);
    }
 
    return (
       <mesh>
          <planeGeometry args={[2, 2]} />
-         <Composer compose={compose} key={version} />
+         <Pipeline
+            fxConfig={fxConfig}
+            pipelineConfig={pipelineConfig}
+            key={version}
+         />
       </mesh>
    );
 };
@@ -65,7 +78,7 @@ non-reactive way
 // export const Playground = () => {
 //    const { size } = useThree();
 
-//    const { texture, render } = useComposer(
+//    const { texture, render, setPipeline } = usePipeline(
 //       {
 //          fx: useFluid,
 //          size,
@@ -78,6 +91,8 @@ non-reactive way
 //          mixSrcColorFactor: 0.2,
 //       }
 //    );
+//    setPipeline({}, { mixSrc: 0 });
+
 //    useFrame((state) => render(state));
 
 //    return (
