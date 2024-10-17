@@ -91,8 +91,9 @@ export const Playground = () => {
       {
          fx: useNoise,
          size,
-         dpr: 0.1,
-         mixDstUvFactor: 0.2,
+         dpr: 0.8,
+         fboAutoSetSize: true,
+         mixDstUvFactor: 0.3,
          mixDstColorFactor: 0.2,
       }
    );

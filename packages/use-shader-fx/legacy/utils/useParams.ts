@@ -18,6 +18,7 @@ export const useParams = <T extends object>(params: T): UseParamsReturn<T> => {
          return;
       }
       for (const key in newParams) {
+         // hasOwnPropertyで保証するべき
          const paramKey = key as keyof T;
          if (
             paramKey in paramsRef.current &&

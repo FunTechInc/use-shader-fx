@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { HooksReturn, RootState } from "../hooks/types";
 import { FxTypes, FxProps } from "../hooks";
 
@@ -8,17 +8,19 @@ export type FxConfig<T extends FxTypes = FxTypes> = {
 } & FxProps<T>;
 
 export type PipelineConfig = {
-   src?: number | THREE.Texture;
-   mixSrc?: number | THREE.Texture;
-   mixDst?: number | THREE.Texture;
+   src?: number | THREE.Texture | null;
+   mixSrc?: number | THREE.Texture | null;
+   mixDst?: number | THREE.Texture | null;
 };
 export type PipelineValues = {
-   [K in keyof PipelineConfig]: THREE.Texture | undefined;
+   [K in keyof PipelineConfig]: THREE.Texture | null | undefined;
 };
 
 const WARN_TEXT = {
    args: `use-shader-fx: fx and args length mismatch. fx is non-reactive; update by changing the key to reset state.`,
    pipeline: `use-shader-fx: fx and pipeline length mismatch. fx is non-reactive; update by changing the key to reset state.`,
+   pipelineValue: (val: number, pipelineIndex: number, key: string) =>
+      `use-shader-fx: texture(index:${val}) is missing, at "${key}" of pipeline(index:${pipelineIndex}).`,
 };
 
 export const usePipeline = <T extends FxTypes[]>(
@@ -42,25 +44,32 @@ export const usePipeline = <T extends FxTypes[]>(
       }
    }
 
-   const pipeline: HooksReturn[] = [];
-   hooks.forEach((hook, i) => pipeline.push(hook(_args[i])));
+   const pipeline = hooks.map((hook, i) => hook(_args[i]));
 
-   const render = (state: RootState) =>
-      pipeline.forEach((fx) => fx.render(state));
-   const setValues = (...values: {}[]) =>
-      pipeline.forEach((fx, i) => fx.setValues(values[i]));
+   const render = useCallback(
+      (state: RootState) => pipeline.forEach((fx) => fx.render(state)),
+      [pipeline]
+   );
+
+   const setValues = useCallback(
+      (...values: {}[]) => pipeline.forEach((fx, i) => fx.setValues(values[i])),
+      [pipeline]
+   );
 
    const textures = pipeline.map((fx) => fx.texture);
 
-   const setPipeline = (...args: PipelineConfig[]) => {
-      if (args.length !== pipeline.length) {
-         console.warn(WARN_TEXT.pipeline);
-         return;
-      }
-      args.forEach((arg, i) =>
-         pipeline[i].setValues(getPipelineValues(arg, textures))
-      );
-   };
+   const setPipeline = useCallback(
+      (...args: PipelineConfig[]) => {
+         if (args.length !== pipeline.length) {
+            console.warn(WARN_TEXT.pipeline);
+            return;
+         }
+         args.forEach((arg, i) =>
+            pipeline[i].setValues(getPipelineValues(arg, textures, i))
+         );
+      },
+      [pipeline, textures]
+   );
 
    return {
       render,
@@ -72,13 +81,34 @@ export const usePipeline = <T extends FxTypes[]>(
    };
 };
 
-function getPipelineValues(config: PipelineConfig, textures: THREE.Texture[]) {
+function getPipelineValues(
+   config: PipelineConfig,
+   textures: THREE.Texture[],
+   pipelineIndex: number
+) {
    const value: PipelineValues = {};
-   for (const key in config) {
-      const _val = config[key as keyof PipelineConfig];
-      if (_val != null)
-         value[key as keyof PipelineConfig] =
-            typeof _val === "number" ? textures[_val] : _val;
+
+   for (const [key, val] of Object.entries(config)) {
+      const _key = key as keyof PipelineConfig;
+
+      if (val == null) {
+         value[_key] = null;
+         break;
+      }
+
+      if (typeof val === "number") {
+         const _tex = textures[val];
+         if (!_tex) {
+            console.warn(WARN_TEXT.pipelineValue(val, pipelineIndex, key));
+            value[_key] = null;
+            break;
+         }
+         value[_key] = _tex;
+         break;
+      }
+
+      value[_key] = val;
    }
+
    return value;
 }

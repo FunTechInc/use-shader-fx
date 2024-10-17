@@ -79,10 +79,8 @@ export class FxMaterial extends THREE.ShaderMaterial {
    setUniformValues(values?: { [key: string]: any }) {
       if (values === undefined) return;
 
-      for (const key in values) {
-         const newValue = values[key];
-
-         if (newValue === undefined) {
+      for (const [key, value] of Object.entries(values)) {
+         if (value === undefined) {
             console.warn(
                `use-shader-fx: parameter '${key}' has value of undefined.`
             );
@@ -98,7 +96,7 @@ export class FxMaterial extends THREE.ShaderMaterial {
             return;
          }
 
-         curretUniform.value = newValue;
+         curretUniform.value = value;
       }
    }
 
