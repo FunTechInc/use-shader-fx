@@ -9,9 +9,9 @@ import {
    useBlur,
    useSingleFBO,
    createFxMaterialImpl,
-   createFxBasicFxMaterialImpl,
+   createBasicFxMaterialImpl,
    FxMaterialImplValues,
-   FxBasicFxMaterialImplValues,
+   BasicFxMaterialImplValues,
    useFluid,
    useCoverTexture,
 } from "@/packages/use-shader-fx/src";
@@ -32,9 +32,9 @@ const FxMaterialImpl = createFxMaterialImpl({
 	}
 `,
 });
-const FxBasicFxMaterialImpl = createFxBasicFxMaterialImpl();
+const BasicFxMaterialImpl = createBasicFxMaterialImpl();
 
-extend({ FxMaterialImpl, FxBasicFxMaterialImpl });
+extend({ FxMaterialImpl, BasicFxMaterialImpl });
 
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
@@ -123,7 +123,7 @@ declare global {
       interface IntrinsicElements {
          fxMaterialImpl: FxMaterialImplValues &
             JSX.IntrinsicElements["shaderMaterial"];
-         fxBasicFxMaterialImpl: FxBasicFxMaterialImplValues &
+         BasicFxMaterialImpl: BasicFxMaterialImplValues &
             JSX.IntrinsicElements["shaderMaterial"];
       }
    }

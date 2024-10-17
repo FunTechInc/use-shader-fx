@@ -15,7 +15,7 @@ export type FluidValues = {
    /*===============================================
 	TODO * 
 	- 出力でcolormapとvelocitymapを選択できるみたいな仕組みにする
-		- colormapはfxBasicFxmaterialで、基礎FXも
+		- colormapはBasicFxmaterial
 	- params
 	 - velocity dissipation
 	 - color dissipation (color map)

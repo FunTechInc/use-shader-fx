@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { FxBasicFxMaterial } from "../../materials/core/FxBasicFxMaterial";
+import { BasicFxMaterial } from "../../materials/core/BasicFxMaterial";
 import { DoubleRenderTarget } from "../../utils/useDoubleFBO";
 
 export type Size = {
@@ -59,7 +59,7 @@ export interface HooksProps {
  * @template V The type for the FX parameters.
  * @template O The type for the material.
  */
-export type HooksReturn<V = {}, M = FxBasicFxMaterial> = {
+export type HooksReturn<V = {}, M = BasicFxMaterial> = {
    /**
     * Functions to update parameters and render.
     * @param rootState RootState

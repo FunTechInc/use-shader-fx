@@ -1,19 +1,19 @@
 import * as THREE from "three";
 import { FxMaterialProps, ShaderWithUniforms } from "../core/FxMaterial";
 import { ShaderLib } from "../../libs/shaders/ShaderLib";
-import { FxBasicFxMaterial } from "../core/FxBasicFxMaterial";
+import { BasicFxMaterial } from "../core/BasicFxMaterial";
 import {
    BasicFxUniforms,
    BasicFxValues,
    ExtractUniformValue,
 } from "../core/BasicFxLib";
 
-type FxBasicFxMaterialImplUniforms = {
+type BasicFxMaterialImplUniforms = {
    src: { value: THREE.Texture };
 } & BasicFxUniforms;
 
-export type FxBasicFxMaterialImplValues =
-   ExtractUniformValue<FxBasicFxMaterialImplUniforms> & BasicFxValues;
+export type BasicFxMaterialImplValues =
+   ExtractUniformValue<BasicFxMaterialImplUniforms> & BasicFxValues;
 
 const DEFAULT_VERTEX = `
 	void main() {
@@ -38,21 +38,21 @@ const DEFAULT_FRAGMENT = `
 	}
 `;
 
-export const createFxBasicFxMaterialImpl = ({
+export const createBasicFxMaterialImpl = ({
    uniforms,
    vertexShader = DEFAULT_VERTEX,
    fragmentShader = DEFAULT_FRAGMENT,
 }: ShaderWithUniforms = {}) => {
-   class FxBasicFxMaterialImpl extends FxBasicFxMaterial {
+   class BasicFxMaterialImpl extends BasicFxMaterial {
       public static readonly key: string = THREE.MathUtils.generateUUID();
 
       static get type() {
-         return "FxBasicFxMaterialImpl";
+         return "BasicFxMaterialImpl";
       }
 
-      uniforms!: FxBasicFxMaterialImplUniforms;
+      uniforms!: BasicFxMaterialImplUniforms;
 
-      constructor(props: FxMaterialProps<FxBasicFxMaterialImplValues>) {
+      constructor(props: FxMaterialProps<BasicFxMaterialImplValues>) {
          super({
             vertexShader: props?.vertexShader || vertexShader,
             fragmentShader: props?.fragmentShader || fragmentShader,
@@ -67,11 +67,11 @@ export const createFxBasicFxMaterialImpl = ({
             ]),
          });
 
-         this.type = FxBasicFxMaterialImpl.type;
+         this.type = BasicFxMaterialImpl.type;
       }
    }
 
-   return FxBasicFxMaterialImpl as typeof FxBasicFxMaterialImpl & {
+   return BasicFxMaterialImpl as typeof BasicFxMaterialImpl & {
       key: string;
    };
 };

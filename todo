@@ -1,12 +1,11 @@
-- touch designerを解剖して、機能を因数分解してみる
-	- webglooの設計つくる
-
-- rename
-	- fxbasicfx→basicfx
-
 - createMaterialImpl
 	- createMaterialImplにして、引数に関数で引数にチャンクとれるみたいな。第二引数でマテリアルの種類選べるみたいな。
 	- 実装クラスを生成する関数
 
 - SamplingFxMaterialの実装
 	- rgbShiftなど
+	- basicFxLibを拡張する
+
+- blending mode
+	- mixSrc,mixDstのblendingMode
+	- basicFxにcolor追加

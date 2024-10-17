@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { fragment, vertex } from "./coverTexture.glsl";
-import { FxBasicFxMaterial } from "../../core/FxBasicFxMaterial";
+import { BasicFxMaterial } from "../../core/BasicFxMaterial";
 import { FxMaterialProps } from "../../core/FxMaterial";
 import {
    BasicFxUniforms,
@@ -18,7 +18,7 @@ type CoverTextureUniforms = {
 export type CoverTextureValues = ExtractUniformValue<CoverTextureUniforms> &
    BasicFxValues;
 
-export class CoverTextureMaterial extends FxBasicFxMaterial {
+export class CoverTextureMaterial extends BasicFxMaterial {
    static get type() {
       return "NoiseMaterial";
    }

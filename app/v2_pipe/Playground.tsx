@@ -4,9 +4,9 @@ import { useFrame, useThree, extend, createPortal } from "@react-three/fiber";
 import {
    useNoise,
    createFxMaterialImpl,
-   createFxBasicFxMaterialImpl,
+   createBasicFxMaterialImpl,
    FxMaterialImplValues,
-   FxBasicFxMaterialImplValues,
+   BasicFxMaterialImplValues,
    useFluid,
    usePipeline,
 } from "@/packages/use-shader-fx/src";
@@ -14,9 +14,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useTexture } from "@react-three/drei";
 
 const FxMaterialImpl = createFxMaterialImpl();
-const FxBasicFxMaterialImpl = createFxBasicFxMaterialImpl();
+const BasicFxMaterialImpl = createBasicFxMaterialImpl();
 
-extend({ FxMaterialImpl, FxBasicFxMaterialImpl });
+extend({ FxMaterialImpl, BasicFxMaterialImpl });
 
 /*===============================================
 reactive way
@@ -114,7 +114,7 @@ declare global {
       interface IntrinsicElements {
          fxMaterialImpl: FxMaterialImplValues &
             JSX.IntrinsicElements["shaderMaterial"];
-         fxBasicFxMaterialImpl: FxBasicFxMaterialImplValues &
+         BasicFxMaterialImpl: BasicFxMaterialImplValues &
             JSX.IntrinsicElements["shaderMaterial"];
       }
    }

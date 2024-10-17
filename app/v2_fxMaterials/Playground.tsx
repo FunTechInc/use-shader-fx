@@ -7,7 +7,7 @@ import {
    NoiseMaterial,
    NoiseValues,
    FxMaterialImplValues,
-   FxBasicFxMaterialImplValues,
+   BasicFxMaterialImplValues,
 } from "@/packages/use-shader-fx/src";
 
 extend({ NoiseMaterial });
@@ -33,7 +33,7 @@ declare global {
          noiseMaterial: NoiseValues & JSX.IntrinsicElements["shaderMaterial"];
          fxMaterialImpl: FxMaterialImplValues &
             JSX.IntrinsicElements["shaderMaterial"];
-         fxBasicFxMaterialImpl: FxBasicFxMaterialImplValues &
+         BasicFxMaterialImpl: BasicFxMaterialImplValues &
             JSX.IntrinsicElements["shaderMaterial"];
       }
    }

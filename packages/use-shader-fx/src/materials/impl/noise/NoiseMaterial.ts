@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { noiseFragment, noiseVertex } from "./noise.glsl";
-import { FxBasicFxMaterial } from "../../core/FxBasicFxMaterial";
+import { BasicFxMaterial } from "../../core/BasicFxMaterial";
 import { FxMaterialProps } from "../../core/FxMaterial";
 import {
    BasicFxUniforms,
@@ -29,7 +29,7 @@ type NoiseUniforms = {
 
 export type NoiseValues = ExtractUniformValue<NoiseUniforms> & BasicFxValues;
 
-export class NoiseMaterial extends FxBasicFxMaterial {
+export class NoiseMaterial extends BasicFxMaterial {
    public static readonly key: string = THREE.MathUtils.generateUUID();
 
    static get type() {

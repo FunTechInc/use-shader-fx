@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { fragment, vertex } from "./blur.glsl";
-import { FxBasicFxMaterial } from "../../core/FxBasicFxMaterial";
+import { BasicFxMaterial } from "../../core/BasicFxMaterial";
 import { FxMaterialProps } from "../../core/FxMaterial";
 import {
    BasicFxUniforms,
@@ -17,7 +17,7 @@ type BlurUniforms = {
 
 export type BlurValues = ExtractUniformValue<BlurUniforms> & BasicFxValues;
 
-export class BlurMaterial extends FxBasicFxMaterial {
+export class BlurMaterial extends BasicFxMaterial {
    static get type() {
       return "BlurMaterial";
    }
