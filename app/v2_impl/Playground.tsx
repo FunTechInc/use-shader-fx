@@ -55,10 +55,10 @@ export const Playground = () => {
    //    src: renderTarget.texture,
    // });
 
-   // const fluid = useFluid({
-   //    size,
-   //    dpr: 0.25,
-   // });
+   const fluid = useFluid({
+      size,
+      dpr: 0.25,
+   });
 
    const noise = useNoise({
       size,
@@ -88,6 +88,7 @@ export const Playground = () => {
       noise.render(state);
       // blur.render(state);
       cover.render(state);
+      fluid.render(state);
    });
 
    const ref = useRef<any>();
@@ -99,7 +100,7 @@ export const Playground = () => {
             <fxMaterialImpl
                key={FxMaterialImpl.key}
                ref={ref}
-               src={cover.texture}
+               src={fluid.texture}
             />
          </mesh>
          {createPortal(

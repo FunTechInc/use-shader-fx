@@ -18,7 +18,7 @@ export type FluidValues = {
 		- colormapはBasicFxmaterial
 	- params
 	 - velocity dissipation
-	 - color dissipation (color map)
+	 - color dissipation (color map　/ pressure disippation的なこと？)　
 	===============================================*/
 };
 
@@ -89,6 +89,11 @@ export const useFluid = ({
       poisson.material.uniforms.isBounce.value = false;
       pressure.material.uniforms.isBounce.value = false;
    }, []);
+
+   // bounce の設定 一旦OFFに
+   divergence.material.uniforms.isBounce.value = false;
+   poisson.material.uniforms.isBounce.value = false;
+   pressure.material.uniforms.isBounce.value = false;
 
    const render = useCallback(
       (rootState: RootState, newValues?: FluidValues) => {

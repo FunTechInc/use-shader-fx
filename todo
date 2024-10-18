@@ -9,3 +9,12 @@
 - blending mode
 	- mixSrc,mixDstのblendingMode
 	- basicFxにcolor追加
+
+
+
+- 粘性の追加
+- advectionのdisipationを追加する
+- deltaTimeも操作できるように
+- コントラストを強めてみて
+	- これの、aboutページみたいにできるはずなんだけどな
+		- https://www.hatom.com/

@@ -30,13 +30,13 @@ export class SplatMaterial extends FxMaterial {
          uniforms: {
             force: { value: new THREE.Vector2(0, 0) },
             center: { value: new THREE.Vector2(0, 0) },
-            scale: { value: new THREE.Vector2(30, 30) },
+            scale: { value: new THREE.Vector2(120, 120) },
          } as SplatUniforms,
       });
 
       this.type = SplatMaterial.type;
 
-      this.forceBias = 30;
+      this.forceBias = 20;
 
       this.blending = THREE.AdditiveBlending;
    }
