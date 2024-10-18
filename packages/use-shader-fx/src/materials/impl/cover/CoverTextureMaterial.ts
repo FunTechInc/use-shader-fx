@@ -7,10 +7,11 @@ import {
    BasicFxValues,
    ExtractUniformValue,
 } from "../../core/BasicFxLib";
+import { TexturePipelineSrc } from "../../../misc";
 
 type CoverTextureUniforms = {
    /**  */
-   src: { value: THREE.Texture | null };
+   src: { value: TexturePipelineSrc };
    /**  */
    textureResolution: { value: THREE.Vector2 };
 } & BasicFxUniforms;

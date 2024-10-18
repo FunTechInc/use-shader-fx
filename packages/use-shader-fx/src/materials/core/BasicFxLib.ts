@@ -1,18 +1,19 @@
 import * as THREE from "three";
 import { DefaultUniforms } from "./FxMaterial";
+import { TexturePipelineSrc } from "../../misc";
 
 /*===============================================
 basic fxを追加するときはこことShaderChunk,Libを編集する
 ===============================================*/
 type BasicFxUniformsUnique = {
    // mixSrc
-   mixSrc: { value: THREE.Texture | null };
+   mixSrc: { value: TexturePipelineSrc };
    mixSrcResolution: { value: THREE.Vector2 };
    mixSrcUvFactor: { value: number };
    mixSrcAlphaFactor: { value: number };
    mixSrcColorFactor: { value: number };
    // mixDst
-   mixDst: { value: THREE.Texture | null };
+   mixDst: { value: TexturePipelineSrc };
    mixDstResolution: { value: THREE.Vector2 };
    mixDstUvFactor: { value: number };
    mixDstAlphaFactor: { value: number };

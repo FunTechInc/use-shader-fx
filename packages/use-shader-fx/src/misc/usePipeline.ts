@@ -1,19 +1,21 @@
 import * as THREE from "three";
-import { useCallback, useMemo, useState } from "react";
-import { HooksReturn, RootState } from "../hooks/types";
+import { useCallback, useState } from "react";
+import { RootState } from "../hooks/types";
 import { FxTypes, FxProps } from "../hooks";
 
 export type FxConfig<T extends FxTypes = FxTypes> = {
    fx: T;
 } & FxProps<T>;
 
+export type TexturePipelineSrc = THREE.Texture | null;
+
 export type PipelineConfig = {
-   src?: number | THREE.Texture | null;
-   mixSrc?: number | THREE.Texture | null;
-   mixDst?: number | THREE.Texture | null;
+   src?: number | TexturePipelineSrc;
+   mixSrc?: number | TexturePipelineSrc;
+   mixDst?: number | TexturePipelineSrc;
 };
 export type PipelineValues = {
-   [K in keyof PipelineConfig]: THREE.Texture | null | undefined;
+   [K in keyof PipelineConfig]?: TexturePipelineSrc;
 };
 
 const WARN_TEXT = {
