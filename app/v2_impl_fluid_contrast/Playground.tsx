@@ -44,28 +44,43 @@ vec3 rgb2hsv(vec3 c)
 		vec4 fluid = texture2D(src, vUv);
 		vec2 vel = fluid.rg;
 
-		// THINK つまりfluidのcolorMapは最後lenを返せばいいのか？ それをを色調補正すれば以下ができるじゃない
 		float len = length(vel); // 0~1
 		
-		vec3 fluidColor = vec3(len);
-		fluidColor.r = clamp(fluidColor.r + .2, 0., 1.);
-		fluidColor.b = clamp(fluidColor.b + .1, 0., 1.);
-
+		vec4 fluidColor = vec4(len);
+		
+		// color overlay
+		fluidColor.r *= clamp(fluidColor.r * .2, 0., 1.);
+		fluidColor.g *= clamp(fluidColor.g * .1, 0., 1.);
+		fluidColor.b *= clamp(fluidColor.b * .8, 0., 1.);
 		// THINK ここまでがデフォルトのfluidのcolor
-
+		
 		// THINK ここからがbasicFxの色調補正
+		// THINK ガンマ補正とコントラストはvec4でやればいいのかも
+		
+		// ガンマ補正
+		float gammaFactor = .4;
+		vec4 gamma = pow(fluidColor, vec4(1./gammaFactor));
+		// コントラスト
+		float contrastFactor = 1.;
+		vec4 contrast = clamp(((gamma-.5)*contrastFactor)+.5, 0., 1.);
+		
+		vec4 outputColor = contrast;
 
-		vec3 hsv = rgb2hsv(fluidColor);
+		// color overlay
+		outputColor.r *= clamp(outputColor.r * 1.2, 0., 1.);
+		outputColor.g *= clamp(outputColor.g * .4, 0., 1.);
+		outputColor.b *= clamp(outputColor.b * .9, 0., 1.);
 
-		hsv.y *= 100.; // 彩度
+		// 彩度と明度
+		vec3 hsv = rgb2hsv(outputColor.rgb);
+		hsv.y *= 2.4; // 彩度
 		hsv.z *= 2.; // 明度
+		outputColor.rgb = hsv2rgb(hsv);
 
-		vec3 final = hsv2rgb(hsv);
-		
-		vec3 gamma = pow(final, vec3(1./.01));
-		gamma = ((gamma-.5)*10.)+.5;
-		
-		gl_FragColor = vec4(vec3(gamma),  len);
+		// alpha TODO * transparentを選択できるようにする？
+		float alpha = outputColor.a;
+		// float alpha = 1.;
+		gl_FragColor = vec4(outputColor.rgb, alpha);
 	}
 `,
 });
@@ -78,7 +93,7 @@ export const Playground = () => {
 
    const fluid = useFluid({
       size,
-      dpr: 0.8,
+      dpr: 0.6,
    });
 
    useFrame((state) => {

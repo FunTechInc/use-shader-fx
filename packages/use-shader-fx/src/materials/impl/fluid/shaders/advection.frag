@@ -1,7 +1,7 @@
 uniform float dt;
 uniform sampler2D velocity;
 
-float dissipation = 0.95; // TODO disipationを追加する
+float dissipation = .99; // TODO disipationを追加する
 
 void main(){
 	vec2 vel = texture2D(velocity, vUv).xy;

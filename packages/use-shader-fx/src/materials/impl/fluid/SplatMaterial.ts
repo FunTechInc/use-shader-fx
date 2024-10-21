@@ -36,7 +36,7 @@ export class SplatMaterial extends FxMaterial {
 
       this.type = SplatMaterial.type;
 
-      this.forceBias = 20;
+      this.forceBias = 30;
 
       this.blending = THREE.AdditiveBlending;
    }

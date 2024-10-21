@@ -4,4 +4,4 @@ export * from "./PressureMaterial";
 export * from "./PoissonMaterial";
 export * from "./SplatMaterial";
 
-export const DeltaTime = 0.01;
+export const DeltaTime = 0.008;

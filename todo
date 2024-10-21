@@ -6,15 +6,18 @@
 	- rgbShiftなど
 	- basicFxLibを拡張する
 
-- blending mode
+- basic fx
 	- mixSrc,mixDstのblendingMode
-	- basicFxにcolor追加
+	- basicFxに色調補正
+		- fluid contrastを参考に
+	- micSrc => 色調補正系 => micDstの順
+
+- fluid
+	- 粘性の追加
+	- advectionのdisipationを追加する
+	- deltaTimeも操作できるように
+	- transparencyを選択できるように
+		- transparencyにして、0~1でmixする方式で
 
 
 
-- 粘性の追加
-- advectionのdisipationを追加する
-- deltaTimeも操作できるように
-- コントラストを強めてみて
-	- これの、aboutページみたいにできるはずなんだけどな
-		- https://www.hatom.com/
