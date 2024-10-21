@@ -49,31 +49,51 @@ vec3 rgb2hsv(vec3 c)
 		vec4 fluidColor = vec4(len);
 		
 		// color overlay
-		fluidColor.r *= clamp(fluidColor.r * .2, 0., 1.);
-		fluidColor.g *= clamp(fluidColor.g * .1, 0., 1.);
-		fluidColor.b *= clamp(fluidColor.b * .8, 0., 1.);
+		fluidColor.r *= clamp(fluidColor.r * 1.1, 0., 1.);
+		fluidColor.g *= clamp(fluidColor.g * 0.2, 0., 1.);
+		fluidColor.b *= clamp(fluidColor.b * .6, 0., 1.);
 		// THINK ここまでがデフォルトのfluidのcolor
 		
 		// THINK ここからがbasicFxの色調補正
 		// THINK ガンマ補正とコントラストはvec4でやればいいのかも
 		
+		// レベル補正
+		
+		// float gammaFactor = .0;
+		// vec4 gamma = pow(fluidColor, vec4(1./gammaFactor));
+
+		float u_shadows = 1.2;         // シャドウ値 (0.0 〜 1.0)
+		float u_midtones = 1.1;        // ミッドトーン値 (0.0 〜 1.0)
+		float u_highlights = 1.4;      // ハイライト値 (0.0 〜 1.0)
+		float u_outputMin = 0.0;     // 出力の最小値 (0.0 〜 1.0)
+		float u_outputMax = 1.0;       // 出力の最大値 (0.0 〜 1.0)
+
+		// 入力レベル補正
+		vec4 correctedColor = (fluidColor - vec4(u_shadows)) / (vec4(u_highlights) - vec4(u_shadows));
+
 		// ガンマ補正
-		float gammaFactor = .4;
-		vec4 gamma = pow(fluidColor, vec4(1./gammaFactor));
+		correctedColor = pow(correctedColor, vec4(1.0 / u_midtones));
+
+		// 出力レベル補正
+		correctedColor = correctedColor * (vec4(u_outputMax) - vec4(u_outputMin)) + vec4(u_outputMin);
+
+		vec4 gamma = correctedColor;
+
+
 		// コントラスト
-		float contrastFactor = 1.;
+		float contrastFactor = 20.;
 		vec4 contrast = clamp(((gamma-.5)*contrastFactor)+.5, 0., 1.);
 		
 		vec4 outputColor = contrast;
 
 		// color overlay
-		outputColor.r *= clamp(outputColor.r * 1.2, 0., 1.);
-		outputColor.g *= clamp(outputColor.g * .4, 0., 1.);
-		outputColor.b *= clamp(outputColor.b * .9, 0., 1.);
+		outputColor.r *= clamp(outputColor.r * 2., 0., 1.);
+		outputColor.g *= clamp(outputColor.g * 1., 0., 1.);
+		outputColor.b *= clamp(outputColor.b * 1., 0., 1.);
 
 		// 彩度と明度
 		vec3 hsv = rgb2hsv(outputColor.rgb);
-		hsv.y *= 2.4; // 彩度
+		hsv.y *= 1.; // 彩度
 		hsv.z *= 2.; // 明度
 		outputColor.rgb = hsv2rgb(hsv);
 

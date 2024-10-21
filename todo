@@ -6,18 +6,34 @@
 	- rgbShiftなど
 	- basicFxLibを拡張する
 
+- fluid
+	- advectionのdisipationを追加する
+	- deltaTimeも操作できるように
+	- transparencyを選択できるように
+	- transparencyにして、0~1でmixする方式で
+	- 粘性の追加
+
 - basic fx
+	- valueをオブジェクトにする仕組み
+		- 変数が多くなって変数名が冗長になるため
 	- mixSrc,mixDstのblendingMode
 	- basicFxに色調補正
 		- fluid contrastを参考に
 	- micSrc => 色調補正系 => micDstの順
 
-- fluid
-	- 粘性の追加
-	- advectionのdisipationを追加する
-	- deltaTimeも操作できるように
-	- transparencyを選択できるように
-		- transparencyにして、0~1でmixする方式で
+### mix
+- mixSrc
+- mixDst
 
+### color adjustments
+- duotone
+- saturation
+- brightness
+- contrast
+- levels
+- colorBalance
+- threshold
+- posterization
 
-
+### misc
+- vignette
