@@ -3,7 +3,11 @@ import { useSingleFBO } from "../../utils/useSingleFBO";
 import { HooksProps, HooksReturn } from "../types";
 import { getDpr } from "../../utils/getDpr";
 import { RootState } from "../types";
-import { NoiseMaterial, NoiseValues } from "../../materials";
+import {
+   NoiseMaterial,
+   NoiseMaterialProps,
+   NoiseValues,
+} from "../../materials";
 import { useFxScene } from "../../utils/useFxScene";
 
 export type NoiseProps = HooksProps & NoiseValues;
@@ -18,7 +22,10 @@ export const useNoise = ({
    renderTargetOptions,
    materialParameters,
    ...uniformValues
-}: NoiseProps): HooksReturn<NoiseValues, NoiseMaterial> => {
+}: NoiseProps): HooksReturn<
+   NoiseValues,
+   NoiseMaterial & NoiseMaterialProps
+> => {
    const _dpr = getDpr(dpr);
 
    const { scene, material, camera } = useFxScene({

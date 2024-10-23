@@ -2,7 +2,10 @@
 
 import { useRef } from "react";
 import { useFrame, extend } from "@react-three/fiber";
-import { NoiseMaterial } from "@/packages/use-shader-fx/src";
+import {
+   NoiseMaterial,
+   NoiseMaterialProps,
+} from "@/packages/use-shader-fx/src";
 import { useTexture } from "@react-three/drei";
 
 extend({ NoiseMaterial });
@@ -31,7 +34,8 @@ export const Playground = () => {
 declare global {
    namespace JSX {
       interface IntrinsicElements {
-         noiseMaterial: any & JSX.IntrinsicElements["shaderMaterial"];
+         noiseMaterial: NoiseMaterialProps &
+            JSX.IntrinsicElements["shaderMaterial"];
       }
    }
 }

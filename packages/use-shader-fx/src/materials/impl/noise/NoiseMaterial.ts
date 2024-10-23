@@ -3,7 +3,10 @@ import { noiseFragment, noiseVertex } from "./noise.glsl";
 import { BasicFxMaterial } from "../../core/BasicFxMaterial";
 import { FxMaterialProps } from "../../core/FxMaterial";
 import { BasicFxUniforms, BasicFxValues } from "../../core/BasicFxLib";
-import { NestUniformValues } from "../../../shaders/uniformsUtils";
+import {
+   ExtractUniformValues,
+   NestUniformValues,
+} from "../../../shaders/uniformsUtils";
 
 type NoiseUniforms = {
    /** useBeatを渡せば、リズムを変えられる。 */
@@ -25,6 +28,8 @@ type NoiseUniforms = {
 } & BasicFxUniforms;
 
 export type NoiseValues = NestUniformValues<NoiseUniforms> & BasicFxValues;
+
+export type NoiseMaterialProps = ExtractUniformValues<NoiseUniforms>;
 
 export class NoiseMaterial extends BasicFxMaterial {
    public static readonly key: string = THREE.MathUtils.generateUUID();

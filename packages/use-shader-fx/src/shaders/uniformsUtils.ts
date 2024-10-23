@@ -10,6 +10,18 @@ export type ShaderWithUniforms = {
    fragmentShader?: string;
 };
 
+/**
+ * test:{value:number} => test:number
+ * materialのprops型を定義する
+ * materialにはuniformsのsetter/getterが定義されている.その型推論のため.
+ */
+export type ExtractUniformValues<T> = {
+   [K in keyof T]?: T[K] extends { value: infer U } ? U : never;
+};
+
+/**
+ * test_test => { test: { test: number } }
+ */
 type Nest<K extends string, V> = K extends `${infer First}_${infer Rest}`
    ? { [P in First]?: Nest<Rest, V> }
    : { [P in K]?: V };
@@ -19,21 +31,16 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
 ) => void
    ? I
    : never;
-
-/**
- * test_test => { test: { test: number } }
- */
 export type NestUniformValues<U extends Uniforms> = UnionToIntersection<
    { [K in keyof U]: Nest<Extract<K, string>, U[K]["value"]> }[keyof U]
 >;
 
-function isTHREE(property: any) {
-   return property && THREE_TYPES.has(property.constructor);
-}
-
 /**
  * {test:{test:1}} => {test_test:1}
  */
+function isTHREE(property: any) {
+   return property && THREE_TYPES.has(property.constructor);
+}
 export function flattenUniformValues(
    obj: Record<string, any>
 ): Record<string, any> {
