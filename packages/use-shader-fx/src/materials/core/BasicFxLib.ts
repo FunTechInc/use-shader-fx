@@ -1,45 +1,46 @@
 import * as THREE from "three";
 import { DefaultUniforms } from "./FxMaterial";
 import { TexturePipelineSrc } from "../../misc";
+import {
+   NestUniformValues,
+   flattenUniformValues,
+} from "../../shaders/uniformsUtils";
 
 /*===============================================
 basic fxを追加するときはこことShaderChunk,Libを編集する
 ===============================================*/
 type BasicFxUniformsUnique = {
    // mixSrc
-   mixSrc: { value: TexturePipelineSrc };
-   mixSrcResolution: { value: THREE.Vector2 };
-   mixSrcUvFactor: { value: number };
-   mixSrcAlphaFactor: { value: number };
-   mixSrcColorFactor: { value: number };
+   mixSrc_src: { value: TexturePipelineSrc };
+   mixSrc_resolution: { value: THREE.Vector2 };
+   mixSrc_uvFactor: { value: number };
+   mixSrc_alphaFactor: { value: number };
+   mixSrc_colorFactor: { value: number };
    // mixDst
-   mixDst: { value: TexturePipelineSrc };
-   mixDstResolution: { value: THREE.Vector2 };
-   mixDstUvFactor: { value: number };
-   mixDstAlphaFactor: { value: number };
-   mixDstColorFactor: { value: number };
+   mixDst_src: { value: TexturePipelineSrc };
+   mixDst_resolution: { value: THREE.Vector2 };
+   mixDst_uvFactor: { value: number };
+   mixDst_alphaFactor: { value: number };
+   mixDst_colorFactor: { value: number };
 };
 const DEFAULT_BASICFX_VALUES: BasicFxUniformsUnique = {
    // mixSrc
-   mixSrc: { value: null },
-   mixSrcResolution: { value: new THREE.Vector2() },
-   mixSrcUvFactor: { value: 0 },
-   mixSrcAlphaFactor: { value: 0 },
-   mixSrcColorFactor: { value: 0 },
+   mixSrc_src: { value: null },
+   mixSrc_resolution: { value: new THREE.Vector2() },
+   mixSrc_uvFactor: { value: 0 },
+   mixSrc_alphaFactor: { value: 0 },
+   mixSrc_colorFactor: { value: 0 },
    // mixDst
-   mixDst: { value: null },
-   mixDstResolution: { value: new THREE.Vector2() },
-   mixDstUvFactor: { value: 0 },
-   mixDstAlphaFactor: { value: 0 },
-   mixDstColorFactor: { value: 0 },
+   mixDst_src: { value: null },
+   mixDst_resolution: { value: new THREE.Vector2() },
+   mixDst_uvFactor: { value: 0 },
+   mixDst_alphaFactor: { value: 0 },
+   mixDst_colorFactor: { value: 0 },
 };
 
 export type BasicFxUniforms = BasicFxUniformsUnique & DefaultUniforms;
 
-export type ExtractUniformValue<T> = {
-   [K in keyof T]?: T[K] extends { value: infer U } ? U : never;
-};
-export type BasicFxValues = ExtractUniformValue<BasicFxUniformsUnique>;
+export type BasicFxValues = NestUniformValues<BasicFxUniformsUnique>;
 
 export type BasicFxFlag = {
    mixSrc: boolean;
@@ -49,7 +50,8 @@ export type BasicFxFlag = {
 /** valuesのkeyにbasicFxが含まれているかどうかの判定 */
 function containsBasicFxValues(values?: { [key: string]: any }): boolean {
    if (!values) return false;
-   return Object.keys(values).some((key) =>
+   const _values = flattenUniformValues(values);
+   return Object.keys(_values).some((key) =>
       Object.keys(DEFAULT_BASICFX_VALUES).includes(key as keyof BasicFxValues)
    );
 }
@@ -68,8 +70,8 @@ function handleUpdateBasicFx(
    validCount: number;
    updatedFlag: BasicFxFlag;
 } {
-   const isMixSrc = uniforms.mixSrc.value ? true : false;
-   const isMixDst = uniforms.mixDst.value ? true : false;
+   const isMixSrc = uniforms.mixSrc_src.value ? true : false;
+   const isMixDst = uniforms.mixDst_src.value ? true : false;
 
    const { mixSrc, mixDst } = basicFxFlag;
 

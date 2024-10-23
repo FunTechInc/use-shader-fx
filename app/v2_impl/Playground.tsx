@@ -74,8 +74,10 @@ export const Playground = () => {
       size,
       dpr: 1,
       src: renderTarget.texture,
-      mixSrc: noise.texture,
-      mixSrcUvFactor: 0.2,
+      mixSrc: {
+         src: noise.texture,
+         uvFactor: 0.2,
+      },
    });
 
    // noise.setValues({

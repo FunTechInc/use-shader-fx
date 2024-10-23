@@ -86,19 +86,21 @@ export const Playground = () => {
       {
          fx: useFluid,
          size,
-         dpr: 0.2,
+         dpr: 0.5,
       },
       {
          fx: useNoise,
          size,
          dpr: 0.8,
          fboAutoSetSize: true,
-         mixDstUvFactor: 0.3,
-         mixDstColorFactor: 0.2,
+         mixSrc: {
+            uvFactor: 0.7,
+            colorFactor: 0.2,
+         },
       }
    );
 
-   setPipeline({}, { mixDst: 0 });
+   setPipeline({}, { mixSrc: 0 });
 
    useFrame((state) => render(state));
 

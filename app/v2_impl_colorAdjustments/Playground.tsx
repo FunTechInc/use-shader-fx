@@ -15,7 +15,7 @@ import {
    useFluid,
    useCoverTexture,
 } from "@/packages/use-shader-fx/src";
-import { Float, OrbitControls } from "@react-three/drei";
+import { Float, OrbitControls, useTexture } from "@react-three/drei";
 
 const FxMaterialImpl = createFxMaterialImpl({
    fragmentShader: `
@@ -43,12 +43,10 @@ vec3 rgb2hsv(vec3 c)
 	
 		vec4 fluid = texture2D(src, vUv);
 		vec2 vel = fluid.rg;
-
 		float len = length(vel); // 0~1
-		
 		vec4 fluidColor = vec4(len);
-		
-		// color overlay
+
+		// color balance
 		fluidColor.r *= clamp(fluidColor.r * 1.1, 0., 1.);
 		fluidColor.g *= clamp(fluidColor.g * 0.2, 0., 1.);
 		fluidColor.b *= clamp(fluidColor.b * .6, 0., 1.);
@@ -56,46 +54,76 @@ vec3 rgb2hsv(vec3 c)
 		
 		// THINK ここからがbasicFxの色調補正
 		// THINK ガンマ補正とコントラストはvec4でやればいいのかも
-		
-		// レベル補正
-		
-		// float gammaFactor = .0;
-		// vec4 gamma = pow(fluidColor, vec4(1./gammaFactor));
 
-		float u_shadows = 1.2;         // シャドウ値 (0.0 〜 1.0)
-		float u_midtones = 1.1;        // ミッドトーン値 (0.0 〜 1.0)
-		float u_highlights = 1.4;      // ハイライト値 (0.0 〜 1.0)
-		float u_outputMin = 0.0;     // 出力の最小値 (0.0 〜 1.0)
-		float u_outputMax = 1.0;       // 出力の最大値 (0.0 〜 1.0)
+		vec4 outputColor = fluidColor;
+		
+		/*===============================================
+		// レベル補正
+		===============================================*/
+		float u_shadows = 1.2;         // シャドウ値 
+		float u_midtones = 1.1;        // ミッドトーン値
+		float u_highlights = 1.4;      // ハイライト値 
+		float u_outputMin = 0.0;     // 出力の最小値 
+		float u_outputMax = 1.0;       // 出力の最大値
 
 		// 入力レベル補正
-		vec4 correctedColor = (fluidColor - vec4(u_shadows)) / (vec4(u_highlights) - vec4(u_shadows));
+		outputColor = (outputColor - vec4(u_shadows)) / (vec4(u_highlights) - vec4(u_shadows));
 
 		// ガンマ補正
-		correctedColor = pow(correctedColor, vec4(1.0 / u_midtones));
+		outputColor = pow(outputColor, vec4(1.0 / u_midtones));
 
 		// 出力レベル補正
-		correctedColor = correctedColor * (vec4(u_outputMax) - vec4(u_outputMin)) + vec4(u_outputMin);
-
-		vec4 gamma = correctedColor;
-
-
+		outputColor = outputColor * (vec4(u_outputMax) - vec4(u_outputMin)) + vec4(u_outputMin);
+		/*===============================================
+		// コントラスト
+		===============================================*/
 		// コントラスト
 		float contrastFactor = 20.;
-		vec4 contrast = clamp(((gamma-.5)*contrastFactor)+.5, 0., 1.);
-		
-		vec4 outputColor = contrast;
+		outputColor = clamp(((outputColor-.5)*contrastFactor)+.5, 0., 1.);
 
-		// color overlay
-		outputColor.r *= clamp(outputColor.r * 2., 0., 1.);
+		/*===============================================
+		// color balance
+		===============================================*/
+		outputColor.r *= clamp(outputColor.r * 1., 0., 1.);
 		outputColor.g *= clamp(outputColor.g * 1., 0., 1.);
 		outputColor.b *= clamp(outputColor.b * 1., 0., 1.);
 
-		// 彩度と明度
+		/*===============================================
+		// saturation・brightness
+		===============================================*/
 		vec3 hsv = rgb2hsv(outputColor.rgb);
 		hsv.y *= 1.; // 彩度
 		hsv.z *= 2.; // 明度
 		outputColor.rgb = hsv2rgb(hsv);
+
+		/*===============================================
+		// ポスタライゼーション
+		===============================================*/
+		float posterizationLevels = 6.;
+		outputColor.rgb = floor(outputColor.rgb * posterizationLevels) / posterizationLevels;
+
+		/*===============================================
+		// black&White
+		===============================================*/
+		float redWeight = 0.;
+		float greenWeight = 0.;
+		float blueWeight = 0.;
+		float grayscale = dot(outputColor.rgb, vec3(0.299 + redWeight, 0.587 + greenWeight, 0.114 + blueWeight));
+
+		outputColor.rgb = vec3(grayscale);
+
+		/*===============================================
+		// duo tone
+		===============================================*/
+		vec3 color0 = vec3(0.45, .5, 0.534);
+		vec3 color1 = vec3(.3, 0.876, 0.579);
+		// outputColor.rgb = mix(color0, color1, grayscale);
+
+		/*===============================================
+		// threshold
+		===============================================*/
+		float threshold = 0.4;
+		// outputColor.rgb = grayscale > threshold ? vec3(1.) : vec3(0.);
 
 		// alpha TODO * transparentを選択できるようにする？
 		float alpha = outputColor.a;
@@ -110,6 +138,8 @@ extend({ FxMaterialImpl, BasicFxMaterialImpl });
 
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
+
+   const [funkun] = useTexture(["/funkun.jpg"]);
 
    const fluid = useFluid({
       size,

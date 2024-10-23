@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { useCallback, useState } from "react";
 import { RootState } from "../hooks/types";
 import { FxTypes, FxProps } from "../hooks";
+import { warn } from "../utils/warn";
 
 export type FxConfig<T extends FxTypes = FxTypes> = {
    fx: T;
@@ -15,14 +16,20 @@ export type PipelineConfig = {
    mixDst?: number | TexturePipelineSrc;
 };
 export type PipelineValues = {
-   [K in keyof PipelineConfig]?: TexturePipelineSrc;
+   src?: TexturePipelineSrc;
+   mixSrc?: {
+      src?: TexturePipelineSrc;
+   };
+   mixDst?: {
+      src?: TexturePipelineSrc;
+   };
 };
 
 const WARN_TEXT = {
-   args: `use-shader-fx: fx and args length mismatch. fx is non-reactive; update by changing the key to reset state.`,
-   pipeline: `use-shader-fx: fx and pipeline length mismatch. fx is non-reactive; update by changing the key to reset state.`,
+   args: `fx and args length mismatch. fx is non-reactive; update by changing the key to reset state.`,
+   pipeline: `fx and pipeline length mismatch. fx is non-reactive; update by changing the key to reset state.`,
    pipelineValue: (val: number, pipelineIndex: number, key: string) =>
-      `use-shader-fx: texture(index:${val}) is missing, at "${key}" of pipeline(index:${pipelineIndex}).`,
+      `texture(index:${val}) is missing, at "${key}" of pipeline(index:${pipelineIndex}).`,
 };
 
 export const usePipeline = <T extends FxTypes[]>(
@@ -37,7 +44,7 @@ export const usePipeline = <T extends FxTypes[]>(
    const argsDiff = hooks.length - _args.length;
 
    if (argsDiff !== 0) {
-      console.warn(WARN_TEXT.args);
+      warn(WARN_TEXT.args);
       // adjust length of args
       if (argsDiff < 0) {
          _args = _args.slice(0, hooks.length);
@@ -63,7 +70,7 @@ export const usePipeline = <T extends FxTypes[]>(
    const setPipeline = useCallback(
       (...args: PipelineConfig[]) => {
          if (args.length !== pipeline.length) {
-            console.warn(WARN_TEXT.pipeline);
+            warn(WARN_TEXT.pipeline);
             return;
          }
          args.forEach((arg, i) =>
@@ -90,26 +97,34 @@ function getPipelineValues(
 ) {
    const value: PipelineValues = {};
 
+   const setValue = (key: keyof PipelineConfig, val: TexturePipelineSrc) => {
+      if (key === "src") {
+         value[key] = val;
+         return;
+      }
+      value[key] = { src: val };
+   };
+
    for (const [key, val] of Object.entries(config)) {
       const _key = key as keyof PipelineConfig;
 
       if (val == null) {
-         value[_key] = null;
-         break;
+         setValue(_key, null);
+         continue;
       }
 
       if (typeof val === "number") {
          const _tex = textures[val];
          if (!_tex) {
-            console.warn(WARN_TEXT.pipelineValue(val, pipelineIndex, key));
-            value[_key] = null;
-            break;
+            warn(WARN_TEXT.pipelineValue(val, pipelineIndex, key));
+            setValue(_key, null);
+            continue;
          }
-         value[_key] = _tex;
-         break;
+         setValue(_key, _tex);
+         continue;
       }
 
-      value[_key] = val;
+      setValue(_key, val);
    }
 
    return value;

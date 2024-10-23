@@ -1,4 +1,4 @@
-import { ShaderLib } from "../../../libs/shaders/ShaderLib";
+import { ShaderLib } from "../../../shaders/ShaderLib";
 
 export const vertex = `
 	uniform vec2 textureResolution;

@@ -1,5 +1,5 @@
 #ifdef USF_USE_MIXSRC
-	float mixSrcAspect = mixSrcResolution.x / mixSrcResolution.y;
+	float mixSrcAspect = mixSrc_resolution.x / mixSrc_resolution.y;
 	vec2 mixSrcAspectAspectRatio = vec2(
 		min(aspectRatio / mixSrcAspect, 1.0),
 		min(mixSrcAspect / aspectRatio, 1.0)

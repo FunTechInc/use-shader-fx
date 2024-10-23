@@ -1,19 +1,19 @@
 import * as THREE from "three";
-import { FxMaterialProps, ShaderWithUniforms } from "../core/FxMaterial";
-import { ShaderLib } from "../../libs/shaders/ShaderLib";
+import { FxMaterialProps } from "../core/FxMaterial";
+import { ShaderLib } from "../../shaders/ShaderLib";
 import { BasicFxMaterial } from "../core/BasicFxMaterial";
+import { BasicFxUniforms, BasicFxValues } from "../core/BasicFxLib";
 import {
-   BasicFxUniforms,
-   BasicFxValues,
-   ExtractUniformValue,
-} from "../core/BasicFxLib";
+   NestUniformValues,
+   ShaderWithUniforms,
+} from "../../shaders/uniformsUtils";
 
 type BasicFxMaterialImplUniforms = {
    src: { value: THREE.Texture };
 } & BasicFxUniforms;
 
 export type BasicFxMaterialImplValues =
-   ExtractUniformValue<BasicFxMaterialImplUniforms> & BasicFxValues;
+   NestUniformValues<BasicFxMaterialImplUniforms> & BasicFxValues;
 
 const DEFAULT_VERTEX = `
 	void main() {

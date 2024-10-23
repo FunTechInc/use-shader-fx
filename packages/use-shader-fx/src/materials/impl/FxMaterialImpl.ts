@@ -3,17 +3,19 @@ import {
    DefaultUniforms,
    FxMaterial,
    FxMaterialProps,
-   ShaderWithUniforms,
 } from "../core/FxMaterial";
-import { ShaderLib } from "../../libs/shaders/ShaderLib";
+import { ShaderLib } from "../../shaders/ShaderLib";
 import { DEFAULT_TEXTURE } from "../../libs/constants";
-import { ExtractUniformValue } from "../core/BasicFxLib";
+import {
+   ShaderWithUniforms,
+   NestUniformValues,
+} from "../../shaders/uniformsUtils";
 
 type FxMaterialImplUniforms = {
    src: { value: THREE.Texture };
 } & DefaultUniforms;
 
-export type FxMaterialImplValues = ExtractUniformValue<FxMaterialImplUniforms>;
+export type FxMaterialImplValues = NestUniformValues<FxMaterialImplUniforms>;
 
 const DEFAULT_VERTEX = `
 	void main() {

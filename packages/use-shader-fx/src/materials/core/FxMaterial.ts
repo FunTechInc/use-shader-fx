@@ -1,20 +1,17 @@
 import * as THREE from "three";
-import { resolveIncludes } from "../../libs/shaders/resolveShaders";
-import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
+import { resolveIncludes } from "../../shaders/resolveShaders";
+import { mergeShaderLib } from "../../shaders/mergeShaderLib";
+import {
+   flattenUniformValues,
+   ShaderWithUniforms,
+} from "../../shaders/uniformsUtils";
+import { warn } from "../../utils/warn";
 
 export type DefaultUniforms = {
    resolution: { value: THREE.Vector2 };
    texelSize: { value: THREE.Vector2 };
    aspectRatio: { value: number };
    maxAspect: { value: THREE.Vector2 };
-};
-
-export type Uniforms = { [uniform: string]: THREE.IUniform<any> };
-
-export type ShaderWithUniforms = {
-   uniforms?: Uniforms;
-   vertexShader?: string;
-   fragmentShader?: string;
 };
 
 export type FxMaterialProps<T = {}> = {
@@ -78,22 +75,19 @@ export class FxMaterial extends THREE.ShaderMaterial {
 
    setUniformValues(values?: { [key: string]: any }) {
       if (values === undefined) return;
+      const _values = flattenUniformValues(values);
 
-      for (const [key, value] of Object.entries(values)) {
+      for (const [key, value] of Object.entries(_values)) {
          if (value === undefined) {
-            console.warn(
-               `use-shader-fx: parameter '${key}' has value of undefined.`
-            );
+            warn(`parameter '${key}' has value of undefined.`);
             continue;
          }
 
          const curretUniform = this.uniforms[key];
 
          if (curretUniform === undefined) {
-            console.warn(
-               `use-shader-fx: '${key}' is not a uniform property of ${this.type}.`
-            );
-            return;
+            warn(`'${key}' is not a uniform property of ${this.type}.`);
+            continue;
          }
 
          curretUniform.value = value;
@@ -102,20 +96,17 @@ export class FxMaterial extends THREE.ShaderMaterial {
 
    /** define getter/setters　*/
    defineUniformAccessors(onSet?: () => void) {
-      const entries = Object.entries(this.uniforms);
-      entries.forEach(([name]) => {
-         if (this.hasOwnProperty(name)) {
-            // skip if already defined
-            return;
+      for (const key of Object.keys(this.uniforms)) {
+         if (this.hasOwnProperty(key)) {
+            continue;
          }
-
-         Object.defineProperty(this, name, {
-            get: () => this.uniforms[name].value,
+         Object.defineProperty(this, key, {
+            get: () => this.uniforms[key].value,
             set: (v) => {
-               this.uniforms[name].value = v;
+               this.uniforms[key].value = v;
                onSet?.();
             },
          });
-      });
+      }
    }
 }

@@ -14,3 +14,24 @@ export const DEFAULT_TEXTURE = new THREE.DataTexture(
    1,
    THREE.RGBAFormat
 );
+
+export const APP_NAME = "use-shader-fx";
+
+export const THREE_TYPES = new Set([
+   THREE.Color,
+   THREE.Matrix3,
+   THREE.Matrix4,
+   THREE.Vector2,
+   THREE.Vector3,
+   THREE.Vector4,
+   THREE.Texture,
+   THREE.Quaternion,
+   THREE.WebGLRenderTarget,
+   THREE.Euler,
+   THREE.BufferGeometry,
+   THREE.Material,
+   THREE.Camera,
+   THREE.Light,
+   THREE.Object3D,
+   THREE.Bone,
+]);

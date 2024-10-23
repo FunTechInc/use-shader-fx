@@ -6,7 +6,7 @@ import {
    BasicFxFlag,
    BasicFxLib,
 } from "./BasicFxLib";
-import { mergeShaderLib } from "../../libs/shaders/mergeShaderLib";
+import { mergeShaderLib } from "../../shaders/mergeShaderLib";
 
 export class BasicFxMaterial extends FxMaterial {
    public static readonly key: string = THREE.MathUtils.generateUUID();

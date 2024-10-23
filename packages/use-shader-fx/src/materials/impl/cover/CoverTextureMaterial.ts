@@ -2,12 +2,9 @@ import * as THREE from "three";
 import { fragment, vertex } from "./coverTexture.glsl";
 import { BasicFxMaterial } from "../../core/BasicFxMaterial";
 import { FxMaterialProps } from "../../core/FxMaterial";
-import {
-   BasicFxUniforms,
-   BasicFxValues,
-   ExtractUniformValue,
-} from "../../core/BasicFxLib";
+import { BasicFxUniforms, BasicFxValues } from "../../core/BasicFxLib";
 import { TexturePipelineSrc } from "../../../misc";
+import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type CoverTextureUniforms = {
    /**  */
@@ -16,7 +13,7 @@ type CoverTextureUniforms = {
    textureResolution: { value: THREE.Vector2 };
 } & BasicFxUniforms;
 
-export type CoverTextureValues = ExtractUniformValue<CoverTextureUniforms> &
+export type CoverTextureValues = NestUniformValues<CoverTextureUniforms> &
    BasicFxValues;
 
 export class CoverTextureMaterial extends BasicFxMaterial {
