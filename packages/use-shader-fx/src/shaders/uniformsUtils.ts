@@ -39,28 +39,25 @@ export function flattenUniformValues(
 ): Record<string, any> {
    const flatObject: Record<string, any> = {};
 
-   const helper = (currentObj: any, parentKey = ""): void => {
-      for (const key in currentObj) {
-         if (Object.prototype.hasOwnProperty.call(currentObj, key)) {
-            const value = currentObj[key];
-            const newKey = parentKey ? `${parentKey}_${key}` : key;
-            if (
-               value &&
-               typeof value === "object" &&
-               !Array.isArray(value) &&
-               !isTHREE(value)
-            ) {
-               helper(value, newKey);
-            } else {
-               if (flatObject.hasOwnProperty(newKey)) {
-                  warn(`${newKey} already exists and will be overwritten.`);
-               }
-               flatObject[newKey] = value;
+   const flatten = (currentObj: any, parentKey = ""): void => {
+      for (const [key, val] of Object.entries(currentObj)) {
+         const newKey = parentKey ? `${parentKey}_${key}` : key;
+         if (
+            val &&
+            typeof val === "object" &&
+            !Array.isArray(val) &&
+            !isTHREE(val)
+         ) {
+            flatten(val, newKey);
+         } else {
+            if (flatObject.hasOwnProperty(newKey)) {
+               warn(`${newKey} already exists and will be overwritten.`);
             }
+            flatObject[newKey] = val;
          }
       }
    };
 
-   helper(obj);
+   flatten(obj);
    return flatObject;
 }

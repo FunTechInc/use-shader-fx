@@ -1,14 +1,9 @@
 "use client";
 
-import * as THREE from "three";
-import { useRef, useState } from "react";
-import { useFrame, useThree, extend, createPortal } from "@react-three/fiber";
-import {
-   NoiseMaterial,
-   NoiseValues,
-   FxMaterialImplValues,
-   BasicFxMaterialImplValues,
-} from "@/packages/use-shader-fx/src";
+import { useRef } from "react";
+import { useFrame, extend } from "@react-three/fiber";
+import { NoiseMaterial } from "@/packages/use-shader-fx/src";
+import { useTexture } from "@react-three/drei";
 
 extend({ NoiseMaterial });
 
@@ -17,11 +12,17 @@ export const Playground = () => {
    useFrame(({ clock }) => {
       ref.current.tick = clock.getElapsedTime();
    });
+   const [funkun] = useTexture(["/funkun.jpg"]);
    return (
       <>
          <mesh>
             <planeGeometry args={[2, 2]} />
-            <noiseMaterial ref={ref} scale={0.01} tick={2} />
+            <noiseMaterial
+               ref={ref}
+               mixDst_src={funkun}
+               mixDst_colorFactor={0.5}
+               scale={0.01}
+            />
          </mesh>
       </>
    );
@@ -30,11 +31,7 @@ export const Playground = () => {
 declare global {
    namespace JSX {
       interface IntrinsicElements {
-         noiseMaterial: NoiseValues & JSX.IntrinsicElements["shaderMaterial"];
-         fxMaterialImpl: FxMaterialImplValues &
-            JSX.IntrinsicElements["shaderMaterial"];
-         BasicFxMaterialImpl: BasicFxMaterialImplValues &
-            JSX.IntrinsicElements["shaderMaterial"];
+         noiseMaterial: any & JSX.IntrinsicElements["shaderMaterial"];
       }
    }
 }

@@ -98,6 +98,7 @@ export class FxMaterial extends THREE.ShaderMaterial {
    defineUniformAccessors(onSet?: () => void) {
       for (const key of Object.keys(this.uniforms)) {
          if (this.hasOwnProperty(key)) {
+            warn(`'${key}' is already defined in ${this.type}.`);
             continue;
          }
          Object.defineProperty(this, key, {
