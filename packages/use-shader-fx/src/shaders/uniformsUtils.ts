@@ -20,7 +20,7 @@ export type ExtractUniformValues<T> = {
 };
 
 /**
- * test_test => { test: { test: number } }
+ * test_test:{value:number} => { test: { test: number } }
  */
 type Nest<K extends string, V> = K extends `${infer First}_${infer Rest}`
    ? { [P in First]?: Nest<Rest, V> }
