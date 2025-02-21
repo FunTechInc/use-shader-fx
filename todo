@@ -7,6 +7,8 @@ MaterialImpl / basicFxのhook化
 - useTextureTransition
 	- smoothSquareWaveとmodでautoモードつくってもいいね
 - useGrid
+- usePixelGeometry
+
 
 
 タッチデザイナーを履修して構想を練る

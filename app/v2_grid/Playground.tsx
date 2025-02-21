@@ -122,9 +122,8 @@ const FxMaterialImpl = createFxMaterialImpl({
 	}
 `,
 });
-const BasicFxMaterialImpl = createBasicFxMaterialImpl();
 
-extend({ FxMaterialImpl, BasicFxMaterialImpl });
+extend({ FxMaterialImpl });
 
 export const Playground = () => {
    const { size, viewport, camera } = useThree();

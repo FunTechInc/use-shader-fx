@@ -188,6 +188,7 @@ declare global {
    namespace JSX {
       interface IntrinsicElements {
          fxMaterialImpl: any;
+         fxMaterialImpl2: any;
          BasicFxMaterialImpl: any;
       }
    }
