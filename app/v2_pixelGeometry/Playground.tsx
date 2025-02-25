@@ -76,7 +76,7 @@ const FxMaterialImpl = createFxMaterialImpl({
 
 	// uvとtimeに依存するジッターノイズ（-1～1）
 	vec2 jitterNoise(vec2 uv, float t) {
-		float jitterStrength = 0.001; // ジッター量
+		float jitterStrength = 0.0005; // ジッター量
 		float n1 = hash(uv + t);
 		float n2 = hash(uv + t + 31.4159);
 		return (vec2(n1, n2)*2.-1.) * jitterStrength;
@@ -175,7 +175,7 @@ const FxMaterialImpl = createFxMaterialImpl({
 	vec3 glowEffect(vec2 uv) {
 		vec3 glow = vec3(0.0);
 		float glowIntensity = 0.04;
-		float blurSize = 4.0;
+		float blurSize = 0.0;
 		vec2 perDivSize = vec2(blurSize) / resolution;
 		for (float i = -2.0; i <= 2.0; i++) {
 			for (float j = -2.0; j <= 2.0; j++) {
@@ -226,7 +226,7 @@ export const Playground = () => {
       depthBuffer: true,
    });
 
-   const [funkun, sprite] = useTexture(["/momo.jpg", "/sprite.jpg"]);
+   const [funkun, sprite] = useTexture(["/mh.jpg", "/sprite.jpg"]);
    const funkunVideo = useVideoTexture("/FT_Ch02.mp4", {
       width: 1280,
       height: 720,
@@ -255,7 +255,7 @@ export const Playground = () => {
             <fxMaterialImpl
                ref={material}
                key={FxMaterialImpl.key}
-               src={renderTarget.texture}
+               src={funkun}
             />
          </mesh>
          {createPortal(
