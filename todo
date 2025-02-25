@@ -8,10 +8,14 @@ MaterialImpl / basicFxのhook化
 	- smoothSquareWaveとmodでautoモードつくってもいいね
 - useGrid
 - usePixelGeometry
-
+- useTextureRenderer
+	- webglooで使うための、ただテクスチャをレンダリングして、transformさせられるだけのやつ.いろんなFXのmapに使うためのもの。
 
 
 タッチデザイナーを履修して構想を練る
 - srs systemにtransformを持たせる
 https://github.com/FunTechInc/webgloo/issues/5#issuecomment-2630245651
-
+- basicFxのsrcSystemのcalcMixCirclePower関数
+	- mixMap?みたいなテクスチャを受け取れるようにする。rgbのlengthでmix値を計算する
+	- stepを配列で受け取る[0.4,0.9]みたいな。smoothstepで
+		- 配列の長さが2以下[0.2]の場合は、stepで

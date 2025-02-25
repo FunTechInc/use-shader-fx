@@ -29,41 +29,105 @@ idea of useGrid
 - spriteテクスチャ
 - 単純なカラー指定
 - マッピングに使うテクスチャのカラーをそのままレンダリング
+
+- サイズ調整map
+- 円モード
+- サイズ変更チャンネル
+- カラー変更チャンネル
+- alpha変更チャンネル
+- カラーマップとかアルファマップ的なの加えて、陰影つけられるように。古文を3dモデルでなんかやる。
+
+
+- shuffleCenterを追加する
+
+
+MEMO * floorでgrid化するときは、Nearestにしないといけない
 ===============================================*/
 
 const FxMaterialImpl = createFxMaterialImpl({
    uniforms: {
+      fitScale: { value: new THREE.Vector2(1) },
       celltxture: { value: null },
       spriteTexture: { value: null },
+      mixTexture: { value: null },
       time: { value: 0 },
+      pointer: { value: new THREE.Vector2(0.5, 0.5) },
    },
    fragmentShader: `
 	uniform sampler2D src;
 	uniform sampler2D celltxture;
 	uniform sampler2D spriteTexture;
+	uniform sampler2D mixTexture;
+	uniform vec2 fitScale;
+	uniform vec2 pointer;
 
 	uniform float time;
+
+	float u_lineWidth = .01; // 0.01 ~
+	vec2 u_gridCount = vec2(50.);
+	vec3 u_fillColor = vec3(.0, 1.0, 0.0);
+	vec3 u_backgroundColor = vec3(0.0, 0.0, 0.0);
+	vec3 u_gridColor = vec3(.2, .2, .2);
+	bool u_isEdge = false;
+	float shuffleFrequency = 5.0;
+	float shuffleRadius = 15.0;
+	float maxShuffle = 2.0;
 	
 	float rand(vec2 n) {
 		return fract(sin(dot(n ,vec2(12.9898,78.233))) * 43758.5453);
+	}
+	
+	// 2次元のセル座標からランダムな float を生成するハッシュ関数
+	float hash(vec2 p) {
+		return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
 	}
 
 	vec3 randomColor(float time) {
 		return 0.5 + 0.5 * sin(vec3(12.9898, 78.233, 45.164) * time);
 	}
 
-	// 2次元のセル座標からランダムな float を生成するハッシュ関数
-	float hash(vec2 p) {
-		return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+	// cellIndex を時間に応じてシャッフルする関数
+	vec2 shuffleIndex(vec2 cellIndex) {
+		// 1秒あたり frequency 回更新、離散化
+		float discreteTime = floor(time * shuffleFrequency);
+		
+		// cellIndex に基づく乱数を2種類生成
+		float r1 = hash(cellIndex + vec2(0.123, discreteTime));
+		float r2 = hash(cellIndex + vec2(0.789, discreteTime));
+		
+		// 乱数を使って -maxShuffle ～ +maxShuffle の整数オフセットを生成
+		float offsetX = floor(r1 * (maxShuffle * 2.0 + 1.0)) - maxShuffle;
+		float offsetY = floor(r2 * (maxShuffle * 2.0 + 1.0)) - maxShuffle;
+		vec2 offset = vec2(offsetX, offsetY);
+		
+		// center からの距離を計算（cellIndex と center は同じグリッド座標系である前提）
+		vec2 cellPointer = floor(pointer * u_gridCount);
+		float d = distance(cellIndex, cellPointer);
+		// d=0 のとき重み1、d>=radius で重み0になるよう補間
+		float weight = 1.0 - smoothstep(0.0, shuffleRadius, d);
+		
+		// オフセットに重みを掛ける
+		// TODO * ここでcenterに重み付できる
+		// offset *= weight;
+		
+		// cellIndex にオフセットを加算し、グリッド内にラップアラウンド
+		vec2 shuffled = cellIndex + offset;
+		return mod(shuffled, u_gridCount);
+	}
+
+	// MEMO * 本来これはbasicFXにすでにある関数
+	float calcMixCirclePower(vec2 center, float radius)
+	{
+		vec2 adjustedUV = (vUv - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
+		vec2 adjustedCenter = (center - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
+		float dist = length(adjustedUV - adjustedCenter);
+		float power = radius > 0.0 ? 1.0 - dist / radius : 1.0;
+		return clamp(power, 0.0, 1.0);
 	}
 
 	void main() {
-		float u_lineWidth = .01; // 0.01 ~
-		vec2 u_gridCount = vec2(50.);
-		vec2 u_target = vec2(450., 500.);
-		vec3 u_fillColor = vec3(.0, 1.0, 0.0);
-		vec3 u_backgroundColor = vec3(0.0, 0.0, 0.0);
-		vec3 u_gridColor = vec3(0., 0., 0.);
+
+		vec2 fittedUV = vUv * fitScale + (1. - fitScale) / 2.;
 
 		// 現在のセルのインデックスを計算（例：(3, 5) など）
 		u_gridCount.x *= aspectRatio;
@@ -71,33 +135,36 @@ const FxMaterialImpl = createFxMaterialImpl({
 		// セル毎に一意のhashを生成
 		float cellHash = hash(cellIndex);
 
-		// 各セルの中心座標を計算
-		vec2 cellCenterUV = (cellIndex + 0.5) / u_gridCount;
-		
+		// セルシャッフル
+		vec2 shuffledIndex = shuffleIndex(cellIndex);
+
 		// セル内の位置 (0～1) AKA cellUV
 		vec2 cellPos = fract(vUv * u_gridCount);
-		
+
+		// 各セルの中心座標を計算 テクスチャのfitScaleを考慮する
+		vec2 cellCenterUV = ((shuffledIndex + 0.5) / u_gridCount) * fitScale + (1. - fitScale) / 2.;
+
 		// セルの中心でテクスチャをサンプリング
 		vec4 texColor = texture2D(src, cellCenterUV);
-		vec2 vel = texColor.rg;
-		float len = length(vel);
+		float len = texColor.r;
 		
 		// --- セルカラー ---
+		float threshold = 0.;
 		// 1 セル毎のカラフル セル毎に一意のhashを生成しtimeに乗算する。
-		// vec3 fillColor = (len >= 0.8) ? randomColor((time * cellHash) * .1) : u_backgroundColor;
+		// vec3 fillColor = (len >= threshold) ? randomColor((time * cellHash) * .1) : u_backgroundColor;
 		// 2 セル毎のテクスチャ
-		// vec3 fillColor = (len >= 0.8) ? texture2D(celltxture,cellPos).rgb : u_backgroundColor;
+		// vec3 fillColor = (len >= threshold) ? texture2D(celltxture,cellPos).rgb : u_backgroundColor;
 		// 3. spriteテクスチャ
-		float spriteCount = 10.0;
-		float spritePos = fract(cellHash + time * 0.4);
-		float spriteIndex = floor(spritePos * spriteCount);
-		float spriteSize = 1.0 / spriteCount;
-		float spriteOffset = spriteIndex * spriteSize;
-		float spriteU = spriteOffset + cellPos.x * spriteSize;
-		vec2 spriteUV = vec2(spriteU, cellPos.y);
-		vec3 fillColor = (len >= 0.1) ? texture2D(spriteTexture, spriteUV).rgb : u_backgroundColor;
+		// float spriteCount = 10.0;
+		// float spritePos = fract(cellHash + time * 0.4);
+		// float spriteIndex = floor(spritePos * spriteCount);
+		// float spriteSize = 1.0 / spriteCount;
+		// float spriteOffset = spriteIndex * spriteSize;
+		// float spriteU = spriteOffset + cellPos.x * spriteSize;
+		// vec2 spriteUV = vec2(spriteU, cellPos.y);
+		// vec3 fillColor = (len >= threshold) ? texture2D(spriteTexture, spriteUV).rgb : u_backgroundColor;
 		// 4. マッピングに使うテクスチャのカラーをそのままレンダリング
-		// vec3 fillColor = (len >= 0.8) ? texColor.rgb : u_backgroundColor;
+		vec3 fillColor = (len >= threshold) ? texColor.rgb : u_backgroundColor;
 
 		// --- グリッド線描画の処理 ---
 		// 各辺の境界までの距離を求める
@@ -115,9 +182,18 @@ const FxMaterialImpl = createFxMaterialImpl({
 		float edge = max(edgeX, edgeY);
 		
 		// グリッド線部分は u_gridColor、そうでなければ fillColor
-		vec3 finalColor = mix(fillColor, u_gridColor, edge);
-		
+		vec3 finalColor = u_isEdge ? mix(fillColor, u_gridColor, edge) : fillColor;
 		gl_FragColor = vec4(finalColor, 1.0);
+
+		// TODO * mixDst or SrcにこのFXを使うことで、以下の一部分だけgridにする、みたいな演出も可能になるようにする
+		float mixVal = smoothstep(0.55, 0.6, calcMixCirclePower(pointer,.5));
+		// float mixVal = step(0.5,  calcMixCirclePower(pointer,.4));
+		// float mixVal = smoothstep(0.2, 0.6, length(texture2D(mixTexture, vUv).rgb));
+		// float mixVal = step(0.5,  length(texture2D(mixTexture, vUv).rgb));
+		
+		vec3 outputColor = mix(texture2D(src, fittedUV).rgb,finalColor,mixVal);
+		
+		gl_FragColor = vec4(outputColor, 1.0);
 
 	}
 `,
@@ -128,16 +204,21 @@ extend({ FxMaterialImpl });
 export const Playground = () => {
    const { size, viewport, camera } = useThree();
 
-   const [funkun, sprite] = useTexture(["/momo.jpg", "/sprite.jpg"]);
-   const funkunVideo = useVideoTexture("/FT_Ch02.mp4", {
-      width: 1280,
-      height: 720,
-   });
+   const [funkun, sprite] = useTexture([
+      "/publicdomainq-0037959yqgbhh.jpg",
+      "/sprite.jpg",
+   ]);
 
-   const fluid = useFluid({
-      size,
-      dpr: 0.3,
-   });
+   // MEMO * floorでgrid化するときは、Nearestにしないといけない
+   funkun.minFilter = THREE.NearestFilter;
+   funkun.magFilter = THREE.NearestFilter;
+
+   const fitScale = useRef(new THREE.Vector2(1));
+   const aspectRatio = size.width / size.height;
+   fitScale.current.set(
+      Math.min(aspectRatio / 0.642, 1),
+      Math.min(0.642 / aspectRatio, 1)
+   );
 
    const material = useRef<any>();
    useEffect(() => {
@@ -145,8 +226,11 @@ export const Playground = () => {
    }, [size]);
 
    useFrame((state) => {
-      fluid.render(state);
       material.current.uniforms.time.value = state.clock.getElapsedTime();
+      material.current.uniforms.pointer.value = state.pointer
+         .clone()
+         .multiplyScalar(0.5)
+         .addScalar(0.5);
    });
 
    return (
@@ -155,7 +239,9 @@ export const Playground = () => {
          <fxMaterialImpl
             ref={material}
             key={FxMaterialImpl.key}
-            src={funkunVideo}
+            src={funkun}
+            // mixTexture={fluid.texture}
+            fitScale={fitScale.current}
             celltxture={funkun}
             spriteTexture={sprite}
          />
