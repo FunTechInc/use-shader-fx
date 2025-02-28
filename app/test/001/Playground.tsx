@@ -4,6 +4,7 @@ import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    createFxMaterialImpl,
    FxMaterialImplValues,
+   useFluid,
    useNoise,
 } from "@/packages/use-shader-fx/src";
 import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
@@ -21,16 +22,23 @@ export const Playground = () => {
       timeStrength: 0.4,
    });
 
+   const fluid = useFluid({
+      size,
+      dpr: 0.25,
+   });
+
    // noise.setValues();
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
-      noise.setValues
+      noise.setValues,
+      fluid.texture
    );
 
    useFrame((state) => {
       noise.render(state, {
          ...setBasicFxGUIValues(),
       });
+      fluid.render(state);
       updateBasicFxGUI();
    });
 

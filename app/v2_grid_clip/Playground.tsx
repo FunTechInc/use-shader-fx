@@ -20,28 +20,6 @@ import {
    useVideoTexture,
 } from "@react-three/drei";
 
-/*===============================================
-idea of useGrid
-
-セルカラーの可能性
-- カラフル
-- テクスチャ
-- spriteテクスチャ
-- 単純なカラー指定
-- マッピングに使うテクスチャのカラーをそのままレンダリング
-
-- サイズ調整map
-- 円モード
-- サイズ変更チャンネル
-- カラー変更チャンネル
-- alpha変更チャンネル
-- カラーマップとかアルファマップ的なの加えて、陰影つけられるように。古文を3dモデルでなんかやる。
-
-- shuffleCenterを追加する
-
-MEMO * floorでgrid化するときは、Nearestにしないといけない
-===============================================*/
-
 const FxMaterialImpl = createFxMaterialImpl({
    uniforms: {
       fitScale: { value: new THREE.Vector2(1) },
@@ -62,7 +40,7 @@ const FxMaterialImpl = createFxMaterialImpl({
 	uniform float time;
 
 	float u_lineWidth = .01; // 0.01 ~
-	vec2 u_gridCount = vec2(50.);
+	vec2 u_gridCount = vec2(100.);
 	vec3 u_fillColor = vec3(.0, 1.0, 0.0);
 	vec3 u_backgroundColor = vec3(0.0, 0.0, 0.0);
 	vec3 u_gridColor = vec3(.2, .2, .2);
@@ -113,19 +91,10 @@ const FxMaterialImpl = createFxMaterialImpl({
 		return mod(shuffled, u_gridCount);
 	}
 
-	// MEMO * 本来これはbasicFXにすでにある関数
-	float calcMixCirclePower(vec2 center, float radius)
-	{
-		vec2 adjustedUV = (vUv - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
-		vec2 adjustedCenter = (center - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
-		float dist = length(adjustedUV - adjustedCenter);
-		float power = radius > 0.0 ? 1.0 - dist / radius : 1.0;
-		return clamp(power, 0.0, 1.0);
-	}
-
 	void main() {
 
-		vec2 fittedUV = vUv * fitScale + (1. - fitScale) / 2.;
+		// vec2 fittedUV = vUv * fitScale + (1. - fitScale) / 2.;
+		vec2 fittedUV = vUv;
 
 		// 現在のセルのインデックスを計算（例：(3, 5) など）
 		u_gridCount.x *= aspectRatio;
@@ -140,14 +109,15 @@ const FxMaterialImpl = createFxMaterialImpl({
 		vec2 cellPos = fract(vUv * u_gridCount);
 
 		// 各セルの中心座標を計算 テクスチャのfitScaleを考慮する
-		vec2 cellCenterUV = ((shuffledIndex + 0.5) / u_gridCount) * fitScale + (1. - fitScale) / 2.;
+		// vec2 cellCenterUV = ((shuffledIndex + 0.5) / u_gridCount) * fitScale + (1. - fitScale) / 2.;
+		vec2 cellCenterUV = (shuffledIndex + 0.5) / u_gridCount;
 
 		// セルの中心でテクスチャをサンプリング
 		vec4 texColor = texture2D(src, cellCenterUV);
-		float len = texColor.r;
+		float len = length(texColor.rgb);
 		
 		// --- セルカラー ---
-		float threshold = 0.;
+		float threshold = 0.6;
 		// 1 セル毎のカラフル セル毎に一意のhashを生成しtimeに乗算する。
 		// vec3 fillColor = (len >= threshold) ? randomColor((time * cellHash) * .1) : u_backgroundColor;
 		// 2 セル毎のテクスチャ
@@ -162,7 +132,8 @@ const FxMaterialImpl = createFxMaterialImpl({
 		// vec2 spriteUV = vec2(spriteU, cellPos.y);
 		// vec3 fillColor = (len >= threshold) ? texture2D(spriteTexture, spriteUV).rgb : u_backgroundColor;
 		// 4. マッピングに使うテクスチャのカラーをそのままレンダリング
-		vec3 fillColor = (len >= threshold) ? texColor.rgb : u_backgroundColor;
+		// vec3 fillColor = (len >= threshold) ? texColor.rgb : u_backgroundColor;
+		vec3 fillColor = (len >= threshold) ? u_fillColor : u_backgroundColor;
 
 		// --- グリッド線描画の処理 ---
 		// 各辺の境界までの距離を求める
@@ -183,16 +154,6 @@ const FxMaterialImpl = createFxMaterialImpl({
 		vec3 finalColor = u_isEdge ? mix(fillColor, u_gridColor, edge) : fillColor;
 		gl_FragColor = vec4(finalColor, 1.0);
 
-		// TODO * mixDst or SrcにこのFXを使うことで、以下の一部分だけgridにする、みたいな演出も可能になるようにする
-		float mixVal = smoothstep(0.55, 0.6, calcMixCirclePower(pointer,.5));
-		// float mixVal = step(0.5,  calcMixCirclePower(pointer,.4));
-		// float mixVal = smoothstep(0.2, 0.6, length(texture2D(mixTexture, vUv).rgb));
-		// float mixVal = step(0.5,  length(texture2D(mixTexture, vUv).rgb));
-		
-		vec3 outputColor = mix(texture2D(src, fittedUV).rgb,finalColor,mixVal);
-		
-		gl_FragColor = vec4(outputColor, 1.0);
-
 	}
 `,
 });
@@ -206,6 +167,11 @@ export const Playground = () => {
       "/publicdomainq-0037959yqgbhh.jpg",
       "/sprite.jpg",
    ]);
+
+   const fluid = useFluid({
+      size,
+      dpr: 0.3,
+   });
 
    // MEMO * floorでgrid化するときは、Nearestにしないといけない
    funkun.minFilter = THREE.NearestFilter;
@@ -224,11 +190,8 @@ export const Playground = () => {
    }, [size]);
 
    useFrame((state) => {
+      fluid.render(state);
       material.current.uniforms.time.value = state.clock.getElapsedTime();
-      material.current.uniforms.pointer.value = state.pointer
-         .clone()
-         .multiplyScalar(0.5)
-         .addScalar(0.5);
    });
 
    return (
@@ -237,7 +200,7 @@ export const Playground = () => {
          <fxMaterialImpl
             ref={material}
             key={FxMaterialImpl.key}
-            src={funkun}
+            src={fluid.texture}
             // mixTexture={fluid.texture}
             fitScale={fitScale.current}
             celltxture={funkun}

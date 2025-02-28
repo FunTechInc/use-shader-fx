@@ -5,6 +5,7 @@ import {
    NestUniformValues,
    UniformParentKey,
 } from "../../shaders/uniformsUtils";
+import { DEFAULT_TEXTURE } from "../../libs/constants";
 
 /*===============================================
 types
@@ -19,6 +20,7 @@ export type BasicFxUniformsUnique = {
    mixSrc_uvFactor: { value: number };
    mixSrc_alphaFactor: { value: number };
    mixSrc_colorFactor: { value: number };
+
    // mixDst
    mixDst: { value: UniformParentKey };
    mixDst_src: { value: THREE.Texture };
@@ -28,14 +30,26 @@ export type BasicFxUniformsUnique = {
    mixDst_uv_offset: { value: THREE.Vector2 };
    mixDst_uv_radius: { value: number }; // 負の値は画面全体
    mixDst_uv_position: { value: THREE.Vector2 };
+   mixDst_uv_range: { value: THREE.Vector2 };
+   mixDst_uv_mixMap: { value: UniformParentKey };
+   mixDst_uv_mixMap_src: { value: THREE.Texture }; // textureのcolor長 = mix値
+
    mixDst_color: { value: UniformParentKey };
    mixDst_color_factor: { value: number };
    mixDst_color_radius: { value: number }; // 負の値は画面全体
    mixDst_color_position: { value: THREE.Vector2 };
+   mixDst_color_range: { value: THREE.Vector2 };
+   mixDst_color_mixMap: { value: UniformParentKey };
+   mixDst_color_mixMap_src: { value: THREE.Texture }; // textureのcolor長 = mix値
+
    mixDst_alpha: { value: UniformParentKey };
    mixDst_alpha_factor: { value: number };
    mixDst_alpha_radius: { value: number }; // 負の値は画面全体
    mixDst_alpha_position: { value: THREE.Vector2 };
+   mixDst_alpha_range: { value: THREE.Vector2 };
+   mixDst_alpha_mixMap: { value: UniformParentKey };
+   mixDst_alpha_mixMap_src: { value: THREE.Texture }; // textureのcolor長 = mix値
+
    // levels
    levels: { value: UniformParentKey };
    levels_shadows: { value: THREE.Vector4 };
@@ -112,14 +126,26 @@ export const BASICFX_VALUES: BasicFxUniformsUnique & BasicFxUniformsFitScale = {
    mixDst_uv_offset: { value: new THREE.Vector2(0, 0) },
    mixDst_uv_radius: { value: 0.5 },
    mixDst_uv_position: { value: new THREE.Vector2(0.5, 0.5) },
+   mixDst_uv_range: { value: new THREE.Vector2(0.0, 1.0) },
+   mixDst_uv_mixMap: { value: false },
+   mixDst_uv_mixMap_src: { value: DEFAULT_TEXTURE },
+
    mixDst_color: { value: false },
    mixDst_color_factor: { value: 0 },
    mixDst_color_radius: { value: 0.5 },
    mixDst_color_position: { value: new THREE.Vector2(0.5, 0.5) },
+   mixDst_color_range: { value: new THREE.Vector2(0.0, 1.0) },
+   mixDst_color_mixMap: { value: false },
+   mixDst_color_mixMap_src: { value: DEFAULT_TEXTURE },
+
    mixDst_alpha: { value: false },
    mixDst_alpha_factor: { value: 0 },
    mixDst_alpha_radius: { value: 0.5 },
    mixDst_alpha_position: { value: new THREE.Vector2(0.5, 0.5) },
+   mixDst_alpha_range: { value: new THREE.Vector2(0.0, 1.0) },
+   mixDst_alpha_mixMap: { value: false },
+   mixDst_alpha_mixMap_src: { value: DEFAULT_TEXTURE },
+
    // levels
    levels: { value: false },
    levels_shadows: { value: new THREE.Vector4(0, 0, 0, 0) },
