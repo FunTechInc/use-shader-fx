@@ -1,3 +1,3 @@
 #ifdef USF_USE_TEXTURE		
-	vTextureCoverUv = calcCoverUv(vUv, texture_fitScale);
+	vTextureCoverUv = calcSrcUv(vUv, texture_fitScale);
 #endif

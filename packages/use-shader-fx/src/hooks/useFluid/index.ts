@@ -12,7 +12,7 @@ export type FluidValues = {
    /*===============================================
 	TODO * 
 	- 出力でcolormapとvelocitymapを選択できるみたいな仕組みにする
-		- colormapはBasicFxmaterial
+		- colormapはBasicFxmaterialにするからカラーバランスいけるので、このhookに色は不要
 	- params
 	- velocity dissipation
 	- color dissipation (color map　/ pressure disippation的なこと？)　

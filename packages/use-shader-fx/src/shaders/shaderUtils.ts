@@ -6,6 +6,11 @@ export function mergeShaderCode(prefix: string[]): string {
    return prefix.filter((string) => string !== "").join("\n");
 }
 
+/*===============================================
+MEMO
+- SamplingFxMaterialをさらに拡張する場合（例えばuseTextureTransitionとかで、複数のtextureのfitScaleが必要な場合）、ここでShaderLibTypeを追加する。
+===============================================*/
+
 export type ShaderLibType = "default" | "basicFx" | "samplingFx";
 /**
  * merge ShaderLib to shader

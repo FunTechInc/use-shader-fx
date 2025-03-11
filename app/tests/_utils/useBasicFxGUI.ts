@@ -7,7 +7,6 @@ import {
    BasicFxValues,
    FitType,
 } from "@/packages/use-shader-fx/src";
-import { useTexture, useVideoTexture } from "@react-three/drei";
 import { useCallback } from "react";
 
 const BASICFX_CONFIG: BasicFxUniformsUnique = BASICFX_VALUES;
@@ -15,15 +14,148 @@ const FIT_TYPE: FitType[] = ["fill", "cover", "contain"];
 
 export const useBasicFxGUI = (
    setValues: (v: BasicFxValues) => void,
-   mixMap: THREE.Texture
+   textures: {
+      mixSrc: THREE.Texture;
+      mixDst: THREE.Texture;
+      mixMap: THREE.Texture;
+   }
 ) => {
-   const [funkun] = useTexture(["/funkun.jpg"]);
-   const funkunVideo = useVideoTexture("/FT_Ch02.mp4", {
-      width: 1280,
-      height: 720,
-   });
    const setupGUI = useCallback(
       (gui: GUI) => {
+         /*===============================================
+			mixSrc
+			===============================================*/
+         const mixSrc = gui.addFolder("mixSrc");
+         mixSrc
+            .add(BASICFX_CONFIG.mixSrc, "value")
+            .name("enabled")
+            .onChange((v: boolean) =>
+               setValues({ mixSrc: v ? { src: textures.mixSrc } : v })
+            );
+         mixSrc
+            .add(BASICFX_CONFIG.mixSrc_fit, "value", FIT_TYPE)
+            .name("fit")
+            .onChange((v: FitType) => setValues({ mixSrc: { fit: v } }));
+         // uv
+         const mixSrcUV = mixSrc.addFolder("uv");
+         mixSrcUV.add(BASICFX_CONFIG.mixSrc_uv, "value").name("enabled");
+         mixSrcUV.add(BASICFX_CONFIG.mixSrc_uv_ch, "value", 0, 3, 1).name("ch");
+         mixSrcUV
+            .add(BASICFX_CONFIG.mixSrc_uv_factor, "value", 0, 1, 0.01)
+            .name("factor");
+         const mixSrcUVOffset = mixSrcUV.addFolder("offset");
+         mixSrcUVOffset
+            .add(BASICFX_CONFIG.mixSrc_uv_offset.value, "x", -1, 1, 0.01)
+            .name("x");
+         mixSrcUVOffset
+            .add(BASICFX_CONFIG.mixSrc_uv_offset.value, "y", -1, 1, 0.01)
+            .name("y");
+         mixSrcUV
+            .add(BASICFX_CONFIG.mixSrc_uv_radius, "value", 0, 1, 0.01)
+            .name("radius");
+         const mixSrcUVPosition = mixSrcUV.addFolder("position");
+         mixSrcUVPosition
+            .add(BASICFX_CONFIG.mixSrc_uv_position.value, "x", -1, 1, 0.01)
+            .name("x");
+         mixSrcUVPosition
+            .add(BASICFX_CONFIG.mixSrc_uv_position.value, "y", -1, 1, 0.01)
+            .name("y");
+         const mixSrcUVRange = mixSrcUV.addFolder("range");
+         mixSrcUVRange
+            .add(BASICFX_CONFIG.mixSrc_uv_range.value, "x", 0, 1, 0.01)
+            .name("x");
+         mixSrcUVRange
+            .add(BASICFX_CONFIG.mixSrc_uv_range.value, "y", 0, 1, 0.01)
+            .name("y");
+         const mixSrcUvMixMap = mixSrcUV.addFolder("mixMap");
+         mixSrcUvMixMap
+            .add(BASICFX_CONFIG.mixSrc_uv_mixMap, "value")
+            .name("enabled")
+            .onChange((v: boolean) =>
+               setValues({
+                  mixSrc: { uv: { mixMap: v ? { src: textures.mixMap } : v } },
+               })
+            );
+         mixSrcUvMixMap
+            .add(BASICFX_CONFIG.mixSrc_uv_mixMap_ch, "value", 0, 3, 1)
+            .name("ch");
+
+         // color
+         const mixSrcColor = mixSrc.addFolder("color");
+         mixSrcColor.add(BASICFX_CONFIG.mixSrc_color, "value").name("enabled");
+         mixSrcColor
+            .add(BASICFX_CONFIG.mixSrc_color_factor, "value", 0, 1, 0.01)
+            .name("factor");
+         mixSrcColor
+            .add(BASICFX_CONFIG.mixSrc_color_radius, "value", 0, 1, 0.01)
+            .name("radius");
+         const mixSrcColorPosition = mixSrcColor.addFolder("position");
+         mixSrcColorPosition
+            .add(BASICFX_CONFIG.mixSrc_color_position.value, "x", -1, 1, 0.01)
+            .name("x");
+         mixSrcColorPosition
+            .add(BASICFX_CONFIG.mixSrc_color_position.value, "y", -1, 1, 0.01)
+            .name("y");
+         const mixSrcColorRange = mixSrcColor.addFolder("range");
+         mixSrcColorRange
+            .add(BASICFX_CONFIG.mixSrc_color_range.value, "x", 0, 1, 0.01)
+            .name("x");
+         mixSrcColorRange
+            .add(BASICFX_CONFIG.mixSrc_color_range.value, "y", 0, 1, 0.01)
+            .name("y");
+         const mixSrcColorMixMap = mixSrcColor.addFolder("mixMap");
+         mixSrcColorMixMap
+            .add(BASICFX_CONFIG.mixSrc_color_mixMap, "value")
+            .name("enabled")
+            .onChange((v: boolean) =>
+               setValues({
+                  mixSrc: {
+                     color: { mixMap: v ? { src: textures.mixMap } : v },
+                  },
+               })
+            );
+         mixSrcColorMixMap
+            .add(BASICFX_CONFIG.mixSrc_color_mixMap_ch, "value", 0, 3, 1)
+            .name("ch");
+
+         // alpha
+         const mixSrcAlpha = mixSrc.addFolder("alpha");
+         mixSrcAlpha.add(BASICFX_CONFIG.mixSrc_alpha, "value").name("enabled");
+         mixSrcAlpha
+            .add(BASICFX_CONFIG.mixSrc_alpha_factor, "value", 0, 1, 0.01)
+            .name("factor");
+         mixSrcAlpha
+            .add(BASICFX_CONFIG.mixSrc_alpha_radius, "value", 0, 1, 0.01)
+            .name("radius");
+         const mixSrcAlphaPosition = mixSrcAlpha.addFolder("position");
+         mixSrcAlphaPosition
+            .add(BASICFX_CONFIG.mixSrc_alpha_position.value, "x", -1, 1, 0.01)
+            .name("x");
+         mixSrcAlphaPosition
+            .add(BASICFX_CONFIG.mixSrc_alpha_position.value, "y", -1, 1, 0.01)
+            .name("y");
+         const mixSrcAlphaRange = mixSrcAlpha.addFolder("range");
+         mixSrcAlphaRange
+            .add(BASICFX_CONFIG.mixSrc_alpha_range.value, "x", 0, 1, 0.01)
+            .name("x");
+         mixSrcAlphaRange
+            .add(BASICFX_CONFIG.mixSrc_alpha_range.value, "y", 0, 1, 0.01)
+            .name("y");
+         const mixSrcAlphaMixMap = mixSrcAlpha.addFolder("mixMap");
+         mixSrcAlphaMixMap
+            .add(BASICFX_CONFIG.mixSrc_alpha_mixMap, "value")
+            .name("enabled")
+            .onChange((v: boolean) =>
+               setValues({
+                  mixSrc: {
+                     alpha: { mixMap: v ? { src: textures.mixMap } : v },
+                  },
+               })
+            );
+         mixSrcAlphaMixMap
+            .add(BASICFX_CONFIG.mixSrc_alpha_mixMap_ch, "value", 0, 3, 1)
+            .name("ch");
+
          /*===============================================
 			mixDst
 			===============================================*/
@@ -32,7 +164,7 @@ export const useBasicFxGUI = (
             .add(BASICFX_CONFIG.mixDst, "value")
             .name("enabled")
             .onChange((v: boolean) =>
-               setValues({ mixDst: v ? { src: funkun } : v })
+               setValues({ mixDst: v ? { src: textures.mixDst } : v })
             );
          mixDst
             .add(BASICFX_CONFIG.mixDst_fit, "value", FIT_TYPE)
@@ -42,6 +174,7 @@ export const useBasicFxGUI = (
          // uv
          const mixDstUV = mixDst.addFolder("uv");
          mixDstUV.add(BASICFX_CONFIG.mixDst_uv, "value").name("enabled");
+         mixDstUV.add(BASICFX_CONFIG.mixDst_uv_ch, "value", 0, 3, 1).name("ch");
          mixDstUV
             .add(BASICFX_CONFIG.mixDst_uv_factor, "value", 0, 1, 0.01)
             .name("factor");
@@ -69,14 +202,18 @@ export const useBasicFxGUI = (
          mixDstUVRange
             .add(BASICFX_CONFIG.mixDst_uv_range.value, "y", 0, 1, 0.01)
             .name("y");
-         mixDstUV
+         const mixDstUvMixMap = mixDstUV.addFolder("mixMap");
+         mixDstUvMixMap
             .add(BASICFX_CONFIG.mixDst_uv_mixMap, "value")
-            .name("mixMap")
+            .name("enabled")
             .onChange((v: boolean) =>
                setValues({
-                  mixDst: { uv: { mixMap: v ? { src: mixMap } : v } },
+                  mixDst: { uv: { mixMap: v ? { src: textures.mixMap } : v } },
                })
             );
+         mixDstUvMixMap
+            .add(BASICFX_CONFIG.mixDst_uv_mixMap_ch, "value", 0, 3, 1)
+            .name("ch");
 
          // color
          const mixDstColor = mixDst.addFolder("color");
@@ -101,14 +238,20 @@ export const useBasicFxGUI = (
          mixDstColorRange
             .add(BASICFX_CONFIG.mixDst_color_range.value, "y", 0, 1, 0.01)
             .name("y");
-         mixDstColor
+         const mixDstColorMixMap = mixDstColor.addFolder("mixMap");
+         mixDstColorMixMap
             .add(BASICFX_CONFIG.mixDst_color_mixMap, "value")
-            .name("mixMap")
+            .name("enabled")
             .onChange((v: boolean) =>
                setValues({
-                  mixDst: { color: { mixMap: v ? { src: mixMap } : v } },
+                  mixDst: {
+                     color: { mixMap: v ? { src: textures.mixMap } : v },
+                  },
                })
             );
+         mixDstColorMixMap
+            .add(BASICFX_CONFIG.mixDst_color_mixMap_ch, "value", 0, 3, 1)
+            .name("ch");
 
          // alpha
          const mixDstAlpha = mixDst.addFolder("alpha");
@@ -133,14 +276,20 @@ export const useBasicFxGUI = (
          mixDstAlphaRange
             .add(BASICFX_CONFIG.mixDst_alpha_range.value, "y", 0, 1, 0.01)
             .name("y");
-         mixDstAlpha
+         const mixDstAlphaMixMap = mixDstAlpha.addFolder("mixMap");
+         mixDstAlphaMixMap
             .add(BASICFX_CONFIG.mixDst_alpha_mixMap, "value")
-            .name("mixMap")
+            .name("enabled")
             .onChange((v: boolean) =>
                setValues({
-                  mixDst: { alpha: { mixMap: v ? { src: mixMap } : v } },
+                  mixDst: {
+                     alpha: { mixMap: v ? { src: textures.mixMap } : v },
+                  },
                })
             );
+         mixDstAlphaMixMap
+            .add(BASICFX_CONFIG.mixDst_alpha_mixMap_ch, "value", 0, 3, 1)
+            .name("ch");
 
          /*===============================================
 			levels
@@ -315,7 +464,7 @@ export const useBasicFxGUI = (
             .add(BASICFX_CONFIG.grayscale_threshold, "value", -0.01, 1, 0.01)
             .name("threshold");
       },
-      [setValues, funkun, mixMap]
+      [setValues, textures]
    );
 
    const updateBasicFxGUI = useGUI(setupGUI, "BasicFx");
@@ -325,26 +474,71 @@ export const useBasicFxGUI = (
       setBasicFxGUIValues: (): BasicFxValues => {
          return {
             ...{
+               ...(BASICFX_CONFIG.mixSrc.value && {
+                  mixSrc: {
+                     uv: BASICFX_CONFIG.mixSrc_uv.value && {
+                        ch: BASICFX_CONFIG.mixSrc_uv_ch.value,
+                        factor: BASICFX_CONFIG.mixSrc_uv_factor.value,
+                        offset: BASICFX_CONFIG.mixSrc_uv_offset.value,
+                        radius: BASICFX_CONFIG.mixSrc_uv_radius.value,
+                        position: BASICFX_CONFIG.mixSrc_uv_position.value,
+                        range: BASICFX_CONFIG.mixSrc_uv_range.value,
+                        mixMap: BASICFX_CONFIG.mixSrc_uv_mixMap.value && {
+                           ch: BASICFX_CONFIG.mixSrc_uv_mixMap_ch.value,
+                        },
+                     },
+                     color: BASICFX_CONFIG.mixSrc_color.value && {
+                        factor: BASICFX_CONFIG.mixSrc_color_factor.value,
+                        radius: BASICFX_CONFIG.mixSrc_color_radius.value,
+                        position: BASICFX_CONFIG.mixSrc_color_position.value,
+                        range: BASICFX_CONFIG.mixSrc_color_range.value,
+                        mixMap: BASICFX_CONFIG.mixSrc_color_mixMap.value && {
+                           ch: BASICFX_CONFIG.mixSrc_color_mixMap_ch.value,
+                        },
+                     },
+                     alpha: BASICFX_CONFIG.mixSrc_alpha.value && {
+                        factor: BASICFX_CONFIG.mixSrc_alpha_factor.value,
+                        radius: BASICFX_CONFIG.mixSrc_alpha_radius.value,
+                        position: BASICFX_CONFIG.mixSrc_alpha_position.value,
+                        range: BASICFX_CONFIG.mixSrc_alpha_range.value,
+                        mixMap: BASICFX_CONFIG.mixSrc_alpha_mixMap.value && {
+                           ch: BASICFX_CONFIG.mixSrc_alpha_mixMap_ch.value,
+                        },
+                     },
+                  },
+               }),
+            },
+            ...{
                ...(BASICFX_CONFIG.mixDst.value && {
                   mixDst: {
                      uv: BASICFX_CONFIG.mixDst_uv.value && {
+                        ch: BASICFX_CONFIG.mixDst_uv_ch.value,
                         factor: BASICFX_CONFIG.mixDst_uv_factor.value,
                         offset: BASICFX_CONFIG.mixDst_uv_offset.value,
                         radius: BASICFX_CONFIG.mixDst_uv_radius.value,
                         position: BASICFX_CONFIG.mixDst_uv_position.value,
                         range: BASICFX_CONFIG.mixDst_uv_range.value,
+                        mixMap: BASICFX_CONFIG.mixDst_uv_mixMap.value && {
+                           ch: BASICFX_CONFIG.mixDst_uv_mixMap_ch.value,
+                        },
                      },
                      color: BASICFX_CONFIG.mixDst_color.value && {
                         factor: BASICFX_CONFIG.mixDst_color_factor.value,
                         radius: BASICFX_CONFIG.mixDst_color_radius.value,
                         position: BASICFX_CONFIG.mixDst_color_position.value,
                         range: BASICFX_CONFIG.mixDst_color_range.value,
+                        mixMap: BASICFX_CONFIG.mixDst_color_mixMap.value && {
+                           ch: BASICFX_CONFIG.mixDst_color_mixMap_ch.value,
+                        },
                      },
                      alpha: BASICFX_CONFIG.mixDst_alpha.value && {
                         factor: BASICFX_CONFIG.mixDst_alpha_factor.value,
                         radius: BASICFX_CONFIG.mixDst_alpha_radius.value,
                         position: BASICFX_CONFIG.mixDst_alpha_position.value,
                         range: BASICFX_CONFIG.mixDst_alpha_range.value,
+                        mixMap: BASICFX_CONFIG.mixDst_alpha_mixMap.value && {
+                           ch: BASICFX_CONFIG.mixDst_alpha_mixMap_ch.value,
+                        },
                      },
                   },
                }),

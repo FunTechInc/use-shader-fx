@@ -10,9 +10,14 @@
 		return smoothstep(range.x,range.y,power);
 	}
 
-	float calcMixMapPower(sampler2D map,vec2 range)
+	float calcMixMapPower(sampler2D map,vec2 range, int ch)
 	{
-		return smoothstep(range.x,range.y, length(texture2D(map, vUv).rgb));
+		return smoothstep(range.x,range.y, texture2D(map, vUv)[ch]);
+	}
+
+	vec4 fitTexture(sampler2D src , vec2 uv)
+	{
+		return mix(vec4(0.), texture2D(src, uv), step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0));
 	}
 
 #endif

@@ -25,6 +25,10 @@ export default function RootLayout({
          style={{
             overflow: "hidden",
             backgroundColor: "#000",
+            backgroundImage: "url(/bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "repeat",
             touchAction: "none",
             userSelect: "none",
          }}>

@@ -128,7 +128,10 @@ const FxMaterialImpl = createFxMaterialImpl({
 		vec2 fittedUV = vUv * fitScale + (1. - fitScale) / 2.;
 
 		// 現在のセルのインデックスを計算（例：(3, 5) など）
+		
+		// TODO autoFitさせないようにもしないと柔軟性に欠けるね
 		u_gridCount.x *= aspectRatio;
+		
 		vec2 cellIndex = floor(vUv * u_gridCount);
 		// セル毎に一意のhashを生成
 		float cellHash = hash(cellIndex);
@@ -144,7 +147,10 @@ const FxMaterialImpl = createFxMaterialImpl({
 
 		// セルの中心でテクスチャをサンプリング
 		vec4 texColor = texture2D(src, cellCenterUV);
-		float len = texColor.r;
+		// TODO この基準のチャンネルをcolor か alpha かを選べるようにする
+		// TODO float len = texColor[0]; みたいにアクセスできるね
+		float len = texColor[0];
+		// float len = texColor.r;
 		
 		// --- セルカラー ---
 		float threshold = 0.;
@@ -160,6 +166,10 @@ const FxMaterialImpl = createFxMaterialImpl({
 		// float spriteOffset = spriteIndex * spriteSize;
 		// float spriteU = spriteOffset + cellPos.x * spriteSize;
 		// vec2 spriteUV = vec2(spriteU, cellPos.y);
+		
+		// TODO スプライトテクスチャのrgbにtexColorのrgbを乗算できるようにする
+		// THINK alphaはalpha mapとかにする？ => 普通にtextureのaをそのままが一旦シンプルかな
+
 		// vec3 fillColor = (len >= threshold) ? texture2D(spriteTexture, spriteUV).rgb : u_backgroundColor;
 		// 4. マッピングに使うテクスチャのカラーをそのままレンダリング
 		vec3 fillColor = (len >= threshold) ? texColor.rgb : u_backgroundColor;
