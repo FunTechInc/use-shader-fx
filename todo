@@ -1,5 +1,5 @@
 
 - useFluid仕上げ
-	- カラーはlenの白（0~1）だけでいい
 	- あとvelocityを使えるようにするので、カスタマイズする人はそれで、みたいな
 - useBlank
+- useRawBlank

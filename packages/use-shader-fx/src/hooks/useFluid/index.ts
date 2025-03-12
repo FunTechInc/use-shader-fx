@@ -7,6 +7,7 @@ import { useSplat } from "./scenes/useSplat";
 import { useDivergence } from "./scenes/useDivergence";
 import { usePoisson } from "./scenes/usePoisson";
 import { usePressure } from "./scenes/usePressure";
+import { useOutput } from "./scenes/useOutput";
 
 export type FluidValues = {
    /*===============================================
@@ -45,6 +46,7 @@ export const useFluid = ({
    const [velocity_1, updateVelocity_1] = useSingleFBO(fboProps);
    const [divergenceFBO, updateDivergenceFBO] = useSingleFBO(fboProps);
    const [pressureFBO, updatePressureFBO] = useDoubleFBO(fboProps);
+   const [outputFBO, updateOutputFBO] = useSingleFBO(fboProps);
 
    // scenes
    const SceneSize = { size, dpr: _dpr.shader };
@@ -78,6 +80,13 @@ export const useFluid = ({
       },
       updateVelocity_0
    );
+   const output = useOutput(
+      {
+         ...SceneSize,
+         src: velocity_0.texture,
+      },
+      updateOutputFBO
+   );
 
    const setValues = useCallback((newValues: FluidValues) => {
       // splat.material.force = newValues.force;
@@ -96,27 +105,31 @@ export const useFluid = ({
       (rootState: RootState, newValues?: FluidValues) => {
          newValues && setValues(newValues);
 
-         [advection, splat, divergence, poisson, pressure].forEach((shader) => {
-            shader.render(rootState);
-         });
+         [advection, splat, divergence, poisson, pressure, output].forEach(
+            (shader) => {
+               shader.render(rootState);
+            }
+         );
 
-         return velocity_0.texture;
+         return outputFBO.texture;
       },
       [
          setValues,
-         velocity_0.texture,
+         // velocity_0.texture,
+         outputFBO.texture,
          advection,
          splat,
          divergence,
          poisson,
          pressure,
+         output,
       ]
    );
 
    return {
       render,
       setValues,
-      texture: velocity_0.texture,
+      texture: outputFBO.texture,
       // material,
       // scene,
    };

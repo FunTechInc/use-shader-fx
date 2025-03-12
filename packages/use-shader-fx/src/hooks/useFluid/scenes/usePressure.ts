@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
-import { PressureMaterial } from "../../../materials";
+import { FluidMaterials } from "../../../materials";
 
 export const usePressure = (
    {
@@ -20,7 +20,7 @@ export const usePressure = (
    const { scene, material, camera } = useSetup({
       size,
       dpr,
-      material: PressureMaterial,
+      material: FluidMaterials.PressureMaterial,
       uniformValues: values,
    });
 

@@ -2,9 +2,13 @@ import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
-import { FluidMaterials } from "../../../materials";
+import {
+   BufferMaterial,
+   NoiseMaterial,
+   FluidMaterials,
+} from "../../../materials";
 
-export const usePoisson = (
+export const useOutput = (
    {
       size,
       dpr,
@@ -12,27 +16,23 @@ export const usePoisson = (
    }: {
       size: Size;
       dpr: number | false;
-      divergence: THREE.Texture;
+      src: THREE.Texture;
    },
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
    const { scene, material, camera } = useSetup({
       size,
       dpr,
-      material: FluidMaterials.PoissonMaterial,
+      material: FluidMaterials.OutputMaterial,
       uniformValues: values,
    });
 
    const render = useCallback(
       (rootState: RootState) => {
          const { gl } = rootState;
-         for (let i = 0; i < material.iteration; i++) {
-            updateRenderTarget({ gl, scene, camera }, ({ read }) => {
-               material.uniforms.pressure.value = read;
-            });
-         }
+         updateRenderTarget({ gl, scene, camera });
       },
-      [updateRenderTarget, material, scene, camera]
+      [updateRenderTarget, scene, camera]
    );
 
    return { render, material };

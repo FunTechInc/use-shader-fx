@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
-import { SplatMaterial } from "../../../materials";
+import { FluidMaterials } from "../../../materials";
 import { usePointerTracker } from "../../../misc/usePointerTracker";
 
 export const useSplat = (
@@ -17,7 +17,7 @@ export const useSplat = (
    const { scene, material, camera } = useSetup({
       size,
       dpr,
-      material: SplatMaterial,
+      material: FluidMaterials.SplatMaterial,
       geometrySize: {
          width: 1,
          height: 1,

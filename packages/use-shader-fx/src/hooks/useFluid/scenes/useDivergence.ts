@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
-import { DivergenceMaterial } from "../../../materials";
+import { FluidMaterials } from "../../../materials";
 import { useSetup, SingleFBOUpdateFunction } from "../../../utils";
 
 export const useDivergence = (
@@ -19,7 +19,7 @@ export const useDivergence = (
    const { scene, material, camera } = useSetup({
       size,
       dpr,
-      material: DivergenceMaterial,
+      material: FluidMaterials.DivergenceMaterial,
       uniformValues: values,
    });
 

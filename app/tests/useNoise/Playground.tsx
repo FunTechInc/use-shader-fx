@@ -20,7 +20,7 @@ export const Playground = () => {
 
    const noise = useNoise({
       size,
-      dpr: 1,
+      dpr: 0.5,
       scale: 0.01,
       timeStrength: 0.4,
    });
@@ -33,8 +33,8 @@ export const Playground = () => {
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
       noise.setValues,
       {
-         mixSrc: mask,
-         mixDst: mask,
+         mixSrc: fluid.texture,
+         mixDst: fluid.texture,
          mixMap: fluid.texture,
       }
    );

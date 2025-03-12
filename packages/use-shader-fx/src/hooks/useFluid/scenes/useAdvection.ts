@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
-import { AdvectionMaterial } from "../../../materials";
+import { FluidMaterials } from "../../../materials";
 import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
 
 export const useAdvection = (
@@ -19,7 +19,7 @@ export const useAdvection = (
    const { scene, material, camera } = useSetup({
       size,
       dpr,
-      material: AdvectionMaterial,
+      material: FluidMaterials.AdvectionMaterial,
       uniformValues: values,
    });
 
