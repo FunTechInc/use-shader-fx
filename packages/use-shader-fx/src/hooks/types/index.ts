@@ -73,8 +73,8 @@ export type HooksReturn<V = {}, M = BasicFxMaterial, A = {}> = {
     */
    setValues: (newValues: V, needsUpdate?: boolean) => void;
    texture: THREE.Texture;
-   material: M;
-   scene: THREE.Scene;
-   camera: THREE.Camera;
-   renderTarget: THREE.WebGLRenderTarget | DoubleRenderTarget;
+   material?: M;
+   scene?: THREE.Scene;
+   camera?: THREE.Camera;
+   renderTarget?: THREE.WebGLRenderTarget | DoubleRenderTarget;
 } & A;

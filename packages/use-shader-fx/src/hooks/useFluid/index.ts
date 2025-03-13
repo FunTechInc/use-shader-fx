@@ -10,11 +10,6 @@ import { usePressure } from "./scenes/usePressure";
 import { useOutput } from "./scenes/useOutput";
 import { BasicFxValues, FluidMaterials } from "../../materials";
 
-/*===============================================
-TODO
-- returnの修正
-===============================================*/
-
 export type FluidValues = {
    pressureIterations?: number;
    force?: number;
@@ -71,7 +66,7 @@ export const useFluid = ({
    FluidValues,
    any,
    {
-      /** 速度場 */
+      /** velocity map */
       velocity: THREE.Texture;
    }
 > => {
@@ -193,7 +188,5 @@ export const useFluid = ({
       setValues,
       texture: outputFBO.texture,
       velocity: velocity_0.texture,
-      // material,
-      // scene,
    };
 };
