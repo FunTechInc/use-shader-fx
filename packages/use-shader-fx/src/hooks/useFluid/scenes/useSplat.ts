@@ -8,10 +8,13 @@ export const useSplat = (
    {
       size,
       dpr,
+      force,
+      ...uniformValues
    }: {
       size: Size;
       dpr: number | false;
-   },
+      force?: number;
+   } & FluidMaterials.SplatValuesClient,
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
    const { scene, material, camera } = useSetup({
@@ -21,6 +24,12 @@ export const useSplat = (
       geometrySize: {
          width: 1,
          height: 1,
+      },
+      uniformValues,
+      materialParameters: {
+         defines: {
+            FORCE_BIAS: force || 20,
+         },
       },
    });
 
@@ -33,7 +42,7 @@ export const useSplat = (
 
          material.uniforms.center.value.copy(currentPointer);
          material.uniforms.force.value.copy(
-            diffPointer.multiplyScalar(material.forceBias)
+            diffPointer.multiplyScalar(material.defines["FORCE_BIAS"])
          );
 
          updateRenderTarget({ gl, scene, camera, clear: false });

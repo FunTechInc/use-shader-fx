@@ -6,14 +6,21 @@ import {
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
-import { DeltaTime } from ".";
+import { DELTA_TIME } from ".";
+import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type PressureUniforms = {
-   isBounce: { value: boolean };
+   bounce: { value: boolean };
+   deltaTime: { value: number };
    pressure: { value: THREE.Texture };
    velocity: { value: THREE.Texture };
-   dt: { value: number };
 };
+
+export type PressureValues = NestUniformValues<PressureUniforms>;
+export type PressureValuesClient = Omit<
+   PressureValues,
+   "velocity" | "pressure"
+>;
 
 export class PressureMaterial extends FxMaterial {
    static get type() {
@@ -22,17 +29,20 @@ export class PressureMaterial extends FxMaterial {
 
    uniforms!: PressureUniforms;
 
-   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+   }: FxMaterialProps<PressureValues>) {
       super({
          vertexShader: vertex.main,
          fragmentShader: fragment,
          uniformValues,
          materialParameters,
          uniforms: {
-            isBounce: { value: true },
+            bounce: { value: true },
+            deltaTime: { value: DELTA_TIME },
             pressure: { value: DEFAULT_TEXTURE },
             velocity: { value: DEFAULT_TEXTURE },
-            dt: { value: DeltaTime },
          } as PressureUniforms,
       });
 

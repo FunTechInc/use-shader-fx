@@ -6,13 +6,17 @@ import {
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
-import { DeltaTime } from ".";
+import { DELTA_TIME } from ".";
+import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type DivergenceUniforms = {
-   isBounce: { value: boolean };
+   bounce: { value: boolean };
+   deltaTime: { value: number };
    velocity: { value: THREE.Texture };
-   dt: { value: number };
 };
+
+export type DivergenceValues = NestUniformValues<DivergenceUniforms>;
+export type DivergenceValuesClient = Omit<DivergenceValues, "velocity">;
 
 export class DivergenceMaterial extends FxMaterial {
    static get type() {
@@ -21,16 +25,19 @@ export class DivergenceMaterial extends FxMaterial {
 
    uniforms!: DivergenceUniforms;
 
-   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+   }: FxMaterialProps<DivergenceValues>) {
       super({
          vertexShader: vertex.main,
          fragmentShader: fragment,
          uniformValues,
          materialParameters,
          uniforms: {
-            isBounce: { value: true },
+            bounce: { value: true },
             velocity: { value: DEFAULT_TEXTURE },
-            dt: { value: DeltaTime },
+            deltaTime: { value: DELTA_TIME },
          } as DivergenceUniforms,
       });
 

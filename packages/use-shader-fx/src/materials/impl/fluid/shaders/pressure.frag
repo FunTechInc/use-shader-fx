@@ -1,4 +1,4 @@
-uniform float dt;
+uniform float deltaTime;
 uniform sampler2D pressure;
 uniform sampler2D velocity;
 
@@ -16,7 +16,7 @@ void main(){
 
 	vec2 v = texture2D(velocity, vUv).xy;
 	vec2 gradP = vec2(R - L, T - B) * 0.5;
-	v = v - gradP * dt;
+	v = v - gradP * deltaTime;
 
 	gl_FragColor = vec4(v, 0.0, 1.0);
 

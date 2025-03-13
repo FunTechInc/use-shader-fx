@@ -59,7 +59,7 @@ export interface HooksProps {
  * @template V The type for the FX parameters.
  * @template O The type for the material.
  */
-export type HooksReturn<V = {}, M = BasicFxMaterial> = {
+export type HooksReturn<V = {}, M = BasicFxMaterial, A = {}> = {
    /**
     * Functions to update parameters and render.
     * @param rootState RootState
@@ -77,4 +77,4 @@ export type HooksReturn<V = {}, M = BasicFxMaterial> = {
    scene: THREE.Scene;
    camera: THREE.Camera;
    renderTarget: THREE.WebGLRenderTarget | DoubleRenderTarget;
-};
+} & A;

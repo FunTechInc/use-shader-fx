@@ -1,4 +1,4 @@
-uniform float dt;
+uniform float deltaTime;
 uniform sampler2D velocity;
 
 varying vec2 vL;
@@ -13,5 +13,5 @@ void main(){
     float T = texture2D(velocity, vT).g;
 	 
     float divergence = (R-L + T-B) / 2.0;
-    gl_FragColor = vec4(divergence / dt);
+    gl_FragColor = vec4(divergence / deltaTime);
 }

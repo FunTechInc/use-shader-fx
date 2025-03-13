@@ -1,5 +1,6 @@
 "use client";
 
+import * as THREE from "three";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    createFxMaterialImpl,
@@ -28,6 +29,16 @@ export const Playground = () => {
    const fluid = useFluid({
       size,
       dpr: 0.25,
+      // dissipation: 0.8,
+      // pressureIterations: 1,
+      // scale: new THREE.Vector2(10, 10),
+      // force: 1,
+   });
+   fluid.setValues({
+      // scale: new THREE.Vector2(100, 200),
+      dissipation: 0.8,
+      force: 20,
+      bounce: true,
    });
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(

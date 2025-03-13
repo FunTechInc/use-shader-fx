@@ -46,8 +46,8 @@ export class OutputMaterial extends BasicFxMaterial {
 				}
 			`,
          uniforms: {
-            src: { value: uniformValues?.src || DEFAULT_TEXTURE },
-         } as OutputUniforms,
+            src: { value: DEFAULT_TEXTURE },
+         },
       });
       this.type = OutputMaterial.type;
    }

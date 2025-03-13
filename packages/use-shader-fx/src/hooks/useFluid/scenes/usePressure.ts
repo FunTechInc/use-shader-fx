@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
@@ -8,20 +7,18 @@ export const usePressure = (
    {
       size,
       dpr,
-      ...values
+      ...uniformValues
    }: {
       size: Size;
       dpr: number | false;
-      velocity: THREE.Texture;
-      pressure: THREE.Texture;
-   },
+   } & FluidMaterials.PressureValues,
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
    const { scene, material, camera } = useSetup({
       size,
       dpr,
       material: FluidMaterials.PressureMaterial,
-      uniformValues: values,
+      uniformValues,
    });
 
    const render = useCallback(

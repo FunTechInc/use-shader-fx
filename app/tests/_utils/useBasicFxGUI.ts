@@ -382,6 +382,9 @@ export const useBasicFxGUI = (
          contrast
             .add(BASICFX_CONFIG.contrast_factor.value, "z", 0, 2, 0.01)
             .name("b");
+         contrast
+            .add(BASICFX_CONFIG.contrast_factor.value, "w", 0, 20, 0.01)
+            .name("a");
 
          /*===============================================
 			color balance

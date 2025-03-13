@@ -6,12 +6,17 @@ import {
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
-import { DeltaTime } from ".";
+import { DELTA_TIME } from ".";
+import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type AdvectionUniforms = {
+   dissipation: { value: number };
+   deltaTime: { value: number };
    velocity: { value: THREE.Texture };
-   dt: { value: number };
 };
+
+export type AdvectionValues = NestUniformValues<AdvectionUniforms>;
+export type AdvectionValuesClient = Omit<AdvectionValues, "velocity">;
 
 export class AdvectionMaterial extends FxMaterial {
    static get type() {
@@ -20,15 +25,19 @@ export class AdvectionMaterial extends FxMaterial {
 
    uniforms!: AdvectionUniforms;
 
-   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+   }: FxMaterialProps<AdvectionValues>) {
       super({
          vertexShader: vertex.advection,
          fragmentShader: fragment,
          uniformValues,
          materialParameters,
          uniforms: {
+            dissipation: { value: 0.99 },
             velocity: { value: DEFAULT_TEXTURE },
-            dt: { value: DeltaTime },
+            deltaTime: { value: DELTA_TIME },
          } as AdvectionUniforms,
       });
       this.type = AdvectionMaterial.type;

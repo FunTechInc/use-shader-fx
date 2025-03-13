@@ -53,7 +53,13 @@ export const UI = () => {
             </li>
             <li>
                <a href="https://twitter.com/tkm_hmng8" target={"_blank"}>
-                  <Image src="/x-logo.svg" alt="X" width={1200} height={1227} />
+                  <Image
+                     src="/x-logo.svg"
+                     alt="X"
+                     width={1200}
+                     height={1227}
+                     priority
+                  />
                </a>
             </li>
          </ul>

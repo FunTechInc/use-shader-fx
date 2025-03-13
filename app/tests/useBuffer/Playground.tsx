@@ -29,7 +29,7 @@ export const Playground = () => {
       size,
       dpr: 1,
       texture: {
-         src: noise.texture,
+         src: mask,
          fit: "contain",
       },
    });
@@ -42,7 +42,7 @@ export const Playground = () => {
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
       basic.setValues,
       {
-         mixSrc: fluid.texture,
+         mixSrc: noise.texture,
          mixDst: noise.texture,
          mixMap: fluid.texture,
       }

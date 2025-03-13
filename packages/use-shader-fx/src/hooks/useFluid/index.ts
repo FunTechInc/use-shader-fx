@@ -8,19 +8,54 @@ import { useDivergence } from "./scenes/useDivergence";
 import { usePoisson } from "./scenes/usePoisson";
 import { usePressure } from "./scenes/usePressure";
 import { useOutput } from "./scenes/useOutput";
+import { BasicFxValues, FluidMaterials } from "../../materials";
+
+/*===============================================
+TODO
+- returnの修正
+===============================================*/
 
 export type FluidValues = {
-   /*===============================================
-	TODO * 
-	- 出力でcolormapとvelocitymapを選択できるみたいな仕組みにする
-		- colormapはBasicFxmaterialにするからカラーバランスいけるので、このhookに色は不要
-	- params
-	- velocity dissipation
-	- color dissipation (color map　/ pressure disippation的なこと？)　
-	===============================================*/
-};
+   pressureIterations?: number;
+   force?: number;
+} & BasicFxValues &
+   FluidMaterials.AdvectionValuesClient &
+   FluidMaterials.DivergenceValuesClient &
+   FluidMaterials.PoissonValuesClient &
+   FluidMaterials.PressureValuesClient &
+   FluidMaterials.SplatValuesClient;
 
 export type FluidProps = HooksProps & FluidValues;
+
+const removeUndefined = <T extends object>(obj: T): Partial<T> =>
+   Object.fromEntries(
+      Object.entries(obj).filter(([, value]) => value !== undefined)
+   ) as Partial<T>;
+
+const extractValues = (values: FluidValues) => {
+   const {
+      dissipation,
+      deltaTime,
+      bounce,
+      pressureIterations,
+      scale,
+      force,
+      ...basicFxValues
+   } = values;
+
+   return [
+      {
+         advection: removeUndefined({ dissipation, deltaTime }),
+         divergence: removeUndefined({ bounce, deltaTime }),
+         poisson: removeUndefined({ bounce }),
+         pressure: removeUndefined({ bounce, deltaTime }),
+         splat: removeUndefined({ scale }),
+         pressureIterations,
+         force,
+      },
+      basicFxValues,
+   ] as const;
+};
 
 /**
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
@@ -30,8 +65,16 @@ export const useFluid = ({
    dpr,
    fboAutoSetSize,
    renderTargetOptions,
-   ...values
-}: FluidProps): HooksReturn<FluidValues, any> => {
+   materialParameters,
+   ...uniformValues
+}: FluidProps): HooksReturn<
+   FluidValues,
+   any,
+   {
+      /** 速度場 */
+      velocity: THREE.Texture;
+   }
+> => {
    const _dpr = getDpr(dpr);
 
    // fbos
@@ -49,18 +92,29 @@ export const useFluid = ({
    const [outputFBO, updateOutputFBO] = useSingleFBO(fboProps);
 
    // scenes
+   const [extractedValues, basicFxValues] = extractValues(uniformValues);
+
    const SceneSize = { size, dpr: _dpr.shader };
    const advection = useAdvection(
       {
          ...SceneSize,
+         ...extractedValues.advection,
          velocity: velocity_0.texture,
       },
       updateVelocity_1
    );
-   const splat = useSplat(SceneSize, updateVelocity_1);
+   const splat = useSplat(
+      {
+         ...SceneSize,
+         ...extractedValues.splat,
+         force: extractedValues.force,
+      },
+      updateVelocity_1
+   );
    const divergence = useDivergence(
       {
          ...SceneSize,
+         ...extractedValues.divergence,
          velocity: velocity_1.texture,
       },
       updateDivergenceFBO
@@ -68,13 +122,16 @@ export const useFluid = ({
    const poisson = usePoisson(
       {
          ...SceneSize,
+         ...extractedValues.poisson,
          divergence: divergenceFBO.texture,
+         pressureIterations: extractedValues.pressureIterations,
       },
       updatePressureFBO
    );
    const pressure = usePressure(
       {
          ...SceneSize,
+         ...extractedValues.pressure,
          velocity: velocity_1.texture,
          pressure: pressureFBO.read.texture,
       },
@@ -83,39 +140,45 @@ export const useFluid = ({
    const output = useOutput(
       {
          ...SceneSize,
+         ...basicFxValues,
          src: velocity_0.texture,
       },
       updateOutputFBO
    );
 
-   const setValues = useCallback((newValues: FluidValues) => {
-      // splat.material.force = newValues.force;
-      // bounce の設定
-      divergence.material.uniforms.isBounce.value = false;
-      poisson.material.uniforms.isBounce.value = false;
-      pressure.material.uniforms.isBounce.value = false;
-   }, []);
+   const setValues = useCallback(
+      (newValues: FluidValues, needsUpdate: boolean = true) => {
+         const [_extractedValues, _basicFxValues] = extractValues(newValues);
 
-   // bounce の設定 一旦OFFに
-   divergence.material.uniforms.isBounce.value = false;
-   poisson.material.uniforms.isBounce.value = false;
-   pressure.material.uniforms.isBounce.value = false;
+         output.material.setUniformValues(_basicFxValues, needsUpdate);
+         advection.material.setUniformValues(_extractedValues.advection);
+         divergence.material.setUniformValues(_extractedValues.divergence);
+         poisson.material.setUniformValues(_extractedValues.poisson);
+         pressure.material.setUniformValues(_extractedValues.pressure);
+         splat.material.setUniformValues(_extractedValues.splat);
+         if (_extractedValues.pressureIterations) {
+            poisson.material.defines["ITERATIONS"] =
+               _extractedValues.pressureIterations;
+         }
+         if (_extractedValues.force) {
+            splat.material.defines["FORCE_BIAS"] = _extractedValues.force;
+         }
+      },
+      [output, advection, divergence, poisson, pressure, splat]
+   );
 
    const render = useCallback(
       (rootState: RootState, newValues?: FluidValues) => {
-         newValues && setValues(newValues);
+         newValues && setValues(newValues, false);
 
          [advection, splat, divergence, poisson, pressure, output].forEach(
-            (shader) => {
-               shader.render(rootState);
-            }
+            (shader) => shader?.render(rootState)
          );
 
          return outputFBO.texture;
       },
       [
          setValues,
-         // velocity_0.texture,
          outputFBO.texture,
          advection,
          splat,
@@ -130,6 +193,7 @@ export const useFluid = ({
       render,
       setValues,
       texture: outputFBO.texture,
+      velocity: velocity_0.texture,
       // material,
       // scene,
    };

@@ -5,6 +5,7 @@ import {
    FxMaterial,
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
+import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type SplatUniforms = {
    force: { value: THREE.Vector2 };
@@ -12,12 +13,13 @@ type SplatUniforms = {
    scale: { value: THREE.Vector2 };
 };
 
+export type SplatValues = NestUniformValues<SplatUniforms>;
+export type SplatValuesClient = Omit<SplatValues, "force" | "center">;
+
 export class SplatMaterial extends FxMaterial {
    static get type() {
       return "SplatMaterial";
    }
-
-   forceBias: number;
 
    uniforms!: SplatUniforms;
 
@@ -30,13 +32,11 @@ export class SplatMaterial extends FxMaterial {
          uniforms: {
             force: { value: new THREE.Vector2(0, 0) },
             center: { value: new THREE.Vector2(0, 0) },
-            scale: { value: new THREE.Vector2(60, 60) },
+            scale: { value: new THREE.Vector2(50, 50) },
          } as SplatUniforms,
       });
 
       this.type = SplatMaterial.type;
-
-      this.forceBias = 20;
 
       this.blending = THREE.AdditiveBlending;
    }

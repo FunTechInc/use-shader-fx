@@ -1,18 +1,16 @@
 const boxVarying = `
-	uniform bool isBounce;
+	uniform bool bounce;
 	varying vec2 vL;
 	varying vec2 vR;
 	varying vec2 vT;
 	varying vec2 vB;
 `;
 
-const getPosition = (isBounce: boolean = true) => {
+const getPosition = (bounce: boolean = true) => {
    return `
 		vec3 pos = position;
 		vec2 scale = ${
-         isBounce
-            ? "isBounce ? vec2(1.,1.) : 1.-texelSize*2."
-            : "1.-texelSize*2."
+         bounce ? "bounce ? vec2(1.,1.) : 1.-texelSize*2." : "1.-texelSize*2."
       };
 		pos.xy = pos.xy * scale;
 		vUv = vec2(.5)+(pos.xy)*.5;

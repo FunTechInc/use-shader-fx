@@ -1,12 +1,7 @@
-import * as THREE from "three";
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
 import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
-import {
-   BufferMaterial,
-   NoiseMaterial,
-   FluidMaterials,
-} from "../../../materials";
+import { FluidMaterials } from "../../../materials";
 
 export const useOutput = (
    {
@@ -16,8 +11,7 @@ export const useOutput = (
    }: {
       size: Size;
       dpr: number | false;
-      src: THREE.Texture;
-   },
+   } & FluidMaterials.OutputValues,
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
    const { scene, material, camera } = useSetup({

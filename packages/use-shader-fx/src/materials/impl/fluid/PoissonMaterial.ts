@@ -6,12 +6,19 @@ import {
    FxMaterialProps,
 } from "../../../materials/core/FxMaterial";
 import { DEFAULT_TEXTURE } from "../../../libs/constants";
+import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type PoissonUniforms = {
-   isBounce: { value: boolean };
+   bounce: { value: boolean };
    pressure: { value: THREE.Texture };
    divergence: { value: THREE.Texture };
 };
+
+export type PoissonValues = NestUniformValues<PoissonUniforms>;
+export type PoissonValuesClient = Omit<
+   PoissonValues,
+   "pressure" | "divergence"
+>;
 
 export class PoissonMaterial extends FxMaterial {
    static get type() {
@@ -20,21 +27,21 @@ export class PoissonMaterial extends FxMaterial {
 
    uniforms!: PoissonUniforms;
 
-   iteration: number;
-
-   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
+   constructor({
+      uniformValues,
+      materialParameters = {},
+   }: FxMaterialProps<PoissonValues>) {
       super({
          vertexShader: vertex.poisson,
          fragmentShader: fragment,
          uniformValues,
          materialParameters,
          uniforms: {
-            isBounce: { value: true },
+            bounce: { value: true },
             pressure: { value: DEFAULT_TEXTURE },
             divergence: { value: DEFAULT_TEXTURE },
          } as PoissonUniforms,
       });
       this.type = PoissonMaterial.type;
-      this.iteration = 32;
    }
 }
