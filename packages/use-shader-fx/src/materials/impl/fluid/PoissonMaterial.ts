@@ -27,9 +27,12 @@ export class PoissonMaterial extends FxMaterial {
 
    uniforms!: PoissonUniforms;
 
+   iterations: number;
+
    constructor({
       uniformValues,
       materialParameters = {},
+      customParameters,
    }: FxMaterialProps<PoissonValues>) {
       super({
          vertexShader: vertex.poisson,
@@ -42,6 +45,7 @@ export class PoissonMaterial extends FxMaterial {
             divergence: { value: DEFAULT_TEXTURE },
          } as PoissonUniforms,
       });
+      this.iterations = customParameters?.iterations ?? 32;
       this.type = PoissonMaterial.type;
    }
 }

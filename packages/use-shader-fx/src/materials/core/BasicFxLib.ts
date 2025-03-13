@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { mergeShaderCode } from "../../shaders/shaderUtils";
 import { DefaultUniforms } from "./FxMaterial";
 import {
    NestUniformValues,
@@ -261,24 +260,11 @@ export const BASICFX_VALUES: BasicFxUniformsUnique & BasicFxUniformsFitScale = {
    grayscale_threshold: { value: -1 },
 };
 
-export const BASICFX_SHADER_PREFIX = {
-   srcSystem: "#define USF_USE_SRC_SYSTEM",
-   mixSrc: "#define USF_USE_MIXSRC",
-   mixDst: "#define USF_USE_MIXDST",
-   levels: "#define USF_USE_LEVELS",
-   contrast: "#define USF_USE_CONTRAST",
-   colorBalance: "#define USF_USE_COLORBALANCE",
-   hsv: "#define USF_USE_HSV",
-   posterize: "#define USF_USE_POSTERIZE",
-   grayscale: "#define USF_USE_GRAYSCALE",
-};
-
 /*===============================================
 functions
 ===============================================*/
-export function handleUpdateFxShaderPrefixes(fxKey: FxKey): {
-   vertex: string;
-   fragment: string;
+export function handleUpdateFxDefines(fxKey: FxKey): {
+   [key: string]: any;
 } {
    const {
       mixSrc,
@@ -292,24 +278,15 @@ export function handleUpdateFxShaderPrefixes(fxKey: FxKey): {
       grayscale,
    } = fxKey;
    return {
-      vertex: mergeShaderCode([
-         srcSystem ? BASICFX_SHADER_PREFIX.srcSystem : "",
-         mixSrc ? BASICFX_SHADER_PREFIX.mixSrc : "",
-         mixDst ? BASICFX_SHADER_PREFIX.mixDst : "",
-         "\n",
-      ]),
-      fragment: mergeShaderCode([
-         srcSystem ? BASICFX_SHADER_PREFIX.srcSystem : "",
-         mixSrc ? BASICFX_SHADER_PREFIX.mixSrc : "",
-         mixDst ? BASICFX_SHADER_PREFIX.mixDst : "",
-         levels ? BASICFX_SHADER_PREFIX.levels : "",
-         contrast ? BASICFX_SHADER_PREFIX.contrast : "",
-         colorBalance ? BASICFX_SHADER_PREFIX.colorBalance : "",
-         hsv ? BASICFX_SHADER_PREFIX.hsv : "",
-         posterize ? BASICFX_SHADER_PREFIX.posterize : "",
-         grayscale ? BASICFX_SHADER_PREFIX.grayscale : "",
-         "\n",
-      ]),
+      USF_USE_SRC_SYSTEM: srcSystem,
+      USF_USE_MIXSRC: mixSrc,
+      USF_USE_MIXDST: mixDst,
+      USF_USE_LEVELS: levels,
+      USF_USE_CONTRAST: contrast,
+      USF_USE_COLORBALANCE: colorBalance,
+      USF_USE_HSV: hsv,
+      USF_USE_POSTERIZE: posterize,
+      USF_USE_GRAYSCALE: grayscale,
    };
 }
 

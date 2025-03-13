@@ -7,10 +7,6 @@ export class BasicFxMaterial extends FxMaterial {
    fxKey: BasicFxLib.FxKey;
 
    uniforms!: BasicFxLib.BasicFxUniforms;
-   vertexShaderCache: string;
-   vertexPrefixCache: string;
-   fragmentShaderCache: string;
-   fragmentPrefixCache: string;
    programCache: number;
 
    constructor({
@@ -29,10 +25,10 @@ export class BasicFxMaterial extends FxMaterial {
          ]),
       });
 
-      this.vertexShaderCache = this.vertexShader;
-      this.fragmentShaderCache = this.fragmentShader;
-      this.vertexPrefixCache = "";
-      this.fragmentPrefixCache = "";
+      this.defines = {
+         ...materialParameters?.defines,
+      };
+
       this.programCache = 0;
 
       this.fxKey = this._setupFxKey(this.uniforms);
@@ -43,7 +39,7 @@ export class BasicFxMaterial extends FxMaterial {
    private _setupFxShaders(vertexShader?: string, fragmentShader?: string) {
       if (!vertexShader && !fragmentShader) return;
 
-      this._updateFxShaderPrefixes();
+      this._updateFxDefines();
 
       const [vertex, fragment] = this._handleMergeShaderLib(
          vertexShader,
@@ -51,11 +47,6 @@ export class BasicFxMaterial extends FxMaterial {
       );
 
       super._setupShaders(vertex, fragment);
-
-      this.vertexShaderCache = this.vertexShader;
-      this.fragmentShaderCache = this.fragmentShader;
-
-      this._compileFxShaders();
    }
 
    /** SamplingFxMaterialで継承するため、handlerとして独立させる */
@@ -78,9 +69,8 @@ export class BasicFxMaterial extends FxMaterial {
       this.fxKey = newFxKey;
 
       if (_cache !== this.programCache) {
-         this._updateFxShaderPrefixes();
-         this._compileFxShaders();
-         this.version++; // same as this.needsUpdate = true;
+         this._updateFxDefines();
+         this.needsUpdate = true;
       }
    }
 
@@ -99,23 +89,15 @@ export class BasicFxMaterial extends FxMaterial {
       };
    }
 
-   private _compileFxShaders() {
-      this.vertexShader = this.vertexPrefixCache + this.vertexShaderCache;
-      this.fragmentShader = this.fragmentPrefixCache + this.fragmentShaderCache;
-   }
-
-   private _updateFxShaderPrefixes() {
-      const prefix = this._handleUpdateFxShaderPrefixes();
-      this.vertexPrefixCache = prefix.vertex;
-      this.fragmentPrefixCache = prefix.fragment;
+   private _updateFxDefines() {
+      Object.assign(this.defines, this._handleUpdateFxDefines());
    }
 
    /** SamplingFxMaterialで継承するため、handlerとして独立させる */
-   protected _handleUpdateFxShaderPrefixes(): {
-      vertex: string;
-      fragment: string;
+   protected _handleUpdateFxDefines(): {
+      [key: string]: any;
    } {
-      return BasicFxLib.handleUpdateFxShaderPrefixes(this.fxKey);
+      return BasicFxLib.handleUpdateFxDefines(this.fxKey);
    }
 
    protected _isContainsBasicFxValues(

@@ -157,11 +157,10 @@ export const useFluid = ({
          pressure.material.setUniformValues(_extractedValues.pressure);
          splat.material.setUniformValues(_extractedValues.splat);
          if (_extractedValues.pressureIterations) {
-            poisson.material.defines["ITERATIONS"] =
-               _extractedValues.pressureIterations;
+            poisson.material.iterations = _extractedValues.pressureIterations;
          }
          if (_extractedValues.force) {
-            splat.material.defines["FORCE_BIAS"] = _extractedValues.force;
+            splat.material.forceBias = _extractedValues.force;
          }
       },
       [output, advection, divergence, poisson, pressure, splat]

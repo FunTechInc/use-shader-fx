@@ -23,7 +23,13 @@ export class SplatMaterial extends FxMaterial {
 
    uniforms!: SplatUniforms;
 
-   constructor({ uniformValues, materialParameters = {} }: FxMaterialProps) {
+   forceBias: number;
+
+   constructor({
+      uniformValues,
+      materialParameters = {},
+      customParameters,
+   }: FxMaterialProps) {
       super({
          vertexShader: vertex.splat,
          fragmentShader: fragment,
@@ -37,6 +43,8 @@ export class SplatMaterial extends FxMaterial {
       });
 
       this.type = SplatMaterial.type;
+
+      this.forceBias = customParameters?.forceBias ?? 20;
 
       this.blending = THREE.AdditiveBlending;
    }

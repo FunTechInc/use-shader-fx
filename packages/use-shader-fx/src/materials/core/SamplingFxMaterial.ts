@@ -4,7 +4,7 @@ import {
    NestUniformValues,
    UniformParentKey,
 } from "../../shaders/uniformsUtils";
-import { mergeShaderCode, mergeShaderLib } from "../../shaders/shaderUtils";
+import { mergeShaderLib } from "../../shaders/shaderUtils";
 import { BasicFxMaterial } from "./BasicFxMaterial";
 import * as BasicFxLib from "./BasicFxLib";
 
@@ -33,10 +33,6 @@ const SAMPLINGFX_VALUES: SamplingFxUniformsUnique & SamplingFxUniformsFitScale =
       texture_fit: { value: "fill" },
       texture_fitScale: { value: new THREE.Vector2(1, 1) },
    };
-
-const SAMPLINGFX_SHADER_PREFIX = {
-   texture: "#define USF_USE_TEXTURE",
-};
 
 /**
  * SamplingFxMaterialでは常にtextureはtrueであるはずなので、BasicFxMaterialを継承して、srcSystemは常にtrueになるように、継承する
@@ -104,22 +100,11 @@ export class SamplingFxMaterial extends BasicFxMaterial {
       };
    }
 
-   protected _handleUpdateFxShaderPrefixes(): {
-      vertex: string;
-      fragment: string;
+   protected _handleUpdateFxDefines(): {
+      [key: string]: any;
    } {
-      const prefix = super._handleUpdateFxShaderPrefixes();
-      return {
-         vertex: mergeShaderCode([
-            prefix.vertex.trim(),
-            SAMPLINGFX_SHADER_PREFIX.texture,
-            "\n",
-         ]),
-         fragment: mergeShaderCode([
-            prefix.fragment.trim(),
-            SAMPLINGFX_SHADER_PREFIX.texture,
-            "\n",
-         ]),
-      };
+      return Object.assign(super._handleUpdateFxDefines(), {
+         USF_USE_TEXTURE: true,
+      });
    }
 }

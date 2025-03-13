@@ -21,17 +21,15 @@ export const usePoisson = (
       dpr,
       material: FluidMaterials.PoissonMaterial,
       uniformValues,
-      materialParameters: {
-         defines: {
-            ITERATIONS: pressureIterations || 32,
-         },
+      customParameters: {
+         iterations: pressureIterations,
       },
    });
 
    const render = useCallback(
       (rootState: RootState) => {
          const { gl } = rootState;
-         for (let i = 0; i < material.defines["ITERATIONS"]; i++) {
+         for (let i = 0; i < material.iterations; i++) {
             updateRenderTarget({ gl, scene, camera }, ({ read }) => {
                material.uniforms.pressure.value = read;
             });

@@ -26,10 +26,8 @@ export const useSplat = (
          height: 1,
       },
       uniformValues,
-      materialParameters: {
-         defines: {
-            FORCE_BIAS: force || 20,
-         },
+      customParameters: {
+         forceBias: force,
       },
    });
 
@@ -42,7 +40,7 @@ export const useSplat = (
 
          material.uniforms.center.value.copy(currentPointer);
          material.uniforms.force.value.copy(
-            diffPointer.multiplyScalar(material.defines["FORCE_BIAS"])
+            diffPointer.multiplyScalar(material.forceBias)
          );
 
          updateRenderTarget({ gl, scene, camera, clear: false });

@@ -17,6 +17,7 @@ export type DefaultUniforms = {
 export type FxMaterialProps<T = {}> = {
    uniformValues?: T;
    materialParameters?: THREE.ShaderMaterialParameters;
+   customParameters?: { [key: string]: any };
 } & ShaderWithUniforms;
 
 export class FxMaterial extends THREE.ShaderMaterial {
