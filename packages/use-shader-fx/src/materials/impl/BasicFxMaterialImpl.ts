@@ -58,13 +58,11 @@ export const createBasicFxMaterialImpl = ({
             fragmentShader: props?.fragmentShader || fragmentShader,
             uniformValues: props?.uniformValues,
             materialParameters: props?.materialParameters,
-            uniforms: THREE.UniformsUtils.merge([
-               {
-                  src: { value: null },
-               },
-               uniforms || {},
-               props?.uniforms || {},
-            ]),
+            uniforms: {
+               src: { value: null },
+               ...uniforms,
+               ...props?.uniforms,
+            },
          });
 
          this.type = BasicFxMaterialImpl.type;

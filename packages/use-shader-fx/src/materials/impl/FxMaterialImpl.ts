@@ -50,13 +50,11 @@ export const createFxMaterialImpl = ({
             fragmentShader: props?.fragmentShader || fragmentShader,
             uniformValues: props?.uniformValues,
             materialParameters: props?.materialParameters,
-            uniforms: THREE.UniformsUtils.merge([
-               {
-                  src: { value: DEFAULT_TEXTURE },
-               },
-               uniforms || {},
-               props?.uniforms || {},
-            ]),
+            uniforms: {
+               src: { value: DEFAULT_TEXTURE },
+               ...uniforms,
+               ...props?.uniforms,
+            },
          });
 
          this.type = FxMaterialImpl.type;

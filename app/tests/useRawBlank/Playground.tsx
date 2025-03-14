@@ -4,22 +4,15 @@ import * as THREE from "three";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import {
    createFxMaterialImpl,
-   FxMaterialImplValues,
-   useBuffer,
    useFluid,
-   useNoise,
    useRawBlank,
 } from "@/packages/use-shader-fx/src";
-import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
-import { useTexture } from "@react-three/drei";
 
 const FxMaterialImpl = createFxMaterialImpl();
 extend({ FxMaterialImpl });
 
 export const Playground = () => {
    const { size } = useThree();
-
-   const [mask] = useTexture(["/momo.jpg"]);
 
    const fluid = useFluid({
       size,
@@ -30,7 +23,7 @@ export const Playground = () => {
       size,
       dpr: 1,
       uniforms: {
-         src: { value: new THREE.Texture() },
+         src: { value: fluid.velocity },
       },
       vertexShader: `
 			void main() {
@@ -41,11 +34,17 @@ export const Playground = () => {
 			uniform sampler2D src;
 			void main() {
 				vec2 uv = vUv;
-				gl_FragColor = texture2D(src, uv);
+				vec2 vel = texture2D(src, uv).rg;
+				float len = length(vel);
+				vel = vel * 0.5 + 0.5;
+				
+				vec3 color = vec3(vel.x, vel.y, 1.0);
+				color = mix(vec3(1.0), color, len);
+
+				gl_FragColor = vec4(color,  1.);
 			}
 		`,
    });
-   rawShader.setValues({ src: fluid.texture });
 
    useFrame((state) => {
       rawShader.render(state);

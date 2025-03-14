@@ -32,17 +32,15 @@ export class FxMaterial extends THREE.ShaderMaterial {
    }: FxMaterialProps = {}) {
       super(materialParameters);
 
-      this.uniforms = THREE.UniformsUtils.merge([
-         {
-            resolution: { value: new THREE.Vector2() },
-            texelSize: { value: new THREE.Vector2() },
-            aspectRatio: { value: 0 },
-            maxAspect: { value: new THREE.Vector2() },
-            // 一部のFXでiterationをカウントする必要があるため
-            renderCount: { value: 0 },
-         },
-         uniforms || {},
-      ]) as DefaultUniforms;
+      this.uniforms = {
+         resolution: { value: new THREE.Vector2() },
+         texelSize: { value: new THREE.Vector2() },
+         aspectRatio: { value: 0 },
+         maxAspect: { value: new THREE.Vector2() },
+         // 一部のFXでiterationをカウントする必要があるため
+         renderCount: { value: 0 },
+         ...uniforms,
+      } as DefaultUniforms;
 
       this._setupShaders(vertexShader, fragmentShader);
 
