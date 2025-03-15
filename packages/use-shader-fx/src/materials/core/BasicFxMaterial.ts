@@ -19,10 +19,10 @@ export class BasicFxMaterial extends FxMaterial {
       super({
          uniformValues,
          materialParameters,
-         uniforms: THREE.UniformsUtils.merge([
-            BasicFxLib.BASICFX_VALUES,
-            uniforms || {},
-         ]),
+         uniforms: {
+            ...THREE.UniformsUtils.clone(BasicFxLib.BASICFX_VALUES),
+            ...uniforms,
+         },
       });
 
       this.defines = {

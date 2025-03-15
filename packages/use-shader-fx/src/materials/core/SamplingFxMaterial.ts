@@ -52,10 +52,10 @@ export class SamplingFxMaterial extends BasicFxMaterial {
          fragmentShader,
          uniformValues,
          materialParameters,
-         uniforms: THREE.UniformsUtils.merge([
-            SAMPLINGFX_VALUES,
-            uniforms || {},
-         ]),
+         uniforms: {
+            ...THREE.UniformsUtils.clone(SAMPLINGFX_VALUES),
+            ...uniforms,
+         },
       });
    }
 

@@ -7,3 +7,4 @@ export * from "./impl/noise/NoiseMaterial";
 export * from "./impl/rgbShift/RGBShiftMaterial";
 export * as FluidMaterials from "./impl/fluid";
 export * from "./impl/buffer/BufferMaterial";
+export * from "./impl/rawBlank/RawBlankMaterial";
