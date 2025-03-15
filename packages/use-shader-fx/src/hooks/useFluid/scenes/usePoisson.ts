@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { RootState, Size } from "../../types";
-import { SingleFBOUpdateFunction, useSetup } from "../../../utils";
+import { DoubleFBOUpdateFunction, useSetup } from "../../../utils";
 import { FluidMaterials } from "../../../materials";
 
 export const usePoisson = (
@@ -14,7 +14,7 @@ export const usePoisson = (
       dpr: number | false;
       pressureIterations?: number;
    } & Omit<FluidMaterials.PoissonValues, "pressure">,
-   updateRenderTarget: SingleFBOUpdateFunction
+   updateRenderTarget: DoubleFBOUpdateFunction
 ) => {
    const { scene, material, camera } = useSetup({
       size,
