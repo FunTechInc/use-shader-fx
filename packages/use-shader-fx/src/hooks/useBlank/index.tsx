@@ -79,7 +79,7 @@ export const useBlank = ({
    const render = useCallback(
       (rootState: RootState, newValues?: {} & BlankConfig) => {
          const { gl, clock, pointer } = rootState;
-         newValues && setValues(newValues);
+         if (newValues) setValues(newValues);
          material.uniforms.time.value = clock.getElapsedTime();
          material.uniforms.pointer.value.lerp(
             pointer,
