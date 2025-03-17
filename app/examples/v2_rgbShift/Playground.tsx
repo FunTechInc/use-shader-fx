@@ -76,7 +76,7 @@ export const Playground = () => {
       isUseShiftPowerSrcB: true,
       texture: {
          src: app,
-         fit: "contain",
+         fit: 2,
       },
    });
 

@@ -2,6 +2,7 @@
 
 	varying vec2 vMixDstCoverUv;
 	uniform sampler2D mixDst_src;
+	uniform int mixDst_fit;
 	
 	uniform bool mixDst_uv;
 	uniform int mixDst_uv_ch;

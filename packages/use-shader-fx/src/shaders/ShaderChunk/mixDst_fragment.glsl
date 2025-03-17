@@ -8,7 +8,7 @@
 				? calcMixMapPower(mixDst_uv_mixMap_src,mixDst_uv_range,mixDst_uv_mixMap_ch)
 				: calcMixCirclePower(mixDst_uv_position,mixDst_uv_radius,mixDst_uv_range)) * mixDst_uv_factor
 		: vec2(0.);
-	vec4 mixDstColor = fitTexture(mixDst_src, mixedUv);
+	vec4 mixDstColor = fitTexture(mixDst_src, mixedUv , mixDst_fit);
 
 	// color
 	usf_FragColor = mixDst_color 

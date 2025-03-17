@@ -18,6 +18,7 @@ import texture_pars_vertex from "./ShaderChunk/texture_pars_vertex.glsl";
 import texture_pars_fragment from "./ShaderChunk/texture_pars_fragment.glsl";
 import adjustments_fragment from "./ShaderChunk/adjustments_fragment.glsl";
 import adjustments_pars_fragment from "./ShaderChunk/adjustments_pars_fragment.glsl";
+import calcSrcUv from "./ShaderChunk/calcSrcUv.glsl";
 
 export type ShaderChunkTypes =
    | "default_pars_fragment"
@@ -39,7 +40,8 @@ export type ShaderChunkTypes =
    | "texture_pars_vertex"
    | "texture_vertex"
    | "adjustments_fragment"
-   | "adjustments_pars_fragment";
+   | "adjustments_pars_fragment"
+   | "calcSrcUv";
 
 export const ShaderChunk: { [K in ShaderChunkTypes]: string } = Object.freeze({
    plane_vertex,
@@ -62,4 +64,5 @@ export const ShaderChunk: { [K in ShaderChunkTypes]: string } = Object.freeze({
    texture_pars_fragment,
    adjustments_fragment,
    adjustments_pars_fragment,
+   calcSrcUv,
 });

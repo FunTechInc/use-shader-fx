@@ -73,7 +73,7 @@ export const useBlank = ({
          material.setUniformValues(newValues);
          if (pointerLerp) setConfig({ pointerLerp });
       },
-      [material]
+      [material, setConfig]
    );
 
    const render = useCallback(
@@ -91,7 +91,7 @@ export const useBlank = ({
          );
          return updateRenderTarget({ gl });
       },
-      [setValues, updateRenderTarget, material]
+      [setValues, updateRenderTarget, material, updateBackbuffer, confing]
    );
 
    return {

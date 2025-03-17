@@ -10,7 +10,8 @@ import type { Vec4Channel } from "../../libs/types";
 /*===============================================
 types
 ===============================================*/
-export type FitType = "fill" | "cover" | "contain";
+/** 0:`fill` 1:`cover` 2:`contain` */
+export type FitType = 0 | 1 | 2;
 
 export type BasicFxUniformsUnique = {
    /*===============================================
@@ -153,7 +154,7 @@ export const BASICFX_VALUES: BasicFxUniformsUnique & BasicFxUniformsFitScale = {
 	===============================================*/
    mixSrc: { value: false },
    mixSrc_src: { value: new THREE.Texture() },
-   mixSrc_fit: { value: "fill" },
+   mixSrc_fit: { value: 0 },
    mixSrc_fitScale: { value: new THREE.Vector2(1, 1) },
    // uv
    mixSrc_uv: { value: false },
@@ -192,7 +193,7 @@ export const BASICFX_VALUES: BasicFxUniformsUnique & BasicFxUniformsFitScale = {
 	===============================================*/
    mixDst: { value: false },
    mixDst_src: { value: new THREE.Texture() },
-   mixDst_fit: { value: "fill" },
+   mixDst_fit: { value: 0 },
    mixDst_fitScale: { value: new THREE.Vector2(1, 1) },
 
    // uv

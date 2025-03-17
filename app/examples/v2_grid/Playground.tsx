@@ -19,35 +19,34 @@ import {
    useTexture,
    useVideoTexture,
 } from "@react-three/drei";
-
 /*===============================================
 idea of useGrid
-
 セルカラーの可能性
 - カラフル
 - テクスチャ
 - spriteテクスチャ
 - 単純なカラー指定
 - マッピングに使うテクスチャのカラーをそのままレンダリング
-
 - サイズ調整map
 - 円モード
 - サイズ変更チャンネル
 - カラー変更チャンネル
 - alpha変更チャンネル
 - カラーマップとかアルファマップ的なの加えて、陰影つけられるように。古文を3dモデルでなんかやる。
-
 - shuffleCenterを追加する
-
 MEMO * floorでgrid化するときは、Nearestにしないといけない
+
+機能整理
+- texture （SamplingFxMaterial）
+- cellTexture
+- spriteTexture
+
 ===============================================*/
 
 const FxMaterialImpl = createFxMaterialImpl({
    uniforms: {
-      fitScale: { value: new THREE.Vector2(1) },
       celltxture: { value: null },
       spriteTexture: { value: null },
-      mixTexture: { value: null },
       time: { value: 0 },
       pointer: { value: new THREE.Vector2(0.5, 0.5) },
    },
@@ -55,10 +54,7 @@ const FxMaterialImpl = createFxMaterialImpl({
 	uniform sampler2D src;
 	uniform sampler2D celltxture;
 	uniform sampler2D spriteTexture;
-	uniform sampler2D mixTexture;
-	uniform vec2 fitScale;
 	uniform vec2 pointer;
-
 	uniform float time;
 
 	float u_lineWidth = .01; // 0.01 ~
@@ -111,16 +107,6 @@ const FxMaterialImpl = createFxMaterialImpl({
 		// cellIndex にオフセットを加算し、グリッド内にラップアラウンド
 		vec2 shuffled = cellIndex + offset;
 		return mod(shuffled, u_gridCount);
-	}
-
-	// MEMO * 本来これはbasicFXにすでにある関数
-	float calcMixCirclePower(vec2 center, float radius)
-	{
-		vec2 adjustedUV = (vUv - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
-		vec2 adjustedCenter = (center - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
-		float dist = length(adjustedUV - adjustedCenter);
-		float power = radius > 0.0 ? 1.0 - dist / radius : 1.0;
-		return clamp(power, 0.0, 1.0);
 	}
 
 	void main() {
@@ -193,16 +179,6 @@ const FxMaterialImpl = createFxMaterialImpl({
 		vec3 finalColor = u_isEdge ? mix(fillColor, u_gridColor, edge) : fillColor;
 		gl_FragColor = vec4(finalColor, 1.0);
 
-		// TODO * mixDst or SrcにこのFXを使うことで、以下の一部分だけgridにする、みたいな演出も可能になるようにする
-		float mixVal = smoothstep(0.55, 0.6, calcMixCirclePower(pointer,.5));
-		// float mixVal = step(0.5,  calcMixCirclePower(pointer,.4));
-		// float mixVal = smoothstep(0.2, 0.6, length(texture2D(mixTexture, vUv).rgb));
-		// float mixVal = step(0.5,  length(texture2D(mixTexture, vUv).rgb));
-		
-		vec3 outputColor = mix(texture2D(src, fittedUV).rgb,finalColor,mixVal);
-		
-		gl_FragColor = vec4(outputColor, 1.0);
-
 	}
 `,
 });
@@ -248,7 +224,6 @@ export const Playground = () => {
             ref={material}
             key={FxMaterialImpl.key}
             src={funkun}
-            // mixTexture={fluid.texture}
             fitScale={fitScale.current}
             celltxture={funkun}
             spriteTexture={sprite}

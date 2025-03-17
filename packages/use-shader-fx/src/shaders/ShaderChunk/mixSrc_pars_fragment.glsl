@@ -1,6 +1,7 @@
 #ifdef USF_USE_MIXSRC
 	varying vec2 vMixSrcCoverUv;
 	uniform sampler2D mixSrc_src;
+	uniform int mixSrc_fit;
 
 	uniform bool mixSrc_uv;
 	uniform int mixSrc_uv_ch;
