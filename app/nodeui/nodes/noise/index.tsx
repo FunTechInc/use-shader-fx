@@ -169,32 +169,44 @@ function NoiseNode({ data: {params} }: {data: {
         },
         [params,parametersEl]
     );
-    const updateBasicFxGUI = useGUI(setupGUI, "Parameters", parametersEl);
+  const updateBasicFxGUI = useGUI(setupGUI, "Parameters", parametersEl);
  
   return (
     <div className={s.node}>
-      <Handle type="target" position={Position.Left} />
       <div className={`${s.nodeHead} draghandle`}>
         Noise
       </div>
       <div className={s.nodeBody}>
         <div className={`${s.nodeSide} draghandle`}>
-          
+          <div className={s.nodeSideItem} style={{top: '25%'}}>
+            src
+          </div>
+          <div className={s.nodeSideItem} style={{top: '50%'}}>
+            mixSrc
+          </div>
+          <div className={s.nodeSideItem} style={{top: '75%'}}>
+            mixDest
+          </div>
+          <Handle id="src" type="target" position={Position.Left} className={s.nodeTargetEdge} style={{ top: '25%' }}  />
+          <Handle id="mixSrc" type="target" position={Position.Left} className={s.nodeTargetEdge} style={{ top: '50%' }}  />
+          <Handle id="mixDest" type="target" position={Position.Left} className={s.nodeTargetEdge} style={{ top: '75%' }}  />
         </div>
         <div className={s.nodeMain} ref={parametersEl}>
 
         </div>
+        <div className={`${s.nodeOut} draghandle`}>
+          Out
+          <Handle type="source" position={Position.Right} id="a" style={{
+            top: '50%',
+            transform: 'translate(50%, -50%)',
+          }} />          
+        </div>
       </div>
-      
-      <Handle type="source" position={Position.Right} id="a" />
-      {/* <Handle
-        type="source"
-        position={Position.Bottom}
-        id="b"
-        style={handleStyle}
-      /> */}
     </div>
   );
 }
+
+
+// https://reactflow.dev/examples/layout/elkjs-multiple-handles
 
 export default NoiseNode;

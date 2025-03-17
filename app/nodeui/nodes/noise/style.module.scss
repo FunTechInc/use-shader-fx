@@ -3,23 +3,56 @@
 .node {
     background-color: #333;
     border-radius: .4rem;
-    min-width: 18rem;
-    overflow: hidden;
+    min-width: 330px;
+    // overflow: hidden;
     color: #fff;
 }
 
 .nodeHead {    
     background-color: #B84F0A;
     padding: .3rem 1rem;
-}
-
-.nodeSide {
-    background-color: #222;    
-    height: 100%;
-    min-height: 10rem;
+    border-radius: .4rem .4rem 0 0;
 }
 
 .nodeBody {
+    width: 100%;
     display: grid;
-    grid-template-columns: 2.4rem 1fr;    
+    grid-template-columns: 1fr 240px 30px;
 }
+
+.nodeSide {
+    position: relative;
+    background-color: #222;    
+    height: 100%;
+    min-height: 10rem;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.nodeTargetEdge {
+    position: absolute;    
+    transform: translate(0%, -50%);    
+}
+
+.nodeSideItem {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding-left: 0.8rem;
+    transform: translateY(-60%);
+    line-height: 1;
+    font-size: 0.6rem;    
+}
+
+.nodeOut {
+    position: relative;
+    line-height: 1;
+    font-size: 0.6rem;
+    height: 100%;
+    display: flex;
+    align-items: center;   
+    justify-content: center;
+    text-align: center;
+    width: 100%;     
+}
+

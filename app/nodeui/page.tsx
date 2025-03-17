@@ -12,6 +12,8 @@ import {
    useEdgesState,
    addEdge,
    Node,  
+   applyNodeChanges,
+   applyEdgeChanges
 } from '@xyflow/react';
 
 
@@ -27,8 +29,17 @@ const initialNodes:Node[] = [
    // { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
    // { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
    { 
+      id: '2', 
+      position: { x: 100, y: 0 },
+      type: 'noiseNode',
+      dragHandle: '.draghandle',
+      data: { 
+         params: {...NoiseInitParams}
+      }
+   },
+   { 
       id: '3', 
-      position: { x: 0, y: 200 },
+      position: { x: 500, y: 0 },
       type: 'noiseNode',
       dragHandle: '.draghandle',
       data: { 
@@ -36,7 +47,7 @@ const initialNodes:Node[] = [
       }
    },
  ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialEdges = [{ id: 'e2-3', source: '2', target: '3' }];
 
 
 export default function Page() {
@@ -44,8 +55,22 @@ export default function Page() {
    // 各ノードのパラメータはzustandで管理
    // それをedgesとnodesが変更した時にコンパイルする
 
-   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+   const [nodes, setNodes] = useNodesState(initialNodes);
+   const [edges, setEdges] = useEdgesState(initialEdges);
+
+   const onNodesChange = useCallback(
+      (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+      [setNodes],
+    );
+    const onEdgesChange = useCallback(
+      (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+      [setEdges],
+    );
+    const onConnect = useCallback(
+      (connection) => setEdges((eds) => addEdge(connection, eds)),
+      [setEdges],
+    );  
+   
   
    return (
       <div className={s.page}>
@@ -56,7 +81,7 @@ export default function Page() {
             onEdgesChange={onEdgesChange}
             nodeTypes={nodeTypes}
             fitView
-            // onConnect={onConnect}
+            onConnect={onConnect}
          />
       </div>
    )
