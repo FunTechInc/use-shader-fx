@@ -31,9 +31,12 @@ export default function RootLayout({
             backgroundRepeat: "repeat",
             touchAction: "none",
             userSelect: "none",
+            height: "100svh",
          }}>
          <body className={oswald.className}>
-            {children}
+            <div style={{ position: "fixed", width: "100%", height: "100%" }}>
+               {children}
+            </div>
             <UI />
          </body>
       </html>

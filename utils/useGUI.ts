@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, RefObject } from "react";
 import GUI from "lil-gui";
 
-export const useGUI = (setupGUI: (gui: GUI) => void, title?: string) => {
+export const useGUI = (setupGUI: (gui: GUI) => void, title?: string, container?: RefObject<HTMLDivElement>) => {
    const [gui, setGUIState] = useState<GUI | null>(null);
 
    useEffect(() => {
@@ -10,6 +10,8 @@ export const useGUI = (setupGUI: (gui: GUI) => void, title?: string) => {
             closeFolders: true,
             width: 240,
             title,
+            autoPlace: container?.current ? false : true,
+            container: container?.current || undefined,            
          });
          setGUIState(newGui);
          setupGUI(newGui);
@@ -20,7 +22,7 @@ export const useGUI = (setupGUI: (gui: GUI) => void, title?: string) => {
             setGUIState(null);
          }
       };
-   }, [gui, setupGUI, title]);
+   }, [gui, setupGUI, title, container]);
 
    const updateDisplays = useCallback(() => {
       gui?.folders.forEach((folder) =>

@@ -15,6 +15,7 @@ export type RawBlankProps = HooksProps & ShaderWithUniforms;
    renderCount: { value: number };
 	はデフォルトである
 	あとvaringでvUvつかえる
+	
  * @link https://github.com/FunTechInc/use-shader-fx?tab=readme-ov-file#usage
  */
 export const useRawBlank = ({

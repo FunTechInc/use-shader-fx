@@ -39,7 +39,7 @@ export class OutputMaterial extends BasicFxMaterial {
 					${ShaderLib.basicFx_fragment_begin}
 
 					vec4 usf_FragColor = vec4(length(texture2D(src,usf_Uv).rg));
-					
+
 					${ShaderLib.basicFx_fragment_end}
 
 					gl_FragColor = usf_FragColor;
