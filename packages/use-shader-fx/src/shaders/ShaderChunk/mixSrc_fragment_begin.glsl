@@ -1,6 +1,6 @@
 #ifdef USF_USE_MIXSRC
 
-	vec4 mixSrcColor = fitTexture(mixSrc_src, vMixSrcCoverUv);
+	vec4 mixSrcColor = fitTexture(mixSrc_src, vMixSrcCoverUv, mixSrc_fit);
 
 	usf_Uv += mixSrc_uv 
 		? (mixSrc_uv_offset + (vec2(mixSrcColor[mixSrc_uv_ch]) * 2. - 1.)) * 

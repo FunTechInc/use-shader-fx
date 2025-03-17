@@ -135,12 +135,12 @@ export class BasicFxMaterial extends FxMaterial {
          srcAspectRatio = baseAspectRatio;
       }
 
-      if (fitType === "cover") {
+      if (fitType === 1) {
          fitScale.set(
             Math.min(baseAspectRatio / srcAspectRatio, 1),
             Math.min(srcAspectRatio / baseAspectRatio, 1)
          );
-      } else if (fitType === "contain") {
+      } else if (fitType === 2) {
          fitScale.set(
             Math.max(baseAspectRatio / srcAspectRatio, 1),
             Math.max(srcAspectRatio / baseAspectRatio, 1)

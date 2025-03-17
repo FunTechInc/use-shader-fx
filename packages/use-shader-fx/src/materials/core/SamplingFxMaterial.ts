@@ -7,6 +7,7 @@ import {
 import { mergeShaderLib } from "../../shaders/shaderUtils";
 import { BasicFxMaterial } from "./BasicFxMaterial";
 import * as BasicFxLib from "./BasicFxLib";
+import { DEFAULT_TEXTURE } from "../../libs/constants";
 
 /*===============================================
 types
@@ -29,8 +30,8 @@ constants
 const SAMPLINGFX_VALUES: SamplingFxUniformsUnique & SamplingFxUniformsFitScale =
    {
       texture: { value: true },
-      texture_src: { value: new THREE.Texture() },
-      texture_fit: { value: "fill" },
+      texture_src: { value: DEFAULT_TEXTURE },
+      texture_fit: { value: 0 },
       texture_fitScale: { value: new THREE.Vector2(1, 1) },
    };
 

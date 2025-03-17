@@ -10,7 +10,7 @@ import {
 import { useCallback } from "react";
 
 const BASICFX_CONFIG: BasicFxUniformsUnique = BASICFX_VALUES;
-const FIT_TYPE: FitType[] = ["fill", "cover", "contain"];
+const FIT_TYPE = ["fill", "cover", "contain"];
 
 export const useBasicFxGUI = (
    setValues: (v: BasicFxValues) => void,
@@ -35,7 +35,9 @@ export const useBasicFxGUI = (
          mixSrc
             .add(BASICFX_CONFIG.mixSrc_fit, "value", FIT_TYPE)
             .name("fit")
-            .onChange((v: FitType) => setValues({ mixSrc: { fit: v } }));
+            .onChange((v: string) =>
+               setValues({ mixSrc: { fit: FIT_TYPE.indexOf(v) as FitType } })
+            );
          // uv
          const mixSrcUV = mixSrc.addFolder("uv");
          mixSrcUV.add(BASICFX_CONFIG.mixSrc_uv, "value").name("enabled");
@@ -169,7 +171,9 @@ export const useBasicFxGUI = (
          mixDst
             .add(BASICFX_CONFIG.mixDst_fit, "value", FIT_TYPE)
             .name("fit")
-            .onChange((v: FitType) => setValues({ mixDst: { fit: v } }));
+            .onChange((v: string) =>
+               setValues({ mixDst: { fit: FIT_TYPE.indexOf(v) as FitType } })
+            );
 
          // uv
          const mixDstUV = mixDst.addFolder("uv");

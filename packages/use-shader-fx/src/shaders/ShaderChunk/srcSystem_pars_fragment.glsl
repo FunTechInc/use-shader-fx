@@ -1,5 +1,7 @@
 #ifdef USF_USE_SRC_SYSTEM
 
+	#usf <calcSrcUv>
+
 	float calcMixCirclePower(vec2 center, float radius, vec2 range)
 	{
 		vec2 adjustedUV = (vUv - 0.5) * vec2(aspectRatio, 1.0) + 0.5;
@@ -15,9 +17,11 @@
 		return smoothstep(range.x,range.y, texture2D(map, vUv)[ch]);
 	}
 
-	vec4 fitTexture(sampler2D src , vec2 uv)
+	vec4 fitTexture(sampler2D src , vec2 uv, int fitType)
 	{
-		return mix(vec4(0.), texture2D(src, uv), step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0));
+		// fitTypeがcontainの場合だけ範囲外を透過する
+		float a = fitType == 2 ? step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0) : 1.;
+		return mix(vec4(0.), texture2D(src, uv), a);
 	}
 
 #endif

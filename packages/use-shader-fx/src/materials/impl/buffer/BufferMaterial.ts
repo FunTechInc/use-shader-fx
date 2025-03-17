@@ -34,18 +34,16 @@ export class BufferMaterial extends SamplingFxMaterial {
 				}
 			`,
          fragmentShader: `
-			
 				void main() {
 					vec2 usf_Uv = vTextureCoverUv;
 
 					${ShaderLib.basicFx_fragment_begin}
 
-					vec4 usf_FragColor = fitTexture(texture_src,usf_Uv);
+					vec4 usf_FragColor = fitTexture(texture_src,usf_Uv,texture_fit);
 
 					${ShaderLib.basicFx_fragment_end}
 
 					gl_FragColor = usf_FragColor;
-
 				}
 			`,
          uniformValues,
