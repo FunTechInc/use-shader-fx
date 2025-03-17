@@ -13,9 +13,13 @@
     padding: .3rem 1rem;
 }
 
+.nodeSide {
+    background-color: #222;    
+    height: 100%;
+    min-height: 10rem;
+}
+
 .nodeBody {
     display: grid;
-    grid-template-columns: 2.4rem 1fr;
-    background-color: #222;
-    height: 18.4rem;
+    grid-template-columns: 2.4rem 1fr;    
 }
