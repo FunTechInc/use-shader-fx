@@ -27,7 +27,7 @@ export const Playground = () => {
 
    const fluid = useFluid({
       size,
-      dpr: 0.25,
+      dpr: 0.24,
    });
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
