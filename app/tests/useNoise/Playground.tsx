@@ -1,17 +1,10 @@
 "use client";
 
-import { useFrame, useThree, extend } from "@react-three/fiber";
-import {
-   createFxMaterialImpl,
-   FxMaterialImplValues,
-   useFluid,
-   useNoise,
-} from "@/packages/use-shader-fx/src";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useFluid, useNoise } from "@/packages/use-shader-fx/src";
 import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
 import { useTexture } from "@react-three/drei";
-
-const FxMaterialImpl = createFxMaterialImpl();
-extend({ FxMaterialImpl });
+import { Output } from "../_utils/Output";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -47,10 +40,5 @@ export const Playground = () => {
       updateBasicFxGUI();
    });
 
-   return (
-      <mesh>
-         <planeGeometry args={[2, 2]} />
-         <fxMaterialImpl key={FxMaterialImpl.key} src={noise.texture} />
-      </mesh>
-   );
+   return <Output src={noise.texture} />;
 };

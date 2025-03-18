@@ -25,15 +25,11 @@ export class DivergenceMaterial extends FxMaterial {
 
    uniforms!: DivergenceUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<DivergenceValues>) {
+   constructor(props: FxMaterialProps<DivergenceValues>) {
       super({
+         ...props,
          vertexShader: vertex.main,
          fragmentShader: fragment,
-         uniformValues,
-         materialParameters,
          uniforms: {
             bounce: { value: true },
             velocity: { value: DEFAULT_TEXTURE },

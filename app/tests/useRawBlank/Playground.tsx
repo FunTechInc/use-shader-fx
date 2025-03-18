@@ -1,15 +1,8 @@
 "use client";
 
-import * as THREE from "three";
-import { useFrame, useThree, extend } from "@react-three/fiber";
-import {
-   createFxMaterialImpl,
-   useFluid,
-   useRawBlank,
-} from "@/packages/use-shader-fx/src";
-
-const FxMaterialImpl = createFxMaterialImpl();
-extend({ FxMaterialImpl });
+import { useFrame, useThree } from "@react-three/fiber";
+import { useFluid, useRawBlank } from "@/packages/use-shader-fx/src";
+import { Output } from "../_utils/Output";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -51,10 +44,5 @@ export const Playground = () => {
       fluid.render(state);
    });
 
-   return (
-      <mesh>
-         <planeGeometry args={[2, 2]} />
-         <fxMaterialImpl key={FxMaterialImpl.key} src={rawShader.texture} />
-      </mesh>
-   );
+   return <Output src={rawShader.texture} />;
 };

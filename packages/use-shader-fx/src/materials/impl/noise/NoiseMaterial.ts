@@ -42,13 +42,9 @@ export class NoiseMaterial extends BasicFxMaterial {
 
    uniforms!: NoiseUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<NoiseValues> = {}) {
+   constructor(props: FxMaterialProps<NoiseValues> = {}) {
       super({
-         uniformValues,
-         materialParameters,
+         ...props,
          vertexShader: noiseVertex,
          fragmentShader: noiseFragment,
          uniforms: {

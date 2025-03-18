@@ -41,18 +41,9 @@ const SAMPLINGFX_VALUES: SamplingFxUniformsUnique & SamplingFxUniformsFitScale =
 export class SamplingFxMaterial extends BasicFxMaterial {
    uniforms!: SamplingFxUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-      uniforms,
-      vertexShader,
-      fragmentShader,
-   }: FxMaterialProps<SamplingFxValues>) {
+   constructor({ uniforms, ...rest }: FxMaterialProps<SamplingFxValues>) {
       super({
-         vertexShader,
-         fragmentShader,
-         uniformValues,
-         materialParameters,
+         ...rest,
          uniforms: {
             ...THREE.UniformsUtils.clone(SAMPLINGFX_VALUES),
             ...uniforms,

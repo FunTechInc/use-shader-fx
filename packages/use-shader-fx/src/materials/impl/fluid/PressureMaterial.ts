@@ -29,15 +29,11 @@ export class PressureMaterial extends FxMaterial {
 
    uniforms!: PressureUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<PressureValues>) {
+   constructor(props: FxMaterialProps<PressureValues>) {
       super({
+         ...props,
          vertexShader: vertex.main,
          fragmentShader: fragment,
-         uniformValues,
-         materialParameters,
          uniforms: {
             bounce: { value: true },
             deltaTime: { value: DELTA_TIME },

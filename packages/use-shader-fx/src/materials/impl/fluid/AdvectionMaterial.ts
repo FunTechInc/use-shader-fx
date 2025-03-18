@@ -25,15 +25,11 @@ export class AdvectionMaterial extends FxMaterial {
 
    uniforms!: AdvectionUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<AdvectionValues>) {
+   constructor(props: FxMaterialProps<AdvectionValues>) {
       super({
+         ...props,
          vertexShader: vertex.advection,
          fragmentShader: fragment,
-         uniformValues,
-         materialParameters,
          uniforms: {
             dissipation: { value: 0.99 },
             velocity: { value: DEFAULT_TEXTURE },

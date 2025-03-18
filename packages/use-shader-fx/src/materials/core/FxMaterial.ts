@@ -5,6 +5,7 @@ import {
    ShaderWithUniforms,
 } from "../../shaders/uniformsUtils";
 import { warn } from "../../utils";
+import { Size } from "../../hooks/types";
 
 export type DefaultUniforms = {
    resolution: { value: THREE.Vector2 };
@@ -50,8 +51,7 @@ export class FxMaterial extends THREE.ShaderMaterial {
    }
 
    /** This is updated in useFxScene */
-   public updateResolution(resolution: THREE.Vector2) {
-      const { width, height } = resolution;
+   public updateResolution(width: number, height: number) {
       const maxAspect = Math.max(width, height);
       this.uniforms.resolution.value.set(width, height);
       this.uniforms.texelSize.value.set(1 / width, 1 / height);
