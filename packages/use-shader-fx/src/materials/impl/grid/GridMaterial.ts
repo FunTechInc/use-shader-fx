@@ -40,13 +40,9 @@ export class GridMaterial extends SamplingFxMaterial {
 
    uniforms!: GridUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<GridValues>) {
+   constructor(props: FxMaterialProps<GridValues>) {
       super({
-         uniformValues,
-         materialParameters,
+         ...props,
          vertexShader: gridVertex,
          fragmentShader: gridFragment,
          uniforms: {

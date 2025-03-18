@@ -29,16 +29,11 @@ export class PoissonMaterial extends FxMaterial {
 
    iterations: number;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-      customParameters,
-   }: FxMaterialProps<PoissonValues>) {
+   constructor({ customParameters, ...rest }: FxMaterialProps<PoissonValues>) {
       super({
+         ...rest,
          vertexShader: vertex.poisson,
          fragmentShader: fragment,
-         uniformValues,
-         materialParameters,
          uniforms: {
             bounce: { value: true },
             pressure: { value: DEFAULT_TEXTURE },

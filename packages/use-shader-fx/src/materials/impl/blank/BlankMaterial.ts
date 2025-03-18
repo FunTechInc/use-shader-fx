@@ -26,9 +26,9 @@ export class BlankMaterial extends FxMaterial {
    uniforms!: BlankUniforms;
 
    constructor({
-      uniforms,
       vertexShader,
       fragmentShader,
+      uniforms,
       ...rest
    }: FxMaterialProps) {
       super({

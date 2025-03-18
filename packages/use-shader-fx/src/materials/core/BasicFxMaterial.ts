@@ -10,15 +10,13 @@ export class BasicFxMaterial extends FxMaterial {
    programCache: number;
 
    constructor({
-      uniformValues,
-      materialParameters = {},
       uniforms,
       vertexShader,
       fragmentShader,
+      ...rest
    }: FxMaterialProps<BasicFxLib.BasicFxValues> = {}) {
       super({
-         uniformValues,
-         materialParameters,
+         ...rest,
          uniforms: {
             ...THREE.UniformsUtils.clone(BasicFxLib.BASICFX_VALUES),
             ...uniforms,
@@ -26,7 +24,7 @@ export class BasicFxMaterial extends FxMaterial {
       });
 
       this.defines = {
-         ...materialParameters?.defines,
+         ...rest?.materialParameters?.defines,
       };
 
       this.programCache = 0;
@@ -184,12 +182,13 @@ export class BasicFxMaterial extends FxMaterial {
    protected _defineUniformAccessors(onSet?: () => void) {
       super._defineUniformAccessors(() => {
          this._updateFxShaders();
+         this._updateFitScale();
          onSet?.();
       });
    }
 
-   public updateResolution(resolution: THREE.Vector2): void {
-      super.updateResolution(resolution);
+   public updateResolution(width: number, height: number): void {
+      super.updateResolution(width, height);
       this._updateFitScale();
    }
 }

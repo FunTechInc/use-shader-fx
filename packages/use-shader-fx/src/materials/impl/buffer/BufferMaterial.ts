@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import {
    SamplingFxUniforms,
    SamplingFxValues,
@@ -10,6 +11,14 @@ import {
 } from "../../../shaders/uniformsUtils";
 import { ShaderLib } from "../../../shaders/ShaderLib";
 
+/*===============================================
+memo
+
+- BufferMaterialはMaterialをそのまま、r3fでextendしてコンポーネントとして使うケースが考えられる
+ので、keyを持たせる
+- また、globalで型定義する
+===============================================*/
+
 type BufferUniforms = SamplingFxUniforms;
 
 export type BufferValues = NestUniformValues<BufferUniforms> & SamplingFxValues;
@@ -17,17 +26,17 @@ export type BufferValues = NestUniformValues<BufferUniforms> & SamplingFxValues;
 export type BufferMaterialProps = ExtractUniformValues<BufferUniforms>;
 
 export class BufferMaterial extends SamplingFxMaterial {
+   public static readonly key: string = THREE.MathUtils.generateUUID();
+
    static get type() {
       return "BufferMaterial";
    }
 
    uniforms!: BufferUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<BufferValues>) {
+   constructor(props: FxMaterialProps<BufferValues> = {}) {
       super({
+         ...props,
          vertexShader: `
 				void main() {
 					${ShaderLib.plane_vertex}
@@ -46,10 +55,19 @@ export class BufferMaterial extends SamplingFxMaterial {
 					gl_FragColor = usf_FragColor;
 				}
 			`,
-         uniformValues,
-         materialParameters,
       });
 
       this.type = BufferMaterial.type;
+   }
+}
+
+declare global {
+   namespace JSX {
+      interface IntrinsicElements {
+         bufferMaterial: BufferMaterialProps & {
+            ref?: React.RefObject<BufferMaterial>;
+            key?: React.Key;
+         };
+      }
    }
 }

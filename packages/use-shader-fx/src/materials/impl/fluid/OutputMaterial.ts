@@ -19,13 +19,9 @@ export class OutputMaterial extends BasicFxMaterial {
 
    uniforms!: OutputUniforms;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-   }: FxMaterialProps<OutputValues> = {}) {
+   constructor(props: FxMaterialProps<OutputValues> = {}) {
       super({
-         uniformValues,
-         materialParameters,
+         ...props,
          vertexShader: `
 				void main() {
 					${ShaderLib.plane_vertex}
