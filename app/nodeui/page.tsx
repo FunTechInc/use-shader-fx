@@ -1,6 +1,8 @@
 "use client";
 import s from './index.module.scss';
 import '@xyflow/react/dist/style.css';
+// import { useShallow } from 'zustand/s';
+
 
 import React,{
    useCallback,
@@ -16,18 +18,12 @@ import {
    applyEdgeChanges
 } from '@xyflow/react';
 
-
-// Nodes
-// Noise
 import NoiseNode, {NoiseInitParams} from './nodes/noise'
 
 const nodeTypes = { noiseNode: NoiseNode };
 
 
-// https://reactflow.dev/api-reference/types/node
-const initialNodes:Node[] = [
-   // { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-   // { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
+const initialNodes:Node[] = [   
    { 
       id: '2', 
       position: { x: 100, y: 0 },
