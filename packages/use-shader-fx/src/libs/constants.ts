@@ -17,22 +17,22 @@ export const DEFAULT_TEXTURE = new THREE.DataTexture(
 
 export const APP_NAME = "use-shader-fx";
 
-export const THREE_TYPES = new Set([
-   THREE.Color,
-   THREE.Matrix3,
-   THREE.Matrix4,
-   THREE.Vector2,
-   THREE.Vector3,
-   THREE.Vector4,
-   THREE.Texture,
-   THREE.Quaternion,
-   THREE.WebGLRenderTarget,
-   THREE.Euler,
-   THREE.BufferGeometry,
-   THREE.Material,
-   THREE.Camera,
-   THREE.Light,
-   THREE.Object3D,
-   THREE.Bone,
-   THREE.VideoTexture,
-]);
+export const THREE_FLAG_PROPS = [
+   "isColor",
+   "isMatrix3",
+   "isMatrix4",
+   "isVector2",
+   "isVector3",
+   "isVector4",
+   "isTexture",
+   "isQuaternion",
+   "isWebGLRenderTarget",
+   "isEuler",
+   "isBufferGeometry",
+   "isMaterial",
+   "isCamera",
+   "isLight",
+   "isObject3D",
+   "isBone",
+   "isVideoTexture",
+];

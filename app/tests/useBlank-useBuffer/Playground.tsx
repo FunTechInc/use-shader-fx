@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useFluid, useBuffer, useBlank } from "@/packages/use-shader-fx/src";
 import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
 import { useTexture } from "@react-three/drei";
-import { Output } from "../_utils/Output";
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -103,5 +103,5 @@ export const Playground = () => {
       updateBasicFxGUI();
    });
 
-   return <Output src={basic.texture} />;
+   return <TextureRenderer src={basic.texture} />;
 };

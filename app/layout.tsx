@@ -1,8 +1,12 @@
 import "the-new-css-reset/css/reset.css";
-import "./main.css";
+import "@/css/reset.css";
+import "@/css/global.scss";
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
-import { UI } from "./_ui";
+import { UI } from "./_components/UI";
+import { userAgent } from "next/server";
+import { headers } from "next/headers";
+import { StableScroller } from "@funtech-inc/spice";
 
 const oswald = Oswald({
    subsets: ["latin"],
@@ -14,29 +18,19 @@ const metadata: Metadata = {
    description: "⚡️ More FXs, Less GLSL",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
    children,
 }: {
    children: React.ReactNode;
 }) {
+   const headersList = await headers();
+   const { device } = userAgent({ headers: headersList });
    return (
-      <html
-         lang="en"
-         style={{
-            overflow: "hidden",
-            backgroundColor: "#000",
-            backgroundImage: "url(/bg.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "repeat",
-            touchAction: "none",
-            userSelect: "none",
-            height: "100svh",
-         }}>
+      <html lang="en">
          <body className={oswald.className}>
-            <div style={{ position: "fixed", width: "100%", height: "100%" }}>
-               {children}
-            </div>
+            <StableScroller active={device.type === "mobile"}>
+               <main>{children}</main>
+            </StableScroller>
             <UI />
          </body>
       </html>

@@ -2,7 +2,7 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useFluid, useRawBlank } from "@/packages/use-shader-fx/src";
-import { Output } from "../_utils/Output";
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -44,5 +44,5 @@ export const Playground = () => {
       fluid.render(state);
    });
 
-   return <Output src={rawShader.texture} />;
+   return <TextureRenderer src={rawShader.texture} />;
 };

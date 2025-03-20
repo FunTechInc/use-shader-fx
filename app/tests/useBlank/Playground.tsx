@@ -3,7 +3,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useBlank } from "@/packages/use-shader-fx/src";
 import { useTexture } from "@react-three/drei";
-import { Output } from "../_utils/Output";
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 /*===============================================
 vibe coded by ShaderGPT
@@ -80,5 +80,5 @@ export const Playground = () => {
       blank.render(state);
    });
 
-   return <Output src={blank.texture} />;
+   return <TextureRenderer src={blank.texture} />;
 };

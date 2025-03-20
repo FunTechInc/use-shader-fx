@@ -1,0 +1,205 @@
+@use "sass:math";
+@use "./easing.scss" as *;
+
+/*===============================================
+designRoot
+===============================================*/
+$designRoot: 1;
+// device
+$sm-device: 560px;
+$md-device: 960px;
+$lg-device: 1200px;
+$lg-design-width: 1440;
+$md-design-width: 750;
+$sm-design-width: 375;
+$lg-design-height: 780;
+$sm-design-height: 812;
+$mobile-design-width: 750;
+
+/*===============================================
+unit
+===============================================*/
+$unit: inherit;
+
+//unit
+@if $designRoot==1 {
+   $unit: rem;
+} @else {
+   $unit: px;
+}
+
+/*===============================================
+duration
+===============================================*/
+$duration-strong: 1.2s;
+$duration-strongDecelerate: 1s;
+$duration-strongAccelerate: 0.8s;
+$duration-emphasized: 0.5s;
+$duration-emphasizedDecelerate: 0.4s;
+$duration-emphasizedAccelerate: 0.2s;
+$duration-standard: 0.3s;
+$duration-standardDecelerate: 0.25s;
+$duration-standardAccelerate: 0.2s;
+
+/*===============================================
+spacing
+===============================================*/
+$spacing-0: if($designRoot==1, 0, 0);
+$spacing-half: if($designRoot==1, 8rem, 8px);
+$spacing-mini: if($designRoot==1, 12rem, 12px);
+$spacing-1: if($designRoot==1, 16rem, 16px);
+$spacing-2: if($designRoot==1, 24rem, 24px);
+$spacing-3: if($designRoot==1, 32rem, 32px);
+$spacing-4: if($designRoot==1, 40rem, 40px);
+$spacing-4half: if($designRoot==1, 48rem, 48px);
+$spacing-5: if($designRoot==1, 56rem, 56px);
+$spacing-6: if($designRoot==1, 64rem, 64px);
+$spacing-7: if($designRoot==1, 72rem, 72px);
+$spacing-8: if($designRoot==1, 80rem, 80px);
+$spacing-8half: if($designRoot==1, 88rem, 88px);
+$spacing-9: if($designRoot==1, 96rem, 96px);
+$spacing-10: if($designRoot==1, 104rem, 104px);
+$spacing-11: if($designRoot==1, 112rem, 112px);
+$spacing-12: if($designRoot==1, 120rem, 120px);
+
+/*===============================================
+inner
+===============================================*/
+$inner-outer: 1360rem;
+$inner-wide: 1280rem;
+$inner-default: 1128rem;
+$inner-narrow: 960rem;
+$inner-padding: $spacing-3;
+
+/*===============================================
+font
+===============================================*/
+// line-height @include lineHeightCrop($leading-loose);
+$leading-none: 1 !default;
+$leading-x-tight: 1.1 !default;
+$leading-tight: 1.3 !default;
+$leading-snug: 1.6 !default;
+$leading-normal: 1.7 !default;
+$leading-relaxed: 1.8 !default;
+$leading-loose: 2 !default;
+$leading-x-loose: 2.2 !default;
+
+/*===============================================
+color
+===============================================*/
+//brandColor
+$color-line: #00c300;
+$color-yahoo: #ff0027;
+$color-twitter: #1da1f2;
+$color-facebook: #3b5998;
+$color-insta: #e1306c;
+$FunTech: #b84f0a;
+
+//colorRegulation
+$color-txt: #ffffff;
+$color-key: #b84f0a;
+$color-bg: #000000;
+$color-grey0: #111111;
+$color-grey1: #222222;
+$color-grey2: #a5a5a5;
+$color-grey3: #d9d9d9;
+$color-grey4: #1e1e1e;
+$color-grey5: #121212;
+
+/*===============================================
+Media Query
+===============================================*/
+$breakpoints: (
+   "sm": "screen and (max-width:" $sm-device ")",
+   "md": "screen and (max-width:" $md-device ")",
+   "lg": "screen and (max-width:" $lg-device ")",
+) !default;
+
+@mixin mq($breakpoint) {
+   @media #{map-get($breakpoints, $breakpoint)} {
+      @content;
+   }
+}
+
+/*===============================================
+Disable hover effects when on mobile
+If $parent is set, hover can be specified for the parent element.
+===============================================*/
+@mixin hover($parent: null) {
+   @media (hover: none) {
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+   }
+
+   @media (-ms-high-contrast: none),
+      (-ms-high-contrast: active),
+      (-moz-touch-enabled: 0),
+      (hover: hover) {
+      @if $parent == null {
+         &:hover,
+         &:focus-visible {
+            @content;
+         }
+      } @else {
+         #{$parent}:hover &,
+         #{$parent}:focus-visible & {
+            @content;
+         }
+      }
+   }
+}
+
+/*===============================================
+transition
+power1 : quad
+power2 : cubic
+power3 : quart
+power4 : quint
+===============================================*/
+@mixin transition($dur: all $duration-standard) {
+   transition: $dur;
+   transition-timing-function: $easeOutQuart;
+}
+
+/*===============================================
+placeholder
+===============================================*/
+
+@mixin placeholder($color) {
+   &::placeholder {
+      color: $color;
+   }
+
+   &:-ms-input-placeholder {
+      color: $color;
+   }
+
+   &::-ms-input-placeholder {
+      color: $color;
+   }
+}
+
+/*===============================================
+background image
+===============================================*/
+@mixin bg_img_cover {
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-position: center;
+}
+
+@mixin bg_img_contain {
+   background-repeat: no-repeat;
+   background-size: contain;
+   background-position: center;
+}
+
+/*===============================================
+fill
+===============================================*/
+@mixin fill {
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   inset: 0;
+   color: transparent;
+}
