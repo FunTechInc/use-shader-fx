@@ -67,7 +67,7 @@ export const useSetup = <M extends FxMaterial>({
 
    // materialのresolutionはreactiveに更新する
    const resolution = useResolution(size, dpr);
-   _material.updateResolution(resolution);
+   _material.updateResolution(resolution.x, resolution.y);
 
    useObject3D(scene, _geometry, _material, THREE.Mesh);
 

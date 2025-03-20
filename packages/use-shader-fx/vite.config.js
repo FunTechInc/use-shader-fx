@@ -18,6 +18,10 @@ export default defineConfig({
          external,
          output: {
             dir: "./build",
+            globals: {
+               three: "THREE",
+               react: "React",
+            },
          },
       },
       sourcemap: true,

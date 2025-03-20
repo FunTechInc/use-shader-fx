@@ -1,11 +1,9 @@
 "use client";
 
-import { useFrame, useThree, extend } from "@react-three/fiber";
-import { createFxMaterialImpl, useBlank } from "@/packages/use-shader-fx/src";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useBlank } from "@/packages/use-shader-fx/src";
 import { useTexture } from "@react-three/drei";
-
-const FxMaterialImpl = createFxMaterialImpl();
-extend({ FxMaterialImpl });
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 /*===============================================
 vibe coded by ShaderGPT
@@ -82,10 +80,5 @@ export const Playground = () => {
       blank.render(state);
    });
 
-   return (
-      <mesh>
-         <planeGeometry args={[2, 2]} />
-         <fxMaterialImpl key={FxMaterialImpl.key} src={blank.texture} />
-      </mesh>
-   );
+   return <TextureRenderer src={blank.texture} />;
 };

@@ -1,18 +1,11 @@
 "use client";
 
 import * as THREE from "three";
-import { useFrame, useThree, extend } from "@react-three/fiber";
-import {
-   createFxMaterialImpl,
-   FxMaterialImplValues,
-   useFluid,
-   useNoise,
-} from "@/packages/use-shader-fx/src";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useFluid, useNoise } from "@/packages/use-shader-fx/src";
 import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
 import { useTexture } from "@react-three/drei";
-
-const FxMaterialImpl = createFxMaterialImpl();
-extend({ FxMaterialImpl });
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -29,6 +22,12 @@ export const Playground = () => {
    const fluid = useFluid({
       size,
       dpr: 0.25,
+      contrast: {
+         factor: new THREE.Vector4(5, 2, 1, 1),
+      },
+      colorBalance: {
+         factor: new THREE.Vector3(0.2, 0.2, 0.2),
+      },
    });
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
@@ -44,14 +43,8 @@ export const Playground = () => {
       fluid.render(state, {
          ...setBasicFxGUIValues(),
       });
-      // fluid.render(state);
       updateBasicFxGUI();
    });
 
-   return (
-      <mesh>
-         <planeGeometry args={[2, 2]} />
-         <fxMaterialImpl key={FxMaterialImpl.key} src={fluid.texture} />
-      </mesh>
-   );
+   return <TextureRenderer src={fluid.texture} />;
 };

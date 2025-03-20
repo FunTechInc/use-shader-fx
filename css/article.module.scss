@@ -1,0 +1,285 @@
+@use "@/css" as *;
+
+@mixin quoteIcon($color) {
+   background-image: url('data:image/svg+xml;utf8,<svg width="33" height="28" viewBox="0 0 33 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.19114 27.7398C2.54598 27.7398 0.0390625 24.0532 0.0390625 17.7122C0.0390625 10.1915 3.7257 4.51403 11.099 0.679932L13.6059 5.47256C8.81326 8.05321 6.38008 11.2237 6.38008 15.9426C6.67501 15.8689 6.89621 15.8689 7.19114 15.8689C10.3616 15.8689 13.0898 18.0071 13.0898 21.5463C13.0898 25.3804 10.6566 27.7398 7.19114 27.7398ZM25.6243 27.7398C20.9792 27.7398 18.4722 24.0532 18.4722 17.7122C18.4722 10.1915 22.1589 4.51403 29.5321 0.679932L32.0391 5.47256C27.2464 8.05321 24.8133 11.2237 24.8133 15.9426C25.1082 15.8689 25.3294 15.8689 25.6243 15.8689C28.7948 15.8689 31.5229 18.0071 31.5229 21.5463C31.5229 25.3804 29.016 27.7398 25.6243 27.7398Z" fill="%23#{$color}"/></svg>');
+}
+@function re-color($code) {
+   @return str-slice("#{$code}", 2);
+}
+
+.article {
+   position: relative;
+   z-index: 10;
+   > *:first-child {
+      margin-top: 0 !important;
+   }
+
+   > *:last-child {
+      margin-bottom: 0 !important;
+   }
+
+   //color
+   --color-txt: currentColor;
+   --color-bg: #{$color-grey2};
+   --color-key: #{$color-key};
+
+   //line-height
+   --title_lineHeight: #{$leading-snug};
+   --text_lineHeight: #{$leading-loose};
+   //margin
+   --title_margin: #{$spacing-6 0 $spacing-1};
+   --title_margin_s: #{$spacing-4 0 $spacing-1};
+   --text_margin: #{$spacing-1 0};
+   --block_margin: #{$spacing-6 0};
+   @include mq(md) {
+      --title_margin: #{$spacing-4 0 $spacing-1};
+      --title_margin_s: #{$spacing-3 0 $spacing-1};
+      --text_margin: #{$spacing-1 0};
+      --block_margin: #{$spacing-4 0};
+   }
+   //fons size
+   --title_large: 24rem;
+   --title_medium: 20rem;
+   --title_small: 18rem;
+   --text_normal: 15rem;
+   --text_small: 14rem;
+   @include mq(md) {
+      --title_large: 20rem;
+      --title_medium: 18rem;
+      --title_small: 16rem;
+      --text_normal: 13rem;
+      --text_small: 12rem;
+   }
+
+   color: var(--color-txt);
+
+   h1,
+   h2 {
+      font-size: var(--title_large);
+      font-weight: bold;
+      position: relative;
+      line-height: var(--title_lineHeight);
+      margin: var(--title_margin);
+
+      // border left
+      padding-left: $spacing-3;
+      &:before {
+         position: absolute;
+         top: 0;
+         left: 0;
+         content: "";
+         width: $spacing-half;
+         height: 100%;
+         background-color: var(--color-key);
+         border-radius: $spacing-mini;
+      }
+   }
+
+   h3 {
+      font-size: var(--title_medium);
+      font-weight: bold;
+      position: relative;
+      line-height: var(--title_lineHeight);
+      margin: var(--title_margin);
+   }
+
+   h4,
+   h5,
+   h6 {
+      font-size: var(--title_small);
+      font-weight: bold;
+      line-height: var(--title_lineHeight);
+      margin: var(--title_margin_s);
+   }
+
+   a {
+      display: inline;
+      text-decoration: underline;
+      color: var(--color-key);
+      @include transition;
+      transition-property: opacity;
+      @include hover {
+         opacity: 0.7;
+      }
+   }
+
+   p {
+      font-size: var(--text_normal);
+      line-height: var(--text_lineHeight);
+      margin: var(--text_margin);
+   }
+
+   ul,
+   ol {
+      margin: var(--block_margin);
+
+      li {
+         font-size: var(--text_normal);
+         list-style: none;
+         line-height: var(--title_lineHeight);
+
+         p {
+            margin: 0;
+         }
+
+         &:not(:first-child) {
+            margin-top: $spacing-2;
+         }
+
+         display: flex;
+         gap: $spacing-mini;
+      }
+   }
+
+   ul {
+      li {
+         align-items: flex-start;
+         &::before {
+            position: relative;
+            top: 1.3ch;
+            content: "";
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--color-key);
+            border-radius: 50%;
+         }
+      }
+   }
+
+   ol {
+      li {
+         counter-increment: listNum;
+
+         &::before {
+            content: "" counter(listNum) ".";
+         }
+      }
+   }
+
+   blockquote {
+      font-size: var(--text_normal);
+      padding: $spacing-3 $spacing-8;
+      position: relative;
+      margin: var(--block_margin);
+      line-height: var(--text_lineHeight);
+
+      @include mq(sm) {
+         padding-right: $spacing-1;
+         padding-left: $spacing-6;
+      }
+
+      &:before {
+         margin: auto;
+         top: $spacing-3;
+         left: $spacing-2;
+         content: "";
+         position: absolute;
+         width: 32rem;
+         height: 27rem;
+         @include bg_img_contain;
+         z-index: 1;
+         @include quoteIcon(re-color($color-key));
+         @include mq(sm) {
+            left: $spacing-1;
+            width: 24rem;
+         }
+      }
+      &:after {
+         border-radius: 4rem;
+         position: absolute;
+         content: "";
+         width: 100%;
+         height: 100%;
+         background-color: var(--color-key);
+         opacity: 0.24;
+         z-index: -1;
+         top: 0;
+         left: 0;
+      }
+
+      p {
+         margin: 0;
+      }
+
+      cite {
+         font-size: var(--text_small);
+         opacity: 0.48;
+         width: 100%;
+         text-align: right;
+         display: inline-block;
+         margin-top: $spacing-1;
+         line-height: var(--title_lineHeight);
+
+         a {
+            display: inline;
+         }
+      }
+   }
+
+   table {
+      border-collapse: collapse;
+      font-size: var(--text_normal);
+      width: 100%;
+      margin: var(--block_margin);
+
+      td,
+      th {
+         padding: $spacing-1;
+         text-align: left;
+         line-height: var(--title_lineHeight);
+         border-bottom: 1px solid var(--color-key);
+      }
+
+      th {
+         font-weight: bold;
+         min-width: $spacing-12;
+      }
+   }
+
+   img {
+      display: block;
+      margin: var(--block_margin);
+   }
+
+   figure {
+      margin: var(--block_margin);
+
+      img {
+         margin: 0;
+      }
+
+      figcaption {
+         font-size: var(--text_small);
+         text-align: center;
+         margin-top: $spacing-1;
+         line-height: var(--title_lineHeight);
+      }
+   }
+
+   strong {
+      font-weight: bold;
+   }
+
+   em {
+      font-style: italic;
+   }
+
+   u {
+      text-decoration: underline;
+   }
+
+   s {
+      text-decoration: line-through;
+   }
+
+   code {
+      background-color: var(--color-key);
+      border-radius: 4rem;
+      padding: 4rem 8rem;
+   }
+
+   hr {
+      border-top: 2px solid var(--color-txt);
+      margin: var(--block_margin);
+   }
+}

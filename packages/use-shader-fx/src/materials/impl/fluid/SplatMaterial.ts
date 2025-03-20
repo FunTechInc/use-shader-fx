@@ -25,16 +25,11 @@ export class SplatMaterial extends FxMaterial {
 
    forceBias: number;
 
-   constructor({
-      uniformValues,
-      materialParameters = {},
-      customParameters,
-   }: FxMaterialProps) {
+   constructor({ customParameters, ...rest }: FxMaterialProps) {
       super({
+         ...rest,
          vertexShader: vertex.splat,
          fragmentShader: fragment,
-         uniformValues,
-         materialParameters,
          uniforms: {
             force: { value: new THREE.Vector2(0, 0) },
             center: { value: new THREE.Vector2(0, 0) },

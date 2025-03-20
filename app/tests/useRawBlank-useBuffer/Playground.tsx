@@ -1,17 +1,10 @@
 "use client";
 
 import * as THREE from "three";
-import { useFrame, useThree, extend } from "@react-three/fiber";
-import {
-   createFxMaterialImpl,
-   useFluid,
-   useRawBlank,
-   useBuffer,
-} from "@/packages/use-shader-fx/src";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useFluid, useRawBlank, useBuffer } from "@/packages/use-shader-fx/src";
 import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
-
-const FxMaterialImpl = createFxMaterialImpl();
-extend({ FxMaterialImpl });
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -183,7 +176,7 @@ export const Playground = () => {
       dpr: 1,
       texture: {
          src: rawShader.texture,
-         fit: "fill",
+         fit: 0,
       },
    });
 
@@ -207,10 +200,5 @@ export const Playground = () => {
       updateBasicFxGUI();
    });
 
-   return (
-      <mesh>
-         <planeGeometry args={[2, 2]} />
-         <fxMaterialImpl key={FxMaterialImpl.key} src={basic.texture} />
-      </mesh>
-   );
+   return <TextureRenderer src={basic.texture} />;
 };

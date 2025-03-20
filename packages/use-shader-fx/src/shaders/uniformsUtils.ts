@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { warn } from "../utils";
-import { THREE_TYPES } from "../libs/constants";
+import { THREE_FLAG_PROPS } from "../libs/constants";
 
 export type Uniforms = { [uniform: string]: THREE.IUniform<any> };
 
@@ -38,8 +38,13 @@ export type NestUniformValues<U extends Uniforms> = UnionToIntersection<
    { [K in keyof U]: Nest<Extract<K, string>, U[K]["value"]> }[keyof U]
 >;
 
+/**
+ * Determines whether the given property is a three.js object by checking for the presence
+ * of known boolean flag properties (e.g., `isTexture`, `isVector2`, etc.) that are typically
+ * set to true on three.js instances.
+ */
 function isTHREE(property: any) {
-   return property && THREE_TYPES.has(property.constructor);
+   return property && THREE_FLAG_PROPS.some((prop) => property[prop] === true);
 }
 
 /**
