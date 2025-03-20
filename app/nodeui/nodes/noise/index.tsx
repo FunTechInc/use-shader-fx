@@ -1,11 +1,12 @@
 import { useCallback, useRef } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import s from './style.module.scss';
+import { useEffect } from 'react';
 
 import { GUI } from 'lil-gui';
 import { useGUI } from '@/utils/useGUI';
-
-import { NoiseValues } from '@/packages/use-shader-fx/src';
+import useStore from '../../store';
+// import { NoiseValues } from '@/packages/use-shader-fx/src';
 // import { BASICFX_VALUES } from '@/packages/use-shader-fx/src';
 import * as THREE from 'three';
  
@@ -47,6 +48,7 @@ export const BASICFX_VALUES = {
     mixSrc_alpha_range: { value: new THREE.Vector2(0.0, 1.0) },
     mixSrc_alpha_mixMap: { value: false },
     mixSrc_alpha_mixMap_ch: { value: 0 },
+
   },
   mixDst: {
     /*===============================================
@@ -127,49 +129,34 @@ export const BASICFX_VALUES = {
 };
 
 
-export const NoiseInitParams = {   
-   tick: 0,   
-   scale: 0.004,   
-   timeStrength: 0.3,   
-   noiseOctaves: 1,   
-   fbmOctaves: 2,   
-   warpOctaves: 2,   
-   warpDirection: new THREE.Vector2(2, 2),  
-   warpStrength: 8,   
-   timeOffset: 0,  
-   ...BASICFX_VALUES
+export const NoiseInitParams = {     
+   scale: 0.004,
 };
  
-function NoiseNode({ data: {params} }: {data: {
+function NoiseNode({ data: {params}, id }: {data: {
   params: any
-}}) {        
+}, id: string}) {        
+  // console.log(id);  
+  const {
+    nodes,
+    updateNodeParameter,    
+  } = useStore(state => state);
   const parametersEl = useRef<HTMLDivElement>(null);  
   
     const setupGUI = useCallback(
-        (gui: GUI) => {
-            const noiseParams = gui.addFolder('Noise Parameters');
-            noiseParams.add(params, 'scale', 0, 10, 0.001);
-            noiseParams.add(params, 'timeStrength', 0, 10, 0.01);
-            noiseParams.add(params, 'noiseOctaves', 1, 10, 1);
-            noiseParams.add(params, 'fbmOctaves', 1, 10, 1);
-            noiseParams.add(params, 'warpOctaves', 1, 10, 1);
-            noiseParams.add(params.warpDirection, 'x', 1, 10, 0.1);
-            noiseParams.add(params.warpDirection, 'y', 1, 10, 0.1);
-            noiseParams.add(params, 'warpStrength', 1, 50, 0.1);   
-            
-            const basicFxFolder = gui.addFolder('Basic FX Values');
-              
-            // mixSrc フォルダーの追加 繋がっているか繋がっていないかで表示を変える
-            const mixSrcFolder = basicFxFolder.addFolder('mixSrc');          
-            // mixDst フォルダーの追加　繋がっているか繋がっていないかで表示を変える
-            const mixDstFolder = basicFxFolder.addFolder('mixDst');                        
-            // adjustments フォルダーの追加
-            const adjustmentsFolder = basicFxFolder.addFolder('adjustments');
-              
+        (gui: GUI) => {            
+            gui.add(params, 'scale', 0, 10, 0.001);
+
+            gui.onFinishChange(({property}) => {              
+              updateNodeParameter(id, params);
+            })
         },
-        [params,parametersEl]
+        [params, parametersEl]
     );
+    
   const updateBasicFxGUI = useGUI(setupGUI, "Parameters", parametersEl);
+
+
  
   return (
     <div className={s.node}>
@@ -205,8 +192,5 @@ function NoiseNode({ data: {params} }: {data: {
     </div>
   );
 }
-
-
-// https://reactflow.dev/examples/layout/elkjs-multiple-handles
 
 export default NoiseNode;

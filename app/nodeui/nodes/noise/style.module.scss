@@ -2,29 +2,30 @@
 
 .node {
     background-color: #333;
-    border-radius: .4rem;
-    min-width: 330px;
-    // overflow: hidden;
+    border-radius: 4rem;
+    min-width: calc(240px + 60rem);
     color: #fff;
 }
 
 .nodeHead {    
     background-color: #B84F0A;
-    padding: .3rem 1rem;
-    border-radius: .4rem .4rem 0 0;
+    padding: 8rem 10rem;    
+    border-radius: 4rem 4rem 0 0;
 }
 
 .nodeBody {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 240px 30px;
+    // display: flex;
+    grid-template-columns: 1fr 240px 20rem;
+    min-height: 150rem;
 }
 
 .nodeSide {
     position: relative;
     background-color: #222;    
     height: 100%;
-    min-height: 10rem;
+    min-height: 100rem;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
 }
@@ -38,16 +39,16 @@
     position: absolute;
     left: 0;
     width: 100%;
-    padding-left: 0.8rem;
+    padding-left: 8rem;
     transform: translateY(-60%);
     line-height: 1;
-    font-size: 0.6rem;    
+    font-size: 8rem;    
 }
 
 .nodeOut {
     position: relative;
     line-height: 1;
-    font-size: 0.6rem;
+    font-size: 8rem;
     height: 100%;
     display: flex;
     align-items: center;   
