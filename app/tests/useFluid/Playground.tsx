@@ -1,10 +1,11 @@
 "use client";
 
+import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useFluid, useNoise } from "@/packages/use-shader-fx/src";
 import { useBasicFxGUI } from "../_utils/useBasicFxGUI";
 import { useTexture } from "@react-three/drei";
-import { Output } from "../_utils/Output";
+import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 
 export const Playground = () => {
    const { size } = useThree();
@@ -21,6 +22,12 @@ export const Playground = () => {
    const fluid = useFluid({
       size,
       dpr: 0.25,
+      contrast: {
+         factor: new THREE.Vector4(5, 2, 1, 1),
+      },
+      colorBalance: {
+         factor: new THREE.Vector3(0.2, 0.2, 0.2),
+      },
    });
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
@@ -36,9 +43,8 @@ export const Playground = () => {
       fluid.render(state, {
          ...setBasicFxGUIValues(),
       });
-      // fluid.render(state);
       updateBasicFxGUI();
    });
 
-   return <Output src={fluid.texture} />;
+   return <TextureRenderer src={fluid.texture} />;
 };
