@@ -1,0 +1,59 @@
+
+
+.node {
+    background-color: #333;
+    border-radius: 4rem;
+    min-width: calc(240px + 60rem);
+    color: #fff;
+}
+
+.nodeHead {    
+    background-color: #4CAA62;
+    padding: 8rem 10rem;    
+    border-radius: 4rem 4rem 0 0;
+}
+
+.nodeBody {
+    width: 100%;
+    display: grid;
+    // display: flex;
+    grid-template-columns: 1fr 240px 20rem;
+    min-height: 150rem;
+}
+
+.nodeSide {
+    position: relative;
+    background-color: #222;    
+    height: 100%;
+    min-height: 100rem;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.nodeTargetEdge {
+    position: absolute;    
+    transform: translate(0%, -50%);    
+}
+
+.nodeSideItem {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding-left: 8rem;
+    transform: translateY(-60%);
+    line-height: 1;
+    font-size: 8rem;    
+}
+
+.nodeOut {
+    position: relative;
+    line-height: 1;
+    font-size: 8rem;
+    height: 100%;
+    display: flex;
+    align-items: center;   
+    justify-content: center;
+    text-align: center;
+    width: 100%;     
+}
+

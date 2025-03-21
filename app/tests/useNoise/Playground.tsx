@@ -10,7 +10,7 @@ import { TextureRenderer } from "../../_components/WebGL/TextureRenderer";
 export const Playground = () => {
    const { size } = useThree();
 
-   const [mask] = useTexture(["/mask.png"]);
+   const [mask] = useTexture(["/momo.jpg"]);
 
    const noise = useNoise({
       size,

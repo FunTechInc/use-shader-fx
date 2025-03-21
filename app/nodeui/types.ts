@@ -13,10 +13,12 @@ import {
   export type AppState = {
     nodes: AppNode[];
     edges: Edge[];
+    pipeline: any[];
     onNodesChange: OnNodesChange<AppNode>;
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
     setNodes: (nodes: AppNode[]) => void;
     setEdges: (edges: Edge[]) => void;
+    setPipeline: (pipeline: any[]) => void;
     updateNodeParameter: (nodeId: string, newParams: any) => void;
   };

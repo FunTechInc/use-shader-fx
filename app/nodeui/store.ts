@@ -4,10 +4,13 @@ import { addEdge, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import { InitialNodes } from './nodes';
 import { InitialEdges } from './edges';
 import { type AppNode, type AppState } from './types';
+
+const InitialPipeline:any[] = [];
  
 const useStore = create<AppState>((set, get) => ({
   nodes: InitialNodes,
   edges: InitialEdges,
+  pipeline: InitialPipeline,
   onNodesChange: (changes) => {    
     set({
       nodes: applyNodeChanges(changes, get().nodes),
@@ -28,7 +31,10 @@ const useStore = create<AppState>((set, get) => ({
   },
   setEdges: (edges) => {
     set({ edges });
-  },  
+  },
+  setPipeline: (pipeline) => {
+    set({pipeline});    
+  },
   updateNodeParameter: (nodeId, newParams) => {
     set({
       nodes: get().nodes.map((node) => {
