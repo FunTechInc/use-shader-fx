@@ -5,7 +5,6 @@ import {
    ShaderWithUniforms,
 } from "../../shaders/uniformsUtils";
 import { warn } from "../../utils";
-import { Size } from "../../hooks/types";
 
 export type DefaultUniforms = {
    resolution: { value: THREE.Vector2 };
@@ -90,7 +89,8 @@ export class FxMaterial extends THREE.ShaderMaterial {
             continue;
          }
 
-         curretUniform.value = value;
+         curretUniform.value =
+            typeof value === "function" ? value(curretUniform.value) : value;
       }
 
       return flattenedValues;

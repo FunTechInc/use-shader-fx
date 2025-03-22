@@ -8,9 +8,10 @@ import {
 import { NestUniformValues } from "../../../shaders/uniformsUtils";
 
 type SplatUniforms = {
+   forceBias: { value: number };
+   radius: { value: THREE.Vector2 };
    force: { value: THREE.Vector2 };
    center: { value: THREE.Vector2 };
-   scale: { value: THREE.Vector2 };
 };
 
 export type SplatValues = NestUniformValues<SplatUniforms>;
@@ -23,23 +24,20 @@ export class SplatMaterial extends FxMaterial {
 
    uniforms!: SplatUniforms;
 
-   forceBias: number;
-
-   constructor({ customParameters, ...rest }: FxMaterialProps) {
+   constructor(props: FxMaterialProps) {
       super({
-         ...rest,
+         ...props,
          vertexShader: vertex.splat,
          fragmentShader: fragment,
          uniforms: {
+            forceBias: { value: 20 },
+            radius: { value: new THREE.Vector2(50, 50) },
             force: { value: new THREE.Vector2(0, 0) },
             center: { value: new THREE.Vector2(0, 0) },
-            scale: { value: new THREE.Vector2(50, 50) },
          } as SplatUniforms,
       });
 
       this.type = SplatMaterial.type;
-
-      this.forceBias = customParameters?.forceBias ?? 20;
 
       this.blending = THREE.AdditiveBlending;
    }

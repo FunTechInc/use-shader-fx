@@ -9,7 +9,8 @@ import {
 } from "@/packages/use-shader-fx/src";
 import { useCallback } from "react";
 
-const BASICFX_CONFIG: BasicFxUniformsUnique = BASICFX_VALUES;
+const BASICFX_CONFIG: BasicFxUniformsUnique =
+   THREE.UniformsUtils.clone(BASICFX_VALUES);
 const FIT_TYPE = ["fill", "cover", "contain"];
 
 export const useBasicFxGUI = (

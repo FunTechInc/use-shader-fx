@@ -12,22 +12,9 @@ export const Playground = () => {
 
    const [mask] = useTexture(["/mask.png"]);
 
-   // const noise = useNoise({
-   //    size,
-   //    dpr: 1,
-   //    scale: 0.01,
-   //    timeStrength: 0.4,
-   // });
-
    const fluid = useFluid({
       size,
       dpr: 0.25,
-      contrast: {
-         factor: new THREE.Vector4(5, 2, 1, 1),
-      },
-      colorBalance: {
-         factor: new THREE.Vector3(0.2, 0.2, 0.2),
-      },
    });
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(

@@ -8,12 +8,10 @@ export const useSplat = (
    {
       size,
       dpr,
-      force,
       ...uniformValues
    }: {
       size: Size;
       dpr: number | false;
-      force?: number;
    } & FluidMaterials.SplatValuesClient,
    updateRenderTarget: SingleFBOUpdateFunction
 ) => {
@@ -26,9 +24,6 @@ export const useSplat = (
          height: 1,
       },
       uniformValues,
-      customParameters: {
-         forceBias: force,
-      },
    });
 
    const pointerTracker = usePointerTracker();
@@ -39,9 +34,7 @@ export const useSplat = (
          const { currentPointer, diffPointer } = pointerTracker(pointer);
 
          material.uniforms.center.value.copy(currentPointer);
-         material.uniforms.force.value.copy(
-            diffPointer.multiplyScalar(material.forceBias)
-         );
+         material.uniforms.force.value.copy(diffPointer);
 
          updateRenderTarget({ gl, scene, camera, clear: false });
       },

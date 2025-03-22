@@ -23,11 +23,11 @@ export type ExtractUniformValues<T> = {
 };
 
 /**
- * test_test:{value:number} => { test: { test: number } }
+ * test_test:{value:number} => { test: { test: number | (value:number)=>number } }
  */
 type Nest<K extends string, V> = K extends `${infer First}_${infer Rest}`
    ? { [P in First]?: Nest<Rest, V> }
-   : { [P in K]?: V };
+   : { [P in K]?: V | ((value: V) => V) };
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
    k: infer I
