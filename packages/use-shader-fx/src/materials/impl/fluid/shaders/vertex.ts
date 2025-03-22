@@ -57,9 +57,9 @@ const vertex = {
 	`,
    splat: `
 		uniform vec2 center;
-		uniform vec2 scale;
+		uniform vec2 radius;
 		void main(){		
-			vec2 pos = position.xy * scale * 2.0 * texelSize + center;
+			vec2 pos = position.xy * radius * 2.0 * texelSize + center;
 			gl_Position = vec4(pos, 0.0, 1.0);
 		}
 	`,

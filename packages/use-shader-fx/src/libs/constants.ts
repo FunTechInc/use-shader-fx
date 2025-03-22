@@ -1,6 +1,13 @@
 import * as THREE from "three";
 
-export const ISDEV = process.env.NODE_ENV === "development";
+// CDNとして使う場合、processがundefinedになるので、その場合はfalseを返す
+export const ISDEV = (() => {
+   try {
+      return process.env.NODE_ENV === "development";
+   } catch (error) {
+      return false;
+   }
+})();
 
 export const MATERIAL_BASIC_PARAMS = {
    transparent: false,

@@ -12,7 +12,6 @@ import { BasicFxValues, FluidMaterials } from "../../materials";
 
 export type FluidValues = {
    pressureIterations?: number;
-   force?: number;
 } & BasicFxValues &
    FluidMaterials.AdvectionValuesClient &
    FluidMaterials.DivergenceValuesClient &
@@ -33,8 +32,8 @@ const extractValues = (values: FluidValues) => {
       deltaTime,
       bounce,
       pressureIterations,
-      scale,
-      force,
+      radius,
+      forceBias,
       ...basicFxValues
    } = values;
 
@@ -44,9 +43,8 @@ const extractValues = (values: FluidValues) => {
          divergence: removeUndefined({ bounce, deltaTime }),
          poisson: removeUndefined({ bounce }),
          pressure: removeUndefined({ bounce, deltaTime }),
-         splat: removeUndefined({ scale }),
+         splat: removeUndefined({ radius, forceBias }),
          pressureIterations,
-         force,
       },
       basicFxValues,
    ] as const;
@@ -102,7 +100,6 @@ export const useFluid = ({
       {
          ...SceneSize,
          ...extractedValues.splat,
-         force: extractedValues.force,
       },
       updateVelocity_1
    );
@@ -153,9 +150,6 @@ export const useFluid = ({
          splat.material.setUniformValues(_extractedValues.splat);
          if (_extractedValues.pressureIterations) {
             poisson.material.iterations = _extractedValues.pressureIterations;
-         }
-         if (_extractedValues.force) {
-            splat.material.forceBias = _extractedValues.force;
          }
       },
       [output, advection, divergence, poisson, pressure, splat]
