@@ -17,7 +17,7 @@ export const Playground = () => {
       timeStrength: 0.4,
    });
 
-   const basic = useBuffer({
+   const buffer = useBuffer({
       size,
       dpr: 1,
       texture: {
@@ -32,7 +32,7 @@ export const Playground = () => {
    });
 
    const { updateBasicFxGUI, setBasicFxGUIValues } = useBasicFxGUI(
-      basic.setValues,
+      buffer.setValues,
       {
          mixSrc: noise.texture,
          mixDst: noise.texture,
@@ -41,7 +41,7 @@ export const Playground = () => {
    );
 
    useFrame((state) => {
-      basic.render(state, {
+      buffer.render(state, {
          ...setBasicFxGUIValues(),
       });
       fluid.render(state);
@@ -49,5 +49,5 @@ export const Playground = () => {
       updateBasicFxGUI();
    });
 
-   return <TextureRenderer src={basic.texture} />;
+   return <TextureRenderer src={buffer.texture} />;
 };
