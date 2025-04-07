@@ -48,7 +48,9 @@ export const useGrid = ({
          const { gl, clock } = rootState;
          newValues && setValues(newValues, false);
          material.uniforms.tick.value =
-            newValues?.tick || clock.getElapsedTime();
+            typeof newValues?.tick === "function"
+               ? newValues.tick(material.uniforms.tick.value)
+               : newValues?.tick || clock.getElapsedTime();
          return updateRenderTarget({ gl });
       },
       [setValues, updateRenderTarget, material]
